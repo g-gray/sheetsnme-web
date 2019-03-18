@@ -29,9 +29,9 @@ export function geometry (width) {
   return {width, ...{isMobile: false}}
 }
 
-export function isMobile(env, props) {
-  return f.scan(env, '$', 'geometry', 'width') <= MOBILE_WIDTH_MAX &&
-         f.scan(props, 'data', 'hasMobileLayout')
+export function isMobile(props) {
+  return f.scan(props, 'dom', 'geometry', 'width') <= MOBILE_WIDTH_MAX &&
+         f.scan(props, 'hasMobileLayout')
 }
 
 /**
