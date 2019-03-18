@@ -1,0 +1,14 @@
+/*
+!/.env.properties.example
+!/.eslintrc
+!/.gitignore
+!/gulpfile.js
+!/package.json
+!/readme.md
+!/scripts
+!/styles
+!/images
+!/static*
+!/templates
+!/webpack.config.js
+!/yarn.lock
