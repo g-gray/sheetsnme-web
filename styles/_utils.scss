@@ -1,0 +1,53 @@
+// https://www.sitepoint.com/hsb-colors-with-sass/
+@function hsb($h-hsb, $s-hsb, $b-hsb, $a: 1) {
+  $l-hsl: ($b-hsb / 2) * (2 - ($s-hsb / 100));
+  $s-hsl: ($b-hsb * $s-hsb) / if($l-hsl < 50, $l-hsl * 2, 200 - $l-hsl * 2);
+  @return hsla($h-hsb, $s-hsl, $l-hsl, $a);
+}
+
+// https://gist.github.com/JacobDB/0ffffaf8e772c12acf7102edb8a302be
+// Encode symbols
+@function url-encode($string) {
+  $map: (
+    "%": "%25",
+    "<": "%3C",
+    ">": "%3E",
+    " ": "%20",
+    "!": "%21",
+    "*": "%2A",
+    "'": "%27",
+    '"': "%22",
+    "(": "%28",
+    ")": "%29",
+    ";": "%3B",
+    ":": "%3A",
+    "@": "%40",
+    "&": "%26",
+    "=": "%3D",
+    "+": "%2B",
+    "$": "%24",
+    ",": "%2C",
+    "/": "%2F",
+    "?": "%3F",
+    "#": "%23",
+    "[": "%5B",
+    "]": "%5D"
+  );
+
+  $new: $string;
+
+  @each $search, $replace in $map {
+    $new: sb-str-replace($new, $search, $replace);
+  }
+
+  @return $new;
+}
+
+// Format the SVG as a URL
+@function inline-svg($string) {
+  @return url('data:image/svg+xml,#{url-encode($string)}');
+}
+
+@function inline-feather-svg($string, $color: 'black') {
+  @return inline-svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#{$color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">#{$string}</svg>');
+}

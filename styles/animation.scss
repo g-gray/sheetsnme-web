@@ -1,0 +1,46 @@
+@keyframes slide-in-right {
+  from {
+    transform: translate3d(110%, 0, 0);
+    visibility: visible;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translate3d(-110%, 0, 0);
+    visibility: visible;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.slide-in-right {
+  animation-name: slide-in-right;
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in;
+}
+
+.slide-in-left-fast {
+  animation-name: slide-in-left;
+  animation-duration: $transition-duration-fast;
+  animation-timing-function: ease-in;
+}
+
+.fade-in-fast {
+  animation-name: fade-in;
+  animation-duration: $transition-duration-fast;
+  animation-timing-function: ease-in;
+}

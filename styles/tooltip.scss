@@ -1,0 +1,127 @@
+$color-tooltip-bg: rgba($color-deep, 0.8);
+$color-tooltip-fg: $color-white;
+$tooltip-offset: 1rem;
+
+[aria-label] {
+  @extend .relative;
+
+  &::before,
+  &::after {
+    display: none;
+    position: absolute;
+    z-index: $z-index-tooltip;
+    pointer-events: none;
+    outline: none;
+    padding: 0;
+    // Negate inherited case transforms, if any.
+    text-transform: none;
+    // TODO: should reset font-size?
+  }
+
+  &:hover, .enable-focus-indicators &:focus {
+    &::before,
+    &::after {
+      display: block;
+    }
+  }
+
+  &::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border: ($tooltip-offset / 2) solid transparent;
+  }
+
+  &::after {
+    @extend .rounded;
+    color: $color-tooltip-fg;
+    background-color: $color-tooltip-bg;
+    @extend .font-small;
+    content: attr(aria-label);
+    padding: 0.5rem;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  &:not([class*=aria-label-]) {
+    @extend .aria-label-top;
+  }
+}
+
+// Hide empty tooltips.
+[aria-label='']::after, [aria-label='']::before {
+  content: none;
+}
+
+.aria-label-top {
+  &::before {
+    bottom: 100%;
+    right: 50%;
+    transform: translateX(50%);
+    border-top-color: $color-tooltip-bg;
+  }
+
+  &::after {
+    bottom: calc(100% + #{$tooltip-offset});
+    right: 50%;
+    transform: translateX(50%);
+  }
+}
+
+.aria-label-right {
+  &::before {
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    border-right-color: $color-tooltip-bg;
+  }
+
+  &::after {
+    top: 50%;
+    left: calc(100% + #{$tooltip-offset});
+    transform: translateY(-50%);
+  }
+}
+
+.aria-label-bottom {
+  &::before {
+    top: 100%;
+    right: 50%;
+    transform: translateX(50%);
+    border-bottom-color: $color-tooltip-bg;
+  }
+
+  &::after {
+    top: calc(100% + #{$tooltip-offset});
+    right: 50%;
+    transform: translateX(50%);
+  }
+}
+
+.aria-label-left {
+  &::before {
+    top: 50%;
+    right: 100%;
+    transform: translateY(-50%);
+    border-left-color: $color-tooltip-bg;
+  }
+
+  &::after {
+    top: 50%;
+    right: calc(100% + #{$tooltip-offset});
+    transform: translateY(-50%);
+  }
+}
+
+.aria-label-top-right {
+  &::before {
+    bottom: 100%;
+    left: 0;
+    border-top-color: $color-tooltip-bg;
+  }
+
+  &::after {
+    bottom: calc(100% + #{$tooltip-offset});
+    left: -$tooltip-offset;
+  }
+}

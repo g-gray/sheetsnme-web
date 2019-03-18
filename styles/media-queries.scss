@@ -1,0 +1,96 @@
+/**
+ * Default = large
+ * media-md = medium and smaller
+ * media-sm = only small
+ */
+
+@mixin media-ie {
+  @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {@content;}
+}
+
+@mixin media-hover {
+  @media all and (any-hover: hover) {@content;}
+}
+
+@mixin media-lg {
+  @media screen and (min-width: $page-breakpoint-md + 1px) {@content;}
+}
+
+@mixin media-md {
+  @media screen and (max-width: $page-breakpoint-md) {@content;}
+}
+
+@mixin media-md-exact {
+  @media screen and (min-width: $page-breakpoint-sm + 1px) and (max-width: $page-breakpoint-md) {@content;}
+}
+
+@mixin media-sm {
+  @media screen and (max-width: $page-breakpoint-sm) {@content;}
+}
+
+@mixin media-not-lg {
+  @media not screen and (min-width: $page-breakpoint-md + 1px) {@content;}
+}
+
+@mixin media-not-md {
+  @media not screen and (max-width: $page-breakpoint-md) and (min-width: $page-breakpoint-sm + 1) {@content;}
+}
+
+@mixin media-not-sm {
+  @media not screen and (max-width: $page-breakpoint-sm) {@content;}
+}
+
+@mixin media-mobile {
+  @media screen and (max-width: $page-width-mobile) {@content;}
+}
+
+@mixin row-start-center($prefix: '') {
+  .#{$prefix}row-start-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+}
+
+@mixin row-between-center($prefix: '') {
+  .#{$prefix}row-between-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+@mixin col-start-stretch($prefix: '') {
+  .#{$prefix}col-start-stretch {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+}
+
+@include media-lg {
+  .lg-hide {display: none}
+}
+
+@include media-md {
+  .md-hide {display: none}
+}
+
+@include media-sm {
+  .sm-hide {display: none}
+}
+
+@include media-not-sm {
+  .not-sm-hide {display: none}
+}
+
+@include media-not-md {
+  .not-md-hide {display: none}
+}
+
+@include media-not-lg {
+  .not-lg-hide {display: none}
+}

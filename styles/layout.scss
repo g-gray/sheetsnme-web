@@ -1,0 +1,68 @@
+body {
+  min-width: $page-width-max;
+
+  @include media-mobile {
+    min-width: $page-width-min;
+  }
+
+  // Always show the scrollbar. This prevents layout jitter when navigating
+  // between pages that do and do not overflow.
+  overflow-y: scroll;
+}
+
+.fixed-limit-width {
+  @include limit-width;
+  min-width: $page-width-max;
+}
+
+.min-width-page-max {
+  min-width: $page-width-max;
+}
+
+.dialog-max-width {
+  max-width: $dialog-max-width;
+}
+
+.rounded-50p {
+  border-radius: 999em;
+}
+
+.stretch-to-viewport-v {
+  min-height: 100vh;
+}
+
+.abs-center-x {
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+}
+
+.abs-center-y {
+  top: 50%;
+  transform: translateY(-50%);
+  position: absolute;
+}
+
+.hr {
+  color: $color-black-90;
+}
+
+.flex-self-start   {align-self: flex-start}
+.flex-self-center  {align-self: center}
+.flex-self-end     {align-self: flex-end}
+.flex-self-stretch {align-self: stretch}
+.flex-shrink-none  {flex-shrink: 0}
+
+.sticky {
+  position: sticky;
+}
+
+.sticky-t {
+  top: 0;
+  @extend .sticky;
+}
+
+.sticky-b {
+  bottom: 0;
+  @extend .sticky;
+}

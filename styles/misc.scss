@@ -1,0 +1,565 @@
+/**
+ * Focus
+ */
+
+$focus-width: 3px;
+$color-focus: rgba($color-primary-100, 0.3);
+
+// Note: this uses an outline because box-shadow and border don't support an
+// offset. Outlines don't support rounding, so this can't be used for circular
+// elements such as radio inputs.
+%focus {
+  outline-width: $focus-width;
+  outline-color: $color-focus;
+  outline-style: solid;
+  outline-offset: 0;
+  animation-name: collapse-outline;
+  animation-duration: 0.2s;
+}
+
+@keyframes collapse-outline {
+  from {
+    outline-offset: $focus-width * 3;
+  }
+}
+
+// For circular elements
+%focus-rounded {
+  box-shadow: inset 0 0 0 $focus-width $color-focus;
+}
+
+.enable-focus-indicators {
+  :focus:not(%nofocus) {
+    // @extend %focus;
+  }
+
+  // Experimental
+  :focus {
+    z-index: 0;
+  }
+}
+
+select:focus,
+input[type=radio]:focus,
+input[type=checkbox]:focus {
+  &, .enable-focus-indicators & {
+    outline: $color-focus auto;
+  }
+}
+
+/**
+ * Buttons
+ */
+
+@mixin button-core {
+  line-height: 1rem;
+  border: 1px solid;
+  border-radius: $radius;
+  padding: 0.5rem 1rem;
+  @include sb-transition($duration: $transition-duration-faster);
+  @extend .wspace-nowrap;
+
+  &[disabled] {
+    pointer-events: none;
+  }
+}
+
+@mixin button-focus {
+  &:focus, .enable-focus-indicators &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 3px $color-primary-225;
+  }
+}
+
+.btn-wide {
+  min-width: 8rem;
+}
+
+.btn-gaps {
+  @extend .gaps-h-0x25;
+}
+
+.btn-primary {
+  @include button-core;
+  @include button-focus;
+  color: $color-white;
+  background-color: $color-primary-125;
+  border-color: $color-primary-125;
+  @include busy {
+    background-color: $color-primary-100;
+    border-color: $color-primary-100;
+  }
+}
+
+.btn-secondary {
+  @include button-core;
+  @include button-focus;
+  color: $color-black-35;
+  background-color: $color-primary-275;
+  border-color: $color-primary-275;
+  @include busy {
+    background-color: $color-primary-250;
+    border-color: $color-primary-250;
+  }
+}
+
+/**
+ * Inputs
+ */
+
+.input-height {
+ height: 2rem;
+}
+
+.input-padding {
+ padding: 0.25rem 0.75rem;
+}
+
+@mixin input-core {
+  @extend .input-height;
+  @extend .input-padding;
+  // min-width: 14.5rem;
+  border-radius: $radius;
+  border: 1px solid;
+  @include sb-transition($duration: $transition-duration-faster);
+  @include media-sm {
+    min-width: auto;
+  }
+}
+
+@mixin input-focus {
+  &:focus, .enable-focus-indicators &:focus {
+    outline: 0;
+    background-color: $color-white;
+    border-color: $color-primary-125;
+    box-shadow: inset 0 1px 2px $color-black-97, 0 0 0 3px $color-primary-250;
+  }
+}
+
+.input {
+  @include input-core;
+  @include input-focus;
+  border-color: $color-black-75;
+  background-color: $color-white;
+}
+
+.input::placeholder {
+  @extend .weight-light;
+  @include sb-transition;
+  opacity: 1;
+  color: $color-black-70;
+}
+
+.textarea {
+  @extend .input;
+  height: auto;
+}
+
+.select-native {
+  @extend .input;
+  padding-right: 1.5rem;
+  appearance: none;
+  background-image: inline-feather-svg('<polyline points="6 9 12 15 18 9" />', $color-black-50);
+  background-position: right 0.25rem center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+}
+
+/**
+ * Photo
+ */
+
+@mixin bg-square-rounded($val: 1rem) {
+  width: $val;
+  height: $val;
+  border-radius: $radius;
+  flex-shrink: 0;
+  @extend .bg-cover;
+}
+
+.bg-square-rounded-10 {
+  @include bg-square-rounded(10rem);
+}
+
+.bg-circle-trick {
+  @include bg-cover-circle;
+  @include sb-height-percentage-trick(100%);
+}
+
+@mixin bg-circle($val: 1rem) {
+  width: $val;
+  height: $val;
+  @include bg-cover-circle;
+}
+
+.bg-circle-1 {
+  @include bg-circle(1rem);
+}
+
+.bg-circle-1x5 {
+  @include bg-circle(1.5rem);
+}
+
+.bg-circle-1x75 {
+  @include bg-circle(1.75rem);
+}
+
+.bg-circle-2 {
+  @include bg-circle(2rem);
+}
+
+.bg-circle-2x25 {
+  @include bg-circle(2.25rem);
+}
+
+.bg-circle-2x5 {
+  @include bg-circle(2.5rem);
+}
+
+.bg-circle-3 {
+  @include bg-circle(3rem);
+}
+
+.bg-circle-3x5 {
+  @include bg-circle(3.5rem);
+}
+
+.bg-circle-4 {
+  @include bg-circle(4rem);
+}
+
+.bg-circle-4x5 {
+  @include bg-circle(4.5rem);
+}
+
+.bg-circle-5 {
+  @include bg-circle(5rem);
+}
+
+.square-em {
+  width: 1em;
+  height: 1em;
+}
+
+.square-3x4 {
+  @include sb-height-percentage-trick(133%);
+}
+
+.square-4x3 {
+  @include sb-height-percentage-trick(75%);
+}
+
+.square-16x9 {
+  @include sb-height-percentage-trick(56%);
+}
+
+/**
+ * Misc
+ */
+
+.fixed-loading-indicator {
+  @extend .fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: $z-index-tooltip;
+
+  @extend .row-center-center;
+  @extend .padding-h-1;
+  @extend .padding-v-0x5;
+  @extend .rounded;
+
+  box-shadow: 0 0 0 1px rgba($color-primary-100, 0.2);
+  background-color: $color-primary-175;
+  color: $color-white;
+
+  animation-name: fade-in;
+  animation-duration: 0.2s;
+}
+
+@keyframes fade-in {
+  0% {opacity: 0}
+  // Implicit: transition back to opacity 1
+}
+
+.feather {
+  @extend .square-em;
+  @extend .flex-shrink-none;
+}
+
+.pane {
+  @extend .padding-1;
+  @extend .col-start-stretch;
+  @extend .gaps-v-1;
+  &.--warning {
+    background-color: hsl(hue($color-warning-100), saturation($color-warning-100), 95%);
+    box-shadow: 0 0 0 1px $color-warning-100;
+  }
+   &.--success {
+     background-color: hsl(hue($color-success), saturation($color-success), 95%);
+     box-shadow: 0 0 0 1px $color-success;
+   }
+}
+
+%hide {
+  opacity: 0;
+  visibility: hidden;
+}
+
+%show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.show-on-parent-hover {
+  @extend %hide;
+}
+
+:hover > .show-on-parent-hover {
+  @extend %show;
+}
+
+.show-on-parent-busy {
+  @extend %hide;
+}
+
+@include busy {
+  > .show-on-parent-busy {
+    @extend %show;
+  }
+}
+
+.show-on-trigger-hover {
+  @extend %hide;
+}
+
+.trigger:hover .show-on-trigger-hover {
+  @extend %show;
+}
+
+.transition {
+  @include sb-transition;
+}
+
+.transition-fast-all {
+  transition: $transition-duration-fast ease all;
+}
+
+.transition-fast-opacity {
+  transition: $transition-duration-fast ease opacity;
+}
+
+.widget {
+  border-radius: $radius;
+  background-color: $color-white;
+  box-shadow: 0 0 1px $color-black-70;
+}
+
+.mobile-widget {
+  background-color: $color-white;
+  box-shadow: 0 0 1px $color-black-75;
+}
+
+.offset-right-0x5 > :not(:last-child) {
+  margin-right: -0.5rem;
+}
+
+.list-item:last-child .hide-in-list-last-child {
+  display: none;
+}
+
+.tab-padding {
+  padding: 1rem 0.25rem;
+}
+
+/**
+ * Submenu
+ */
+
+.submenu-item {
+  @extend .decorate-light-menu-item;
+  @extend .submenu-item-padding;
+  @include current-primary-edge-left;
+}
+
+.submenu-nested-item {
+  color: $color-black-50;
+  @extend .decorate-light-menu-item;
+  @extend .submenu-nested-item-padding;
+  @include current-primary-edge-left;
+}
+
+.submenu-item-padding {
+  padding: 0.5rem 1.5rem;
+}
+
+.submenu-nested-item-padding {
+  padding-left: 2rem;
+  @extend .submenu-item-padding;
+}
+
+/**
+ * Dropdown Menu
+ */
+
+$dropdown-color-edge:   hsb(208, 10%, 86%);
+$dropdown-color-bg:     $color-white;
+$dropdown-color-shadow: rgba(black, 0.1);
+
+.dropdown-chevron::before {
+  content: '';
+  display: block;
+  border: 7px solid transparent;
+  border-bottom-color: $dropdown-color-edge;
+}
+
+.dropdown-chevron::after {
+  content: '';
+  left: 50%;
+  bottom: 0;
+  display: block;
+  position: absolute;
+  border: 5px solid transparent;
+  border-bottom-color: $dropdown-color-bg;
+  transform: translateX(-50%);
+}
+
+.dropdown {
+  background-color: $dropdown-color-bg;
+  border: 1px solid $dropdown-color-edge;
+  border-radius: $radius;
+  box-shadow: 0 1px 3px $dropdown-color-shadow;
+}
+
+.dropdown-padding {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.dropdown-item-padding {
+  padding: 0.5rem 1rem;
+}
+
+.dropdown-hr-padding {
+  padding: 0.25rem 1rem;
+}
+
+.dropdown-position-right-shifted {
+  top: 100%;
+  right: 0;
+  position: absolute;
+  padding-top: 0.5rem;
+  margin-right: - $page-padding-h / 2;
+  @extend .col-start-stretch;
+}
+
+.dropdown-chevron-position {
+  left: 50%;
+  bottom: -0.5rem;
+  position: absolute;
+  margin-bottom: -1px;
+  transform: translateX(-50%);
+}
+
+/**
+ * Tables
+ */
+
+// Colors must be replaced
+
+ .striped-table > .table-row:nth-child(odd) .table-cell {
+   background-color: $color-pale;
+ }
+
+ .striped-table > .table-row:nth-child(even) .table-cell {
+   background-color: $color-faded;
+ }
+
+ .striped-table > .table-row.head-table-row .table-cell {
+   background-color: $color-deep;
+   color: $color-white;
+ }
+
+ .padded-table > .table-row .table-cell {
+   padding: 0.5rem 1rem;
+   border: 1px solid $color-body;
+ }
+
+ .padded-table > .head-table-row .table-cell {
+   border-bottom-width: 4px;
+ }
+
+ .cell-valign-middle .table-cell {
+   vertical-align: middle;
+ }
+
+/**
+ * Dialog
+ */
+
+.dialog {
+  z-index: $z-index-dialog;
+  @extend .fix-fit;
+}
+
+.dialog-overlay {
+  @extend .abs-fit;
+}
+
+.dialog-overlay.-light {
+  background-color: $color-overlay-light;
+
+  @include media-sm {
+    background-color: $color-white;
+  }
+}
+
+.dialog-overlay.-dark {
+  background-color: $color-overlay-dark;
+}
+
+.dialog-scrollable {
+  height: 100vh;
+  @extend .relative;
+  @extend .overflow-y-scroll;
+}
+
+.dialog-center {
+  min-height: 100vh;
+  @extend .fixed-limit-width;
+  @extend .col-center-center;
+  @extend .padding-v-1;
+}
+
+.z-index-1 {
+  z-index: 1;
+}
+
+.z-index-2 {
+  z-index: 2;
+}
+
+.z-index-tooltip {
+  z-index: $z-index-tooltip;
+}
+
+.padding-broad {
+  @extend .padding-v-0x5;
+  @extend .padding-h-1;
+}
+
+@mixin form-element-spacing($val) {
+  margin-top: $val;
+
+  &:first-child,
+  :not(#{&}):first-child + & {
+    margin-top: 0;
+  }
+}
+
+.form-element-spacing {
+  @include form-element-spacing(1rem);
+}
+
+.mobile-form-element-spacing {
+  @include form-element-spacing(0.75rem);
+}

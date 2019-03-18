@@ -17,6 +17,7 @@
     "eslint_d": "7.3.0",
     "exports-loader": "0.7.0",
     "fancy-log": "1.3.3",
+    "fpx": "0.7.0",
     "gulp": "4.0.0",
     "gulp-autoprefixer": "6.0.0",
     "gulp-clean-css": "4.0.0",
@@ -25,7 +26,10 @@
     "gulp-sass": "4.0.2",
     "gulp-watch": "5.0.1",
     "http-proxy": "1.17.0",
+    "react": "16.8.4",
+    "react-dom": "16.8.4",
     "statil": "0.9.0",
+    "stylebox": "^0.0.15",
     "webpack": "4.29.6"
   }
 }
