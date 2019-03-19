@@ -7,7 +7,11 @@ export const MOBILE_WIDTH_MAX = 980
  * View
  */
 
+export const Context = React.createContext({})
+
 export class ViewComponent extends React.Component {
+  static contextType = Context
+
   constructor(a, b, c) {
     super(a, b, c)
     this.render = renderWithArg
@@ -26,12 +30,15 @@ function renderWithArg() {
  */
 
 export function geometry (width) {
-  return {width, ...{isMobile: false}}
+  return {width, isMobile: width <= MOBILE_WIDTH_MAX}
 }
 
-export function isMobile(props) {
-  return f.scan(props, 'dom', 'geometry', 'width') <= MOBILE_WIDTH_MAX &&
-         f.scan(props, 'hasMobileLayout')
+export function isMobileGeometry(context) {
+  return f.scan(context, 'dom', 'geometry', 'isMobile')
+}
+
+export function isMobileLayout(context) {
+  return f.scan(context, 'dom', 'isMobileLayout')
 }
 
 /**

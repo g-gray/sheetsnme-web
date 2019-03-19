@@ -12,17 +12,28 @@ import * as p from './pages'
 const initialState = {
   dom: {
     geometry: u.geometry(window.innerWidth),
+    isMobileLayout: false,
   },
 }
 
-const store = createStore(rootReducer, initialState)
+export const store = createStore(rootReducer, initialState)
 
-const PageComponent = connect(state => state)(p.HomePage)
+class App extends u.ViewComponent {
+  render({props}) {
+    return (
+      <u.Context.Provider value={{dom: props.dom}}>
+        <p.HomePage />
+      </u.Context.Provider>
+    )
+  }
+}
+
+const ConnectedApp = connect(state => state)(App)
 
 const elem = (
   <div id='root'>
     <Provider store={store}>
-      <PageComponent />
+      <ConnectedApp />
     </Provider>
   </div>
 )

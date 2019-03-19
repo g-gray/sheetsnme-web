@@ -1,8 +1,36 @@
 import React from 'react'
+import {setMobileLayout} from './actions'
+
 import * as f from 'fpx'
 import * as u from './utils'
 
+import {store} from './main'
+
 class PageLayout extends u.ViewComponent {
+  componentWillMount() {
+    store.dispatch(setMobileLayout(false))
+  }
+
+  render({props: {className: cls, style, children}}) {
+    return (
+      <div className='relative col-start-stretch stretch-to-viewport-v bg-body'>
+        {/*
+        <Navbar {...props} />
+        */}
+        <div
+          className={`flex-1 ${cls || ''}`}
+          style={style}
+          children={children} />
+      </div>
+    )
+  }
+}
+
+class MobilePageLayout extends u.ViewComponent {
+  componentWillMount() {
+    store.dispatch(setMobileLayout(true))
+  }
+
   render({props: {className: cls, style, children}}) {
     return (
       <div className='relative col-start-stretch stretch-to-viewport-v bg-body'>
@@ -19,7 +47,20 @@ class PageLayout extends u.ViewComponent {
 }
 
 export class HomePage extends u.ViewComponent {
-  render({props}) {
+  render({
+    props,
+    context,
+  }) {
+    if (u.isMobileGeometry(context)) {
+      return (
+        <MobilePageLayout title='Add transaction' {...props}>
+          <div className='col-start-stretch bg-white'>
+            <TransactionForm />
+          </div>
+        </MobilePageLayout>
+      )
+    }
+
     return (
       <PageLayout {...props}>
         <div className='fixed-limit-width row-start-stretch grid12 padding-v-1'>
@@ -36,7 +77,7 @@ export class HomePage extends u.ViewComponent {
                 </h1>
               </div>
               <hr className='hr' />
-              <TransactionForm hasMobileLayout={true} {...props} />
+              <TransactionForm />
             </div>
           </div>
           <div className='grid12-3 col-start-stretch gaps-v-1x25' />
@@ -47,7 +88,55 @@ export class HomePage extends u.ViewComponent {
 }
 
 class TransactionForm extends u.ViewComponent {
-  render() {
+  render({context}) {
+    if (u.isMobileLayout(context)) {
+      return (
+        <form className='col-start-stretch'>
+          <div className='col-start-stretch padding-v-1 padding-h-1x25'>
+            <FormDateElement label='Date' defaultValue={new Date()} />
+            <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
+              <label className='row-start-center fg-black-50'>
+                Type:
+              </label>
+              <div className='col-start-stretch gaps-v-0x5'>
+                <label className='row-start-center gaps-h-0x5'>
+                  <Radio
+                    name='transaction-type'
+                    value='outcome'
+                    defaultChecked />
+                  <span>Outcome</span>
+                </label>
+                <label className='row-start-center gaps-h-0x5'>
+                  <Radio
+                    name='transaction-type'
+                    value='income' />
+                  <span>Income</span>
+                </label>
+              </div>
+            </div>
+            <FormTextElement label='Amount' />
+            <FormSelectElement label='Category'>
+              <option value='' />
+              <option value='education'>Education</option>
+              <option value='health'>Health</option>
+              <option value='food'>Food</option>
+              <option value='fastfood'>Fastfood</option>
+              <option value='fuel'>Fuel</option>
+            </FormSelectElement>
+            <FormTextElement label='Recipient' />
+          </div>
+          <hr className='hr margin-h-1x25' />
+          <div className='row-center-center padding-v-1 padding-h-1x25'>
+            <button
+              type='submit'
+              className='btn-primary btn-wide'>
+              Submit
+            </button>
+          </div>
+        </form>
+      )
+    }
+
     return (
       <form className='col-start-stretch'>
         <div className='col-start-stretch padding-v-1x25'>
@@ -124,10 +213,10 @@ class FormTextElement extends u.ViewComponent {
 
   render({
     onChange,
-    props,
+    context,
     props: {label, input_type, ident, value, readOnly, disabled},
   }) {
-    if (u.isMobile(props)) {
+    if (u.isMobileLayout(context)) {
       return (
         <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
           <label
@@ -170,6 +259,33 @@ class FormTextElement extends u.ViewComponent {
 }
 
 class FormDateElement extends u.ViewComponent {
+  render({
+    context,
+    props: {label},
+  }) {
+    if (u.isMobileLayout(context)) {
+      return (
+        <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
+          <label className='row-start-center fg-black-50'>
+            {label}:
+          </label>
+          <FormDateInputs />
+        </div>
+      )
+    }
+
+    return (
+      <G7FormLine className='form-element-spacing'>
+        <label className='row-end-center input-height fg-black-50'>
+          {label}:
+        </label>
+        <FormDateInputs />
+      </G7FormLine>
+    )
+  }
+}
+
+class FormDateInputs extends u.ViewComponent {
   constructor() {
     super(...arguments)
     const {props: {ident, value, defaultValue, onUpdate}} = this
@@ -251,65 +367,60 @@ class FormDateElement extends u.ViewComponent {
     onMonthInput,
     onDayInput,
   }) {
-    const {label, readOnly, disabled} = props
+    const {readOnly, disabled} = props
     const {years, months, days, year, month, day} = state
 
     return (
-      <G7FormLine className='form-element-spacing'>
-        <label className='row-end-center input-height fg-black-50'>
-          {label}:
-        </label>
-        <div className='row-start-stretch gaps-h-0x5'>
-          <select
-            className='flex-3 select-native'
-            onChange={onYearInput}
-            value={year}
-            disabled={readOnly || disabled}>
-            <option value=''>
-              Year:
+      <div className='row-start-stretch gaps-h-0x5'>
+        <select
+          className='flex-3 select-native'
+          onChange={onYearInput}
+          value={year}
+          disabled={readOnly || disabled}>
+          <option value=''>
+            Year:
+          </option>
+          {f.map(years, year => (
+            <option
+              key={year}
+              value={year}>
+              {year}
             </option>
-            {f.map(years, year => (
-              <option
-                key={year}
-                value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-          <select
-            className='flex-5 select-native'
-            value={month}
-            onChange={onMonthInput}
-            disabled={readOnly || disabled}>
-            <option value=''>
-              Month:
+          ))}
+        </select>
+        <select
+          className='flex-5 select-native'
+          value={month}
+          onChange={onMonthInput}
+          disabled={readOnly || disabled}>
+          <option value=''>
+            Month:
+          </option>
+          {f.map(months, ({value, text}) => (
+            <option
+              key={value}
+              value={value}>
+              {text}
             </option>
-            {f.map(months, ({value, text}) => (
-              <option
-                key={value}
-                value={value}>
-                {text}
-              </option>
-            ))}
-          </select>
-          <select
-            className='flex-3 select-native'
-            value={day}
-            onChange={onDayInput}
-            disabled={readOnly || disabled}>
-            <option value=''>
-              Day:
+          ))}
+        </select>
+        <select
+          className='flex-3 select-native'
+          value={day}
+          onChange={onDayInput}
+          disabled={readOnly || disabled}>
+          <option value=''>
+            Day:
+          </option>
+          {f.map(days, day => (
+            <option
+              key={day}
+              value={day}>
+              {day}
             </option>
-            {f.map(days, day => (
-              <option
-                key={day}
-                value={day}>
-                {day}
-              </option>
-            ))}
-          </select>
-        </div>
-      </G7FormLine>
+          ))}
+        </select>
+      </div>
     )
   }
 }
@@ -324,8 +435,31 @@ class FormSelectElement extends u.ViewComponent {
 
   render({
     onChange,
+    context,
     props: {label, ident, value, readOnly, disabled, children},
   }) {
+    if (u.isMobileLayout(context)) {
+      return (
+        <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
+          <label
+            className='row-start-center fg-black-50'
+            htmlFor={ident}>
+            {label}:
+          </label>
+          <select
+            id={ident}
+            name={ident}
+            className='select-native'
+            value={value}
+            onChange={onChange}
+            readOnly={readOnly}
+            disabled={disabled}>
+            {children}
+          </select>
+        </div>
+      )
+    }
+
     return (
       <G7FormLine className='form-element-spacing'>
         <label className='row-end-center input-height fg-black-50'>

@@ -122,6 +122,7 @@ function babelOptions() {
       }),
       '@babel/transform-react-jsx',
       '@babel/plugin-syntax-dynamic-import',
+      '@babel/plugin-proposal-class-properties',
     ],
   }
 }
