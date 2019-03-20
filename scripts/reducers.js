@@ -7,11 +7,6 @@ const dom = (state = {}, action) => {
         ...state,
         geometry: action.geometry,
       }
-    case 'SET_MOBILE_LAYOUT':
-      return {
-        ...state,
-        isMobileLayout: action.isMobileLayout,
-      }
     default:
       return state
   }

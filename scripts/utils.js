@@ -33,12 +33,8 @@ export function geometry (width) {
   return {width, isMobile: width <= MOBILE_WIDTH_MAX}
 }
 
-export function isMobileGeometry(context) {
-  return f.scan(context, 'dom', 'geometry', 'isMobile')
-}
-
-export function isMobileLayout(context) {
-  return f.scan(context, 'dom', 'isMobileLayout')
+export function isMobile(context) {
+  return f.scan(context, 'isMobile')
 }
 
 /**

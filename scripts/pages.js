@@ -1,16 +1,9 @@
 import React from 'react'
-import {setMobileLayout} from './actions'
 
 import * as f from 'fpx'
 import * as u from './utils'
 
-import {store} from './main'
-
 class PageLayout extends u.ViewComponent {
-  componentWillMount() {
-    store.dispatch(setMobileLayout(false))
-  }
-
   render({props: {className: cls, style, children}}) {
     return (
       <div className='relative col-start-stretch stretch-to-viewport-v bg-body'>
@@ -27,10 +20,6 @@ class PageLayout extends u.ViewComponent {
 }
 
 class MobilePageLayout extends u.ViewComponent {
-  componentWillMount() {
-    store.dispatch(setMobileLayout(true))
-  }
-
   render({props: {className: cls, style, children}}) {
     return (
       <div className='relative col-start-stretch stretch-to-viewport-v bg-body'>
@@ -51,7 +40,7 @@ export class HomePage extends u.ViewComponent {
     props,
     context,
   }) {
-    if (u.isMobileGeometry(context)) {
+    if (u.isMobile(context)) {
       return (
         <MobilePageLayout title='Add transaction' {...props}>
           <div className='col-start-stretch bg-white'>
@@ -89,7 +78,7 @@ export class HomePage extends u.ViewComponent {
 
 class TransactionForm extends u.ViewComponent {
   render({context}) {
-    if (u.isMobileLayout(context)) {
+    if (u.isMobile(context)) {
       return (
         <form className='col-start-stretch'>
           <div className='col-start-stretch padding-v-1 padding-h-1x25'>
@@ -216,7 +205,7 @@ class FormTextElement extends u.ViewComponent {
     context,
     props: {label, input_type, ident, value, readOnly, disabled},
   }) {
-    if (u.isMobileLayout(context)) {
+    if (u.isMobile(context)) {
       return (
         <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
           <label
@@ -263,7 +252,7 @@ class FormDateElement extends u.ViewComponent {
     context,
     props: {label},
   }) {
-    if (u.isMobileLayout(context)) {
+    if (u.isMobile(context)) {
       return (
         <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
           <label className='row-start-center fg-black-50'>
@@ -438,7 +427,7 @@ class FormSelectElement extends u.ViewComponent {
     context,
     props: {label, ident, value, readOnly, disabled, children},
   }) {
-    if (u.isMobileLayout(context)) {
+    if (u.isMobile(context)) {
       return (
         <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
           <label
