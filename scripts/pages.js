@@ -1,7 +1,10 @@
 import React from 'react'
+import {connect} from 'react-redux'
 
 import * as f from 'fpx'
 import * as u from './utils'
+
+import * as a from './actions'
 
 class PageLayout extends u.ViewComponent {
   render({props: {className: cls, style, children}}) {
@@ -43,8 +46,13 @@ export class HomePage extends u.ViewComponent {
     if (u.isMobile(context)) {
       return (
         <MobilePageLayout title='Add transaction' {...props}>
-          <div className='col-start-stretch bg-white'>
-            <TransactionForm />
+          <div className='col-start-stretch gaps-v-0x75 padding-v-0x75'>
+            <div className='mobile-widget col-start-stretch'>
+              <TransactionForm />
+            </div>
+            <div className='mobile-widget col-start-stretch'>
+              <TransactionsTable />
+            </div>
           </div>
         </MobilePageLayout>
       )
@@ -67,6 +75,15 @@ export class HomePage extends u.ViewComponent {
               </div>
               <hr className='hr' />
               <TransactionForm />
+            </div>
+            <div className='widget col-start-stretch'>
+              <div className='rounded-t row-start-center padding-h-1x25 padding-v-0x75 bg-black-97'>
+                <h1 className='font-large'>
+                  Transactions
+                </h1>
+              </div>
+              <hr className='hr' />
+              <TransactionsTable />
             </div>
           </div>
           <div className='grid12-3 col-start-stretch gaps-v-1x25' />
@@ -173,6 +190,42 @@ class TransactionForm extends u.ViewComponent {
     )
   }
 }
+
+class _TransactionsTable extends u.ViewComponent {
+  constructor(props) {
+    super(props)
+    props.dispatch(a.fetchTransactionsData())
+  }
+
+  render({props: {transactions}}) {
+    return (
+      <div className='col-start-stretch gaps-v-0x5 padding-h-1x25 padding-v-0x75'>
+        {/* TODO: validate transactions */}
+        {f.map(transactions, tr => tr.amountIncome || tr.amountOutcome ? (
+          <div className='col-start-stretch gaps-v-0x5 list-item' key={tr.id}>
+            <div className='col-start-stretch gaps-v-0x25'>
+              <div className='row-between-start font-midsmall'>
+                <span>{tr.date}</span>
+                <span>{tr.accountIncome || tr.accountOutcome}</span>
+              </div>
+              <div className='row-between-end'>
+                <span>{tr.category}</span>
+                {
+                  tr.amountIncome ? <span className='fg-success'>{`+${tr.amountIncome}`}</span> :
+                  tr.amountOutcome ? <span className='fg-danger-100'>{`-${tr.amountOutcome}`}</span> :
+                  null
+                }
+              </div>
+            </div>
+            <hr className='hr hide-in-list-last-child' />
+          </div>
+        ) : null)}
+      </div>
+    )
+  }
+}
+
+const TransactionsTable = connect(state => ({transactions: state.net.transactions}))(_TransactionsTable)
 
 class G7FormLine extends u.ViewComponent {
   render({props: {children, className: cls}}) {

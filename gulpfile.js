@@ -184,15 +184,15 @@ gulp.task('images:watch', () => {
  */
 
 gulp.task('server', () => {
-  // const proxy = require('http-proxy').createProxyServer()
+  const proxy = require('http-proxy').createProxyServer()
 
-  // proxy.on('error', (err, req, res) => {
-  //   if (err.code === 'ECONNRESET') return
-  //   log('[proxy error]', err)
-  //   res.setHeader('content-type', 'application/json')
-  //   res.writeHead(500)
-  //   res.end(JSON.stringify(Object.assign({message: err.message}, err)))
-  // })
+  proxy.on('error', (err, req, res) => {
+    if (err.code === 'ECONNRESET') return
+    log('[proxy error]', err)
+    res.setHeader('content-type', 'application/json')
+    res.writeHead(500)
+    res.end(JSON.stringify(Object.assign({message: err.message}, err)))
+  })
 
   require('browser-sync').create().init({
     startPath: '/',
@@ -205,16 +205,16 @@ gulp.task('server', () => {
     server: {
       baseDir: OUT_ROOT_DIR,
       middleware: [
-        // (req, res, next) => {
-        //   const backend = BACKEND_HOST + '/'
+        (req, res, next) => {
+          const backend = BACKEND_HOST + '/'
 
-        //   if (/^\/(?:api|public|upload)\//.test(req.url)) {
-        //     proxy.web(req, res, {target: backend, secure: false})
-        //   }
-        //   else {
-        //     next()
-        //   }
-        // },
+          if (/^\/(?:api|auth)\//.test(req.url)) {
+            proxy.web(req, res, {target: backend, secure: false})
+          }
+          else {
+            next()
+          }
+        },
 
         (req, res, next) => {
           // No dot in pathname -> probably not a file request, use fallback

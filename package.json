@@ -14,6 +14,7 @@
     "browser-sync": "2.26.3",
     "del": "4.0.0",
     "dotenv": "6.2.0",
+    "emerge": "0.4.0",
     "eslint-plugin-react": "7.12.4",
     "eslint_d": "7.3.0",
     "exports-loader": "0.7.0",
@@ -31,8 +32,9 @@
     "react-dom": "16.8.4",
     "react-redux": "6.0.1",
     "redux": "4.0.1",
+    "redux-thunk": "2.3.0",
     "statil": "0.9.0",
-    "stylebox": "^0.0.15",
+    "stylebox": "0.0.15",
     "webpack": "4.29.6"
   }
 }

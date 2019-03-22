@@ -1,5 +1,6 @@
 import React from 'react'
 import * as f from 'fpx'
+import * as e from 'emerge'
 
 export const MOBILE_WIDTH_MAX = 980
 
@@ -74,4 +75,17 @@ export function parseNum(value) {
   if (f.isString(value)) value = parseFloat(value, 10)
   if (f.isFinite(value)) return value
   return undefined
+}
+
+/**
+ * Net
+ */
+
+export function jsonParams(params) {
+  return e.merge(params, {headers: jsonHeaders})
+}
+
+const jsonHeaders = {
+  accept: 'application/json',
+  'content-type': 'application/json',
 }
