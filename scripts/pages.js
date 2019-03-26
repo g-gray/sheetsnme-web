@@ -93,13 +93,52 @@ export class HomePage extends u.ViewComponent {
   }
 }
 
-class TransactionForm extends u.ViewComponent {
-  render({context}) {
+/**
+ * TODO:
+ * fetch categories
+ * fetch payees
+ * fetch accounts
+ * validate forms
+ * show submit status
+ */
+class _TransactionForm extends u.ViewComponent {
+  constructor(props) {
+    super(props)
+
+    this.onSubmit = this.onSubmit.bind(this)
+    this.bindValue = this.bindValue.bind(this)
+    this.onTypeChange = this.onTypeChange.bind(this)
+  }
+
+  onSubmit(event) {
+    event.preventDefault()
+    this.props.dispatch(a.createTransaction())
+  }
+
+  bindValue(key) {
+    return {
+      value: this.props.transaction[key],
+      onUpdate: (__, value) => {
+        this.props.dispatch(a.transactionChange({[key]: value}))
+      },
+    }
+  }
+
+  onTypeChange({target: {value}}) {
+    this.props.dispatch(a.transactionChange({type: value}))
+  }
+
+  render({
+    context,
+    props: {transaction: {type}},
+  }) {
     if (u.isMobile(context)) {
       return (
         <form className='col-start-stretch'>
           <div className='col-start-stretch padding-v-1 padding-h-1x25'>
-            <FormDateElement label='Date' defaultValue={new Date()} />
+            <FormDateElement
+              label='Date'
+              {...this.bindValue('date')} />
             <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
               <label className='row-start-center fg-black-50'>
                 Type:
@@ -109,27 +148,48 @@ class TransactionForm extends u.ViewComponent {
                   <Radio
                     name='transaction-type'
                     value='outcome'
-                    defaultChecked />
+                    onChange={this.onTypeChange}
+                    checked={type === 'outcome'} />
                   <span>Outcome</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
                   <Radio
                     name='transaction-type'
-                    value='income' />
+                    value='income'
+                    onChange={this.onTypeChange}
+                    checked={type === 'income'} />
                   <span>Income</span>
                 </label>
               </div>
             </div>
-            <FormTextElement label='Amount' />
-            <FormSelectElement label='Category'>
+            <FormTextElement
+              label='Amount'
+              {...this.bindValue('amount')} />
+            <FormSelectElement
+              label='Account'
+              {...this.bindValue('account')}>
               <option value='' />
-              <option value='education'>Education</option>
-              <option value='health'>Health</option>
-              <option value='food'>Food</option>
-              <option value='fastfood'>Fastfood</option>
-              <option value='fuel'>Fuel</option>
+              <option value='₽ К ТКС'>₽ К ТКС</option>
+              <option value='₽ К СБ'>₽ К СБ</option>
+              <option value='₽ Н'>₽ Н</option>
+              <option value='₽ Б ТКС'>₽ Б ТКС</option>
             </FormSelectElement>
-            <FormTextElement label='Recipient' />
+            <FormSelectElement
+              label='Category'
+              {...this.bindValue('category')}>
+              <option value='' />
+              <option value='Education'>Education</option>
+              <option value='Health'>Health</option>
+              <option value='Food'>Food</option>
+              <option value='Fastfood'>Fastfood</option>
+              <option value='Fuel'>Fuel</option>
+            </FormSelectElement>
+            <FormTextElement
+              label='Payee'
+              {...this.bindValue('payee')} />
+            <FormTextElement
+              label='Comment'
+              {...this.bindValue('comment')} />
           </div>
           <hr className='hr margin-h-1x25' />
           <div className='row-center-center padding-v-1 padding-h-1x25'>
@@ -144,9 +204,11 @@ class TransactionForm extends u.ViewComponent {
     }
 
     return (
-      <form className='col-start-stretch'>
+      <form className='col-start-stretch' onSubmit={this.onSubmit}>
         <div className='col-start-stretch padding-v-1x25'>
-          <FormDateElement label='Date' defaultValue={new Date()} />
+          <FormDateElement
+            label='Date'
+            {...this.bindValue('date')} />
           <G7FormLine className='form-element-spacing'>
             <label className='row-end-center fg-black-50'>
               Type:
@@ -156,27 +218,48 @@ class TransactionForm extends u.ViewComponent {
                 <Radio
                   name='transaction-type'
                   value='outcome'
-                  defaultChecked />
+                  onChange={this.onTypeChange}
+                  checked={type === 'outcome'} />
                 <span>Outcome</span>
               </label>
               <label className='row-start-center gaps-h-0x5'>
                 <Radio
                   name='transaction-type'
-                  value='income' />
+                  value='income'
+                  onChange={this.onTypeChange}
+                  checked={type === 'income'} />
                 <span>Income</span>
               </label>
             </div>
           </G7FormLine>
-          <FormTextElement label='Amount' />
-          <FormSelectElement label='Category'>
+          <FormTextElement
+            label='Amount'
+            {...this.bindValue('amount')} />
+          <FormSelectElement
+            label='Account'
+            {...this.bindValue('account')}>
             <option value='' />
-            <option value='education'>Education</option>
-            <option value='health'>Health</option>
-            <option value='food'>Food</option>
-            <option value='fastfood'>Fastfood</option>
-            <option value='fuel'>Fuel</option>
+            <option value='₽ К ТКС'>₽ К ТКС</option>
+            <option value='₽ К СБ'>₽ К СБ</option>
+            <option value='₽ Н'>₽ Н</option>
+            <option value='₽ Б ТКС'>₽ Б ТКС</option>
           </FormSelectElement>
-          <FormTextElement label='Recipient' />
+          <FormSelectElement
+            label='Category'
+            {...this.bindValue('category')}>
+            <option value='' />
+            <option value='Education'>Education</option>
+            <option value='Health'>Health</option>
+            <option value='Food'>Food</option>
+            <option value='Fastfood'>Fastfood</option>
+            <option value='Fuel'>Fuel</option>
+          </FormSelectElement>
+          <FormTextElement
+            label='Payee'
+            {...this.bindValue('payee')} />
+          <FormTextElement
+            label='Comment'
+            {...this.bindValue('comment')} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>
@@ -190,6 +273,8 @@ class TransactionForm extends u.ViewComponent {
     )
   }
 }
+
+const TransactionForm = connect(state => ({transaction: state.net.transaction}))(_TransactionForm)
 
 class _TransactionsTable extends u.ViewComponent {
   constructor(props) {
@@ -303,7 +388,7 @@ class FormTextElement extends u.ViewComponent {
 class FormDateElement extends u.ViewComponent {
   render({
     context,
-    props: {label},
+    props: {label, ...props},
   }) {
     if (u.isMobile(context)) {
       return (
@@ -311,7 +396,7 @@ class FormDateElement extends u.ViewComponent {
           <label className='row-start-center fg-black-50'>
             {label}:
           </label>
-          <FormDateInputs />
+          <FormDateInputs {...props} />
         </div>
       )
     }
@@ -321,7 +406,7 @@ class FormDateElement extends u.ViewComponent {
         <label className='row-end-center input-height fg-black-50'>
           {label}:
         </label>
-        <FormDateInputs />
+        <FormDateInputs {...props} />
       </G7FormLine>
     )
   }
@@ -358,7 +443,7 @@ class FormDateInputs extends u.ViewComponent {
     }
 
     this.onDateInput = (year, month, day) => {
-      if (month != null && month != null && day != null) {
+      if (year != null && month != null && day != null) {
         const date = u.addBrowserOffset(new Date(year, month, day))
         if (onUpdate) onUpdate(ident, date)
       }

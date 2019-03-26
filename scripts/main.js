@@ -3,6 +3,7 @@ import {render} from 'react-dom'
 import {createStore, combineReducers, applyMiddleware} from 'redux'
 import {Provider, connect} from 'react-redux'
 import thunk from 'redux-thunk'
+import logger from 'redux-logger'
 
 import * as r from './reducers'
 import * as a from './actions'
@@ -10,7 +11,8 @@ import * as a from './actions'
 import * as u from './utils'
 import * as p from './pages'
 
-export const store = createStore(combineReducers(r), applyMiddleware(thunk))
+// TODO: remove logger middleware from production build
+export const store = createStore(combineReducers(r), applyMiddleware(thunk, logger))
 
 class App extends u.ViewComponent {
   render({props}) {

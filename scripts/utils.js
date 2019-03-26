@@ -49,6 +49,16 @@ export function toValidDate(value) {
   return f.isValidDate(date) ? date : undefined
 }
 
+export function dateIsoString(value) {
+  const date = toValidDate(value)
+  return date ? date.toISOString() : ''
+}
+
+export function formatDate(value) {
+  const match = dateIsoString(value).match(/(\d\d\d\d-\d\d-\d\d)/)
+  return match ? match[1] : ''
+}
+
 export function addBrowserOffset(date) {
   if (!f.isValidDate(date)) return undefined
   date.setTime(date.getTime() - (date.getTimezoneOffset() * 60 * 1000))
@@ -75,6 +85,20 @@ export function parseNum(value) {
   if (f.isString(value)) value = parseFloat(value, 10)
   if (f.isFinite(value)) return value
   return undefined
+}
+
+// TODO: validate transaction
+export function formatTransaction({date, category, payee, comment, account, amount, type}) {
+  return {
+    category,
+    payee,
+    comment,
+    date: formatDate(date),
+    accountOutcome: type === 'outcome' ? account : '',
+    accountIncome: type === 'income' ? account : '',
+    amountOutcome: type === 'outcome' ? amount : '',
+    amountIncome: type === 'income' ? amount : '',
+  }
 }
 
 /**

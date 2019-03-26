@@ -32,6 +32,7 @@
     "react-dom": "16.8.4",
     "react-redux": "6.0.1",
     "redux": "4.0.1",
+    "redux-logger": "3.0.6",
     "redux-thunk": "2.3.0",
     "statil": "0.9.0",
     "stylebox": "0.0.15",
