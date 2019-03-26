@@ -194,7 +194,7 @@ class TransactionForm extends u.ViewComponent {
 class _TransactionsTable extends u.ViewComponent {
   constructor(props) {
     super(props)
-    props.dispatch(a.fetchTransactionsData())
+    props.dispatch(a.fetchTransactions())
   }
 
   render({props: {transactions}}) {

@@ -31,7 +31,7 @@ const OUT_STYLE_DIR = 'public/styles'
 const OUT_IMAGE_DIR = 'public/images'
 
 const PROD                = process.env.NODE_ENV === 'production'
-// const BACKEND_HOST        = process.env.BACKEND_HOST
+const BACKEND_HOST        = process.env.BACKEND_HOST
 const LOCAL_PORT          = process.env.LOCAL_PORT
 
 const autoprefixerConfig = {browsers: ['> 1%', 'IE >= 10', 'iOS 7']}

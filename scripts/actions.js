@@ -1,31 +1,33 @@
 import * as n from './net'
 
+export const RESIZE = 'RESIZE'
 export const resize = geometry => ({
-  type: 'RESIZE',
+  type: RESIZE,
   geometry,
 })
 
-export const fetchTransactionsRequest = () => ({
-  type: 'FETCH_TRANSACTIONS',
+export const REQUEST_TRANSACTIONS = 'REQUEST_TRANSACTIONS'
+export const requestTransactions = () => ({
+  type: REQUEST_TRANSACTIONS,
 })
 
-export const fetchTransactionsError = error => ({
-  type: 'FETCH_TRANSACTIONS',
-  status: 'error',
-  error,
-})
-
-export const fetchTransactionsSuccess = transactions => ({
-  type: 'FETCH_TRANSACTIONS',
-  status: 'success',
+export const RECEIVE_TRANSACTIONS = 'RECEIVE_TRANSACTIONS'
+export const receiveTransactions = transactions => ({
+  type: RECEIVE_TRANSACTIONS,
   transactions,
 })
 
-export const fetchTransactionsData = () => (
+export const FETCH_ERROR = 'FETCH_ERROR'
+export const fetchError = error => ({
+  type: FETCH_ERROR,
+  error,
+})
+
+export const fetchTransactions = () => (
   dispatch => {
-    dispatch(fetchTransactionsRequest())
+    dispatch(requestTransactions())
     n.authedJsonFetch('/api/transactions')
-      .then(transactions => dispatch(fetchTransactionsSuccess(transactions)))
-      .catch(error => dispatch(fetchTransactionsError(error)))
+      .then(transactions => dispatch(receiveTransactions(transactions)))
+      .catch(error => dispatch(fetchError(error)))
   }
 )

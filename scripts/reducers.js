@@ -1,8 +1,11 @@
-import {combineReducers} from 'redux'
+import * as a from './actions'
+import * as u from './utils'
 
-const dom = (state = {}, action) => {
+export const dom = (state = {
+  geometry: u.geometry(window.innerWidth),
+}, action) => {
   switch (action.type) {
-    case 'RESIZE':
+    case a.RESIZE:
       return {
         ...state,
         geometry: action.geometry,
@@ -12,35 +15,29 @@ const dom = (state = {}, action) => {
   }
 }
 
-const net = (state = {}, action) => {
+export const net = (state = {
+  transactions: [],
+  pending: [],
+  errors: [],
+}, action) => {
   switch (action.type) {
-    case 'FETCH_TRANSACTIONS':
-      switch (action.status) {
-        case 'error':
-          return {
-            ...state,
-            pending: false,
-            error: action.error,
-          }
-        case 'success':
-          return {
-            ...state,
-            pending: false,
-            transactions: action.transactions,
-          }
-        default:
-          return {
-            ...state,
-            pending: true,
-            action: action.type,
-          }
+    case a.REQUEST_TRANSACTIONS:
+      return {
+        ...state,
+        pending: [...state.pending, a.REQUEST_TRANSACTIONS],
+      }
+    case a.RECEIVE_TRANSACTIONS:
+      return {
+        ...state,
+        pending: state.pending.filter(item => item !== a.REQUEST_TRANSACTIONS),
+        transactions: action.transactions,
+      }
+    case a.FETCH_ERROR:
+      return {
+        ...state,
+        error: [...state.errors, action.error],
       }
     default:
       return state
   }
 }
-
-export const rootReducer = combineReducers({
-  dom,
-  net,
-})
