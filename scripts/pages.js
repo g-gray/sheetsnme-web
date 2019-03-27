@@ -2,8 +2,9 @@ import React from 'react'
 import {connect} from 'react-redux'
 
 import * as f from 'fpx'
-import * as u from './utils'
+import * as e from 'emerge'
 
+import * as u from './utils'
 import * as a from './actions'
 
 class PageLayout extends u.ViewComponent {
@@ -98,146 +99,74 @@ export class HomePage extends u.ViewComponent {
  * fetch categories
  * fetch payees
  * fetch accounts
- * validate forms
  * show submit status
  */
 class _TransactionForm extends u.ViewComponent {
   constructor(props) {
     super(props)
 
-    this.onSubmit = this.onSubmit.bind(this)
-    this.bindValue = this.bindValue.bind(this)
-    this.onTypeChange = this.onTypeChange.bind(this)
-  }
+    this.state = {formValues: this.props.transaction || {}}
 
-  onSubmit(event) {
-    event.preventDefault()
-    this.props.dispatch(a.createTransaction())
-  }
-
-  bindValue(key) {
-    return {
-      value: this.props.transaction[key],
-      onUpdate: (__, value) => {
-        this.props.dispatch(a.transactionChange({[key]: value}))
-      },
+    this.onSubmit = event => {
+      event.preventDefault()
+      this.props.dispatch(a.createTransaction(this.state.formValues))
     }
-  }
 
-  onTypeChange({target: {value}}) {
-    this.props.dispatch(a.transactionChange({type: value}))
+    this.onUpdate = (key, value) => {
+      this.setState({formValues: e.put(this.state.formValues, key, value)})
+    }
+
+    this.bindValue = key => ({
+      ident: key,
+      onUpdate: this.onUpdate,
+      defaultValue: this.state.formValues[key],
+    })
   }
 
   render({
+    onSubmit,
+    bindValue,
+    onUpdate,
     context,
-    props: {transaction: {type}},
+    state: {formValues},
   }) {
-    if (u.isMobile(context)) {
-      return (
-        <form className='col-start-stretch'>
-          <div className='col-start-stretch padding-v-1 padding-h-1x25'>
-            <FormDateElement
-              label='Date'
-              {...this.bindValue('date')} />
-            <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
-              <label className='row-start-center fg-black-50'>
-                Type:
-              </label>
-              <div className='col-start-stretch gaps-v-0x5'>
-                <label className='row-start-center gaps-h-0x5'>
-                  <Radio
-                    name='transaction-type'
-                    value='outcome'
-                    onChange={this.onTypeChange}
-                    checked={type === 'outcome'} />
-                  <span>Outcome</span>
-                </label>
-                <label className='row-start-center gaps-h-0x5'>
-                  <Radio
-                    name='transaction-type'
-                    value='income'
-                    onChange={this.onTypeChange}
-                    checked={type === 'income'} />
-                  <span>Income</span>
-                </label>
-              </div>
-            </div>
-            <FormTextElement
-              label='Amount'
-              {...this.bindValue('amount')} />
-            <FormSelectElement
-              label='Account'
-              {...this.bindValue('account')}>
-              <option value='' />
-              <option value='₽ К ТКС'>₽ К ТКС</option>
-              <option value='₽ К СБ'>₽ К СБ</option>
-              <option value='₽ Н'>₽ Н</option>
-              <option value='₽ Б ТКС'>₽ Б ТКС</option>
-            </FormSelectElement>
-            <FormSelectElement
-              label='Category'
-              {...this.bindValue('category')}>
-              <option value='' />
-              <option value='Education'>Education</option>
-              <option value='Health'>Health</option>
-              <option value='Food'>Food</option>
-              <option value='Fastfood'>Fastfood</option>
-              <option value='Fuel'>Fuel</option>
-            </FormSelectElement>
-            <FormTextElement
-              label='Payee'
-              {...this.bindValue('payee')} />
-            <FormTextElement
-              label='Comment'
-              {...this.bindValue('comment')} />
-          </div>
-          <hr className='hr margin-h-1x25' />
-          <div className='row-center-center padding-v-1 padding-h-1x25'>
-            <button
-              type='submit'
-              className='btn-primary btn-wide'>
-              Submit
-            </button>
-          </div>
-        </form>
-      )
-    }
+    const isMobile = u.isMobile(context)
 
     return (
-      <form className='col-start-stretch' onSubmit={this.onSubmit}>
-        <div className='col-start-stretch padding-v-1x25'>
+      <form className='col-start-stretch' onSubmit={onSubmit}>
+        <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormDateElement
             label='Date'
-            {...this.bindValue('date')} />
-          <G7FormLine className='form-element-spacing'>
-            <label className='row-end-center fg-black-50'>
-              Type:
-            </label>
-            <div className='row-start-center gaps-h-1'>
+            {...bindValue('date')} />
+          <G7FormLine>
+            <FormLabel>
+              Type
+            </FormLabel>
+            <div className={isMobile ? 'col-start-stretch gaps-v-0x5' : 'row-start-center gaps-h-1'}>
               <label className='row-start-center gaps-h-0x5'>
                 <Radio
-                  name='transaction-type'
+                  ident='type'
                   value='outcome'
-                  onChange={this.onTypeChange}
-                  checked={type === 'outcome'} />
+                  onUpdate={onUpdate}
+                  defaultChecked={formValues.type === 'outcome'} />
                 <span>Outcome</span>
               </label>
               <label className='row-start-center gaps-h-0x5'>
                 <Radio
-                  name='transaction-type'
+                  ident='type'
                   value='income'
-                  onChange={this.onTypeChange}
-                  checked={type === 'income'} />
+                  onUpdate={onUpdate}
+                  defaultChecked={formValues.type === 'income'} />
                 <span>Income</span>
               </label>
             </div>
           </G7FormLine>
           <FormTextElement
             label='Amount'
-            {...this.bindValue('amount')} />
+            {...bindValue('amount')} />
           <FormSelectElement
             label='Account'
-            {...this.bindValue('account')}>
+            {...bindValue('account')}>
             <option value='' />
             <option value='₽ К ТКС'>₽ К ТКС</option>
             <option value='₽ К СБ'>₽ К СБ</option>
@@ -246,7 +175,7 @@ class _TransactionForm extends u.ViewComponent {
           </FormSelectElement>
           <FormSelectElement
             label='Category'
-            {...this.bindValue('category')}>
+            {...bindValue('category')}>
             <option value='' />
             <option value='Education'>Education</option>
             <option value='Health'>Health</option>
@@ -256,10 +185,10 @@ class _TransactionForm extends u.ViewComponent {
           </FormSelectElement>
           <FormTextElement
             label='Payee'
-            {...this.bindValue('payee')} />
+            {...bindValue('payee')} />
           <FormTextElement
             label='Comment'
-            {...this.bindValue('comment')} />
+            {...bindValue('comment')} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>
@@ -313,9 +242,20 @@ class _TransactionsTable extends u.ViewComponent {
 const TransactionsTable = connect(state => ({transactions: state.net.transactions}))(_TransactionsTable)
 
 class G7FormLine extends u.ViewComponent {
-  render({props: {children, className: cls}}) {
+  render({
+    context,
+    props: {children},
+  }) {
+    if (u.isMobile(context)) {
+      return (
+        <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
+          {children}
+        </div>
+      )
+    }
+
     return (
-      <div className={`grid7 row-start-start ${cls || ''}`}>
+      <div className='grid7 row-start-start form-element-spacing'>
         <div className='grid7-2 col-start-stretch padding-l-1x25 text-right'>
           {f.get(children, 0)}
         </div>
@@ -330,6 +270,27 @@ class G7FormLine extends u.ViewComponent {
   }
 }
 
+class FormLabel extends u.ViewComponent {
+  render({
+    context,
+    props: {children, ...props},
+  }) {
+    if (u.isMobile(context)) {
+      return (
+        <label className='row-start-center input-height fg-black-50' {...props}>
+          {children}:
+        </label>
+      )
+    }
+
+    return (
+      <label className='row-end-center input-height fg-black-50' {...props}>
+        {children}:
+      </label>
+    )
+  }
+}
+
 class FormTextElement extends u.ViewComponent {
   constructor({ident, onUpdate}) {
     super(...arguments)
@@ -340,43 +301,20 @@ class FormTextElement extends u.ViewComponent {
 
   render({
     onChange,
-    context,
-    props: {label, input_type, ident, value, readOnly, disabled},
+    props: {label, input_type, ident, value, defaultValue, readOnly, disabled},
   }) {
-    if (u.isMobile(context)) {
-      return (
-        <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
-          <label
-            className='row-start-center fg-black-50'
-            htmlFor={ident}>
-            {label}:
-          </label>
-          <input
-            id={ident}
-            name={ident}
-            type={input_type || 'text'}
-            className='input'
-            value={value}
-            onChange={onChange}
-            readOnly={readOnly}
-            disabled={disabled} />
-        </div>
-      )
-    }
-
     return (
-      <G7FormLine className='form-element-spacing'>
-        <label
-          className='row-end-center input-height fg-black-50'
-          htmlFor={ident}>
-          {label}:
-        </label>
+      <G7FormLine>
+        <FormLabel htmlFor={ident}>
+          {label}
+        </FormLabel>
         <input
           id={ident}
           name={ident}
           type={input_type || 'text'}
           className='input'
           value={value}
+          defaultValue={defaultValue}
           onChange={onChange}
           readOnly={readOnly}
           disabled={disabled} />
@@ -386,33 +324,6 @@ class FormTextElement extends u.ViewComponent {
 }
 
 class FormDateElement extends u.ViewComponent {
-  render({
-    context,
-    props: {label, ...props},
-  }) {
-    if (u.isMobile(context)) {
-      return (
-        <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
-          <label className='row-start-center fg-black-50'>
-            {label}:
-          </label>
-          <FormDateInputs {...props} />
-        </div>
-      )
-    }
-
-    return (
-      <G7FormLine className='form-element-spacing'>
-        <label className='row-end-center input-height fg-black-50'>
-          {label}:
-        </label>
-        <FormDateInputs {...props} />
-      </G7FormLine>
-    )
-  }
-}
-
-class FormDateInputs extends u.ViewComponent {
   constructor() {
     super(...arguments)
     const {props: {ident, value, defaultValue, onUpdate}} = this
@@ -494,60 +405,65 @@ class FormDateInputs extends u.ViewComponent {
     onMonthInput,
     onDayInput,
   }) {
-    const {readOnly, disabled} = props
+    const {label, readOnly, disabled} = props
     const {years, months, days, year, month, day} = state
 
     return (
-      <div className='row-start-stretch gaps-h-0x5'>
-        <select
-          className='flex-3 select-native'
-          onChange={onYearInput}
-          value={year}
-          disabled={readOnly || disabled}>
-          <option value=''>
-            Year:
-          </option>
-          {f.map(years, year => (
-            <option
-              key={year}
-              value={year}>
-              {year}
+      <G7FormLine>
+        <FormLabel>
+          {label}
+        </FormLabel>
+        <div className='row-start-stretch gaps-h-0x5'>
+          <select
+            className='flex-3 select-native'
+            onChange={onYearInput}
+            value={year}
+            disabled={readOnly || disabled}>
+            <option value=''>
+              Year:
             </option>
-          ))}
-        </select>
-        <select
-          className='flex-5 select-native'
-          value={month}
-          onChange={onMonthInput}
-          disabled={readOnly || disabled}>
-          <option value=''>
-            Month:
-          </option>
-          {f.map(months, ({value, text}) => (
-            <option
-              key={value}
-              value={value}>
-              {text}
+            {f.map(years, year => (
+              <option
+                key={year}
+                value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+          <select
+            className='flex-5 select-native'
+            value={month}
+            onChange={onMonthInput}
+            disabled={readOnly || disabled}>
+            <option value=''>
+              Month:
             </option>
-          ))}
-        </select>
-        <select
-          className='flex-3 select-native'
-          value={day}
-          onChange={onDayInput}
-          disabled={readOnly || disabled}>
-          <option value=''>
-            Day:
-          </option>
-          {f.map(days, day => (
-            <option
-              key={day}
-              value={day}>
-              {day}
+            {f.map(months, ({value, text}) => (
+              <option
+                key={value}
+                value={value}>
+                {text}
+              </option>
+            ))}
+          </select>
+          <select
+            className='flex-3 select-native'
+            value={day}
+            onChange={onDayInput}
+            disabled={readOnly || disabled}>
+            <option value=''>
+              Day:
             </option>
-          ))}
-        </select>
-      </div>
+            {f.map(days, day => (
+              <option
+                key={day}
+                value={day}>
+                {day}
+              </option>
+            ))}
+          </select>
+        </div>
+      </G7FormLine>
     )
   }
 }
@@ -562,41 +478,19 @@ class FormSelectElement extends u.ViewComponent {
 
   render({
     onChange,
-    context,
-    props: {label, ident, value, readOnly, disabled, children},
+    props: {label, ident, value, defaultValue, readOnly, disabled, children},
   }) {
-    if (u.isMobile(context)) {
-      return (
-        <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
-          <label
-            className='row-start-center fg-black-50'
-            htmlFor={ident}>
-            {label}:
-          </label>
-          <select
-            id={ident}
-            name={ident}
-            className='select-native'
-            value={value}
-            onChange={onChange}
-            readOnly={readOnly}
-            disabled={disabled}>
-            {children}
-          </select>
-        </div>
-      )
-    }
-
     return (
-      <G7FormLine className='form-element-spacing'>
-        <label className='row-end-center input-height fg-black-50'>
-          {label}:
-        </label>
+      <G7FormLine>
+        <FormLabel htmlFor={ident}>
+          {label}
+        </FormLabel>
         <select
           id={ident}
           name={ident}
           className='select-native'
           value={value}
+          defaultValue={defaultValue}
           onChange={onChange}
           readOnly={readOnly}
           disabled={disabled}>
@@ -608,10 +502,30 @@ class FormSelectElement extends u.ViewComponent {
 }
 
 class Radio extends u.ViewComponent {
-  render({props}) {
+  constructor({ident, onUpdate}) {
+    super(...arguments)
+    this.onChange = ({target: {value}}) => {
+      if (onUpdate) onUpdate(ident, value)
+    }
+  }
+
+  render({
+    onChange,
+    props: {ident, value, readOnly, disabled, checked, defaultChecked},
+  }) {
     return (
       <label className='radio'>
-        <input type='radio' className='radio-input' {...props} />
+        <input
+          id={ident}
+          name={ident}
+          value={value}
+          type='radio'
+          className='radio-input'
+          onChange={onChange}
+          checked={checked}
+          defaultChecked={defaultChecked}
+          readOnly={readOnly}
+          disabled={disabled} />
         <span className='radio-decorator' />
       </label>
     )

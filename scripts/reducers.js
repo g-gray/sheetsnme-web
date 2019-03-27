@@ -15,16 +15,18 @@ export const dom = (state = {
   }
 }
 
+const defaultTransaction = {
+  date: new Date(),
+  type: 'outcome',
+  category: '',
+  payee: '',
+  comment: '',
+  account: '',
+  amount: '',
+}
+
 export const net = (state = {
-  transaction: {
-    date: new Date(),
-    type: 'outcome',
-    category: '',
-    payee: '',
-    comment: '',
-    account: '',
-    amount: '',
-  },
+  transaction: defaultTransaction,
   transactions: [],
   pending: [],
   errors: [],
@@ -41,15 +43,18 @@ export const net = (state = {
         pending: state.pending.filter(item => item !== a.REQUEST_TRANSACTIONS),
         transactions: action.transactions,
       }
-    case a.TRANSACTION_FORM_CHANGE:
+    case a.POST_TRANSACTION:
       return {
         ...state,
-        transaction: {
-          ...state.transaction,
-          ...action.field,
-        },
+        pending: [...state.pending, a.POST_TRANSACTION],
       }
-    case a.FETCH_ERROR:
+    case a.RECEIVE_TRANSACTION:
+      return {
+        ...state,
+        pending: state.pending.filter(item => item !== a.POST_TRANSACTION),
+        transaction: action.transaction || defaultTransaction,
+      }
+    case a.REQUEST_ERROR:
       return {
         ...state,
         error: [...state.errors, action.error],
