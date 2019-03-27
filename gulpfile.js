@@ -1,6 +1,6 @@
 'use strict'
 
-require('dotenv').load({path: '.env.properties'})
+require('dotenv').config({path: '.env.properties'})
 
 /**
  * Dependencies
