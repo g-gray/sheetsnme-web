@@ -123,7 +123,7 @@ export class CircleUserPic extends u.ViewComponent {
     if (!size) {
       return (
         <span
-          className='block bg-circle-trick bg-pale'
+          className='block bg-circle-trick'
           style={u.bgUrl(bgUrl)}
           {...props} />
       )
@@ -131,7 +131,7 @@ export class CircleUserPic extends u.ViewComponent {
 
     return (
       <span
-        className='block bg-circle-trick bg-pale'
+        className='block bg-circle-trick'
         style={{width: `${size}rem`, ...u.bgUrl(bgUrl)}}
         {...props} />
     )

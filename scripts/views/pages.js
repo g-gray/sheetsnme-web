@@ -123,7 +123,7 @@ class _UserMenu extends u.ViewComponent {
   }) {
     const {firstName, lastName, pictureUrl} = user
 
-    return (
+    return f.isEmpty(user) ? null : (
       <div className='relative row-start-stretch'>
         <m.FakeButton
           onClick={this.toggle}
