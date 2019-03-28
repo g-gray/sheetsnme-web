@@ -34,12 +34,24 @@ const defaultTransaction = {
 }
 
 export const net = (state = {
+  user: {},
   transaction: defaultTransaction,
   transactions: [],
   pending: [],
   errors: [],
 }, action) => {
   switch (action.type) {
+    case a.REQUEST_USER:
+      return {
+        ...state,
+        pending: [...state.pending, a.REQUEST_USER],
+      }
+    case a.RECEIVE_USER:
+      return {
+        ...state,
+        pending: state.pending.filter(item => item !== a.REQUEST_USER),
+        user: action.user,
+      }
     case a.REQUEST_TRANSACTIONS:
       return {
         ...state,

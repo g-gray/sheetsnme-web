@@ -5,6 +5,9 @@ import * as m from './views/misc'
 export const RESIZE                 = 'RESIZE'
 export const SET_DIALOG             = 'SET_DIALOG'
 
+export const REQUEST_USER           = 'REQUEST_USER'
+export const RECEIVE_USER           = 'RECEIVE_USER'
+
 export const REQUEST_TRANSACTIONS   = 'REQUEST_TRANSACTIONS'
 export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
 export const REQUEST_TRANSACTION    = 'REQUEST_TRANSACTION'
@@ -27,6 +30,22 @@ export const openDialog = dialog => (dispatch, getState) => {
   dispatch(setDialog(dialog))
   const {dom: {dialogs}} = getState()
   m.onDialogSet(dialogs)
+}
+
+export const requestUser = () => ({
+  type: REQUEST_USER,
+})
+
+export const receiveUser = user => ({
+  type: RECEIVE_USER,
+  user,
+})
+
+export const fetchUser = () => dispatch => {
+  dispatch(requestUser())
+  n.authedJsonFetch('/api/user')
+    .then(user => dispatch(receiveUser(user)))
+    .catch(error => dispatch(requestError(error)))
 }
 
 export const requestTransactions = () => ({

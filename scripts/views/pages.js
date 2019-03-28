@@ -100,26 +100,29 @@ const Navbar = connect(null, dispatch => ({
   openDialog: dialog => dispatch(a.openDialog(dialog)),
 }))(_Navbar)
 
-class UserMenu extends u.ViewComponent {
-  constructor() {
-    super(...arguments)
+class _UserMenu extends u.ViewComponent {
+  constructor(props) {
+    super(props)
 
-    const self = this
+    this.props.fetchUser()
 
-    self.state = {expanded: false}
+    this.state = {expanded: false}
 
-    self.close = () => {
+    this.close = () => {
       this.setState({expanded: false})
     }
 
-    self.toggle = () => {
+    this.toggle = () => {
       this.setState({expanded: !this.state.expanded})
     }
   }
 
   render({
+    props: {user},
     state: {expanded},
   }) {
+    const {firstName, lastName, pictureUrl} = user
+
     return (
       <div className='relative row-start-stretch'>
         <m.FakeButton
@@ -128,12 +131,13 @@ class UserMenu extends u.ViewComponent {
           aria-expanded={expanded}>
           <div className='relative row-center-center padding-h-0x5'>
             <m.CircleUserPic
+              url={pictureUrl}
               size='1.75' />
             {!expanded ? null :
             <div className='dropdown-chevron dropdown-chevron-position' />}
           </div>
           <div className='row-start-center fg-white'>
-            <span>User Name</span>
+            <span>{`${firstName || ''} ${lastName || ''}`}</span>
             <span className='row-center-center padding-h-0x25'>
               <s.ChevronDown />
             </span>
@@ -156,23 +160,37 @@ class UserMenu extends u.ViewComponent {
   }
 }
 
+const UserMenu = connect(state => ({
+  user: state.net.user,
+}), dispatch => ({
+  fetchUser: () => dispatch(a.fetchUser()),
+}))(_UserMenu)
+
 class _MobileMenu extends u.ViewComponent {
-  constructor() {
-    super(...arguments)
+  constructor(props) {
+    super(props)
+
+    this.props.fetchUser()
 
     this.close = this.props.openDialog.bind(null, null)
   }
 
-  render({close}) {
+  render({
+    close,
+    props: {user},
+  }) {
+    const {firstName, lastName, pictureUrl} = user
+
     return (
       <m.Dialog onEscape={close}>
         <m.DialogScrollable className='row-start-stretch bg-overlay-dark fade-in-fast' onClick={close}>
           <div className='relative bg-body slide-in-left-fast' style={{minWidth: '18rem'}} onClick={close}>
             <div className='row-start-center gaps-h-0x75 padding-0x75'>
               <m.CircleUserPic
+                url={pictureUrl}
                 size='3' />
               <span className='font-midlarge weight-medium'>
-                User Name
+                {`${firstName || ''} ${lastName || ''}`}
               </span>
             </div>
             <div className='col-start-stretch gaps-v-0x5'>
@@ -196,7 +214,10 @@ class _MobileMenu extends u.ViewComponent {
   }
 }
 
-const MobileMenu = connect(null, dispatch => ({
+const MobileMenu = connect(state => ({
+  user: state.net.user,
+}), dispatch => ({
+  fetchUser: () => dispatch(a.fetchUser()),
   openDialog: dialog => dispatch(a.openDialog(dialog)),
 }))(_MobileMenu)
 
