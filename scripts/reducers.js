@@ -2,9 +2,17 @@ import * as a from './actions'
 import * as u from './utils'
 
 export const dom = (state = {
+  dialog: null,
+  dialogs: 0,
   geometry: u.geometry(window.innerWidth),
 }, action) => {
   switch (action.type) {
+    case a.SET_DIALOG:
+      return {
+        ...state,
+        dialog: action.dialog,
+        dialogs: action.dialog ? state.dialogs + 1 : state.dialogs - 1,
+      }
     case a.RESIZE:
       return {
         ...state,

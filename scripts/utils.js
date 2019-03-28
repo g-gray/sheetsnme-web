@@ -1,4 +1,6 @@
 import React from 'react'
+import ReactDom from 'react-dom'
+
 import * as f from 'fpx'
 import * as e from 'emerge'
 
@@ -26,9 +28,80 @@ function renderWithArg() {
   return this.constructor.prototype.render.call(this, this)
 }
 
+export function isViewInstance(value) {
+  return f.isObject(value) &&
+    f.isFunction(value.setState) &&
+    f.isFunction(value.forceUpdate)
+}
+
+// React-specific
+export function findDomNode(element) {
+  element = ReactDom.findDOMNode(element)
+  if (element != null) f.validate(element, isElement)
+  return element
+}
+
 /**
  * Dom
  */
+
+export function isNode(value) {
+  return f.isInstance(value, Node)
+}
+
+export function isElement(value) {
+  return f.isInstance(value, Element)
+}
+
+export function isAncestorOf(maybeAncestor, maybeDescendant) {
+  return (
+    isNode(maybeAncestor) &&
+    isNode(maybeDescendant) && (
+      maybeAncestor === maybeDescendant ||
+      isAncestorOf(maybeAncestor, maybeDescendant.parentNode)
+    )
+  )
+}
+
+// Note: we map `event.keyCode` to names instead of using `event.key` because
+// the latter is not consistently supported across engines, particularly Webkit.
+// https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key#Browser_compatibility
+const KEY_NAMES_US = {
+  8:  'Backspace',
+  9:  'Tab',
+  13: 'Enter',
+  27: 'Escape',
+  32: 'Space',
+  37: 'ArrowLeft',
+  38: 'ArrowUp',
+  39: 'ArrowRight',
+  40: 'ArrowDown',
+  74: 'j',
+  75: 'k',
+}
+
+export function eventKeyName({keyCode}) {
+  return KEY_NAMES_US[keyCode]
+}
+
+export function addEvent(target, name, fun, useCapture = false) {
+  f.validate(fun, f.isFunction)
+  f.validate(useCapture, f.isBoolean)
+
+  target.addEventListener(name, fun, useCapture)
+
+  return function removeEvent() {
+    target.removeEventListener(name, fun, useCapture)
+  }
+}
+
+export function preventDefault(event) {
+  if (event && event.preventDefault) event.preventDefault()
+}
+
+export function stopPropagation(event) {
+  if (event && event.stopPropagation) event.stopPropagation()
+}
 
 export function geometry (width) {
   return {width, isMobile: width <= MOBILE_WIDTH_MAX}
@@ -36,6 +109,14 @@ export function geometry (width) {
 
 export function isMobile(context) {
   return f.scan(context, 'isMobile')
+}
+
+// Measures the CURRENT width of the body scrollbar. Returns ZERO if the body
+// doesn't currently have a scrollbar. This relies on the fact that in our CSS,
+// we always set `overflow-y: scroll` for the body, which allows to avoid layout
+// shifting when navigating between pages that overflow and ones that don't.
+export function getGlobalScrollbarWidth() {
+  return window.innerWidth - document.documentElement.clientWidth
 }
 
 /**
@@ -112,4 +193,17 @@ export function jsonParams(params) {
 const jsonHeaders = {
   accept: 'application/json',
   'content-type': 'application/json',
+}
+
+/**
+ * Misc
+ */
+
+// Note: if the URL contains spaces or other non-URL characters, it must be
+// URL-encoded before calling this function. We can't encode them
+// indiscriminately, because that would wreck some valid URLs.
+export function bgUrl(url) {
+  if (url == null || url === '') return undefined
+  f.validate(url, f.isString)
+  return {backgroundImage: `url(${url})`}
 }

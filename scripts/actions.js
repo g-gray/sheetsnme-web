@@ -1,18 +1,33 @@
 import * as n from './net'
 import * as u from './utils'
+import * as m from './views/misc'
 
 export const RESIZE                 = 'RESIZE'
+export const SET_DIALOG             = 'SET_DIALOG'
+
 export const REQUEST_TRANSACTIONS   = 'REQUEST_TRANSACTIONS'
 export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
 export const REQUEST_TRANSACTION    = 'REQUEST_TRANSACTION'
 export const RECEIVE_TRANSACTION    = 'RECEIVE_TRANSACTION'
 export const POST_TRANSACTION       = 'POST_TRANSACTION'
+
 export const REQUEST_ERROR          = 'REQUEST_ERROR'
 
 export const resize = geometry => ({
   type: RESIZE,
   geometry,
 })
+
+export const setDialog = dialog => ({
+  type: SET_DIALOG,
+  dialog,
+})
+
+export const openDialog = dialog => (dispatch, getState) => {
+  dispatch(setDialog(dialog))
+  const {dom: {dialogs}} = getState()
+  m.onDialogSet(dialogs)
+}
 
 export const requestTransactions = () => ({
   type: REQUEST_TRANSACTIONS,

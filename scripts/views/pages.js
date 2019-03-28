@@ -4,20 +4,22 @@ import {connect} from 'react-redux'
 import * as f from 'fpx'
 import * as e from 'emerge'
 
-import * as u from './utils'
-import * as a from './actions'
+import * as a from '../actions'
+import * as u from '../utils'
+
+import * as m from './misc'
+import * as s from './svg'
 
 class PageLayout extends u.ViewComponent {
   render({props: {className: cls, style, children}}) {
     return (
       <div className='relative col-start-stretch stretch-to-viewport-v bg-body'>
-        {/*
-        <Navbar {...props} />
-        */}
+        <Navbar />
         <div
           className={`flex-1 ${cls || ''}`}
           style={style}
           children={children} />
+        <m.GlobalDialog />
       </div>
     )
   }
@@ -27,17 +29,176 @@ class MobilePageLayout extends u.ViewComponent {
   render({props: {className: cls, style, children}}) {
     return (
       <div className='relative col-start-stretch stretch-to-viewport-v bg-body'>
-        {/*
-        <Navbar {...props} />
-        */}
+        <Navbar />
         <div
           className={`flex-1 ${cls || ''}`}
           style={style}
           children={children} />
+        <m.GlobalDialog />
       </div>
     )
   }
 }
+
+class _Navbar extends u.ViewComponent {
+  constructor(props) {
+    super(props)
+
+    this.state = {menuOpened: false}
+
+    this.openMenu = () => {
+      this.setState({menuOpened: true})
+    }
+
+    this.closeMenu = () => {
+      this.setState({menuOpened: false})
+    }
+  }
+
+  render({
+    context,
+    props: {openDialog},
+  }) {
+    if (u.isMobile(context)) {
+      return (
+        <header
+          className='row-between-stretch bg-primary-100'
+          style={{height: '3.25rem', borderBottom: '1px solid #4872a1'}}>
+          <a href='/' className='row-center-center padding-0x75 decorate-dark-menu-item'>
+            <s.PieChart style={{fontSize: '1.25rem'}} />
+          </a>
+          <m.FakeButton className='row-center-center padding-0x75 decorate-dark-menu-item'>
+            <s.Menu
+              style={{fontSize: '1.5rem'}}
+              onClick={() => {openDialog(<MobileMenu />)}} />
+          </m.FakeButton>
+        </header>
+      )
+    }
+
+    return (
+      <header
+        className='row-start-stretch bg-primary-100 min-width-page-max'
+        style={{borderBottom: '1px solid #4872a1'}}>
+        <div className='fixed-limit-width grid12 row-start-stretch'>
+          <div className='grid12-2 row-start-stretch'>
+            <a href='/' className='row-center-center padding-0x5 decorate-dark-menu-item'>
+              <s.PieChart style={{fontSize: '1.5rem'}} />
+            </a>
+          </div>
+          <div className='grid12-5 row-start-center gaps-h-0x75' />
+          <div className='flex-1 row-end-stretch'>
+            <UserMenu />
+          </div>
+        </div>
+      </header>
+    )
+  }
+}
+
+const Navbar = connect(null, dispatch => ({
+  openDialog: dialog => dispatch(a.openDialog(dialog)),
+}))(_Navbar)
+
+class UserMenu extends u.ViewComponent {
+  constructor() {
+    super(...arguments)
+
+    const self = this
+
+    self.state = {expanded: false}
+
+    self.close = () => {
+      this.setState({expanded: false})
+    }
+
+    self.toggle = () => {
+      this.setState({expanded: !this.state.expanded})
+    }
+  }
+
+  render({
+    state: {expanded},
+  }) {
+    return (
+      <div className='relative row-start-stretch'>
+        <m.FakeButton
+          onClick={this.toggle}
+          className='relative row-start-stretch decorate-dark-menu-item z-index-2'
+          aria-expanded={expanded}>
+          <div className='relative row-center-center padding-h-0x5'>
+            <m.CircleUserPic
+              size='1.75' />
+            {!expanded ? null :
+            <div className='dropdown-chevron dropdown-chevron-position' />}
+          </div>
+          <div className='row-start-center fg-white'>
+            <span>User Name</span>
+            <span className='row-center-center padding-h-0x25'>
+              <s.ChevronDown />
+            </span>
+          </div>
+        </m.FakeButton>
+        {!expanded ? null :
+        <m.Closer root={this} close={this.close}>
+          <div
+            className='dropdown-position-right-shifted z-index-1'
+            onClick={this.close}>
+            <div className='dropdown dropdown-padding col-start-stretch' style={{minWidth: '11rem'}}>
+              <a href='/auth/logout' className='decorate-light-menu-item dropdown-item-padding'>
+                Logout
+              </a>
+            </div>
+          </div>
+        </m.Closer>}
+      </div>
+    )
+  }
+}
+
+class _MobileMenu extends u.ViewComponent {
+  constructor() {
+    super(...arguments)
+
+    this.close = this.props.openDialog.bind(null, null)
+  }
+
+  render({close}) {
+    return (
+      <m.Dialog onEscape={close}>
+        <m.DialogScrollable className='row-start-stretch bg-overlay-dark fade-in-fast' onClick={close}>
+          <div className='relative bg-body slide-in-left-fast' style={{minWidth: '18rem'}} onClick={close}>
+            <div className='row-start-center gaps-h-0x75 padding-0x75'>
+              <m.CircleUserPic
+                size='3' />
+              <span className='font-midlarge weight-medium'>
+                User Name
+              </span>
+            </div>
+            <div className='col-start-stretch gaps-v-0x5'>
+              <div className='col-start-stretch'>
+                <a
+                  href='/auth/logout'
+                  className='row-start-center gaps-h-1 padding-h-1 padding-v-0x5 theme-light-menu-busy'>
+                  <span className='relative bg-circle-2x5 bg-primary-125'>
+                    <s.LogOut className='abs-center font-large fg-white' />
+                  </span>
+                  <span className='col-start-stretch text-left decorate-link weight-medium'>
+                    Logout
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </m.DialogScrollable>
+      </m.Dialog>
+    )
+  }
+}
+
+const MobileMenu = connect(null, dispatch => ({
+  openDialog: dialog => dispatch(a.openDialog(dialog)),
+}))(_MobileMenu)
 
 export class HomePage extends u.ViewComponent {
   render({
@@ -94,13 +255,6 @@ export class HomePage extends u.ViewComponent {
   }
 }
 
-/**
- * TODO:
- * fetch categories
- * fetch payees
- * fetch accounts
- * show submit status
- */
 class _TransactionForm extends u.ViewComponent {
   constructor(props) {
     super(props)
@@ -108,7 +262,7 @@ class _TransactionForm extends u.ViewComponent {
     this.state = {formValues: this.props.transaction || {}}
 
     this.onSubmit = event => {
-      event.preventDefault()
+      u.preventDefault(event)
       this.props.dispatch(a.createTransaction(this.state.formValues))
     }
 
@@ -214,7 +368,6 @@ class _TransactionsTable extends u.ViewComponent {
   render({props: {transactions}}) {
     return (
       <div className='col-start-stretch gaps-v-0x5 padding-h-1x25 padding-v-0x75'>
-        {/* TODO: validate transactions */}
         {f.map(transactions, tr => tr.amountIncome || tr.amountOutcome ? (
           <div className='col-start-stretch gaps-v-0x5 list-item' key={tr.id}>
             <div className='col-start-stretch gaps-v-0x25'>
@@ -273,18 +426,18 @@ class G7FormLine extends u.ViewComponent {
 class FormLabel extends u.ViewComponent {
   render({
     context,
-    props: {children, ...props},
+    props: {children, className: cls, ...props},
   }) {
     if (u.isMobile(context)) {
       return (
-        <label className='row-start-center input-height fg-black-50' {...props}>
+        <label className={`row-start-center fg-black-50 ${cls || ''}`} {...props}>
           {children}:
         </label>
       )
     }
 
     return (
-      <label className='row-end-center input-height fg-black-50' {...props}>
+      <label className={`row-end-center fg-black-50 ${cls || ''}`} {...props}>
         {children}:
       </label>
     )
@@ -305,7 +458,7 @@ class FormTextElement extends u.ViewComponent {
   }) {
     return (
       <G7FormLine>
-        <FormLabel htmlFor={ident}>
+        <FormLabel className='input-height' htmlFor={ident}>
           {label}
         </FormLabel>
         <input
@@ -410,7 +563,7 @@ class FormDateElement extends u.ViewComponent {
 
     return (
       <G7FormLine>
-        <FormLabel>
+        <FormLabel className='input-height'>
           {label}
         </FormLabel>
         <div className='row-start-stretch gaps-h-0x5'>
@@ -482,7 +635,7 @@ class FormSelectElement extends u.ViewComponent {
   }) {
     return (
       <G7FormLine>
-        <FormLabel htmlFor={ident}>
+        <FormLabel className='input-height' htmlFor={ident}>
           {label}
         </FormLabel>
         <select
