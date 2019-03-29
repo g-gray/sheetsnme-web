@@ -389,18 +389,18 @@ class _TransactionsTable extends u.ViewComponent {
   render({props: {transactions}}) {
     return (
       <div className='col-start-stretch gaps-v-0x5 padding-h-1x25 padding-v-0x75'>
-        {f.map(transactions, tr => tr.amountIncome || tr.amountOutcome ? (
+        {f.map(transactions, tr => tr.incomeAmount || tr.outcomeAmount ? (
           <div className='col-start-stretch gaps-v-0x5 list-item' key={tr.id}>
             <div className='col-start-stretch gaps-v-0x25'>
               <div className='row-between-start font-midsmall'>
                 <span>{tr.date}</span>
-                <span>{tr.accountIncome || tr.accountOutcome}</span>
+                <span>{tr.incomeAccountId || tr.outcomeAccountId}</span>
               </div>
               <div className='row-between-end'>
-                <span>{tr.category}</span>
+                <span>{tr.categoryId}</span>
                 {
-                  tr.amountIncome ? <span className='fg-success'>{`+${tr.amountIncome}`}</span> :
-                  tr.amountOutcome ? <span className='fg-danger-100'>{`-${tr.amountOutcome}`}</span> :
+                  tr.incomeAmount ? <span className='fg-success'>{`+${tr.incomeAmount}`}</span> :
+                  tr.outcomeAmount ? <span className='fg-danger-100'>{`-${tr.outcomeAmount}`}</span> :
                   null
                 }
               </div>

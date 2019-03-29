@@ -26,10 +26,10 @@ export const dom = (state = {
 const defaultTransaction = {
   date: new Date(),
   type: 'outcome',
-  category: '',
-  payee: '',
+  categoryId: '',
+  accountId: '',
+  payeeId: '',
   comment: '',
-  account: '',
   amount: '',
 }
 
