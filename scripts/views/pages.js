@@ -337,7 +337,7 @@ class _TransactionForm extends u.ViewComponent {
             label='Account'
             {...bindValue('account')}>
             <option value='' />
-            {f.map(accounts, ({id, title}) => (
+            {f.map(accounts, ({id, title}) => !id || !title ? null : (
               <option value={id} key={`account-${id}`}>
                 {title}
               </option>
@@ -347,7 +347,7 @@ class _TransactionForm extends u.ViewComponent {
             label='Category'
             {...bindValue('category')}>
             <option value='' />
-            {f.map(categories, ({id, title}) => (
+            {f.map(categories, ({id, title}) => !id || !title ? null : (
               <option value={id} key={`category-${id}`}>
                 {title}
               </option>
@@ -357,7 +357,7 @@ class _TransactionForm extends u.ViewComponent {
             label='Payee'
             {...bindValue('payee')}>
             <option value='' />
-            {f.map(payees, ({id, title}) => (
+            {f.map(payees, ({id, title}) => !id || !title ? null : (
               <option value={id} key={`payee-${id}`}>
                 {title}
               </option>
