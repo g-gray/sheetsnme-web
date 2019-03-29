@@ -26,12 +26,6 @@ export const setDialog = dialog => ({
   dialog,
 })
 
-export const openDialog = dialog => (dispatch, getState) => {
-  dispatch(setDialog(dialog))
-  const {dom: {dialogs}} = getState()
-  m.onDialogSet(dialogs)
-}
-
 export const requestUser = () => ({
   type: REQUEST_USER,
 })

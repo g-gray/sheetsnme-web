@@ -8,11 +8,14 @@ import * as u from '../utils'
  * Dialog
  */
 
-export const GlobalDialog = connect(state => ({dialog: state.dom.dialog}))(props => (
-  props.dialog || null
-))
+export const GlobalDialog = connect(state => ({
+  dialog: state.dom.dialog,
+  dialogs: state.dom.dialogs,
+}))(({dialog: Dialog, dialogs}) => {
+  return Dialog ? <Dialog dialogs={dialogs} /> : null
+})
 
-class _Dialog extends u.ViewComponent {
+export class Dialog extends u.ViewComponent {
   componentDidMount() {
     this.unsub = u.addEvent(window, 'keydown', event => {
       const {props: {onEscape}} = this
@@ -20,10 +23,12 @@ class _Dialog extends u.ViewComponent {
         onEscape(event)
       }
     })
+    onDialogOpen(this.props.dialogs)
   }
 
   componentWillUnmount() {
     if (this.unsub) this.unsub()
+    onDialogClose(this.props.dialogs)
   }
 
   render({props: {className: cls, children}}) {
@@ -34,8 +39,6 @@ class _Dialog extends u.ViewComponent {
     )
   }
 }
-
-export const Dialog = connect(state => ({dialogs: state.dom.dialogs}))(_Dialog)
 
 export class DialogOverlay extends u.ViewComponent {
   render({props: {className: cls, ...props}}) {
@@ -76,12 +79,19 @@ export class DialogCentered extends u.ViewComponent {
   }
 }
 
-export function onDialogSet(dialogs) {
+function onDialogOpen(dialogs) {
+  dialogs = (dialogs | 0) + 1
+
   if (dialogs > 0) {
     document.body.style.marginRight = `${u.getGlobalScrollbarWidth()}px`
     document.body.classList.add('overflow-x-scroll')
   }
-  else {
+}
+
+function onDialogClose(dialogs) {
+  dialogs = Math.max(0, (dialogs | 0) - 1)
+
+  if (!dialogs) {
     document.body.style.marginRight = null
     document.body.classList.remove('overflow-x-scroll')
   }

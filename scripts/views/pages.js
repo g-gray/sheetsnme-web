@@ -57,7 +57,7 @@ class _Navbar extends u.ViewComponent {
 
   render({
     context,
-    props: {openDialog},
+    props: {setDialog},
   }) {
     if (u.isMobile(context)) {
       return (
@@ -70,7 +70,7 @@ class _Navbar extends u.ViewComponent {
           <m.FakeButton className='row-center-center padding-0x75 decorate-dark-menu-item'>
             <s.Menu
               style={{fontSize: '1.5rem'}}
-              onClick={() => {openDialog(<MobileMenu />)}} />
+              onClick={() => {setDialog(MobileMenu)}} />
           </m.FakeButton>
         </header>
       )
@@ -97,7 +97,7 @@ class _Navbar extends u.ViewComponent {
 }
 
 const Navbar = connect(null, dispatch => ({
-  openDialog: dialog => dispatch(a.openDialog(dialog)),
+  setDialog: dialog => dispatch(a.setDialog(dialog)),
 }))(_Navbar)
 
 class _UserMenu extends u.ViewComponent {
@@ -172,7 +172,7 @@ class _MobileMenu extends u.ViewComponent {
 
     this.props.fetchUser()
 
-    this.close = this.props.openDialog.bind(null, null)
+    this.close = this.props.setDialog.bind(null, null)
   }
 
   render({
@@ -218,7 +218,7 @@ const MobileMenu = connect(state => ({
   user: state.net.user,
 }), dispatch => ({
   fetchUser: () => dispatch(a.fetchUser()),
-  openDialog: dialog => dispatch(a.openDialog(dialog)),
+  setDialog: dialog => dispatch(a.setDialog(dialog)),
 }))(_MobileMenu)
 
 export class HomePage extends u.ViewComponent {
