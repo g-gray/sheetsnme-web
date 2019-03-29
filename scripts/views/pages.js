@@ -297,6 +297,7 @@ class _TransactionForm extends u.ViewComponent {
     onUpdate,
     context,
     state: {formValues},
+    props: {categories, accounts, payees},
   }) {
     const isMobile = u.isMobile(context)
 
@@ -336,24 +337,32 @@ class _TransactionForm extends u.ViewComponent {
             label='Account'
             {...bindValue('account')}>
             <option value='' />
-            <option value='₽ К ТКС'>₽ К ТКС</option>
-            <option value='₽ К СБ'>₽ К СБ</option>
-            <option value='₽ Н'>₽ Н</option>
-            <option value='₽ Б ТКС'>₽ Б ТКС</option>
+            {f.map(accounts, ({id, title}) => (
+              <option value={id} key={`account-${id}`}>
+                {title}
+              </option>
+            ))}
           </FormSelectElement>
           <FormSelectElement
             label='Category'
             {...bindValue('category')}>
             <option value='' />
-            <option value='Education'>Education</option>
-            <option value='Health'>Health</option>
-            <option value='Food'>Food</option>
-            <option value='Fastfood'>Fastfood</option>
-            <option value='Fuel'>Fuel</option>
+            {f.map(categories, ({id, title}) => (
+              <option value={id} key={`category-${id}`}>
+                {title}
+              </option>
+            ))}
           </FormSelectElement>
-          <FormTextElement
+          <FormSelectElement
             label='Payee'
-            {...bindValue('payee')} />
+            {...bindValue('payee')}>
+            <option value='' />
+            {f.map(payees, ({id, title}) => (
+              <option value={id} key={`payee-${id}`}>
+                {title}
+              </option>
+            ))}
+          </FormSelectElement>
           <FormTextElement
             label='Comment'
             {...bindValue('comment')} />
@@ -371,7 +380,12 @@ class _TransactionForm extends u.ViewComponent {
   }
 }
 
-const TransactionForm = connect(state => ({transaction: state.net.transaction}))(_TransactionForm)
+const TransactionForm = connect(state => ({
+  categories: state.net.categories,
+  accounts: state.net.accounts,
+  payees: state.net.payees,
+  transaction: state.net.transaction,
+}))(_TransactionForm)
 
 class _TransactionsTable extends u.ViewComponent {
   render({props: {transactions}}) {
