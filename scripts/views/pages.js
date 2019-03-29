@@ -104,8 +104,6 @@ class _UserMenu extends u.ViewComponent {
   constructor(props) {
     super(props)
 
-    this.props.fetchUser()
-
     this.state = {expanded: false}
 
     this.close = () => {
@@ -162,15 +160,11 @@ class _UserMenu extends u.ViewComponent {
 
 const UserMenu = connect(state => ({
   user: state.net.user,
-}), dispatch => ({
-  fetchUser: () => dispatch(a.fetchUser()),
 }))(_UserMenu)
 
 class _MobileMenu extends u.ViewComponent {
   constructor(props) {
     super(props)
-
-    this.props.fetchUser()
 
     this.close = this.props.setDialog.bind(null, null)
   }
@@ -217,7 +211,6 @@ class _MobileMenu extends u.ViewComponent {
 const MobileMenu = connect(state => ({
   user: state.net.user,
 }), dispatch => ({
-  fetchUser: () => dispatch(a.fetchUser()),
   setDialog: dialog => dispatch(a.setDialog(dialog)),
 }))(_MobileMenu)
 
@@ -381,11 +374,6 @@ class _TransactionForm extends u.ViewComponent {
 const TransactionForm = connect(state => ({transaction: state.net.transaction}))(_TransactionForm)
 
 class _TransactionsTable extends u.ViewComponent {
-  constructor(props) {
-    super(props)
-    props.dispatch(a.fetchTransactions())
-  }
-
   render({props: {transactions}}) {
     return (
       <div className='col-start-stretch gaps-v-0x5 padding-h-1x25 padding-v-0x75'>

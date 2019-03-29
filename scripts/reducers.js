@@ -52,6 +52,39 @@ export const net = (state = {
         pending: state.pending.filter(item => item !== a.REQUEST_USER),
         user: action.user,
       }
+    case a.REQUEST_CATEGORIES:
+      return {
+        ...state,
+        pending: [...state.pending, a.REQUEST_CATEGORIES],
+      }
+    case a.RECEIVE_CATEGORIES:
+      return {
+        ...state,
+        pending: state.pending.filter(item => item !== a.REQUEST_CATEGORIES),
+        categories: action.categories,
+      }
+    case a.REQUEST_ACCOUNTS:
+      return {
+        ...state,
+        pending: [...state.pending, a.REQUEST_ACCOUNTS],
+      }
+    case a.RECEIVE_ACCOUNTS:
+      return {
+        ...state,
+        pending: state.pending.filter(item => item !== a.REQUEST_ACCOUNTS),
+        accounts: action.accounts,
+      }
+    case a.REQUEST_PAYEES:
+      return {
+        ...state,
+        pending: [...state.pending, a.REQUEST_PAYEES],
+      }
+    case a.RECEIVE_PAYEES:
+      return {
+        ...state,
+        pending: state.pending.filter(item => item !== a.REQUEST_PAYEES),
+        payees: action.payees,
+      }
     case a.REQUEST_TRANSACTIONS:
       return {
         ...state,

@@ -13,16 +13,24 @@ import * as p from './views/pages'
 const store = createStore(combineReducers(r), applyMiddleware(thunk, logger))
 
 class App extends u.ViewComponent {
-  render({props}) {
-    return (
-      <u.Context.Provider value={{isMobile: props.isMobile}}>
+  constructor(props) {
+    super(props)
+    props.dispatch(a.init())
+  }
+
+  render({props: {isMobile, user}}) {
+    return !user.id ? null : (
+      <u.Context.Provider value={{isMobile}}>
         <p.HomePage />
       </u.Context.Provider>
     )
   }
 }
 
-const ConnectedApp = connect(state => ({isMobile: state.dom.geometry.isMobile}))(App)
+const ConnectedApp = connect(state => ({
+  user: state.net.user,
+  isMobile: state.dom.geometry.isMobile,
+}))(App)
 
 const elem = (
   <div id='root'>

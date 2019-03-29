@@ -1,19 +1,21 @@
 import * as n from './net'
 import * as u from './utils'
-import * as m from './views/misc'
 
 export const RESIZE                 = 'RESIZE'
 export const SET_DIALOG             = 'SET_DIALOG'
 
 export const REQUEST_USER           = 'REQUEST_USER'
 export const RECEIVE_USER           = 'RECEIVE_USER'
-
+export const REQUEST_CATEGORIES     = 'REQUEST_CATEGORIES'
+export const RECEIVE_CATEGORIES     = 'RECEIVE_CATEGORIES'
+export const REQUEST_ACCOUNTS       = 'REQUEST_ACCOUNTS'
+export const RECEIVE_ACCOUNTS       = 'RECEIVE_ACCOUNTS'
+export const REQUEST_PAYEES         = 'REQUEST_PAYEES'
+export const RECEIVE_PAYEES         = 'RECEIVE_PAYEES'
 export const REQUEST_TRANSACTIONS   = 'REQUEST_TRANSACTIONS'
 export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
-export const REQUEST_TRANSACTION    = 'REQUEST_TRANSACTION'
 export const RECEIVE_TRANSACTION    = 'RECEIVE_TRANSACTION'
 export const POST_TRANSACTION       = 'POST_TRANSACTION'
-
 export const REQUEST_ERROR          = 'REQUEST_ERROR'
 
 export const resize = geometry => ({
@@ -26,59 +28,66 @@ export const setDialog = dialog => ({
   dialog,
 })
 
-export const requestUser = () => ({
-  type: REQUEST_USER,
-})
+export const requestError = error => dispatch => {
+  dispatch({type: REQUEST_ERROR, error})
+  throw error
+}
 
-export const receiveUser = user => ({
-  type: RECEIVE_USER,
-  user,
-})
+export const init = () => dispatch => {
+  dispatch(fetchUser())
+    .then(() => {
+      return window.Promise.all([
+        dispatch(fetchCategories()),
+        dispatch(fetchAccounts()),
+        dispatch(fetchPayees()),
+        dispatch(fetchTransactions()),
+      ])
+    })
+    .catch(error => error)
+}
 
 export const fetchUser = () => dispatch => {
-  dispatch(requestUser())
-  n.authedJsonFetch('/api/user')
-    .then(user => dispatch(receiveUser(user)))
+  dispatch({type: REQUEST_USER})
+  return n.authedJsonFetch('/api/user')
+    .then(user => dispatch({type: RECEIVE_USER, user}))
     .catch(error => dispatch(requestError(error)))
 }
 
-export const requestTransactions = () => ({
-  type: REQUEST_TRANSACTIONS,
-})
+export const fetchCategories  = () => dispatch => {
+  dispatch({type: REQUEST_CATEGORIES})
+  return n.authedJsonFetch('/api/categories')
+    .then(categories => dispatch({type: RECEIVE_CATEGORIES, categories}))
+    .catch(error => dispatch(requestError(error)))
+}
 
-export const receiveTransactions = transactions => ({
-  type: RECEIVE_TRANSACTIONS,
-  transactions,
-})
+export const fetchAccounts  = () => dispatch => {
+  dispatch({type: REQUEST_ACCOUNTS})
+  return n.authedJsonFetch('/api/accounts')
+    .then(accounts => dispatch({type: RECEIVE_ACCOUNTS, accounts}))
+    .catch(error => dispatch(requestError(error)))
+}
+
+export const fetchPayees  = () => dispatch => {
+  dispatch({type: REQUEST_PAYEES})
+  return n.authedJsonFetch('/api/payees')
+    .then(payees => dispatch({type: RECEIVE_PAYEES, payees}))
+    .catch(error => dispatch(requestError(error)))
+}
 
 export const fetchTransactions = () => dispatch => {
-  dispatch(requestTransactions())
-  n.authedJsonFetch('/api/transactions')
-    .then(transactions => dispatch(receiveTransactions(transactions)))
+  dispatch({type: REQUEST_TRANSACTIONS})
+  return n.authedJsonFetch('/api/transactions')
+    .then(transactions => dispatch({type: RECEIVE_TRANSACTIONS, transactions}))
     .catch(error => dispatch(requestError(error)))
 }
 
-export const receiveTransaction = transaction => ({
-  type: RECEIVE_TRANSACTION,
-  transaction,
-})
-
-export const postTransaction = () => ({
-  type: POST_TRANSACTION,
-})
-
 export const createTransaction = transaction => dispatch => {
-  dispatch(postTransaction())
-  n.authedJsonFetch('/api/transactions', {
+  dispatch({type: POST_TRANSACTION})
+  return n.authedJsonFetch('/api/transactions', {
     method: 'POST',
     body: JSON.stringify(u.formatTransaction(transaction)),
   })
-    .then(() => dispatch(receiveTransaction()))
+    .then(() => dispatch({type: RECEIVE_TRANSACTION, transaction}))
     .then(() => dispatch(fetchTransactions()))
     .catch(error => dispatch(requestError(error)))
 }
-
-export const requestError = error => ({
-  type: REQUEST_ERROR,
-  error,
-})
