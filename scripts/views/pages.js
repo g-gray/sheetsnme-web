@@ -394,7 +394,7 @@ class _TransactionsTable extends u.ViewComponent {
     return (
       <div className='col-start-stretch gaps-v-0x5 padding-h-1x25 padding-v-0x75'>
         {f.map(transactions, tr => tr.incomeAmount || tr.outcomeAmount ? (
-          <div className='col-start-stretch gaps-v-0x5 list-item' key={tr.id}>
+          <div className='col-start-stretch list-item' key={tr.id}>
             <div className='col-start-stretch gaps-v-0x25'>
               <div className='row-between-start font-midsmall'>
                 <span>{tr.date}</span>
@@ -409,7 +409,7 @@ class _TransactionsTable extends u.ViewComponent {
                 }
               </div>
             </div>
-            <hr className='hr hide-in-list-last-child' />
+            <hr className='hr hide-in-list-last-child margin-t-0x5' />
           </div>
         ) : null)}
       </div>
