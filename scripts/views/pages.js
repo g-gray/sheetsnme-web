@@ -335,9 +335,9 @@ class _TransactionForm extends u.ViewComponent {
             {...bindValue('amount')} />
           <FormSelectElement
             label='Account'
-            {...bindValue('account')}>
+            {...bindValue('accountId')}>
             <option value='' />
-            {f.map(accounts, ({id, title}) => !id || !title ? null : (
+            {f.map(accounts, ({id, title}) => (
               <option value={id} key={`account-${id}`}>
                 {title}
               </option>
@@ -345,9 +345,9 @@ class _TransactionForm extends u.ViewComponent {
           </FormSelectElement>
           <FormSelectElement
             label='Category'
-            {...bindValue('category')}>
+            {...bindValue('categoryId')}>
             <option value='' />
-            {f.map(categories, ({id, title}) => !id || !title ? null : (
+            {f.map(categories, ({id, title}) => (
               <option value={id} key={`category-${id}`}>
                 {title}
               </option>
@@ -355,9 +355,9 @@ class _TransactionForm extends u.ViewComponent {
           </FormSelectElement>
           <FormSelectElement
             label='Payee'
-            {...bindValue('payee')}>
+            {...bindValue('payeeId')}>
             <option value='' />
-            {f.map(payees, ({id, title}) => !id || !title ? null : (
+            {f.map(payees, ({id, title}) => (
               <option value={id} key={`payee-${id}`}>
                 {title}
               </option>
@@ -388,7 +388,9 @@ const TransactionForm = connect(state => ({
 }))(_TransactionForm)
 
 class _TransactionsTable extends u.ViewComponent {
-  render({props: {transactions}}) {
+  render({
+    props: {categoriesById, accountsById, transactions},
+  }) {
     return (
       <div className='col-start-stretch gaps-v-0x5 padding-h-1x25 padding-v-0x75'>
         {f.map(transactions, tr => tr.incomeAmount || tr.outcomeAmount ? (
@@ -396,10 +398,10 @@ class _TransactionsTable extends u.ViewComponent {
             <div className='col-start-stretch gaps-v-0x25'>
               <div className='row-between-start font-midsmall'>
                 <span>{tr.date}</span>
-                <span>{tr.incomeAccountId || tr.outcomeAccountId}</span>
+                <span>{f.scan(accountsById, tr.incomeAccountId || tr.outcomeAccountId, 'title')}</span>
               </div>
               <div className='row-between-end'>
-                <span>{tr.categoryId}</span>
+                <span>{f.scan(categoriesById, tr.categoryId, 'title')}</span>
                 {
                   tr.incomeAmount ? <span className='fg-success'>{`+${tr.incomeAmount}`}</span> :
                   tr.outcomeAmount ? <span className='fg-danger-100'>{`-${tr.outcomeAmount}`}</span> :
@@ -415,7 +417,11 @@ class _TransactionsTable extends u.ViewComponent {
   }
 }
 
-const TransactionsTable = connect(state => ({transactions: state.net.transactions}))(_TransactionsTable)
+const TransactionsTable = connect(state => ({
+  categoriesById: state.net.categoriesById,
+  accountsById: state.net.accountsById,
+  transactions: state.net.transactions,
+}))(_TransactionsTable)
 
 class G7FormLine extends u.ViewComponent {
   render({

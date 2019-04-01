@@ -1,3 +1,4 @@
+import * as f from 'fpx'
 import * as a from './actions'
 import * as u from './utils'
 
@@ -49,9 +50,10 @@ export const net = (state = {
     case a.RECEIVE_USER:
       return {
         ...state,
-        pending: state.pending.filter(item => item !== a.REQUEST_USER),
+        pending: f.filter(state.pending, item => item !== a.REQUEST_USER),
         user: action.user,
       }
+
     case a.REQUEST_CATEGORIES:
       return {
         ...state,
@@ -60,9 +62,11 @@ export const net = (state = {
     case a.RECEIVE_CATEGORIES:
       return {
         ...state,
-        pending: state.pending.filter(item => item !== a.REQUEST_CATEGORIES),
+        pending: f.filter(state.pending, item => item !== a.REQUEST_CATEGORIES),
         categories: action.categories,
+        categoriesById: f.keyBy(action.categories, ({id}) => id),
       }
+
     case a.REQUEST_ACCOUNTS:
       return {
         ...state,
@@ -71,9 +75,11 @@ export const net = (state = {
     case a.RECEIVE_ACCOUNTS:
       return {
         ...state,
-        pending: state.pending.filter(item => item !== a.REQUEST_ACCOUNTS),
+        pending: f.filter(state.pending, item => item !== a.REQUEST_ACCOUNTS),
         accounts: action.accounts,
+        accountsById: f.keyBy(action.accounts, ({id}) => id),
       }
+
     case a.REQUEST_PAYEES:
       return {
         ...state,
@@ -82,9 +88,11 @@ export const net = (state = {
     case a.RECEIVE_PAYEES:
       return {
         ...state,
-        pending: state.pending.filter(item => item !== a.REQUEST_PAYEES),
+        pending: f.filter(state.pending, item => item !== a.REQUEST_PAYEES),
         payees: action.payees,
+        payeesById: f.keyBy(action.payees, ({id}) => id),
       }
+
     case a.REQUEST_TRANSACTIONS:
       return {
         ...state,
@@ -93,9 +101,10 @@ export const net = (state = {
     case a.RECEIVE_TRANSACTIONS:
       return {
         ...state,
-        pending: state.pending.filter(item => item !== a.REQUEST_TRANSACTIONS),
+        pending: f.filter(state.pending, item => item !== a.REQUEST_TRANSACTIONS),
         transactions: action.transactions,
       }
+
     case a.POST_TRANSACTION:
       return {
         ...state,
@@ -104,14 +113,16 @@ export const net = (state = {
     case a.RECEIVE_TRANSACTION:
       return {
         ...state,
-        pending: state.pending.filter(item => item !== a.POST_TRANSACTION),
+        pending: f.filter(state.pending, item => item !== a.POST_TRANSACTION),
         transaction: action.transaction || defaultTransaction,
       }
+
     case a.REQUEST_ERROR:
       return {
         ...state,
         error: [...state.errors, action.error],
       }
+
     default:
       return state
   }
