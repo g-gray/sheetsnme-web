@@ -290,8 +290,8 @@ class _SettingsPage extends u.ViewComponent {
                     </h2>
                   </div>
                   <div className='col-start-stretch gaps-v-0x25 padding-h-1x25 padding-v-1'>
-                    {f.map(categories, ({title}) => (
-                      <div>{title}</div>
+                    {f.map(categories, ({id, title}) => (
+                      <div key={`${title}-${id}`}>{title}</div>
                     ))}
                   </div>
                 </div>
@@ -304,8 +304,8 @@ class _SettingsPage extends u.ViewComponent {
                     </h2>
                   </div>
                   <div className='col-start-stretch gaps-v-0x25 padding-h-1x25 padding-v-1'>
-                    {f.map(accounts, ({title}) => (
-                      <div>{title}</div>
+                    {f.map(accounts, ({id, title}) => (
+                      <div key={`${title}-${id}`}>{title}</div>
                     ))}
                   </div>
                 </div>
@@ -318,8 +318,8 @@ class _SettingsPage extends u.ViewComponent {
                     </h2>
                   </div>
                   <div className='col-start-stretch gaps-v-0x25 padding-h-1x25 padding-v-1'>
-                    {f.map(payees, ({title}) => (
-                      <div>{title}</div>
+                    {f.map(payees, ({id, title}) => (
+                      <div key={`${title}-${id}`}>{title}</div>
                     ))}
                   </div>
                 </div>
