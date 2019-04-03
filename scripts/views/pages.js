@@ -215,7 +215,7 @@ class _Drawer extends u.ViewComponent {
             to='/'
             exact
             className='drawer-link decorate-drawer-link'>
-            <s.List className='drawer-icon font-large' />
+            <s.BarChart className='drawer-icon font-large' />
             <span>Transactions</span>
             <span className='flex-1 text-right'>
               {transactions.length || ''}
@@ -409,7 +409,6 @@ const AccountsTable = connect(state => ({
 
 class _PayeesTable extends u.ViewComponent {
   render({props: {payees}}) {
-    console.info(`-- payees:`, payees)
     return (
       <div className='data-table'>
         <div className='data-table-row fg-black-50'>
