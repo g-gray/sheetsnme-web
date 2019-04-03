@@ -38,6 +38,9 @@ export const net = (state = {
   user: {},
   transaction: defaultTransaction,
   transactions: [],
+  categories: [],
+  accounts: [],
+  payees: [],
   pending: [],
   errors: [],
 }, action) => {

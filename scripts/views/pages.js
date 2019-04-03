@@ -188,8 +188,8 @@ const MobileMenu = connect(null, dispatch => ({
   setDialog: dialog => dispatch(a.setDialog(dialog)),
 }))(_MobileMenu)
 
-class Drawer extends u.ViewComponent {
-  render() {
+class _Drawer extends u.ViewComponent {
+  render({props: {transactions}}) {
     return (
       <aside className='col-start-stretch gaps-v-0x5 padding-h-0x5' style={{width: '16rem'}}>
         <div className='col-start-stretch'>
@@ -199,7 +199,9 @@ class Drawer extends u.ViewComponent {
             className='drawer-link decorate-drawer-link'>
             <s.List className='drawer-icon' style={{fontSize: '1.25rem'}} />
             <span>Transactions</span>
-            <span></span>
+            <span className='flex-1 text-right'>
+              {transactions.length || ''}
+            </span>
           </NavLink>
         </div>
         <hr className='hr' />
@@ -230,6 +232,10 @@ class Drawer extends u.ViewComponent {
     )
   }
 }
+
+const Drawer = connect(state => ({
+  transactions: state.net.transactions,
+}))(_Drawer)
 
 export class HomePage extends u.ViewComponent {
   render({context}) {
