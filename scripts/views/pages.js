@@ -14,7 +14,7 @@ import * as s from './svg'
 class PageLayout extends u.ViewComponent {
   render({props: {className: cls, style, children}}) {
     return (
-      <div className='relative col-start-stretch stretch-to-viewport-v bg-body'>
+      <div className='relative col-start-stretch stretch-to-viewport-v'>
         <Navbar />
         <div
           className={`flex-1 ${cls || ''}`}
@@ -22,6 +22,20 @@ class PageLayout extends u.ViewComponent {
           children={children} />
         <m.GlobalDialog />
       </div>
+    )
+  }
+}
+
+class Logo extends u.ViewComponent {
+  render() {
+    return (
+      <span className='row-center-center padding-0x25'>
+        <span className='row-center-center padding-0x25 bg-white circle'>
+          <s.PieChart
+            className='fg-primary-100'
+            style={{fontSize: '1.5rem'}} />
+        </span>
+      </span>
     )
   }
 }
@@ -47,7 +61,7 @@ class _Navbar extends u.ViewComponent {
   }) {
     if (u.isMobile(context)) {
       return (
-        <header className='row-between-stretch bg-primary-100'>
+        <header className='row-between-stretch bg-primary-100 navbar-height'>
           <div className='row-start-center gaps-h-0x75 padding-h-1'>
             <m.FakeButton className='row-center-center padding-0x5 circle decorate-dark-menu-item'>
               <s.Menu
@@ -62,15 +76,9 @@ class _Navbar extends u.ViewComponent {
     }
 
     return (
-      <header className='row-between-stretch bg-primary-100'>
+      <header className='row-between-stretch bg-primary-100 navbar-height'>
         <Link to='/' className='row-center-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
-          <span className='row-center-center padding-0x25'>
-            <span className='row-center-center padding-0x25 bg-white circle'>
-              <s.PieChart
-                className='fg-primary-100'
-                style={{fontSize: '1.5rem'}} />
-            </span>
-          </span>
+          <Logo />
           <span className='font-large'>Accounting</span>
         </Link>
         <UserMenu />
@@ -108,7 +116,7 @@ class _UserMenu extends u.ViewComponent {
       <div className='relative row-start-stretch'>
         <m.FakeButton
           onClick={this.toggle}
-          className='relative row-start-center gaps-h-0x75 padding-h-1 padding-v-0x75 decorate-dark-menu-item z-index-2'
+          className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item z-index-2'
           aria-expanded={expanded}>
           <m.CircleUserPic
             url={pictureUrl}
@@ -160,38 +168,15 @@ class _MobileMenu extends u.ViewComponent {
     this.close = this.props.setDialog.bind(null, null)
   }
 
-  render({
-    close,
-    props: {user},
-  }) {
-    const {firstName, lastName, pictureUrl} = user
-
+  render({close}) {
     return (
       <m.Dialog onEscape={close}>
         <m.DialogScrollable className='row-start-stretch bg-overlay-dark fade-in-fast' onClick={close}>
-          <div className='relative bg-body slide-in-left-fast' style={{minWidth: '18rem'}} onClick={close}>
-            <div className='row-start-center gaps-h-0x75 padding-0x75'>
-              <m.CircleUserPic
-                url={pictureUrl}
-                size='3' />
-              <span className='font-midlarge weight-medium'>
-                {`${firstName || ''} ${lastName || ''}`}
-              </span>
+          <div className='relative col-start-stretch gaps-v-0x5 bg-white slide-in-left-fast' onClick={close}>
+            <div className='row-start-center padding-h-1 bg-primary-100 navbar-height'>
+              <Logo />
             </div>
-            <div className='col-start-stretch gaps-v-0x5'>
-              <div className='col-start-stretch'>
-                <a
-                  href='/auth/logout'
-                  className='row-start-center gaps-h-1 padding-h-1 padding-v-0x5 theme-light-menu-busy'>
-                  <span className='relative bg-circle-2x5 bg-primary-125'>
-                    <s.LogOut className='abs-center font-large fg-white' />
-                  </span>
-                  <span className='col-start-stretch text-left decorate-link weight-medium'>
-                    Logout
-                  </span>
-                </a>
-              </div>
-            </div>
+            <Drawer />
           </div>
         </m.DialogScrollable>
       </m.Dialog>
@@ -199,28 +184,48 @@ class _MobileMenu extends u.ViewComponent {
   }
 }
 
-const MobileMenu = connect(state => ({
-  user: state.net.user,
-}), dispatch => ({
+const MobileMenu = connect(null, dispatch => ({
   setDialog: dialog => dispatch(a.setDialog(dialog)),
 }))(_MobileMenu)
 
-class Sidenav extends u.ViewComponent {
+class Drawer extends u.ViewComponent {
   render() {
     return (
-      <aside className='col-start-stretch'>
-        <Link
-          to='/'
-          className='row-start-center gaps-h-0x5 padding-0x5 decorate-body-menu-item rounded'>
-          <s.Home className='font-large fg-link-icon' />
-          <span>Home</span>
-        </Link>
-        <Link
-          to='/settings'
-          className='row-start-center gaps-h-0x5 padding-0x5 decorate-body-menu-item rounded'>
-          <s.Settings className='font-large fg-link-icon' />
-          <span>Settings</span>
-        </Link>
+      <aside className='col-start-stretch gaps-v-0x5 padding-h-0x5' style={{width: '16rem'}}>
+        <div className='col-start-stretch'>
+          <NavLink
+            to='/'
+            exact
+            className='drawer-link decorate-drawer-link'>
+            <s.List className='drawer-icon' style={{fontSize: '1.25rem'}} />
+            <span>Transactions</span>
+            <span></span>
+          </NavLink>
+        </div>
+        <hr className='hr' />
+        <div className='col-start-stretch'>
+          <NavLink
+            to='/settings/categories'
+            exact
+            className='drawer-link decorate-drawer-link'>
+            <s.Tag className='drawer-icon' style={{fontSize: '1.25rem'}} />
+            <span>Categories</span>
+          </NavLink>
+          <NavLink
+            to='/settings/accounts'
+            exact
+            className='drawer-link decorate-drawer-link'>
+            <s.CreditCard className='drawer-icon' style={{fontSize: '1.25rem'}} />
+            <span>Accounts</span>
+          </NavLink>
+          <NavLink
+            to='/settings/payees'
+            exact
+            className='drawer-link decorate-drawer-link'>
+            <s.Users className='drawer-icon' style={{fontSize: '1.25rem'}} />
+            <span>Payees</span>
+          </NavLink>
+        </div>
       </aside>
     )
   }
@@ -245,31 +250,18 @@ export class HomePage extends u.ViewComponent {
 
     return (
       <PageLayout>
-        <div className='fixed-limit-width row-start-stretch grid12 padding-v-1'>
-          <div className='grid12-2 col-start-stretch gaps-v-1x25'>
-            <Sidenav />
-          </div>
-          <div className='grid12-7 col-start-stretch gaps-v-1x25'>
-            <div className='widget col-start-stretch'>
-              <div className='rounded-t row-start-center padding-h-1x25 padding-v-0x75 bg-black-97'>
-                <h2 className='font-large'>
-                  Add transaction
-                </h2>
-              </div>
-              <hr className='hr' />
-              <TransactionForm />
-            </div>
-            <div className='widget col-start-stretch'>
-              <div className='rounded-t row-start-center padding-h-1x25 padding-v-0x75 bg-black-97'>
+        <div className='row-start-stretch gaps-h-1 padding-v-1'>
+          <Drawer />
+          <div className='flex-1 col-start-stretch gaps-v-1x25 padding-r-1x25'>
+            <div className='col-start-stretch gaps-v-0x5'>
+              <div className='row-start-center padding-h-1x25 padding-v-0x5'>
                 <h2 className='font-large'>
                   Transactions
                 </h2>
               </div>
-              <hr className='hr' />
               <TransactionsTable />
             </div>
           </div>
-          <div className='grid12-3 col-start-stretch gaps-v-1x25' />
         </div>
       </PageLayout>
     )
@@ -280,20 +272,17 @@ class _SettingsPage extends u.ViewComponent {
   render({props: {categories, accounts, payees}}) {
     return (
       <PageLayout>
-        <div className='fixed-limit-width row-start-stretch grid12 padding-v-1'>
-          <div className='grid12-2 col-start-stretch gaps-v-1x25'>
-            <Sidenav />
-          </div>
-          <div className='grid12-7 col-start-stretch gaps-v-1x25'>
+        <div className='row-start-stretch gaps-h-1 padding-v-1'>
+          <Drawer />
+          <div className='flex-1 col-start-stretch gaps-v-1x25 padding-r-1x25'>
             <Switch>
               <Route path='/settings/categories'>
-                <div className='widget col-start-stretch'>
-                  <div className='rounded-t row-start-center padding-h-1x25 padding-v-0x75 bg-black-97'>
+                <div className='col-start-stretch gaps-v-0x5'>
+                  <div className='row-start-center padding-h-1x25 padding-v-0x5'>
                     <h2 className='font-large'>
                       Categories
                     </h2>
                   </div>
-                  <hr className='hr' />
                   <div className='col-start-stretch gaps-v-0x25 padding-h-1x25 padding-v-1'>
                     {f.map(categories, ({title}) => (
                       <div>{title}</div>
@@ -302,13 +291,12 @@ class _SettingsPage extends u.ViewComponent {
                 </div>
               </Route>
               <Route path='/settings/accounts'>
-                <div className='widget col-start-stretch'>
-                  <div className='rounded-t row-start-center padding-h-1x25 padding-v-0x75 bg-black-97'>
+                <div className='col-start-stretch gaps-v-0x5'>
+                  <div className='row-start-center padding-h-1x25 padding-v-0x5'>
                     <h2 className='font-large'>
                       Accounts
                     </h2>
                   </div>
-                  <hr className='hr' />
                   <div className='col-start-stretch gaps-v-0x25 padding-h-1x25 padding-v-1'>
                     {f.map(accounts, ({title}) => (
                       <div>{title}</div>
@@ -317,13 +305,12 @@ class _SettingsPage extends u.ViewComponent {
                 </div>
               </Route>
               <Route path='/settings/payees'>
-                <div className='widget col-start-stretch'>
-                  <div className='rounded-t row-start-center padding-h-1x25 padding-v-0x75 bg-black-97'>
+                <div className='col-start-stretch gaps-v-0x5'>
+                  <div className='row-start-center padding-h-1x25 padding-v-0x5'>
                     <h2 className='font-large'>
                       Payees
                     </h2>
                   </div>
-                  <hr className='hr' />
                   <div className='col-start-stretch gaps-v-0x25 padding-h-1x25 padding-v-1'>
                     {f.map(payees, ({title}) => (
                       <div>{title}</div>
@@ -333,25 +320,6 @@ class _SettingsPage extends u.ViewComponent {
               </Route>
               <Redirect from='/settings' to='settings/categories' />
             </Switch>
-          </div>
-          <div className='grid12-3 col-start-stretch gaps-v-1x25'>
-            <div className='widget col-start-stretch padding-v-0x5'>
-              <NavLink
-                to='/settings/categories'
-                className='submenu-item'>
-                Categories
-              </NavLink>
-              <NavLink
-                to='/settings/accounts'
-                className='submenu-item'>
-                Accounts
-              </NavLink>
-              <NavLink
-                to='/settings/payees'
-                className='submenu-item'>
-                Payees
-              </NavLink>
-            </div>
           </div>
         </div>
       </PageLayout>

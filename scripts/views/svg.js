@@ -646,6 +646,28 @@ export class Edit extends u.ViewComponent {
   }
 }
 
+export class CreditCard extends u.ViewComponent {
+  render({props}) {
+    return (
+      <svg {...featherProps(props)}>
+        <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+        <line x1="1" y1="10" x2="23" y2="10" />
+      </svg>
+    )
+  }
+}
+
+export class Tag extends u.ViewComponent {
+  render({props}) {
+    return (
+      <svg {...featherProps(props)}>
+        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+        <line x1="7" y1="7" x2="7" y2="7" />
+      </svg>
+    )
+  }
+}
+
 export class MaleFigure extends u.ViewComponent {
   render({props}) {
     return (

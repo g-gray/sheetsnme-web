@@ -15,10 +15,6 @@ body {
   min-width: $page-width-max;
 }
 
-.min-width-page-max {
-  min-width: $page-width-max;
-}
-
 .dialog-max-width {
   max-width: $dialog-max-width;
 }
@@ -65,4 +61,8 @@ body {
 .sticky-b {
   bottom: 0;
   @extend .sticky;
+}
+
+.navbar-height {
+  height: 3.5rem;
 }
