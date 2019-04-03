@@ -43,3 +43,24 @@
   @include theme-drawer-link-busy;
   @include theme-drawer-link-current;
 }
+
+.data-table {
+  @extend .table;
+}
+
+.data-table-row {
+  @extend .table-row;
+}
+
+.data-table-head {
+  padding: 0.75rem 1rem;
+  color: $color-black-50;
+  border-bottom: 1px solid $color-black-90;
+  @extend .font-midsmall;
+  @extend .table-cell;
+}
+
+.data-table-cell {
+  padding: 0.75rem 1rem;
+  @extend .table-cell;
+}

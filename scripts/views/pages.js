@@ -16,6 +16,24 @@ class PageLayout extends u.ViewComponent {
     return (
       <div className='relative col-start-stretch stretch-to-viewport-v'>
         <Navbar />
+        <div className='row-start-stretch gaps-h-1 padding-v-1'>
+          <Drawer />
+          <div
+            className={`flex-1 ${cls || ''}`}
+            style={style}
+            children={children} />
+        </div>
+        <m.GlobalDialog />
+      </div>
+    )
+  }
+}
+
+class MobilePageLayout extends u.ViewComponent {
+  render({props: {className: cls, style, children}}) {
+    return (
+      <div className='relative col-start-stretch stretch-to-viewport-v'>
+        <Navbar />
         <div
           className={`flex-1 ${cls || ''}`}
           style={style}
@@ -241,33 +259,18 @@ export class HomePage extends u.ViewComponent {
   render({context}) {
     if (u.isMobile(context)) {
       return (
-        <PageLayout>
-          <div className='col-start-stretch gaps-v-0x75 padding-v-0x75'>
-            <div className='mobile-widget col-start-stretch'>
-              <TransactionForm />
-            </div>
-            <div className='mobile-widget col-start-stretch'>
-              <TransactionsTable />
-            </div>
+        <MobilePageLayout>
+          <div className='col-start-stretch'>
+            <TransactionsTable />
           </div>
-        </PageLayout>
+        </MobilePageLayout>
       )
     }
 
     return (
       <PageLayout>
-        <div className='row-start-stretch gaps-h-1 padding-v-1'>
-          <Drawer />
-          <div className='flex-1 col-start-stretch gaps-v-1x25 padding-r-1x25'>
-            <div className='col-start-stretch gaps-v-0x5'>
-              <div className='row-start-center padding-h-1x25 padding-v-0x5'>
-                <h2 className='font-large'>
-                  Transactions
-                </h2>
-              </div>
-              <TransactionsTable />
-            </div>
-          </div>
+        <div className='col-start-stretch padding-v-0x5 padding-r-1x25'>
+          <TransactionsTable />
         </div>
       </PageLayout>
     )
@@ -275,58 +278,43 @@ export class HomePage extends u.ViewComponent {
 }
 
 class _SettingsPage extends u.ViewComponent {
-  render({props: {categories, accounts, payees}}) {
-    return (
-      <PageLayout>
-        <div className='row-start-stretch gaps-h-1 padding-v-1'>
-          <Drawer />
-          <div className='flex-1 col-start-stretch gaps-v-1x25 padding-r-1x25'>
+  render({context}) {
+    if (u.isMobile(context)) {
+      return (
+        <MobilePageLayout>
+          <div className='col-start-stretch padding-v-0x5'>
             <Switch>
               <Route path='/settings/categories'>
-                <div className='col-start-stretch gaps-v-0x5'>
-                  <div className='row-start-center padding-h-1x25 padding-v-0x5'>
-                    <h2 className='font-large'>
-                      Categories
-                    </h2>
-                  </div>
-                  <div className='col-start-stretch gaps-v-0x25 padding-h-1x25 padding-v-1'>
-                    {f.map(categories, ({id, title}) => (
-                      <div key={`${title}-${id}`}>{title}</div>
-                    ))}
-                  </div>
-                </div>
+                <CategoriesTable />
               </Route>
               <Route path='/settings/accounts'>
-                <div className='col-start-stretch gaps-v-0x5'>
-                  <div className='row-start-center padding-h-1x25 padding-v-0x5'>
-                    <h2 className='font-large'>
-                      Accounts
-                    </h2>
-                  </div>
-                  <div className='col-start-stretch gaps-v-0x25 padding-h-1x25 padding-v-1'>
-                    {f.map(accounts, ({id, title}) => (
-                      <div key={`${title}-${id}`}>{title}</div>
-                    ))}
-                  </div>
-                </div>
+                <AccountsTable />
               </Route>
               <Route path='/settings/payees'>
-                <div className='col-start-stretch gaps-v-0x5'>
-                  <div className='row-start-center padding-h-1x25 padding-v-0x5'>
-                    <h2 className='font-large'>
-                      Payees
-                    </h2>
-                  </div>
-                  <div className='col-start-stretch gaps-v-0x25 padding-h-1x25 padding-v-1'>
-                    {f.map(payees, ({id, title}) => (
-                      <div key={`${title}-${id}`}>{title}</div>
-                    ))}
-                  </div>
-                </div>
+                <PayeesTable />
               </Route>
               <Redirect from='/settings' to='settings/categories' />
             </Switch>
           </div>
+        </MobilePageLayout>
+      )
+    }
+
+    return (
+      <PageLayout>
+        <div className='col-start-stretch padding-v-0x5'>
+          <Switch>
+            <Route path='/settings/categories'>
+              <CategoriesTable />
+            </Route>
+            <Route path='/settings/accounts'>
+              <AccountsTable />
+            </Route>
+            <Route path='/settings/payees'>
+              <PayeesTable />
+            </Route>
+            <Redirect from='/settings' to='settings/categories' />
+          </Switch>
         </div>
       </PageLayout>
     )
@@ -334,10 +322,114 @@ class _SettingsPage extends u.ViewComponent {
 }
 
 export const SettingsPage = connect(state => ({
-  categories: state.net.categories,
-  accounts: state.net.accounts,
   payees: state.net.payees,
 }))(_SettingsPage)
+
+class _CategoriesTable extends u.ViewComponent {
+  render({props: {categories}}) {
+    return (
+      <div className='data-table'>
+        <div className='data-table-row fg-black-50'>
+          <div className='data-table-head'>Title</div>
+        </div>
+        {f.map(categories, cat => (
+          <div className='data-table-row' key={cat.id}>
+            <div className='data-table-cell wspace-nowrap'>
+              {cat.title}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+}
+
+const CategoriesTable = connect(state => ({
+  categories: state.net.categories,
+}))(_CategoriesTable)
+
+class _AccountsTable extends u.ViewComponent {
+  render({
+    context,
+    props: {accounts},
+  }) {
+    if (u.isMobile(context)) {
+      return (
+        <div className='data-table'>
+          <div className='data-table-row fg-black-50'>
+            <div className='data-table-head'>Title</div>
+            <div className='data-table-head text-right'>Initial Rate</div>
+          </div>
+          {f.map(accounts, acc => (
+            <div className='data-table-row' key={acc.id}>
+              <div className='data-table-cell wspace-nowrap'>
+                {acc.title}
+              </div>
+              <div className='data-table-cell wspace-nowrap text-right'>
+                {acc.initial}
+              </div>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    return (
+      <div className='data-table'>
+        <div className='data-table-row fg-black-50'>
+          <div className='data-table-head'>Title</div>
+          <div className='data-table-head'>Initial Rate</div>
+          <div className='data-table-head'>Currency Code</div>
+          <div className='data-table-head'>RUB Rate</div>
+        </div>
+        {f.map(accounts, acc => (
+          <div className='data-table-row' key={acc.id}>
+            <div className='data-table-cell wspace-nowrap'>
+              {acc.title}
+            </div>
+            <div className='data-table-cell wspace-nowrap'>
+              {acc.initial}
+            </div>
+            <div className='data-table-cell wspace-nowrap'>
+              {acc.currencyCode}
+            </div>
+            <div className='data-table-cell wspace-nowrap'>
+              {acc.rubRate}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+}
+
+const AccountsTable = connect(state => ({
+  accounts: state.net.accounts,
+}))(_AccountsTable)
+
+class _PayeesTable extends u.ViewComponent {
+  render({props: {payees}}) {
+    console.info(`-- payees:`, payees)
+    return (
+      <div className='data-table'>
+        <div className='data-table-row fg-black-50'>
+          <div className='data-table-head'>Title</div>
+        </div>
+        {f.map(payees, payee => (
+          <div className='data-table-row' key={payee.id}>
+            <div className='data-table-cell wspace-nowrap'>
+              {payee.title}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+}
+
+const PayeesTable = connect(state => ({
+  payees: state.net.payees,
+}))(_PayeesTable)
 
 class _TransactionForm extends u.ViewComponent {
   constructor(props) {
@@ -459,19 +551,25 @@ const TransactionForm = connect(state => ({
 
 class _TransactionsTable extends u.ViewComponent {
   render({
-    props: {categoriesById, accountsById, transactions},
+    context,
+    props: {categoriesById, accountsById, payeesById, transactions},
   }) {
-    return (
-      <div className='col-start-stretch gaps-v-0x5 padding-h-1x25 padding-v-0x75'>
-        {f.map(transactions, tr => tr.incomeAmount || tr.outcomeAmount ? (
-          <div className='col-start-stretch list-item' key={tr.id}>
-            <div className='col-start-stretch gaps-v-0x25'>
-              <div className='row-between-start font-midsmall'>
-                <span>{tr.date}</span>
-                <span>{f.scan(accountsById, tr.incomeAccountId || tr.outcomeAccountId, 'title')}</span>
+    if (u.isMobile(context)) {
+      return (
+        <div className='data-table'>
+          <div className='data-table-row fg-black-50'>
+            <div className='data-table-head'>Category or Payee</div>
+            <div className='data-table-head text-right'>Amount</div>
+          </div>
+          {f.map(transactions, tr => (
+            <div className='data-table-row' key={tr.id}>
+              <div className='data-table-cell'>
+                {
+                  f.scan(categoriesById, tr.categoryId, 'title') ||
+                  f.scan(payeesById, tr.payeeId, 'title')
+                }
               </div>
-              <div className='row-between-end'>
-                <span>{f.scan(categoriesById, tr.categoryId, 'title')}</span>
+              <div className='data-table-cell text-right'>
                 {
                   tr.incomeAmount ? <span className='fg-success'>{`+${tr.incomeAmount}`}</span> :
                   tr.outcomeAmount ? <span className='fg-danger-100'>{`-${tr.outcomeAmount}`}</span> :
@@ -479,9 +577,42 @@ class _TransactionsTable extends u.ViewComponent {
                 }
               </div>
             </div>
-            <hr className='hr hide-in-list-last-child margin-t-0x5' />
+          ))}
+        </div>
+      )
+    }
+
+    return (
+      <div className='data-table'>
+        <div className='data-table-row fg-black-50'>
+          <div className='data-table-head'>Date</div>
+          <div className='data-table-head'>Category or Payee</div>
+          <div className='data-table-head'>Account</div>
+          <div className='data-table-head text-right'>Amount</div>
+        </div>
+        {f.map(transactions, tr => (
+          <div className='data-table-row' key={tr.id}>
+            <div className='data-table-cell wspace-nowrap'>
+              {tr.date}
+            </div>
+            <div className='data-table-cell'>
+              {
+                f.scan(categoriesById, tr.categoryId, 'title') ||
+                f.scan(payeesById, tr.payeeId, 'title')
+              }
+            </div>
+            <div className='data-table-cell'>
+              {f.scan(accountsById, tr.incomeAccountId || tr.outcomeAccountId, 'title')}
+            </div>
+            <div className='data-table-cell text-right'>
+              {
+                tr.incomeAmount ? <span className='fg-success'>{`+${tr.incomeAmount}`}</span> :
+                tr.outcomeAmount ? <span className='fg-danger-100'>{`-${tr.outcomeAmount}`}</span> :
+                null
+              }
+            </div>
           </div>
-        ) : null)}
+        ))}
       </div>
     )
   }
@@ -490,6 +621,7 @@ class _TransactionsTable extends u.ViewComponent {
 const TransactionsTable = connect(state => ({
   categoriesById: state.net.categoriesById,
   accountsById: state.net.accountsById,
+  payeesById: state.net.payeesById,
   transactions: state.net.transactions,
 }))(_TransactionsTable)
 
