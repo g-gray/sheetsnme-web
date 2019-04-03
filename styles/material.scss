@@ -5,6 +5,10 @@
   @extend .row-start-center;
 }
 
+.drawer-link * {
+  line-height: 1;
+}
+
 .drawer-icon {
   color: $color-black-50;
 }

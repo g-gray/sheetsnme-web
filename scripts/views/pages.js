@@ -197,7 +197,7 @@ class _Drawer extends u.ViewComponent {
             to='/'
             exact
             className='drawer-link decorate-drawer-link'>
-            <s.List className='drawer-icon' style={{fontSize: '1.25rem'}} />
+            <s.List className='drawer-icon font-large' />
             <span>Transactions</span>
             <span className='flex-1 text-right'>
               {transactions.length || ''}
@@ -210,21 +210,21 @@ class _Drawer extends u.ViewComponent {
             to='/settings/categories'
             exact
             className='drawer-link decorate-drawer-link'>
-            <s.Tag className='drawer-icon' style={{fontSize: '1.25rem'}} />
+            <s.Tag className='drawer-icon font-large' />
             <span>Categories</span>
           </NavLink>
           <NavLink
             to='/settings/accounts'
             exact
             className='drawer-link decorate-drawer-link'>
-            <s.CreditCard className='drawer-icon' style={{fontSize: '1.25rem'}} />
+            <s.CreditCard className='drawer-icon font-large' />
             <span>Accounts</span>
           </NavLink>
           <NavLink
             to='/settings/payees'
             exact
             className='drawer-link decorate-drawer-link'>
-            <s.Users className='drawer-icon' style={{fontSize: '1.25rem'}} />
+            <s.Users className='drawer-icon font-large' />
             <span>Payees</span>
           </NavLink>
         </div>
