@@ -26,21 +26,6 @@ class PageLayout extends u.ViewComponent {
   }
 }
 
-class MobilePageLayout extends u.ViewComponent {
-  render({props: {className: cls, style, children}}) {
-    return (
-      <div className='relative col-start-stretch stretch-to-viewport-v bg-body'>
-        <Navbar />
-        <div
-          className={`flex-1 ${cls || ''}`}
-          style={style}
-          children={children} />
-        <m.GlobalDialog />
-      </div>
-    )
-  }
-}
-
 class _Navbar extends u.ViewComponent {
   constructor(props) {
     super(props)
@@ -62,36 +47,33 @@ class _Navbar extends u.ViewComponent {
   }) {
     if (u.isMobile(context)) {
       return (
-        <header
-          className='row-between-stretch bg-primary-100'
-          style={{height: '3.25rem', borderBottom: '1px solid #4872a1'}}>
-          <a href='/' className='row-center-center padding-0x75 decorate-dark-menu-item'>
-            <s.PieChart style={{fontSize: '1.25rem'}} />
-          </a>
-          <m.FakeButton className='row-center-center padding-0x75 decorate-dark-menu-item'>
-            <s.Menu
-              style={{fontSize: '1.5rem'}}
-              onClick={() => {setDialog(MobileMenu)}} />
-          </m.FakeButton>
+        <header className='row-between-stretch bg-primary-100'>
+          <div className='row-start-center gaps-h-0x75 padding-h-1'>
+            <m.FakeButton className='row-center-center padding-0x5 circle decorate-dark-menu-item'>
+              <s.Menu
+                style={{fontSize: '1.5rem'}}
+                onClick={() => {setDialog(MobileMenu)}} />
+            </m.FakeButton>
+            <span className='font-large fg-white'>Accounting</span>
+          </div>
+          <UserMenu />
         </header>
       )
     }
 
     return (
-      <header
-        className='row-start-stretch bg-primary-100 min-width-page-max'
-        style={{borderBottom: '1px solid #4872a1'}}>
-        <div className='fixed-limit-width grid12 row-start-stretch'>
-          <div className='grid12-2 row-start-stretch'>
-            <a href='/' className='row-center-center padding-0x5 decorate-dark-menu-item'>
-              <s.PieChart style={{fontSize: '1.5rem'}} />
-            </a>
-          </div>
-          <div className='grid12-5 row-start-center gaps-h-0x75' />
-          <div className='flex-1 row-end-stretch'>
-            <UserMenu />
-          </div>
-        </div>
+      <header className='row-between-stretch bg-primary-100'>
+        <Link to='/' className='row-center-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
+          <span className='row-center-center padding-0x25'>
+            <span className='row-center-center padding-0x25 bg-white circle'>
+              <s.PieChart
+                className='fg-primary-100'
+                style={{fontSize: '1.5rem'}} />
+            </span>
+          </span>
+          <span className='font-large'>Accounting</span>
+        </Link>
+        <UserMenu />
       </header>
     )
   }
@@ -100,27 +82,6 @@ class _Navbar extends u.ViewComponent {
 const Navbar = connect(null, dispatch => ({
   setDialog: dialog => dispatch(a.setDialog(dialog)),
 }))(_Navbar)
-
-class Sidenav extends u.ViewComponent {
-  render() {
-    return (
-      <aside className='col-start-stretch'>
-        <Link
-          to='/'
-          className='row-start-center gaps-h-0x5 padding-0x5 decorate-body-menu-item rounded'>
-          <s.Home className='font-large fg-link-icon' />
-          <span>Home</span>
-        </Link>
-        <Link
-          to='/settings'
-          className='row-start-center gaps-h-0x5 padding-0x5 decorate-body-menu-item rounded'>
-          <s.Settings className='font-large fg-link-icon' />
-          <span>Settings</span>
-        </Link>
-      </aside>
-    )
-  }
-}
 
 class _UserMenu extends u.ViewComponent {
   constructor(props) {
@@ -141,37 +102,45 @@ class _UserMenu extends u.ViewComponent {
     props: {user},
     state: {expanded},
   }) {
-    const {firstName, lastName, pictureUrl} = user
+    const {firstName, lastName, pictureUrl, email} = user
 
     return f.isEmpty(user) ? null : (
       <div className='relative row-start-stretch'>
         <m.FakeButton
           onClick={this.toggle}
-          className='relative row-start-stretch decorate-dark-menu-item z-index-2'
+          className='relative row-start-center gaps-h-0x75 padding-h-1 padding-v-0x75 decorate-dark-menu-item z-index-2'
           aria-expanded={expanded}>
-          <div className='relative row-center-center padding-h-0x5'>
-            <m.CircleUserPic
-              url={pictureUrl}
-              size='1.75' />
-            {!expanded ? null :
-            <div className='dropdown-chevron dropdown-chevron-position' />}
-          </div>
-          <div className='row-start-center fg-white'>
-            <span>{`${firstName || ''} ${lastName || ''}`}</span>
-            <span className='row-center-center padding-h-0x25'>
-              <s.ChevronDown />
-            </span>
-          </div>
+          <m.CircleUserPic
+            url={pictureUrl}
+            size='2' />
         </m.FakeButton>
         {!expanded ? null :
         <m.Closer root={this} close={this.close}>
           <div
-            className='dropdown-position-right-shifted z-index-1'
+            className='dropdown-position z-index-1'
             onClick={this.close}>
             <div className='dropdown dropdown-padding col-start-stretch' style={{minWidth: '11rem'}}>
-              <a href='/auth/logout' className='decorate-light-menu-item dropdown-item-padding'>
-                Logout
-              </a>
+              <div className='row-start-center gaps-h-0x75 padding-v-0x5 padding-h-1'>
+                <m.CircleUserPic
+                  url={pictureUrl}
+                  size='4' />
+                <div className='col-start-stretch gaps-v-0x5'>
+                  <div class='col-start-stretch'>
+                    <span className='weight-medium wspace-nowrap'>
+                      {`${firstName || ''} ${lastName || ''}`}
+                    </span>
+                    {!email ? null :
+                    <span className='font-midsmall'>
+                      {email}
+                    </span>}
+                  </div>
+                  <div className='row-start-center'>
+                    <a href='/auth/logout' className='btn-secondary'>
+                      Logout
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </m.Closer>}
@@ -236,11 +205,32 @@ const MobileMenu = connect(state => ({
   setDialog: dialog => dispatch(a.setDialog(dialog)),
 }))(_MobileMenu)
 
+class Sidenav extends u.ViewComponent {
+  render() {
+    return (
+      <aside className='col-start-stretch'>
+        <Link
+          to='/'
+          className='row-start-center gaps-h-0x5 padding-0x5 decorate-body-menu-item rounded'>
+          <s.Home className='font-large fg-link-icon' />
+          <span>Home</span>
+        </Link>
+        <Link
+          to='/settings'
+          className='row-start-center gaps-h-0x5 padding-0x5 decorate-body-menu-item rounded'>
+          <s.Settings className='font-large fg-link-icon' />
+          <span>Settings</span>
+        </Link>
+      </aside>
+    )
+  }
+}
+
 export class HomePage extends u.ViewComponent {
   render({context}) {
     if (u.isMobile(context)) {
       return (
-        <MobilePageLayout title='Add transaction'>
+        <PageLayout>
           <div className='col-start-stretch gaps-v-0x75 padding-v-0x75'>
             <div className='mobile-widget col-start-stretch'>
               <TransactionForm />
@@ -249,7 +239,7 @@ export class HomePage extends u.ViewComponent {
               <TransactionsTable />
             </div>
           </div>
-        </MobilePageLayout>
+        </PageLayout>
       )
     }
 

@@ -443,21 +443,12 @@ $dropdown-color-shadow: rgba(black, 0.1);
   padding: 0.25rem 1rem;
 }
 
-.dropdown-position-right-shifted {
+.dropdown-position {
   top: 100%;
-  right: 0;
+  right: 0rem;
   position: absolute;
-  padding-top: 0.5rem;
-  margin-right: - $page-padding-h / 2;
+  margin: 0.25rem;
   @extend .col-start-stretch;
-}
-
-.dropdown-chevron-position {
-  left: 50%;
-  bottom: -0.5rem;
-  position: absolute;
-  margin-bottom: -1px;
-  transform: translateX(-50%);
 }
 
 /**
