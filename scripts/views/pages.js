@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {Switch, Route, Redirect, NavLink, Link} from 'react-router-dom'
 
 import * as f from 'fpx'
 import * as e from 'emerge'
@@ -99,6 +100,27 @@ class _Navbar extends u.ViewComponent {
 const Navbar = connect(null, dispatch => ({
   setDialog: dialog => dispatch(a.setDialog(dialog)),
 }))(_Navbar)
+
+class Sidenav extends u.ViewComponent {
+  render() {
+    return (
+      <aside className='col-start-stretch'>
+        <Link
+          to='/'
+          className='row-start-center gaps-h-0x5 padding-0x5 decorate-body-menu-item rounded'>
+          <s.Home className='font-large fg-link-icon' />
+          <span>Home</span>
+        </Link>
+        <Link
+          to='/settings'
+          className='row-start-center gaps-h-0x5 padding-0x5 decorate-body-menu-item rounded'>
+          <s.Settings className='font-large fg-link-icon' />
+          <span>Settings</span>
+        </Link>
+      </aside>
+    )
+  }
+}
 
 class _UserMenu extends u.ViewComponent {
   constructor(props) {
@@ -215,13 +237,10 @@ const MobileMenu = connect(state => ({
 }))(_MobileMenu)
 
 export class HomePage extends u.ViewComponent {
-  render({
-    props,
-    context,
-  }) {
+  render({context}) {
     if (u.isMobile(context)) {
       return (
-        <MobilePageLayout title='Add transaction' {...props}>
+        <MobilePageLayout title='Add transaction'>
           <div className='col-start-stretch gaps-v-0x75 padding-v-0x75'>
             <div className='mobile-widget col-start-stretch'>
               <TransactionForm />
@@ -235,28 +254,26 @@ export class HomePage extends u.ViewComponent {
     }
 
     return (
-      <PageLayout {...props}>
+      <PageLayout>
         <div className='fixed-limit-width row-start-stretch grid12 padding-v-1'>
           <div className='grid12-2 col-start-stretch gaps-v-1x25'>
-            {/*
-            <Sidenav {...props} />
-            */}
+            <Sidenav />
           </div>
           <div className='grid12-7 col-start-stretch gaps-v-1x25'>
             <div className='widget col-start-stretch'>
               <div className='rounded-t row-start-center padding-h-1x25 padding-v-0x75 bg-black-97'>
-                <h1 className='font-large'>
+                <h2 className='font-large'>
                   Add transaction
-                </h1>
+                </h2>
               </div>
               <hr className='hr' />
               <TransactionForm />
             </div>
             <div className='widget col-start-stretch'>
               <div className='rounded-t row-start-center padding-h-1x25 padding-v-0x75 bg-black-97'>
-                <h1 className='font-large'>
+                <h2 className='font-large'>
                   Transactions
-                </h1>
+                </h2>
               </div>
               <hr className='hr' />
               <TransactionsTable />
@@ -268,6 +285,95 @@ export class HomePage extends u.ViewComponent {
     )
   }
 }
+
+class _SettingsPage extends u.ViewComponent {
+  render({props: {categories, accounts, payees}}) {
+    return (
+      <PageLayout>
+        <div className='fixed-limit-width row-start-stretch grid12 padding-v-1'>
+          <div className='grid12-2 col-start-stretch gaps-v-1x25'>
+            <Sidenav />
+          </div>
+          <div className='grid12-7 col-start-stretch gaps-v-1x25'>
+            <Switch>
+              <Route path='/settings/categories'>
+                <div className='widget col-start-stretch'>
+                  <div className='rounded-t row-start-center padding-h-1x25 padding-v-0x75 bg-black-97'>
+                    <h2 className='font-large'>
+                      Categories
+                    </h2>
+                  </div>
+                  <hr className='hr' />
+                  <div className='col-start-stretch gaps-v-0x25 padding-h-1x25 padding-v-1'>
+                    {f.map(categories, ({title}) => (
+                      <div>{title}</div>
+                    ))}
+                  </div>
+                </div>
+              </Route>
+              <Route path='/settings/accounts'>
+                <div className='widget col-start-stretch'>
+                  <div className='rounded-t row-start-center padding-h-1x25 padding-v-0x75 bg-black-97'>
+                    <h2 className='font-large'>
+                      Accounts
+                    </h2>
+                  </div>
+                  <hr className='hr' />
+                  <div className='col-start-stretch gaps-v-0x25 padding-h-1x25 padding-v-1'>
+                    {f.map(accounts, ({title}) => (
+                      <div>{title}</div>
+                    ))}
+                  </div>
+                </div>
+              </Route>
+              <Route path='/settings/payees'>
+                <div className='widget col-start-stretch'>
+                  <div className='rounded-t row-start-center padding-h-1x25 padding-v-0x75 bg-black-97'>
+                    <h2 className='font-large'>
+                      Payees
+                    </h2>
+                  </div>
+                  <hr className='hr' />
+                  <div className='col-start-stretch gaps-v-0x25 padding-h-1x25 padding-v-1'>
+                    {f.map(payees, ({title}) => (
+                      <div>{title}</div>
+                    ))}
+                  </div>
+                </div>
+              </Route>
+              <Redirect from='/settings' to='settings/categories' />
+            </Switch>
+          </div>
+          <div className='grid12-3 col-start-stretch gaps-v-1x25'>
+            <div className='widget col-start-stretch padding-v-0x5'>
+              <NavLink
+                to='/settings/categories'
+                className='submenu-item'>
+                Categories
+              </NavLink>
+              <NavLink
+                to='/settings/accounts'
+                className='submenu-item'>
+                Accounts
+              </NavLink>
+              <NavLink
+                to='/settings/payees'
+                className='submenu-item'>
+                Payees
+              </NavLink>
+            </div>
+          </div>
+        </div>
+      </PageLayout>
+    )
+  }
+}
+
+export const SettingsPage = connect(state => ({
+  categories: state.net.categories,
+  accounts: state.net.accounts,
+  payees: state.net.payees,
+}))(_SettingsPage)
 
 class _TransactionForm extends u.ViewComponent {
   constructor(props) {
