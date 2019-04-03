@@ -151,7 +151,7 @@ class _UserMenu extends u.ViewComponent {
                   url={pictureUrl}
                   size='4' />
                 <div className='col-start-stretch gaps-v-0x5'>
-                  <div class='col-start-stretch'>
+                  <div className='col-start-stretch'>
                     <span className='weight-medium wspace-nowrap'>
                       {`${firstName || ''} ${lastName || ''}`}
                     </span>
