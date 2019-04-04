@@ -516,7 +516,7 @@ $dropdown-color-shadow: rgba(black, 0.1);
 
 .dialog-center {
   min-height: 100vh;
-  @extend .fixed-limit-width;
+  @include limit-width;
   @extend .col-center-center;
   @extend .padding-v-1;
 }

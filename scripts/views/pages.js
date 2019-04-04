@@ -16,7 +16,7 @@ class PageLayout extends u.ViewComponent {
     return (
       <div className='relative col-start-stretch stretch-to-viewport-v'>
         <Navbar />
-        <div className='row-start-stretch gaps-h-1 padding-v-1'>
+        <div className='row-start-stretch gaps-h-1'>
           <Drawer />
           <div
             className={`flex-1 ${cls || ''}`}
@@ -79,7 +79,7 @@ class _Navbar extends u.ViewComponent {
   }) {
     if (u.isMobile(context)) {
       return (
-        <header className='row-between-stretch bg-primary-100 navbar-height'>
+        <header className='row-between-stretch bg-primary-100 navbar-height shadow-dept-1'>
           <div className='row-start-center gaps-h-0x75 padding-h-1'>
             <m.FakeButton className='row-center-center padding-0x5 circle decorate-dark-menu-item'>
               <s.Menu
@@ -94,7 +94,7 @@ class _Navbar extends u.ViewComponent {
     }
 
     return (
-      <header className='row-between-stretch bg-primary-100 navbar-height'>
+      <header className='row-between-stretch bg-primary-100 navbar-height shadow-dept-1'>
         <Link to='/' className='row-center-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
           <Logo />
           <span className='font-large'>Accounting</span>
@@ -209,7 +209,7 @@ const MobileMenu = connect(null, dispatch => ({
 class _Drawer extends u.ViewComponent {
   render({props: {transactions}}) {
     return (
-      <aside className='col-start-stretch gaps-v-0x5 padding-h-0x5' style={{width: '16rem'}}>
+      <aside className='col-start-stretch gaps-v-0x5 padding-h-0x5 padding-v-1' style={{width: '16rem'}}>
         <div className='col-start-stretch'>
           <NavLink
             to='/'
@@ -430,6 +430,64 @@ const PayeesTable = connect(state => ({
   payees: state.net.payees,
 }))(_PayeesTable)
 
+class _TransactionDialog extends u.ViewComponent {
+  constructor(props) {
+    super(props)
+
+    this.close = this.props.setDialog.bind(null, null)
+  }
+
+  render({
+    close,
+    context,
+  }) {
+    if (u.isMobile(context)) {
+      return (
+        <m.Dialog onEscape={close}>
+          <m.DialogScrollable className='col-start-stretch'>
+            <div className='flex-1 relative col-start-stretch bg-white'>
+              <div className='row-between-center gaps-h-1 padding-l-1x25 navbar-height'>
+                <h2 className='font-large weight-medium'>
+                  New transaction
+                </h2>
+                <m.FakeButton className='row-center-center padding-1x25' onClick={close}>
+                  <s.X className='font-large' />
+                </m.FakeButton>
+              </div>
+              <hr className='hr' />
+              <TransactionForm onSubmit={close} />
+            </div>
+          </m.DialogScrollable>
+        </m.Dialog>
+      )
+    }
+
+    return (
+      <m.Dialog onEscape={close}>
+        <m.DialogOverlay className='bg-overlay-dark' />
+        <m.DialogCentered onClick={close}>
+          <div className='col-start-stretch rounded bg-white shadow-dept-3'>
+            <div className='row-between-center gaps-h-1 padding-h-1x25 navbar-height'>
+              <h2 className='font-large weight-medium'>
+                New transaction
+              </h2>
+              <m.FakeButton className='row-center-center' onClick={close}>
+                <s.X className='font-large' />
+              </m.FakeButton>
+            </div>
+            <hr className='hr' />
+            <TransactionForm onSubmit={close} />
+          </div>
+        </m.DialogCentered>
+      </m.Dialog>
+    )
+  }
+}
+
+const TransactionDialog = connect(null, dispatch => ({
+  setDialog: dialog => dispatch(a.setDialog(dialog)),
+}))(_TransactionDialog)
+
 class _TransactionForm extends u.ViewComponent {
   constructor(props) {
     super(props)
@@ -439,6 +497,7 @@ class _TransactionForm extends u.ViewComponent {
     this.onSubmit = event => {
       u.preventDefault(event)
       this.props.dispatch(a.createTransaction(this.state.formValues))
+      if (this.props.onSubmit) this.props.onSubmit(event)
     }
 
     this.onUpdate = (key, value) => {
@@ -550,61 +609,77 @@ const TransactionForm = connect(state => ({
 
 class _TransactionsList extends u.ViewComponent {
   render({
-    props: {categoriesById, accountsById, payeesById, transactions},
+    context,
+    props: {categoriesById, accountsById, payeesById, transactions, setDialog},
   }) {
+    const isMobile = u.isMobile(context)
+
     return (
-      <div className='col-start-stretch'>
-        {f.map(transactions, tr => (
-          <div className='row-start-center gaps-h-1 padding-h-1 list-item' key={tr.id}>
-            {
-              tr.incomeAmount ?
-              <div className='relative width-2x5 square circle bg-success'>
-                <div className='row-center-center abs-center fg-white font-large'>
-                  {f.scan(categoriesById, tr.categoryId, 'title', 0) || <s.Plus />}
+      <div className={`relative col-start-stretch ${isMobile ? '' : 'gaps-v-1'}`}>
+        {isMobile ? null :
+        <div className='col-start-stretch padding-h-0x5' style={{marginTop: '-1.75rem'}}>
+          <Fab onClick={() => setDialog(TransactionDialog)} />
+        </div>}
+        {!isMobile ? null :
+        <Fab
+          className='fix-b-r margin-1'
+          onClick={() => setDialog(TransactionDialog)} />}
+        <div className='col-start-stretch'>
+          {f.map(transactions, tr => (
+            <div className='row-start-center gaps-h-1 padding-h-1 list-item' key={tr.id}>
+              {
+                tr.incomeAmount ?
+                <div className='relative width-2x5 square circle bg-success'>
+                  <div className='row-center-center abs-center fg-white font-large'>
+                    {f.scan(categoriesById, tr.categoryId, 'title', 0) || <s.Plus />}
+                  </div>
+                </div> :
+                tr.outcomeAmount ?
+                <div className='relative width-2x5 square circle bg-warning-100'>
+                  <div className='row-center-center abs-center fg-white font-large'>
+                    {f.scan(categoriesById, tr.categoryId, 'title', 0) || <s.Minus />}
+                  </div>
+                </div> :
+                <div className='relative width-2x5 square circle bg-accent'>
+                  <div className='row-center-center abs-center fg-white font-large'>!</div>
                 </div>
-              </div> :
-              tr.outcomeAmount ?
-              <div className='relative width-2x5 square circle bg-warning-100'>
-                <div className='row-center-center abs-center fg-white font-large'>
-                  {f.scan(categoriesById, tr.categoryId, 'title', 0) || <s.Minus />}
-                </div>
-              </div> : null
-            }
-            <div className='flex-1 col-start-stretch'>
-              <div className='row-between-center gaps-h-1 padding-v-1'>
-                <div className='col-start-stretch'>
-                  <span>
+              }
+              <div className='flex-1 col-start-stretch'>
+                <div className='row-between-center gaps-h-1 padding-v-1'>
+                  <div className='col-start-stretch'>
+                    <span>
+                      {
+                        tr.incomeAmount && f.scan(payeesById, tr.payeeId, 'title') ?
+                        <span>{f.scan(payeesById, tr.payeeId, 'title')}&nbsp;> </span> : null
+                      }
+                      {
+                        f.scan(categoriesById, tr.categoryId, 'title') ||
+                        <i className='fg-black-35'>Without category</i>
+                      }
+                      {
+                        tr.outcomeAmount && f.scan(payeesById, tr.payeeId, 'title') ?
+                        <span> >&nbsp;{f.scan(payeesById, tr.payeeId, 'title')}</span> : null
+                      }
+                    </span>
+                    <span className='font-midsmall fg-black-50'>
+                      {tr.date} {tr.date && tr.comment ? '·' : ''} {tr.comment}
+                    </span>
+                  </div>
+                  <div className='col-start-stretch text-right wspace-nowrap'>
                     {
-                      tr.incomeAmount && f.scan(payeesById, tr.payeeId, 'title') ?
-                      <span>{f.scan(payeesById, tr.payeeId, 'title')}&nbsp;> </span> : null
+                      tr.incomeAmount ? <span className='fg-success'>{`+${tr.incomeAmount}`}</span> :
+                      tr.outcomeAmount ? <span>{`-${tr.outcomeAmount}`}</span> : null
                     }
-                    {
-                      f.scan(categoriesById, tr.categoryId, 'title') ||
-                      <i className='fg-black-35'>Without category</i>
-                    }
-                    {
-                      tr.outcomeAmount && f.scan(payeesById, tr.payeeId, 'title') ?
-                      <span> >&nbsp;{f.scan(payeesById, tr.payeeId, 'title')}</span> : null
-                    }
-                  </span>
-                  <span className='font-midsmall fg-black-50'>
-                    {tr.date} {tr.date && tr.comment ? '·' : ''} {tr.comment}
-                  </span>
+                    <span className='font-midsmall fg-black-50'>
+                      {f.scan(accountsById, tr.incomeAccountId || tr.outcomeAccountId, 'title')}
+                    </span>
+                  </div>
                 </div>
-                <div className='col-start-stretch text-right wspace-nowrap'>
-                  {
-                    tr.incomeAmount ? <span className='fg-success'>{`+${tr.incomeAmount}`}</span> :
-                    tr.outcomeAmount ? <span>{`-${tr.outcomeAmount}`}</span> : null
-                  }
-                  <span className='font-midsmall fg-black-50'>
-                    {f.scan(accountsById, tr.incomeAccountId || tr.outcomeAccountId, 'title')}
-                  </span>
-                </div>
+                <hr className='hr hide-in-list-last-child' />
               </div>
-              <hr className='hr hide-in-list-last-child' />
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     )
   }
@@ -615,6 +690,8 @@ const TransactionsList = connect(state => ({
   accountsById: state.net.accountsById,
   payeesById: state.net.payeesById,
   transactions: state.net.transactions,
+}), dispatch => ({
+  setDialog: dialog => dispatch(a.setDialog(dialog)),
 }))(_TransactionsList)
 
 class G7FormLine extends u.ViewComponent {
@@ -904,6 +981,20 @@ class Radio extends u.ViewComponent {
           disabled={disabled} />
         <span className='radio-decorator' />
       </label>
+    )
+  }
+}
+
+class Fab extends u.ViewComponent {
+  render({props: {className: cls, ...props}}) {
+    return (
+      <m.FakeButton
+        className={`row-start-stretch width-3x5 ${cls || ''}`}
+        {...props}>
+        <span className='flex-1 relative circle square bg-accent shadow-dept-2'>
+          <s.Plus className='abs-center font-large fg-white' />
+        </span>
+      </m.FakeButton>
     )
   }
 }
