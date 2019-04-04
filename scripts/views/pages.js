@@ -585,7 +585,8 @@ class _TransactionsTable extends u.ViewComponent {
       <div className='data-table'>
         <div className='data-table-row fg-black-50'>
           <div className='data-table-head'>Date</div>
-          <div className='data-table-head'>Category or Payee</div>
+          <div className='data-table-head'>Category</div>
+          <div className='data-table-head'>Payee</div>
           <div className='data-table-head'>Account</div>
           <div className='data-table-head text-right'>Amount</div>
         </div>
@@ -595,10 +596,10 @@ class _TransactionsTable extends u.ViewComponent {
               {tr.date}
             </div>
             <div className='data-table-cell'>
-              {
-                f.scan(categoriesById, tr.categoryId, 'title') ||
-                f.scan(payeesById, tr.payeeId, 'title')
-              }
+              {f.scan(categoriesById, tr.categoryId, 'title')}
+            </div>
+            <div className='data-table-cell'>
+              {f.scan(payeesById, tr.payeeId, 'title')}
             </div>
             <div className='data-table-cell'>
               {f.scan(accountsById, tr.incomeAccountId || tr.outcomeAccountId, 'title')}
