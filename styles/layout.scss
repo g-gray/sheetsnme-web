@@ -66,3 +66,8 @@ body {
 .navbar-height {
   height: 3.5rem;
 }
+
+.limit-content-width {
+  width: 100%;
+  max-width: $content-width-max;
+}

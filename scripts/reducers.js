@@ -24,7 +24,7 @@ export const dom = (state = {
   }
 }
 
-const defaultTransaction = {
+export const defaultTransaction = {
   date: new Date(),
   type: 'outcome',
   categoryId: '',
@@ -39,8 +39,11 @@ export const net = (state = {
   transaction: defaultTransaction,
   transactions: [],
   categories: [],
+  categoriesById: {},
   accounts: [],
+  accountsById: {},
   payees: [],
+  payeesById: {},
   pending: [],
   errors: [],
 }, action) => {

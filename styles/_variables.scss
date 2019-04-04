@@ -36,9 +36,9 @@ $color-primary-275: hsb(204, 04, 94);
 $color-link:        hsb(204, 68, 52);
 $color-link-icon:   hsb(204, 22, 78);
 
-$color-warning-100: hsb(50, 100, 86);
+$color-warning-100: hsb(14, 87, 100);
 
-$color-success-100: hsl(120, 39%, 54%);
+$color-success-100: hsb(122, 57, 69);
 $color-success: $color-success-100;
 
 $color-danger-100:  hsb(10, 97, 78);
@@ -65,6 +65,8 @@ $grid-space-lg-h: 1rem;
 $grid-space-lg-v: 1rem;
 
 $dialog-max-width: 28rem;
+
+$content-width-max: 900px;
 
 /**
  * z-index

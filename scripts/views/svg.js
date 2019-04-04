@@ -566,6 +566,16 @@ export class Plus extends u.ViewComponent {
   }
 }
 
+export class Minus extends u.ViewComponent {
+  render({props}) {
+    return (
+      <svg {...featherProps(props)}>
+        <line x1="5" y1="12" x2="19" y2="12" />
+      </svg>
+    )
+  }
+}
+
 export class Send extends u.ViewComponent {
   render({props}) {
     return (

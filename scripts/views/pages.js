@@ -261,16 +261,16 @@ export class HomePage extends u.ViewComponent {
       return (
         <MobilePageLayout>
           <div className='col-start-stretch'>
-            <TransactionsTable />
+            <TransactionsList />
           </div>
         </MobilePageLayout>
       )
     }
 
     return (
-      <PageLayout>
-        <div className='col-start-stretch padding-v-0x5 padding-r-1x25'>
-          <TransactionsTable />
+      <PageLayout className='col-start-center padding-r-1x25'>
+        <div className='limit-content-width col-start-stretch'>
+          <TransactionsList />
         </div>
       </PageLayout>
     )
@@ -302,7 +302,7 @@ class _SettingsPage extends u.ViewComponent {
 
     return (
       <PageLayout>
-        <div className='col-start-stretch padding-v-0x5'>
+        <div className='col-start-stretch padding-v-0x5 padding-r-1x25'>
           <Switch>
             <Route path='/settings/categories'>
               <CategoriesTable />
@@ -548,68 +548,60 @@ const TransactionForm = connect(state => ({
   transaction: state.net.transaction,
 }))(_TransactionForm)
 
-class _TransactionsTable extends u.ViewComponent {
+class _TransactionsList extends u.ViewComponent {
   render({
-    context,
     props: {categoriesById, accountsById, payeesById, transactions},
   }) {
-    if (u.isMobile(context)) {
-      return (
-        <div className='data-table'>
-          <div className='data-table-row fg-black-50'>
-            <div className='data-table-head'>Category or Payee</div>
-            <div className='data-table-head text-right'>Amount</div>
-          </div>
-          {f.map(transactions, tr => (
-            <div className='data-table-row' key={tr.id}>
-              <div className='data-table-cell'>
-                {
-                  f.scan(categoriesById, tr.categoryId, 'title') ||
-                  f.scan(payeesById, tr.payeeId, 'title')
-                }
-              </div>
-              <div className='data-table-cell text-right'>
-                {
-                  tr.incomeAmount ? <span className='fg-success'>{`+${tr.incomeAmount}`}</span> :
-                  tr.outcomeAmount ? <span className='fg-danger-100'>{`-${tr.outcomeAmount}`}</span> :
-                  null
-                }
-              </div>
-            </div>
-          ))}
-        </div>
-      )
-    }
-
     return (
-      <div className='data-table'>
-        <div className='data-table-row fg-black-50'>
-          <div className='data-table-head'>Date</div>
-          <div className='data-table-head'>Category</div>
-          <div className='data-table-head'>Payee</div>
-          <div className='data-table-head'>Account</div>
-          <div className='data-table-head text-right'>Amount</div>
-        </div>
+      <div className='col-start-stretch'>
         {f.map(transactions, tr => (
-          <div className='data-table-row' key={tr.id}>
-            <div className='data-table-cell wspace-nowrap'>
-              {tr.date}
-            </div>
-            <div className='data-table-cell'>
-              {f.scan(categoriesById, tr.categoryId, 'title')}
-            </div>
-            <div className='data-table-cell'>
-              {f.scan(payeesById, tr.payeeId, 'title')}
-            </div>
-            <div className='data-table-cell'>
-              {f.scan(accountsById, tr.incomeAccountId || tr.outcomeAccountId, 'title')}
-            </div>
-            <div className='data-table-cell text-right'>
-              {
-                tr.incomeAmount ? <span className='fg-success'>{`+${tr.incomeAmount}`}</span> :
-                tr.outcomeAmount ? <span className='fg-danger-100'>{`-${tr.outcomeAmount}`}</span> :
-                null
-              }
+          <div className='row-start-center gaps-h-1 padding-h-1 list-item' key={tr.id}>
+            {
+              tr.incomeAmount ?
+              <div className='relative width-2x5 square circle bg-success'>
+                <div className='row-center-center abs-center fg-white font-large'>
+                  {f.scan(categoriesById, tr.categoryId, 'title', 0) || <s.Plus />}
+                </div>
+              </div> :
+              tr.outcomeAmount ?
+              <div className='relative width-2x5 square circle bg-warning-100'>
+                <div className='row-center-center abs-center fg-white font-large'>
+                  {f.scan(categoriesById, tr.categoryId, 'title', 0) || <s.Minus />}
+                </div>
+              </div> : null
+            }
+            <div className='flex-1 col-start-stretch'>
+              <div className='row-between-center gaps-h-1 padding-v-1'>
+                <div className='col-start-stretch'>
+                  <span>
+                    {
+                      tr.incomeAmount && f.scan(payeesById, tr.payeeId, 'title') ?
+                      <span>{f.scan(payeesById, tr.payeeId, 'title')}&nbsp;> </span> : null
+                    }
+                    {
+                      f.scan(categoriesById, tr.categoryId, 'title') ||
+                      <i className='fg-black-35'>Without category</i>
+                    }
+                    {
+                      tr.outcomeAmount && f.scan(payeesById, tr.payeeId, 'title') ?
+                      <span> >&nbsp;{f.scan(payeesById, tr.payeeId, 'title')}</span> : null
+                    }
+                  </span>
+                  <span className='font-midsmall fg-black-50'>
+                    {tr.date} {tr.date && tr.comment ? '·' : ''} {tr.comment}
+                  </span>
+                </div>
+                <div className='col-start-stretch text-right wspace-nowrap'>
+                  {
+                    tr.incomeAmount ? <span className='fg-success'>{`+${tr.incomeAmount}`}</span> :
+                    tr.outcomeAmount ? <span>{`-${tr.outcomeAmount}`}</span> : null
+                  }
+                  <span className='font-midsmall fg-black-50'>
+                    {f.scan(accountsById, tr.incomeAccountId || tr.outcomeAccountId, 'title')}
+                  </span>
+                </div>
+              </div>
+              <hr className='hr hide-in-list-last-child' />
             </div>
           </div>
         ))}
@@ -618,12 +610,12 @@ class _TransactionsTable extends u.ViewComponent {
   }
 }
 
-const TransactionsTable = connect(state => ({
+const TransactionsList = connect(state => ({
   categoriesById: state.net.categoriesById,
   accountsById: state.net.accountsById,
   payeesById: state.net.payeesById,
   transactions: state.net.transactions,
-}))(_TransactionsTable)
+}))(_TransactionsList)
 
 class G7FormLine extends u.ViewComponent {
   render({
