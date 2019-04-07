@@ -527,13 +527,13 @@ class _TransactionForm extends u.ViewComponent {
 
       const amountType = incomeAmount || incomeAccountId ? 'incomeAmount' : 'outcomeAmount'
 
-      this.setState({formValues: e.put(this.state.formValues, amountType, value)})
+      this.setState({formValues: e.put(this.state.formValues, amountType, Number(value))})
     }
 
     this.onAccountUpdate = (__, value) => {
       const {incomeAmount, incomeAccountId} = this.state.formValues
 
-      const accountType = incomeAmount || incomeAccountId ? 'incomeAmountId' : 'outcomeAmountId'
+      const accountType = incomeAmount || incomeAccountId ? 'incomeAccountId' : 'outcomeAccountId'
 
       this.setState({formValues: e.put(this.state.formValues, accountType, value)})
     }
