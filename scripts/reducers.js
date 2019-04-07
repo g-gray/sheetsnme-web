@@ -24,19 +24,8 @@ export const dom = (state = {
   }
 }
 
-export const defaultTransaction = {
-  date: new Date(),
-  type: 'outcome',
-  categoryId: '',
-  accountId: '',
-  payeeId: '',
-  comment: '',
-  amount: '',
-}
-
 export const net = (state = {
   user: {},
-  transaction: defaultTransaction,
   transactions: [],
   categories: [],
   categoriesById: {},
@@ -120,7 +109,7 @@ export const net = (state = {
       return {
         ...state,
         pending: f.filter(state.pending, item => item !== a.POST_TRANSACTION),
-        transaction: action.transaction || defaultTransaction,
+        transaction: action.transaction,
       }
 
     case a.REQUEST_ERROR:

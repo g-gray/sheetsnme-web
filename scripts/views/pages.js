@@ -434,12 +434,16 @@ class _TransactionDialog extends u.ViewComponent {
   constructor(props) {
     super(props)
 
-    this.close = this.props.setDialog.bind(null, null)
+    this.close = () => {
+      this.props.setDialog(null)
+      this.props.setTransaction(null)
+    }
   }
 
   render({
     close,
     context,
+    props: {transaction},
   }) {
     if (u.isMobile(context)) {
       return (
@@ -448,7 +452,7 @@ class _TransactionDialog extends u.ViewComponent {
             <div className='flex-1 relative col-start-stretch bg-white'>
               <div className='row-between-center gaps-h-1 padding-l-1x25 navbar-height'>
                 <h2 className='font-large weight-medium'>
-                  New transaction
+                  {transaction && transaction.id ? 'Edit' : 'New'} transaction
                 </h2>
                 <m.FakeButton className='row-center-center padding-1x25' onClick={close}>
                   <s.X className='font-large' />
@@ -469,7 +473,7 @@ class _TransactionDialog extends u.ViewComponent {
           <div className='col-start-stretch rounded bg-white shadow-dept-3'>
             <div className='row-between-center gaps-h-1 padding-h-1x25 navbar-height'>
               <h2 className='font-large weight-medium'>
-                New transaction
+                {transaction && transaction.id ? 'Edit' : 'New'} transaction
               </h2>
               <m.FakeButton className='row-center-center' onClick={close}>
                 <s.X className='font-large' />
@@ -484,7 +488,10 @@ class _TransactionDialog extends u.ViewComponent {
   }
 }
 
-const TransactionDialog = connect(null, dispatch => ({
+const TransactionDialog = connect(state => ({
+  transaction: state.net.transaction,
+}), dispatch => ({
+  setTransaction: transaction => dispatch(a.receiveTransaction(transaction)),
   setDialog: dialog => dispatch(a.setDialog(dialog)),
 }))(_TransactionDialog)
 
@@ -492,16 +499,59 @@ class _TransactionForm extends u.ViewComponent {
   constructor(props) {
     super(props)
 
-    this.state = {formValues: this.props.transaction || {}}
+    this.state = {formValues: this.props.transaction || {
+      date: u.formatDate(new Date()),
+    }}
 
     this.onSubmit = event => {
       u.preventDefault(event)
-      this.props.dispatch(a.createTransaction(this.state.formValues))
+
+      const {formValues} = this.state
+
+      if (formValues.id) {
+        this.props.updateTransaction(this.state.formValues, formValues.id)
+      }
+      else {
+        this.props.createTransaction(this.state.formValues)
+      }
+
       if (this.props.onSubmit) this.props.onSubmit(event)
     }
 
     this.onUpdate = (key, value) => {
       this.setState({formValues: e.put(this.state.formValues, key, value)})
+    }
+
+    this.onAmountUpdate = (__, value) => {
+      const {incomeAmount, incomeAccountId} = this.state.formValues
+
+      const amountType = incomeAmount || incomeAccountId ? 'incomeAmount' : 'outcomeAmount'
+
+      this.setState({formValues: e.put(this.state.formValues, amountType, value)})
+    }
+
+    this.onAccountUpdate = (__, value) => {
+      const {incomeAmount, incomeAccountId} = this.state.formValues
+
+      const accountType = incomeAmount || incomeAccountId ? 'incomeAmountId' : 'outcomeAmountId'
+
+      this.setState({formValues: e.put(this.state.formValues, accountType, value)})
+    }
+
+    this.onTypeUpdate = () => {
+      const {
+        outcomeAmount,
+        incomeAmount,
+        outcomeAccountId,
+        incomeAccountId,
+      } = this.state.formValues
+
+      this.setState({formValues: e.patch(this.state.formValues, {
+        outcomeAmount: incomeAmount,
+        incomeAmount: outcomeAmount,
+        outcomeAccountId: incomeAccountId,
+        incomeAccountId: outcomeAccountId,
+      })})
     }
 
     this.bindValue = key => ({
@@ -512,9 +562,7 @@ class _TransactionForm extends u.ViewComponent {
   }
 
   render({
-    onSubmit,
     bindValue,
-    onUpdate,
     context,
     state: {formValues},
     props: {categories, accounts, payees},
@@ -522,7 +570,7 @@ class _TransactionForm extends u.ViewComponent {
     const isMobile = u.isMobile(context)
 
     return (
-      <form className='col-start-stretch' onSubmit={onSubmit}>
+      <form className='col-start-stretch' onSubmit={this.onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormDateElement
             label='Date'
@@ -536,26 +584,30 @@ class _TransactionForm extends u.ViewComponent {
                 <Radio
                   ident='type'
                   value='outcome'
-                  onUpdate={onUpdate}
-                  defaultChecked={formValues.type === 'outcome'} />
+                  onUpdate={this.onTypeUpdate}
+                  defaultChecked={!formValues.incomeAmount} />
                 <span>Outcome</span>
               </label>
               <label className='row-start-center gaps-h-0x5'>
                 <Radio
                   ident='type'
                   value='income'
-                  onUpdate={onUpdate}
-                  defaultChecked={formValues.type === 'income'} />
+                  onUpdate={this.onTypeUpdate}
+                  defaultChecked={formValues.incomeAmount} />
                 <span>Income</span>
               </label>
             </div>
           </G7FormLine>
           <FormTextElement
             label='Amount'
-            {...bindValue('amount')} />
+            ident='amount'
+            onUpdate={this.onAmountUpdate}
+            defaultValue={formValues.outcomeAmount || formValues.incomeAmount} />
           <FormSelectElement
             label='Account'
-            {...bindValue('accountId')}>
+            ident='accountId'
+            onUpdate={this.onAccountUpdate}
+            defaultValue={formValues.outcomeAccountId || formValues.incomeAccountId}>
             <option value='' />
             {f.map(accounts, ({id, title}) => (
               <option value={id} key={`account-${id}`}>
@@ -605,12 +657,15 @@ const TransactionForm = connect(state => ({
   accounts: state.net.accounts,
   payees: state.net.payees,
   transaction: state.net.transaction,
+}), dispatch => ({
+  createTransaction: transaction => dispatch(a.createTransaction(transaction)),
+  updateTransaction: (transaction, id) => dispatch(a.updateTransaction(transaction, id)),
 }))(_TransactionForm)
 
 class _TransactionsList extends u.ViewComponent {
   render({
     context,
-    props: {categoriesById, accountsById, payeesById, transactions, setDialog},
+    props: {categoriesById, accountsById, payeesById, transactions, setTransaction, setDialog},
   }) {
     const isMobile = u.isMobile(context)
 
@@ -626,7 +681,14 @@ class _TransactionsList extends u.ViewComponent {
           onClick={() => setDialog(TransactionDialog)} />}
         <div className='col-start-stretch'>
           {f.map(transactions, tr => (
-            <div className='row-start-center gaps-h-1 padding-h-1 list-item' key={tr.id}>
+            <m.FakeButton
+              type='div'
+              key={tr.id}
+              onClick={() => {
+                setTransaction(tr)
+                setDialog(TransactionDialog)
+              }}
+              className='row-start-center gaps-h-1 padding-h-1 list-item text-left theme-light-menu-busy'>
               {
                 tr.incomeAmount ?
                 <div className='relative width-2x5 square circle bg-success'>
@@ -677,7 +739,7 @@ class _TransactionsList extends u.ViewComponent {
                 </div>
                 <hr className='hr hide-in-list-last-child' />
               </div>
-            </div>
+            </m.FakeButton>
           ))}
         </div>
       </div>
@@ -691,6 +753,7 @@ const TransactionsList = connect(state => ({
   payeesById: state.net.payeesById,
   transactions: state.net.transactions,
 }), dispatch => ({
+  setTransaction: transaction => dispatch(a.receiveTransaction(transaction)),
   setDialog: dialog => dispatch(a.setDialog(dialog)),
 }))(_TransactionsList)
 

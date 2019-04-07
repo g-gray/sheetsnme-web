@@ -1,5 +1,4 @@
 import * as n from './net'
-import * as u from './utils'
 
 export const RESIZE                 = 'RESIZE'
 export const SET_DIALOG             = 'SET_DIALOG'
@@ -26,6 +25,11 @@ export const resize = geometry => ({
 export const setDialog = dialog => ({
   type: SET_DIALOG,
   dialog,
+})
+
+export const receiveTransaction = transaction => ({
+  type: RECEIVE_TRANSACTION,
+  transaction,
 })
 
 export const requestError = error => dispatch => {
@@ -85,9 +89,20 @@ export const createTransaction = transaction => dispatch => {
   dispatch({type: POST_TRANSACTION})
   return n.authedJsonFetch('/api/transactions', {
     method: 'POST',
-    body: JSON.stringify(u.formatTransaction(transaction)),
+    body: JSON.stringify(transaction),
   })
-    .then(() => dispatch({type: RECEIVE_TRANSACTION, transaction}))
+    .then(() => dispatch(receiveTransaction()))
+    .then(() => dispatch(fetchTransactions()))
+    .catch(error => dispatch(requestError(error)))
+}
+
+export const updateTransaction = (transaction, id) => dispatch => {
+  dispatch({type: POST_TRANSACTION})
+  return n.authedJsonFetch(`/api/transactions/${id}`, {
+    method: 'POST',
+    body: JSON.stringify(transaction),
+  })
+    .then(() => dispatch(receiveTransaction()))
     .then(() => dispatch(fetchTransactions()))
     .catch(error => dispatch(requestError(error)))
 }

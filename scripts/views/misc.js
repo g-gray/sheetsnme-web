@@ -108,16 +108,18 @@ export class FakeButton extends u.ViewComponent {
     this.onKeyPress = simulateEnterOnKeyPress.bind(undefined, this)
   }
 
-  render({onKeyPress, props: {onClick, disabled, ...props}}) {
-    return (
-      <span
-        role='button'
-        tabIndex={disabled ? undefined : '0'}
-        onClick={onClick}
-        onKeyPress={onClick ? onKeyPress : undefined}
-        disabled={disabled}
-        {...props} />
-    )
+  render({
+    onKeyPress,
+    props: {type = 'span', onClick, disabled, ...props},
+  }) {
+    return React.createElement(type, {
+      role: 'button',
+      tabIndex: disabled ? undefined : '0',
+      onKeyPress: onClick ? onKeyPress : undefined,
+      onClick,
+      disabled,
+      ...props,
+    })
   }
 }
 

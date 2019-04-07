@@ -168,20 +168,6 @@ export function parseNum(value) {
   return undefined
 }
 
-// TODO: validate transaction
-export function formatTransaction({date, type, categoryId, accountId, payeeId, comment, amount}) {
-  return {
-    categoryId,
-    payeeId,
-    comment,
-    date: formatDate(date),
-    outcomeAccountId: type === 'outcome' ? accountId : '',
-    incomeAccountId: type === 'income' ? accountId : '',
-    outcomeAmount: type === 'outcome' ? amount : '',
-    incomeAmount: type === 'income' ? amount : '',
-  }
-}
-
 /**
  * Net
  */
