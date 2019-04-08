@@ -88,6 +88,18 @@ export const net = (state = {
         accountsById: f.keyBy(action.accounts, ({id}) => id),
       }
 
+    case a.POST_ACCOUNT:
+      return {
+        ...state,
+        pending: [...state.pending, a.POST_ACCOUNT],
+      }
+    case a.RECEIVE_ACCOUNT:
+      return {
+        ...state,
+        pending: f.filter(state.pending, item => item !== a.POST_ACCOUNT),
+        account: action.account,
+      }
+
     case a.REQUEST_PAYEES:
       return {
         ...state,

@@ -13,6 +13,8 @@ export const POST_CATEGORY          = 'POST_CATEGORY'
 
 export const REQUEST_ACCOUNTS       = 'REQUEST_ACCOUNTS'
 export const RECEIVE_ACCOUNTS       = 'RECEIVE_ACCOUNTS'
+export const RECEIVE_ACCOUNT        = 'RECEIVE_ACCOUNT'
+export const POST_ACCOUNT           = 'POST_ACCOUNT'
 
 export const REQUEST_PAYEES         = 'REQUEST_PAYEES'
 export const RECEIVE_PAYEES         = 'RECEIVE_PAYEES'
@@ -43,6 +45,11 @@ export const receiveTransaction = transaction => ({
 export const receiveCategory = category => ({
   type: RECEIVE_CATEGORY,
   category,
+})
+
+export const receiveAccount = account => ({
+  type: RECEIVE_ACCOUNT,
+  account,
 })
 
 export const requestError = error => dispatch => {
@@ -103,6 +110,28 @@ export const fetchAccounts  = () => dispatch => {
   dispatch({type: REQUEST_ACCOUNTS})
   return n.authedJsonFetch('/api/accounts')
     .then(accounts => dispatch({type: RECEIVE_ACCOUNTS, accounts}))
+    .catch(error => dispatch(requestError(error)))
+}
+
+export const createAccount = account => dispatch => {
+  dispatch({type: POST_ACCOUNT})
+  return n.authedJsonFetch('/api/accounts', {
+    method: 'POST',
+    body: JSON.stringify(account),
+  })
+    .then(() => dispatch(receiveAccount()))
+    .then(() => dispatch(fetchAccounts()))
+    .catch(error => dispatch(requestError(error)))
+}
+
+export const updateAccount = (account, id) => dispatch => {
+  dispatch({type: POST_ACCOUNT})
+  return n.authedJsonFetch(`/api/accounts/${id}`, {
+    method: 'POST',
+    body: JSON.stringify(account),
+  })
+    .then(() => dispatch(receiveAccount()))
+    .then(() => dispatch(fetchAccounts()))
     .catch(error => dispatch(requestError(error)))
 }
 

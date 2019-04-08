@@ -288,7 +288,7 @@ class _SettingsPage extends u.ViewComponent {
                 <CategoriesList />
               </Route>
               <Route path='/settings/accounts'>
-                <AccountsTable />
+                <AccountsList />
               </Route>
               <Route path='/settings/payees'>
                 <PayeesTable />
@@ -308,7 +308,7 @@ class _SettingsPage extends u.ViewComponent {
               <CategoriesList />
             </Route>
             <Route path='/settings/accounts'>
-              <AccountsTable />
+              <AccountsList />
             </Route>
             <Route path='/settings/payees'>
               <PayeesTable />
@@ -457,64 +457,144 @@ const CategoriesList = connect(state => ({
   setDialog: (dialog, props) => dispatch(a.setDialog(dialog, props)),
 }))(_CategoriesList)
 
-class _AccountsTable extends u.ViewComponent {
-  render({
-    context,
-    props: {accounts},
-  }) {
-    if (u.isMobile(context)) {
-      return (
-        <div className='data-table'>
-          <div className='data-table-row fg-black-50'>
-            <div className='data-table-head'>Title</div>
-            <div className='data-table-head text-right'>Initial Rate</div>
-          </div>
-          {f.map(accounts, acc => (
-            <div className='data-table-row' key={acc.id}>
-              <div className='data-table-cell wspace-nowrap'>
-                {acc.title}
-              </div>
-              <div className='data-table-cell wspace-nowrap text-right'>
-                {acc.initial}
-              </div>
-            </div>
-          ))}
-        </div>
-      )
+class _AccountForm extends u.ViewComponent {
+  constructor(props) {
+    super(props)
+
+    this.state = {formValues: this.props.account || {}}
+
+    this.onSubmit = event => {
+      u.preventDefault(event)
+
+      const {formValues} = this.state
+
+      if (formValues.id) {
+        this.props.updateAccount(this.state.formValues, formValues.id)
+      }
+      else {
+        this.props.createAccount(this.state.formValues)
+      }
+
+      if (this.props.onSubmit) this.props.onSubmit(event)
     }
 
+    this.onUpdate = (key, value) => {
+      // TODO: find the best way to convert values
+      const isNumber = key === 'initial'
+      this.setState({formValues: e.put(this.state.formValues, key, isNumber ? Number(value) : value)})
+    }
+
+    this.bindValue = key => ({
+      ident: key,
+      onUpdate: this.onUpdate,
+      defaultValue: this.state.formValues[key],
+    })
+  }
+
+  render({
+    bindValue,
+    context,
+  }) {
+    const isMobile = u.isMobile(context)
+
     return (
-      <div className='data-table'>
-        <div className='data-table-row fg-black-50'>
-          <div className='data-table-head'>Title</div>
-          <div className='data-table-head'>Initial Rate</div>
-          <div className='data-table-head'>Currency Code</div>
-          <div className='data-table-head'>RUB Rate</div>
+      <form className='col-start-stretch' onSubmit={this.onSubmit}>
+        <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
+          <FormTextElement
+            label='Title'
+            {...bindValue('title')} />
+          <FormTextElement
+            label='Initial'
+            input_type='number'
+            {...bindValue('initial')} />
         </div>
-        {f.map(accounts, acc => (
-          <div className='data-table-row' key={acc.id}>
-            <div className='data-table-cell wspace-nowrap'>
-              {acc.title}
-            </div>
-            <div className='data-table-cell wspace-nowrap'>
-              {acc.initial}
-            </div>
-            <div className='data-table-cell wspace-nowrap'>
-              {acc.currencyCode}
-            </div>
-            <div className='data-table-cell wspace-nowrap'>
-              {acc.rubRate}
-            </div>
-          </div>
-        ))}
+        <hr className='hr margin-h-1x25' />
+        <div className='row-center-center padding-v-1 padding-h-1x25'>
+          <button
+            type='submit'
+            className='btn-primary btn-wide'>
+            Submit
+          </button>
+        </div>
+      </form>
+    )
+  }
+}
+
+const AccountForm = connect(state => ({
+  account: state.net.account,
+}), dispatch => ({
+  createAccount: account => dispatch(a.createAccount(account)),
+  updateAccount: (account, id) => dispatch(a.updateAccount(account, id)),
+}))(_AccountForm)
+
+class _AccountsList extends u.ViewComponent {
+  render({
+    context,
+    props: {accounts, setDialog, setAccount},
+  }) {
+    const isMobile = u.isMobile(context)
+
+    return (
+      <div className={`relative col-start-stretch ${isMobile ? '' : 'gaps-v-1'}`}>
+        {isMobile ? null :
+        <div className='col-start-stretch padding-h-0x5' style={{marginTop: '-1.75rem'}}>
+          <Fab
+            onClick={() => {
+              setDialog(FormDialog, {
+                form: AccountForm,
+                title: 'New account',
+                onClose: setAccount,
+              })
+            }} />
+        </div>}
+        {!isMobile ? null :
+        <Fab
+          className='fix-b-r margin-1'
+          onClick={() => {
+            setDialog(FormDialog, {
+              form: AccountForm,
+              title: 'New account',
+              onClose: setAccount,
+            })
+          }} />}
+        <div className='col-start-stretch'>
+          {f.map(accounts, acc => (
+            <m.FakeButton
+              type='div'
+              key={acc.id}
+              onClick={() => {
+                setAccount(acc)
+                setDialog(FormDialog, {
+                  form: AccountForm,
+                  title: 'Edit account',
+                  onClose: setAccount,
+                })
+              }}
+              className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
+              <div className='row-start-center padding-1'>
+                <s.CreditCard className='font-large fg-primary-100' />
+              </div>
+              <div className='flex-1 col-start-stretch'>
+                <div className='flex-1 row-between-center gaps-h-1 padding-v-1'>
+                  <span>{acc.title}</span>
+                  <span className='fg-black-50'>{acc.initial}</span>
+                </div>
+              </div>
+            </m.FakeButton>
+          ))}
+        </div>
       </div>
     )
   }
 }
 
-const AccountsTable = connect(state => ({
+const AccountsList = connect(state => ({
   accounts: state.net.accounts,
-}))(_AccountsTable)
+}), dispatch => ({
+  setAccount: account => dispatch(a.receiveAccount(account)),
+  setDialog: (dialog, props) => dispatch(a.setDialog(dialog, props)),
+}))(_AccountsList)
 
 class _PayeesTable extends u.ViewComponent {
   render({props: {payees}}) {
