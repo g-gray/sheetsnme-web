@@ -5,16 +5,23 @@ export const SET_DIALOG             = 'SET_DIALOG'
 
 export const REQUEST_USER           = 'REQUEST_USER'
 export const RECEIVE_USER           = 'RECEIVE_USER'
+
 export const REQUEST_CATEGORIES     = 'REQUEST_CATEGORIES'
 export const RECEIVE_CATEGORIES     = 'RECEIVE_CATEGORIES'
+export const RECEIVE_CATEGORY       = 'RECEIVE_CATEGORY'
+export const POST_CATEGORY          = 'POST_CATEGORY'
+
 export const REQUEST_ACCOUNTS       = 'REQUEST_ACCOUNTS'
 export const RECEIVE_ACCOUNTS       = 'RECEIVE_ACCOUNTS'
+
 export const REQUEST_PAYEES         = 'REQUEST_PAYEES'
 export const RECEIVE_PAYEES         = 'RECEIVE_PAYEES'
+
 export const REQUEST_TRANSACTIONS   = 'REQUEST_TRANSACTIONS'
 export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
 export const RECEIVE_TRANSACTION    = 'RECEIVE_TRANSACTION'
 export const POST_TRANSACTION       = 'POST_TRANSACTION'
+
 export const REQUEST_ERROR          = 'REQUEST_ERROR'
 
 export const resize = geometry => ({
@@ -22,14 +29,20 @@ export const resize = geometry => ({
   geometry,
 })
 
-export const setDialog = dialog => ({
+export const setDialog = (dialog, props) => ({
   type: SET_DIALOG,
   dialog,
+  props,
 })
 
 export const receiveTransaction = transaction => ({
   type: RECEIVE_TRANSACTION,
   transaction,
+})
+
+export const receiveCategory = category => ({
+  type: RECEIVE_CATEGORY,
+  category,
 })
 
 export const requestError = error => dispatch => {
@@ -61,6 +74,28 @@ export const fetchCategories  = () => dispatch => {
   dispatch({type: REQUEST_CATEGORIES})
   return n.authedJsonFetch('/api/categories')
     .then(categories => dispatch({type: RECEIVE_CATEGORIES, categories}))
+    .catch(error => dispatch(requestError(error)))
+}
+
+export const createCategory = category => dispatch => {
+  dispatch({type: POST_CATEGORY})
+  return n.authedJsonFetch('/api/categories', {
+    method: 'POST',
+    body: JSON.stringify(category),
+  })
+    .then(() => dispatch(receiveCategory()))
+    .then(() => dispatch(fetchCategories()))
+    .catch(error => dispatch(requestError(error)))
+}
+
+export const updateCategory = (category, id) => dispatch => {
+  dispatch({type: POST_CATEGORY})
+  return n.authedJsonFetch(`/api/categories/${id}`, {
+    method: 'POST',
+    body: JSON.stringify(category),
+  })
+    .then(() => dispatch(receiveCategory()))
+    .then(() => dispatch(fetchCategories()))
     .catch(error => dispatch(requestError(error)))
 }
 

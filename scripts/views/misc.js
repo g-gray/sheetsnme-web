@@ -11,8 +11,9 @@ import * as u from '../utils'
 export const GlobalDialog = connect(state => ({
   dialog: state.dom.dialog,
   dialogs: state.dom.dialogs,
-}))(({dialog: Dialog, dialogs}) => {
-  return Dialog ? <Dialog dialogs={dialogs} /> : null
+  dialogProps: state.dom.dialogProps,
+}))(({dialog: Dialog, dialogs, dialogProps}) => {
+  return Dialog ? <Dialog dialogs={dialogs} {...dialogProps} /> : null
 })
 
 export class Dialog extends u.ViewComponent {

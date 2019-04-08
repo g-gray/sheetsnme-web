@@ -13,6 +13,7 @@ export const dom = (state = {
         ...state,
         dialog: action.dialog,
         dialogs: action.dialog ? state.dialogs + 1 : state.dialogs - 1,
+        dialogProps: action.props,
       }
     case a.RESIZE:
       return {
@@ -60,6 +61,18 @@ export const net = (state = {
         pending: f.filter(state.pending, item => item !== a.REQUEST_CATEGORIES),
         categories: action.categories,
         categoriesById: f.keyBy(action.categories, ({id}) => id),
+      }
+
+    case a.POST_CATEGORY:
+      return {
+        ...state,
+        pending: [...state.pending, a.POST_CATEGORY],
+      }
+    case a.RECEIVE_CATEGORY:
+      return {
+        ...state,
+        pending: f.filter(state.pending, item => item !== a.POST_CATEGORY),
+        category: action.category,
       }
 
     case a.REQUEST_ACCOUNTS:

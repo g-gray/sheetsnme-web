@@ -282,10 +282,10 @@ class _SettingsPage extends u.ViewComponent {
     if (u.isMobile(context)) {
       return (
         <MobilePageLayout>
-          <div className='col-start-stretch padding-v-0x5'>
+          <div className='col-start-stretch'>
             <Switch>
               <Route path='/settings/categories'>
-                <CategoriesTable />
+                <CategoriesList />
               </Route>
               <Route path='/settings/accounts'>
                 <AccountsTable />
@@ -301,11 +301,11 @@ class _SettingsPage extends u.ViewComponent {
     }
 
     return (
-      <PageLayout>
-        <div className='col-start-stretch padding-v-0x5 padding-r-1x25'>
+      <PageLayout className='col-start-center padding-r-1x25'>
+        <div className='limit-content-width col-start-stretch'>
           <Switch>
             <Route path='/settings/categories'>
-              <CategoriesTable />
+              <CategoriesList />
             </Route>
             <Route path='/settings/accounts'>
               <AccountsTable />
@@ -325,28 +325,137 @@ export const SettingsPage = connect(state => ({
   payees: state.net.payees,
 }))(_SettingsPage)
 
-class _CategoriesTable extends u.ViewComponent {
-  render({props: {categories}}) {
+class _CategoryForm extends u.ViewComponent {
+  constructor(props) {
+    super(props)
+
+    this.state = {formValues: this.props.category || {}}
+
+    this.onSubmit = event => {
+      u.preventDefault(event)
+
+      const {formValues} = this.state
+
+      if (formValues.id) {
+        this.props.updateCategory(this.state.formValues, formValues.id)
+      }
+      else {
+        this.props.createCategory(this.state.formValues)
+      }
+
+      if (this.props.onSubmit) this.props.onSubmit(event)
+    }
+
+    this.onUpdate = (key, value) => {
+      this.setState({formValues: e.put(this.state.formValues, key, value)})
+    }
+
+    this.bindValue = key => ({
+      ident: key,
+      onUpdate: this.onUpdate,
+      defaultValue: this.state.formValues[key],
+    })
+  }
+
+  render({
+    bindValue,
+    context,
+  }) {
+    const isMobile = u.isMobile(context)
+
     return (
-      <div className='data-table'>
-        <div className='data-table-row fg-black-50'>
-          <div className='data-table-head'>Title</div>
+      <form className='col-start-stretch' onSubmit={this.onSubmit}>
+        <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
+          <FormTextElement
+            label='Title'
+            {...bindValue('title')} />
         </div>
-        {f.map(categories, cat => (
-          <div className='data-table-row' key={cat.id}>
-            <div className='data-table-cell wspace-nowrap'>
-              {cat.title}
-            </div>
-          </div>
-        ))}
+        <hr className='hr margin-h-1x25' />
+        <div className='row-center-center padding-v-1 padding-h-1x25'>
+          <button
+            type='submit'
+            className='btn-primary btn-wide'>
+            Submit
+          </button>
+        </div>
+      </form>
+    )
+  }
+}
+
+const CategoryForm = connect(state => ({
+  category: state.net.category,
+}), dispatch => ({
+  createCategory: category => dispatch(a.createCategory(category)),
+  updateCategory: (category, id) => dispatch(a.updateCategory(category, id)),
+}))(_CategoryForm)
+
+class _CategoriesList extends u.ViewComponent {
+  render({
+    context,
+    props: {categories, setDialog, setCategory},
+  }) {
+    const isMobile = u.isMobile(context)
+
+    return (
+      <div className={`relative col-start-stretch ${isMobile ? '' : 'gaps-v-1'}`}>
+        {isMobile ? null :
+        <div className='col-start-stretch padding-h-0x5' style={{marginTop: '-1.75rem'}}>
+          <Fab
+            onClick={() => {
+              setDialog(FormDialog, {
+                form: CategoryForm,
+                title: 'New category',
+                onClose: setCategory,
+              })
+            }} />
+        </div>}
+        {!isMobile ? null :
+        <Fab
+          className='fix-b-r margin-1'
+          onClick={() => {
+            setDialog(FormDialog, {
+              form: CategoryForm,
+              title: 'New category',
+              onClose: setCategory,
+            })
+          }} />}
+        <div className='col-start-stretch'>
+          {f.map(categories, cat => (
+            <m.FakeButton
+              type='div'
+              key={cat.id}
+              onClick={() => {
+                setCategory(cat)
+                setDialog(FormDialog, {
+                  form: CategoryForm,
+                  title: 'Edit category',
+                  onClose: setCategory,
+                })
+              }}
+              className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
+              <div className='row-start-center padding-1'>
+                <s.Tag className='font-large fg-primary-100' />
+              </div>
+              <div className='flex-1 col-start-stretch'>
+                <div className='flex-1 row-between-center padding-v-1'>
+                  {cat.title}
+                </div>
+              </div>
+            </m.FakeButton>
+          ))}
+        </div>
       </div>
     )
   }
 }
 
-const CategoriesTable = connect(state => ({
+const CategoriesList = connect(state => ({
   categories: state.net.categories,
-}))(_CategoriesTable)
+}), dispatch => ({
+  setCategory: category => dispatch(a.receiveCategory(category)),
+  setDialog: (dialog, props) => dispatch(a.setDialog(dialog, props)),
+}))(_CategoriesList)
 
 class _AccountsTable extends u.ViewComponent {
   render({
@@ -430,20 +539,21 @@ const PayeesTable = connect(state => ({
   payees: state.net.payees,
 }))(_PayeesTable)
 
-class _TransactionDialog extends u.ViewComponent {
+class _FormDialog extends u.ViewComponent {
   constructor(props) {
     super(props)
 
     this.close = () => {
       this.props.setDialog(null)
-      this.props.setTransaction(null)
+
+      if (this.props.onClose) this.props.onClose()
     }
   }
 
   render({
     close,
     context,
-    props: {transaction},
+    props: {title, form: Form},
   }) {
     if (u.isMobile(context)) {
       return (
@@ -452,14 +562,15 @@ class _TransactionDialog extends u.ViewComponent {
             <div className='flex-1 relative col-start-stretch bg-white'>
               <div className='row-between-center gaps-h-1 padding-l-1x25 navbar-height'>
                 <h2 className='font-large weight-medium'>
-                  {transaction && transaction.id ? 'Edit' : 'New'} transaction
+                  {title}
                 </h2>
                 <m.FakeButton className='row-center-center padding-1x25' onClick={close}>
                   <s.X className='font-large' />
                 </m.FakeButton>
               </div>
               <hr className='hr' />
-              <TransactionForm onSubmit={close} />
+              {!Form ? null :
+              <Form onSubmit={close} />}
             </div>
           </m.DialogScrollable>
         </m.Dialog>
@@ -470,17 +581,20 @@ class _TransactionDialog extends u.ViewComponent {
       <m.Dialog onEscape={close}>
         <m.DialogOverlay className='bg-overlay-dark' />
         <m.DialogCentered onClick={close}>
-          <div className='col-start-stretch rounded bg-white shadow-dept-3'>
+          <div
+            className='col-start-stretch rounded bg-white shadow-dept-3'
+            style={{minWidth: '30rem'}}>
             <div className='row-between-center gaps-h-1 padding-h-1x25 navbar-height'>
               <h2 className='font-large weight-medium'>
-                {transaction && transaction.id ? 'Edit' : 'New'} transaction
+                {title}
               </h2>
               <m.FakeButton className='row-center-center' onClick={close}>
                 <s.X className='font-large' />
               </m.FakeButton>
             </div>
             <hr className='hr' />
-            <TransactionForm onSubmit={close} />
+            {!Form ? null :
+            <Form onSubmit={close} />}
           </div>
         </m.DialogCentered>
       </m.Dialog>
@@ -488,12 +602,9 @@ class _TransactionDialog extends u.ViewComponent {
   }
 }
 
-const TransactionDialog = connect(state => ({
-  transaction: state.net.transaction,
-}), dispatch => ({
-  setTransaction: transaction => dispatch(a.receiveTransaction(transaction)),
+const FormDialog = connect(null, dispatch => ({
   setDialog: dialog => dispatch(a.setDialog(dialog)),
-}))(_TransactionDialog)
+}))(_FormDialog)
 
 class _TransactionForm extends u.ViewComponent {
   constructor(props) {
@@ -673,12 +784,21 @@ class _TransactionsList extends u.ViewComponent {
       <div className={`relative col-start-stretch ${isMobile ? '' : 'gaps-v-1'}`}>
         {isMobile ? null :
         <div className='col-start-stretch padding-h-0x5' style={{marginTop: '-1.75rem'}}>
-          <Fab onClick={() => setDialog(TransactionDialog)} />
+          <Fab
+            onClick={() => setDialog(FormDialog, {
+              form: TransactionForm,
+              title: 'New transaction',
+              onClose: setTransaction,
+            })} />
         </div>}
         {!isMobile ? null :
         <Fab
           className='fix-b-r margin-1'
-          onClick={() => setDialog(TransactionDialog)} />}
+          onClick={() => setDialog(FormDialog, {
+            form: TransactionForm,
+            title: 'New transaction',
+            onClose: setTransaction,
+          })} />}
         <div className='col-start-stretch'>
           {f.map(transactions, tr => (
             <m.FakeButton
@@ -686,26 +806,32 @@ class _TransactionsList extends u.ViewComponent {
               key={tr.id}
               onClick={() => {
                 setTransaction(tr)
-                setDialog(TransactionDialog)
+                setDialog(FormDialog, {
+                  form: TransactionForm,
+                  title: 'Edit transaction',
+                  onClose: setTransaction,
+                })
               }}
               className='row-start-center gaps-h-1 padding-h-1 list-item text-left theme-light-menu-busy'>
-              {
-                tr.incomeAmount ?
-                <div className='relative width-2x5 square circle bg-success'>
-                  <div className='row-center-center abs-center fg-white font-large'>
-                    {f.scan(categoriesById, tr.categoryId, 'title', 0) || <s.Plus />}
+              <div className='row-start-center padding-v-1'>
+                {
+                  tr.incomeAmount ?
+                  <div className='relative width-2x5 square circle bg-success'>
+                    <div className='row-center-center abs-center fg-white font-large'>
+                      {f.scan(categoriesById, tr.categoryId, 'title', 0) || <s.Plus />}
+                    </div>
+                  </div> :
+                  tr.outcomeAmount ?
+                  <div className='relative width-2x5 square circle bg-warning-100'>
+                    <div className='row-center-center abs-center fg-white font-large'>
+                      {f.scan(categoriesById, tr.categoryId, 'title', 0) || <s.Minus />}
+                    </div>
+                  </div> :
+                  <div className='relative width-2x5 square circle bg-accent'>
+                    <div className='row-center-center abs-center fg-white font-large'>!</div>
                   </div>
-                </div> :
-                tr.outcomeAmount ?
-                <div className='relative width-2x5 square circle bg-warning-100'>
-                  <div className='row-center-center abs-center fg-white font-large'>
-                    {f.scan(categoriesById, tr.categoryId, 'title', 0) || <s.Minus />}
-                  </div>
-                </div> :
-                <div className='relative width-2x5 square circle bg-accent'>
-                  <div className='row-center-center abs-center fg-white font-large'>!</div>
-                </div>
-              }
+                }
+              </div>
               <div className='flex-1 col-start-stretch'>
                 <div className='row-between-center gaps-h-1 padding-v-1'>
                   <div className='col-start-stretch'>
@@ -754,7 +880,7 @@ const TransactionsList = connect(state => ({
   transactions: state.net.transactions,
 }), dispatch => ({
   setTransaction: transaction => dispatch(a.receiveTransaction(transaction)),
-  setDialog: dialog => dispatch(a.setDialog(dialog)),
+  setDialog: (dialog, props) => dispatch(a.setDialog(dialog, props)),
 }))(_TransactionsList)
 
 class G7FormLine extends u.ViewComponent {
