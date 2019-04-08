@@ -291,7 +291,7 @@ class _SettingsPage extends u.ViewComponent {
                 <AccountsList />
               </Route>
               <Route path='/settings/payees'>
-                <PayeesTable />
+                <PayeesList />
               </Route>
               <Redirect from='/settings' to='settings/categories' />
             </Switch>
@@ -311,7 +311,7 @@ class _SettingsPage extends u.ViewComponent {
               <AccountsList />
             </Route>
             <Route path='/settings/payees'>
-              <PayeesTable />
+              <PayeesList />
             </Route>
             <Redirect from='/settings' to='settings/categories' />
           </Switch>
@@ -367,7 +367,7 @@ class _CategoryForm extends u.ViewComponent {
       <form className='col-start-stretch' onSubmit={this.onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
-            label='Title'
+            label='Name'
             {...bindValue('title')} />
         </div>
         <hr className='hr margin-h-1x25' />
@@ -501,7 +501,7 @@ class _AccountForm extends u.ViewComponent {
       <form className='col-start-stretch' onSubmit={this.onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
-            label='Title'
+            label='Name'
             {...bindValue('title')} />
           <FormTextElement
             label='Initial'
@@ -596,28 +596,137 @@ const AccountsList = connect(state => ({
   setDialog: (dialog, props) => dispatch(a.setDialog(dialog, props)),
 }))(_AccountsList)
 
-class _PayeesTable extends u.ViewComponent {
-  render({props: {payees}}) {
+class _PayeeForm extends u.ViewComponent {
+  constructor(props) {
+    super(props)
+
+    this.state = {formValues: this.props.payee || {}}
+
+    this.onSubmit = event => {
+      u.preventDefault(event)
+
+      const {formValues} = this.state
+
+      if (formValues.id) {
+        this.props.updatePayee(this.state.formValues, formValues.id)
+      }
+      else {
+        this.props.createPayee(this.state.formValues)
+      }
+
+      if (this.props.onSubmit) this.props.onSubmit(event)
+    }
+
+    this.onUpdate = (key, value) => {
+      this.setState({formValues: e.put(this.state.formValues, key, value)})
+    }
+
+    this.bindValue = key => ({
+      ident: key,
+      onUpdate: this.onUpdate,
+      defaultValue: this.state.formValues[key],
+    })
+  }
+
+  render({
+    bindValue,
+    context,
+  }) {
+    const isMobile = u.isMobile(context)
+
     return (
-      <div className='data-table'>
-        <div className='data-table-row fg-black-50'>
-          <div className='data-table-head'>Title</div>
+      <form className='col-start-stretch' onSubmit={this.onSubmit}>
+        <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
+          <FormTextElement
+            label='Name'
+            {...bindValue('title')} />
         </div>
-        {f.map(payees, payee => (
-          <div className='data-table-row' key={payee.id}>
-            <div className='data-table-cell wspace-nowrap'>
-              {payee.title}
-            </div>
-          </div>
-        ))}
+        <hr className='hr margin-h-1x25' />
+        <div className='row-center-center padding-v-1 padding-h-1x25'>
+          <button
+            type='submit'
+            className='btn-primary btn-wide'>
+            Submit
+          </button>
+        </div>
+      </form>
+    )
+  }
+}
+
+const PayeeForm = connect(state => ({
+  payee: state.net.payee,
+}), dispatch => ({
+  createPayee: payee => dispatch(a.createPayee(payee)),
+  updatePayee: (payee, id) => dispatch(a.updatePayee(payee, id)),
+}))(_PayeeForm)
+
+class _PayeesList extends u.ViewComponent {
+  render({
+    context,
+    props: {payees, setDialog, setPayee},
+  }) {
+    const isMobile = u.isMobile(context)
+
+    return (
+      <div className={`relative col-start-stretch ${isMobile ? '' : 'gaps-v-1'}`}>
+        {isMobile ? null :
+        <div className='col-start-stretch padding-h-0x5' style={{marginTop: '-1.75rem'}}>
+          <Fab
+            onClick={() => {
+              setDialog(FormDialog, {
+                form: PayeeForm,
+                title: 'New payee',
+                onClose: setPayee,
+              })
+            }} />
+        </div>}
+        {!isMobile ? null :
+        <Fab
+          className='fix-b-r margin-1'
+          onClick={() => {
+            setDialog(FormDialog, {
+              form: PayeeForm,
+              title: 'New payee',
+              onClose: setPayee,
+            })
+          }} />}
+        <div className='col-start-stretch'>
+          {f.map(payees, payee => (
+            <m.FakeButton
+              type='div'
+              key={payee.id}
+              onClick={() => {
+                setPayee(payee)
+                setDialog(FormDialog, {
+                  form: PayeeForm,
+                  title: 'Edit payee',
+                  onClose: setPayee,
+                })
+              }}
+              className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
+              <div className='row-start-center padding-1'>
+                <s.Users className='font-large fg-primary-100' />
+              </div>
+              <div className='flex-1 col-start-stretch'>
+                <div className='flex-1 row-between-center gaps-h-1 padding-v-1'>
+                  <span>{payee.title}</span>
+                </div>
+              </div>
+            </m.FakeButton>
+          ))}
+        </div>
       </div>
     )
   }
 }
 
-const PayeesTable = connect(state => ({
+const PayeesList = connect(state => ({
   payees: state.net.payees,
-}))(_PayeesTable)
+}), dispatch => ({
+  setPayee: payee => dispatch(a.receivePayee(payee)),
+  setDialog: (dialog, props) => dispatch(a.setDialog(dialog, props)),
+}))(_PayeesList)
 
 class _FormDialog extends u.ViewComponent {
   constructor(props) {

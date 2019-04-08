@@ -113,6 +113,18 @@ export const net = (state = {
         payeesById: f.keyBy(action.payees, ({id}) => id),
       }
 
+    case a.POST_PAYEE:
+      return {
+        ...state,
+        pending: [...state.pending, a.POST_PAYEE],
+      }
+    case a.RECEIVE_PAYEE:
+      return {
+        ...state,
+        pending: f.filter(state.pending, item => item !== a.POST_PAYEE),
+        payee: action.payee,
+      }
+
     case a.REQUEST_TRANSACTIONS:
       return {
         ...state,

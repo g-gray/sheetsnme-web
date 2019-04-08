@@ -18,6 +18,8 @@ export const POST_ACCOUNT           = 'POST_ACCOUNT'
 
 export const REQUEST_PAYEES         = 'REQUEST_PAYEES'
 export const RECEIVE_PAYEES         = 'RECEIVE_PAYEES'
+export const RECEIVE_PAYEE          = 'RECEIVE_PAYEE'
+export const POST_PAYEE             = 'POST_PAYEE'
 
 export const REQUEST_TRANSACTIONS   = 'REQUEST_TRANSACTIONS'
 export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
@@ -50,6 +52,11 @@ export const receiveCategory = category => ({
 export const receiveAccount = account => ({
   type: RECEIVE_ACCOUNT,
   account,
+})
+
+export const receivePayee = payee => ({
+  type: RECEIVE_PAYEE,
+  payee,
 })
 
 export const requestError = error => dispatch => {
@@ -139,6 +146,28 @@ export const fetchPayees  = () => dispatch => {
   dispatch({type: REQUEST_PAYEES})
   return n.authedJsonFetch('/api/payees')
     .then(payees => dispatch({type: RECEIVE_PAYEES, payees}))
+    .catch(error => dispatch(requestError(error)))
+}
+
+export const createPayee = payee => dispatch => {
+  dispatch({type: POST_PAYEE})
+  return n.authedJsonFetch('/api/payees', {
+    method: 'POST',
+    body: JSON.stringify(payee),
+  })
+    .then(() => dispatch(receivePayee()))
+    .then(() => dispatch(fetchPayees()))
+    .catch(error => dispatch(requestError(error)))
+}
+
+export const updatePayee = (payee, id) => dispatch => {
+  dispatch({type: POST_PAYEE})
+  return n.authedJsonFetch(`/api/payees/${id}`, {
+    method: 'POST',
+    body: JSON.stringify(payee),
+  })
+    .then(() => dispatch(receivePayee()))
+    .then(() => dispatch(fetchPayees()))
     .catch(error => dispatch(requestError(error)))
 }
 
