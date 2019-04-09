@@ -731,7 +731,7 @@ class _FormDialog extends u.ViewComponent {
     super(...arguments)
 
     this.close = () => {
-      this.props.setDialog(null)
+      this.props.setDialog()
 
       if (this.props.onClose) this.props.onClose()
     }
