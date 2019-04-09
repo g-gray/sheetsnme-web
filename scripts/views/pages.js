@@ -336,14 +336,13 @@ class _CategoryForm extends u.ViewComponent {
 
       const {formValues} = this.state
 
-      if (formValues.id) {
-        this.props.updateCategory(this.state.formValues, formValues.id)
-      }
-      else {
-        this.props.createCategory(this.state.formValues)
-      }
+      const promise = formValues.id
+        ? this.props.updateCategory(this.state.formValues, formValues.id)
+        : this.props.createCategory(this.state.formValues)
 
-      if (this.props.onSubmit) this.props.onSubmit(event)
+      promise.then(() => {
+        if (this.props.onSubmit) this.props.onSubmit(event)
+      })
     }
 
     this.onUpdate = (key, value) => {
@@ -468,14 +467,14 @@ class _AccountForm extends u.ViewComponent {
 
       const {formValues} = this.state
 
-      if (formValues.id) {
-        this.props.updateAccount(this.state.formValues, formValues.id)
-      }
-      else {
-        this.props.createAccount(this.state.formValues)
-      }
+      const initial = formValues.initial ? Number(formValues.initial) : 0
+      const promise = formValues.id
+        ? this.props.updateAccount({...this.state.formValues, initial}, formValues.id)
+        : this.props.createAccount({...this.state.formValues, initial})
 
-      if (this.props.onSubmit) this.props.onSubmit(event)
+      promise.then(() => {
+        if (this.props.onSubmit) this.props.onSubmit(event)
+      })
     }
 
     this.onUpdate = (key, value) => {
@@ -607,14 +606,13 @@ class _PayeeForm extends u.ViewComponent {
 
       const {formValues} = this.state
 
-      if (formValues.id) {
-        this.props.updatePayee(this.state.formValues, formValues.id)
-      }
-      else {
-        this.props.createPayee(this.state.formValues)
-      }
+      const promise = formValues.id
+        ? this.props.updatePayee(this.state.formValues, formValues.id)
+        : this.props.createPayee(this.state.formValues)
 
-      if (this.props.onSubmit) this.props.onSubmit(event)
+      promise.then(() => {
+        if (this.props.onSubmit) this.props.onSubmit(event)
+      })
     }
 
     this.onUpdate = (key, value) => {
@@ -799,23 +797,21 @@ class _TransactionForm extends u.ViewComponent {
   constructor() {
     super(...arguments)
 
-    this.state = {formValues: this.props.transaction || {
-      date: u.formatDate(new Date()),
-    }}
+    this.state = {formValues: this.props.transaction || {date: u.formatDate(new Date())}}
 
     this.onSubmit = event => {
       u.preventDefault(event)
 
       const {formValues} = this.state
+      const date = u.formatDate(this.state.formValues.date)
 
-      if (formValues.id) {
-        this.props.updateTransaction(this.state.formValues, formValues.id)
-      }
-      else {
-        this.props.createTransaction(this.state.formValues)
-      }
+      const promise = formValues.id
+        ? this.props.updateTransaction({...this.state.formValues, date}, formValues.id)
+        : this.props.createTransaction({...this.state.formValues, date})
 
-      if (this.props.onSubmit) this.props.onSubmit(event)
+      promise.then(() => {
+        if (this.props.onSubmit) this.props.onSubmit(event)
+      })
     }
 
     this.onUpdate = (key, value) => {
