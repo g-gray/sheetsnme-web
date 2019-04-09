@@ -59,8 +59,8 @@ class Logo extends u.ViewComponent {
 }
 
 class _Navbar extends u.ViewComponent {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super(...arguments)
 
     this.state = {menuOpened: false}
 
@@ -110,8 +110,8 @@ const Navbar = connect(null, dispatch => ({
 }))(_Navbar)
 
 class _UserMenu extends u.ViewComponent {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super(...arguments)
 
     this.state = {expanded: false}
 
@@ -180,8 +180,8 @@ const UserMenu = connect(state => ({
 }))(_UserMenu)
 
 class _MobileMenu extends u.ViewComponent {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super(...arguments)
 
     this.close = this.props.setDialog.bind(null, null)
   }
@@ -326,8 +326,8 @@ export const SettingsPage = connect(state => ({
 }))(_SettingsPage)
 
 class _CategoryForm extends u.ViewComponent {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super(...arguments)
 
     this.state = {formValues: this.props.category || {}}
 
@@ -458,8 +458,8 @@ const CategoriesList = connect(state => ({
 }))(_CategoriesList)
 
 class _AccountForm extends u.ViewComponent {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super(...arguments)
 
     this.state = {formValues: this.props.account || {}}
 
@@ -597,8 +597,8 @@ const AccountsList = connect(state => ({
 }))(_AccountsList)
 
 class _PayeeForm extends u.ViewComponent {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super(...arguments)
 
     this.state = {formValues: this.props.payee || {}}
 
@@ -729,8 +729,8 @@ const PayeesList = connect(state => ({
 }))(_PayeesList)
 
 class _FormDialog extends u.ViewComponent {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super(...arguments)
 
     this.close = () => {
       this.props.setDialog(null)
@@ -796,8 +796,8 @@ const FormDialog = connect(null, dispatch => ({
 }))(_FormDialog)
 
 class _TransactionForm extends u.ViewComponent {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super(...arguments)
 
     this.state = {formValues: this.props.transaction || {
       date: u.formatDate(new Date()),
