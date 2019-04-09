@@ -9,27 +9,27 @@ import * as u from '../utils'
  */
 
 export const GlobalDialog = connect(state => ({
-  dialog: state.dom.dialog,
-  dialogs: state.dom.dialogs,
-  dialogProps: state.dom.dialogProps,
-}))(({dialog: Dialog, dialogs, dialogProps}) => {
-  return Dialog ? <Dialog dialogs={dialogs} {...dialogProps} /> : null
+  dialog       : state.dom.dialog,
+  dialogsNumber: state.dom.dialogsNumber,
+  dialogProps  : state.dom.dialogProps,
+}))(({dialog: Dialog, dialogsNumber, dialogProps}) => {
+  return Dialog ? <Dialog dialogsNumber={dialogsNumber} {...dialogProps} /> : null
 })
 
 export class Dialog extends u.ViewComponent {
   componentDidMount() {
+    const {props: {onEscape}} = this
     this.unsub = u.addEvent(window, 'keydown', event => {
-      const {props: {onEscape}} = this
       if (u.eventKeyName(event) === 'Escape' && f.isFunction(onEscape)) {
         onEscape(event)
       }
     })
-    onDialogOpen(this.props.dialogs)
+    onDialogOpen(this.props.dialogsNumber)
   }
 
   componentWillUnmount() {
     if (this.unsub) this.unsub()
-    onDialogClose(this.props.dialogs)
+    onDialogClose(this.props.dialogsNumber)
   }
 
   render({props: {className: cls, children}}) {
@@ -80,19 +80,19 @@ export class DialogCentered extends u.ViewComponent {
   }
 }
 
-function onDialogOpen(dialogs) {
-  dialogs = (dialogs | 0) + 1
+function onDialogOpen(dialogsNumber) {
+  dialogsNumber = (dialogsNumber || 0) + 1
 
-  if (dialogs > 0) {
+  if (dialogsNumber > 0) {
     document.body.style.marginRight = `${u.getGlobalScrollbarWidth()}px`
     document.body.classList.add('overflow-x-scroll')
   }
 }
 
-function onDialogClose(dialogs) {
-  dialogs = Math.max(0, (dialogs | 0) - 1)
+function onDialogClose(dialogsNumber) {
+  dialogsNumber = Math.max(0, (dialogsNumber || 0) - 1)
 
-  if (!dialogs) {
+  if (!dialogsNumber) {
     document.body.style.marginRight = null
     document.body.classList.remove('overflow-x-scroll')
   }
@@ -169,7 +169,7 @@ export class Closer extends u.ViewComponent {
       if (close) close(event)
     }
 
-    this.onKeydown = event => {
+    this.onKeyDown = event => {
       if (u.eventKeyName(event) === 'Escape') maybeClose(event)
     }
 
@@ -181,7 +181,7 @@ export class Closer extends u.ViewComponent {
   }
 
   componentDidMount() {
-    this.unKeyDown = u.addEvent(window, 'keydown', this.onKeydown)
+    this.unKeyDown = u.addEvent(window, 'keydown', this.onKeyDown)
     this.unClick = u.addEvent(window, 'click', this.onClick)
   }
 
