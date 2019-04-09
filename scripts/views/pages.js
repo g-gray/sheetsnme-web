@@ -344,20 +344,9 @@ class _CategoryForm extends u.ViewComponent {
         if (this.props.onSubmit) this.props.onSubmit(event)
       })
     }
-
-    this.onUpdate = (key, value) => {
-      this.setState({formValues: e.put(this.state.formValues, key, value)})
-    }
-
-    this.bindValue = key => ({
-      ident: key,
-      onUpdate: this.onUpdate,
-      defaultValue: this.state.formValues[key],
-    })
   }
 
   render({
-    bindValue,
     context,
   }) {
     const isMobile = u.isMobile(context)
@@ -367,7 +356,7 @@ class _CategoryForm extends u.ViewComponent {
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
             label='Name'
-            {...bindValue('title')} />
+            {...u.bindValue(this, ['formValues'], 'title')} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>
@@ -476,22 +465,9 @@ class _AccountForm extends u.ViewComponent {
         if (this.props.onSubmit) this.props.onSubmit(event)
       })
     }
-
-    this.onUpdate = (key, value) => {
-      // TODO: find the best way to convert values
-      const isNumber = key === 'initial'
-      this.setState({formValues: e.put(this.state.formValues, key, isNumber ? Number(value) : value)})
-    }
-
-    this.bindValue = key => ({
-      ident: key,
-      onUpdate: this.onUpdate,
-      defaultValue: this.state.formValues[key],
-    })
   }
 
   render({
-    bindValue,
     context,
   }) {
     const isMobile = u.isMobile(context)
@@ -501,11 +477,11 @@ class _AccountForm extends u.ViewComponent {
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
             label='Name'
-            {...bindValue('title')} />
+            {...u.bindValue(this, ['formValues'], 'title')} />
           <FormTextElement
             label='Initial'
             input_type='number'
-            {...bindValue('initial')} />
+            {...u.bindValue(this, ['formValues'], 'initial')} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>
@@ -614,20 +590,9 @@ class _PayeeForm extends u.ViewComponent {
         if (this.props.onSubmit) this.props.onSubmit(event)
       })
     }
-
-    this.onUpdate = (key, value) => {
-      this.setState({formValues: e.put(this.state.formValues, key, value)})
-    }
-
-    this.bindValue = key => ({
-      ident: key,
-      onUpdate: this.onUpdate,
-      defaultValue: this.state.formValues[key],
-    })
   }
 
   render({
-    bindValue,
     context,
   }) {
     const isMobile = u.isMobile(context)
@@ -637,7 +602,7 @@ class _PayeeForm extends u.ViewComponent {
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
             label='Name'
-            {...bindValue('title')} />
+            {...u.bindValue(this, ['formValues'], 'title')} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>
@@ -814,10 +779,6 @@ class _TransactionForm extends u.ViewComponent {
       })
     }
 
-    this.onUpdate = (key, value) => {
-      this.setState({formValues: e.put(this.state.formValues, key, value)})
-    }
-
     this.onAmountUpdate = (__, value) => {
       const {incomeAmount, incomeAccountId} = this.state.formValues
 
@@ -849,16 +810,9 @@ class _TransactionForm extends u.ViewComponent {
         incomeAccountId: outcomeAccountId,
       })})
     }
-
-    this.bindValue = key => ({
-      ident: key,
-      onUpdate: this.onUpdate,
-      defaultValue: this.state.formValues[key],
-    })
   }
 
   render({
-    bindValue,
     context,
     state: {formValues},
     props: {categories, accounts, payees},
@@ -870,7 +824,7 @@ class _TransactionForm extends u.ViewComponent {
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormDateElement
             label='Date'
-            {...bindValue('date')} />
+            {...u.bindValue(this, ['formValues'], 'date')} />
           <G7FormLine>
             <FormLabel>
               Type
@@ -913,7 +867,7 @@ class _TransactionForm extends u.ViewComponent {
           </FormSelectElement>
           <FormSelectElement
             label='Category'
-            {...bindValue('categoryId')}>
+            {...u.bindValue(this, ['formValues'], 'categoryId')}>
             <option value='' />
             {f.map(categories, ({id, title}) => (
               <option value={id} key={`category-${id}`}>
@@ -923,7 +877,7 @@ class _TransactionForm extends u.ViewComponent {
           </FormSelectElement>
           <FormSelectElement
             label='Payee'
-            {...bindValue('payeeId')}>
+            {...u.bindValue(this, ['formValues'], 'payeeId')}>
             <option value='' />
             {f.map(payees, ({id, title}) => (
               <option value={id} key={`payee-${id}`}>
@@ -933,7 +887,7 @@ class _TransactionForm extends u.ViewComponent {
           </FormSelectElement>
           <FormTextElement
             label='Comment'
-            {...bindValue('comment')} />
+            {...u.bindValue(this, ['formValues'], 'comment')} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>

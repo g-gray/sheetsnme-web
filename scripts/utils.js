@@ -193,3 +193,19 @@ export function bgUrl(url) {
   f.validate(url, f.isString)
   return {backgroundImage: `url(${url})`}
 }
+
+export function bindValue(component, path, key, fun) {
+  // TODO Better validation below
+  f.validate(component, c => f.isInstance(c, React.Component))
+  f.validate(path, f.isArray)
+  f.validate(key, k => !f.isNil(k))
+
+  return {
+    ident: key,
+    onUpdate: (key, value) => {
+      value = f.isFunction(fun) ? fun(value) : value
+      component.setState(e.putIn(component.state, [...path, key], value))
+    },
+    defaultValue: f.getIn(component.state, [...path, key]),
+  }
+}
