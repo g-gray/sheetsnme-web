@@ -195,14 +195,34 @@ export function bgUrl(url) {
 }
 
 export function bindValue(component, path, fun) {
-  f.validate(component, c => f.isInstance(c, React.Component))
-  f.validate(path, f.isArray)
+  f.validate(component, isComponent)
+  f.validate(path, isPath)
 
   return {
     onUpdate: value => {
-      value = f.isFunction(fun) ? fun(value) : value
-      component.setState(e.putIn(component.state, path, value))
+      component.setState(e.putIn(component.state, path, f.isFunction(fun) ? fun(value) : value))
     },
     defaultValue: f.getIn(component.state, path),
   }
+}
+
+export function bindChecked(component, path, componentValue) {
+  f.validate(component, isComponent)
+  f.validate(path, isPath)
+
+  return {
+    onUpdate: value => {
+      component.setState(e.patchIn(component.state, path, value))
+    },
+    value: componentValue,
+    defaultChecked: f.getIn(component.state, path) === componentValue,
+  }
+}
+
+function isComponent(value) {
+  return f.isInstance(value, React.Component)
+}
+
+function isPath (value) {
+  return f.isList(value) && f.every(value, f.isKey)
 }
