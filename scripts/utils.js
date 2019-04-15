@@ -108,7 +108,7 @@ export function geometry (width) {
 }
 
 export function isMobile(context) {
-  return f.scan(context, 'isMobile')
+  return context.isMobile
 }
 
 // Measures the CURRENT width of the body scrollbar. Returns ZERO if the body
