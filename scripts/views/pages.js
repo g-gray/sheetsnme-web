@@ -356,7 +356,7 @@ class _CategoryForm extends u.ViewComponent {
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
             label='Name'
-            {...u.bindValue(this, ['formValues'], 'title')} />
+            {...u.bindValue(this, ['formValues', 'title'])} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>
@@ -477,11 +477,11 @@ class _AccountForm extends u.ViewComponent {
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
             label='Name'
-            {...u.bindValue(this, ['formValues'], 'title')} />
+            {...u.bindValue(this, ['formValues', 'title'])} />
           <FormTextElement
             label='Initial'
             input_type='number'
-            {...u.bindValue(this, ['formValues'], 'initial')} />
+            {...u.bindValue(this, ['formValues', 'initial'], u.parseNum)} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>
@@ -602,7 +602,7 @@ class _PayeeForm extends u.ViewComponent {
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
             label='Name'
-            {...u.bindValue(this, ['formValues'], 'title')} />
+            {...u.bindValue(this, ['formValues', 'title'])} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>
@@ -824,7 +824,7 @@ class _TransactionForm extends u.ViewComponent {
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormDateElement
             label='Date'
-            {...u.bindValue(this, ['formValues'], 'date')} />
+            {...u.bindValue(this, ['formValues', 'date'])} />
           <G7FormLine>
             <FormLabel>
               Type
@@ -832,7 +832,7 @@ class _TransactionForm extends u.ViewComponent {
             <div className={isMobile ? 'col-start-stretch gaps-v-0x5' : 'row-start-center gaps-h-1'}>
               <label className='row-start-center gaps-h-0x5'>
                 <Radio
-                  ident='type'
+                  name='type'
                   value='outcome'
                   onUpdate={this.onTypeUpdate}
                   defaultChecked={!formValues.incomeAmount} />
@@ -840,7 +840,7 @@ class _TransactionForm extends u.ViewComponent {
               </label>
               <label className='row-start-center gaps-h-0x5'>
                 <Radio
-                  ident='type'
+                  name='type'
                   value='income'
                   onUpdate={this.onTypeUpdate}
                   defaultChecked={formValues.incomeAmount} />
@@ -867,7 +867,7 @@ class _TransactionForm extends u.ViewComponent {
           </FormSelectElement>
           <FormSelectElement
             label='Category'
-            {...u.bindValue(this, ['formValues'], 'categoryId')}>
+            {...u.bindValue(this, ['formValues', 'categoryId'])}>
             <option value='' />
             {f.map(categories, ({id, title}) => (
               <option value={id} key={`category-${id}`}>
@@ -877,7 +877,7 @@ class _TransactionForm extends u.ViewComponent {
           </FormSelectElement>
           <FormSelectElement
             label='Payee'
-            {...u.bindValue(this, ['formValues'], 'payeeId')}>
+            {...u.bindValue(this, ['formValues', 'payeeId'])}>
             <option value='' />
             {f.map(payees, ({id, title}) => (
               <option value={id} key={`payee-${id}`}>
@@ -887,7 +887,7 @@ class _TransactionForm extends u.ViewComponent {
           </FormSelectElement>
           <FormTextElement
             label='Comment'
-            {...u.bindValue(this, ['formValues'], 'comment')} />
+            {...u.bindValue(this, ['formValues', 'comment'])} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>
@@ -1073,26 +1073,27 @@ class FormLabel extends u.ViewComponent {
 }
 
 class FormTextElement extends u.ViewComponent {
-  constructor({ident, onUpdate}) {
+  constructor({onUpdate}) {
     super(...arguments)
     this.onChange = ({target: {value}}) => {
-      if (onUpdate) onUpdate(ident, value)
+      f.validate(onUpdate, f.isFunction)
+      if (onUpdate) onUpdate(value)
     }
   }
 
   render({
     onChange,
-    props: {label, input_type, ident, value, defaultValue, readOnly, disabled},
+    props: {label, name, type, value, defaultValue, readOnly, disabled},
   }) {
     return (
       <G7FormLine>
-        <FormLabel className='input-height' htmlFor={ident}>
+        <FormLabel className='input-height' htmlFor={name}>
           {label}
         </FormLabel>
         <input
-          id={ident}
-          name={ident}
-          type={input_type || 'text'}
+          id={name}
+          name={name}
+          type={type || 'text'}
           className='input'
           value={value}
           defaultValue={defaultValue}
@@ -1107,13 +1108,13 @@ class FormTextElement extends u.ViewComponent {
 class FormDateElement extends u.ViewComponent {
   constructor() {
     super(...arguments)
-    const {props: {ident, value, defaultValue, onUpdate}} = this
+    const {props: {value, defaultValue, onUpdate}} = this
 
     this.onYearInput = ({target: {value: year}}) => {
       year = u.parseNum(year)
       const month = this.mayBeMonth(year, this.state.month)
-      const days = u.daysInMonthList(year, month)
-      const day = this.mayBeDay(days, this.state.day)
+      const days  = u.daysInMonthList(year, month)
+      const day   = this.mayBeDay(days, this.state.day)
       this.setState({year, month, day, days})
       this.onDateInput(year, month, day)
     }
@@ -1122,7 +1123,7 @@ class FormDateElement extends u.ViewComponent {
       month = u.parseNum(month)
       const year = this.state.year
       const days = u.daysInMonthList(year, month)
-      const day = this.mayBeDay(days, this.state.day)
+      const day  = this.mayBeDay(days, this.state.day)
       this.setState({month, day, days})
       this.onDateInput(year, month, day)
     }
@@ -1137,11 +1138,11 @@ class FormDateElement extends u.ViewComponent {
     this.onDateInput = (year, month, day) => {
       if (year != null && month != null && day != null) {
         const date = u.addBrowserOffset(new Date(year, month, day))
-        if (onUpdate) onUpdate(ident, date)
+        if (onUpdate) onUpdate(date)
       }
       else {
-        // Handle error
-        if (onUpdate) onUpdate(ident, undefined)
+        f.validate(onUpdate, f.isFunction)
+        if (onUpdate) onUpdate(undefined)
         console.warn('Entered date is invalid')
       }
     }
@@ -1250,25 +1251,26 @@ class FormDateElement extends u.ViewComponent {
 }
 
 class FormSelectElement extends u.ViewComponent {
-  constructor({ident, onUpdate}) {
+  constructor({onUpdate}) {
     super(...arguments)
     this.onChange = ({target: {value}}) => {
-      if (onUpdate) onUpdate(ident, value)
+      f.validate(onUpdate, f.isFunction)
+      if (onUpdate) onUpdate(value)
     }
   }
 
   render({
     onChange,
-    props: {label, ident, value, defaultValue, readOnly, disabled, children},
+    props: {label, name, value, defaultValue, readOnly, disabled, children},
   }) {
     return (
       <G7FormLine>
-        <FormLabel className='input-height' htmlFor={ident}>
+        <FormLabel className='input-height' htmlFor={name}>
           {label}
         </FormLabel>
         <select
-          id={ident}
-          name={ident}
+          id={name}
+          name={name}
           className='select-native'
           value={value}
           defaultValue={defaultValue}
@@ -1283,22 +1285,23 @@ class FormSelectElement extends u.ViewComponent {
 }
 
 class Radio extends u.ViewComponent {
-  constructor({ident, onUpdate}) {
+  constructor({onUpdate}) {
     super(...arguments)
     this.onChange = ({target: {value}}) => {
-      if (onUpdate) onUpdate(ident, value)
+      f.validate(onUpdate, f.isFunction)
+      if (onUpdate) onUpdate(value)
     }
   }
 
   render({
     onChange,
-    props: {ident, value, readOnly, disabled, checked, defaultChecked},
+    props: {name, value, readOnly, disabled, checked, defaultChecked},
   }) {
     return (
       <label className='radio'>
         <input
-          id={ident}
-          name={ident}
+          id={name}
+          name={name}
           value={value}
           type='radio'
           className='radio-input'
