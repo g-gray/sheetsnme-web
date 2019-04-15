@@ -480,7 +480,7 @@ class _AccountForm extends u.ViewComponent {
             {...u.bindValue(this, ['formValues', 'title'])} />
           <FormTextElement
             label='Initial'
-            input_type='number'
+            type='number'
             {...u.bindValue(this, ['formValues', 'initial'], u.parseNum)} />
         </div>
         <hr className='hr margin-h-1x25' />
