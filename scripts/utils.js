@@ -212,7 +212,7 @@ export function bindChecked(component, path, componentValue) {
 
   return {
     onUpdate: value => {
-      component.setState(e.patchIn(component.state, path, value))
+      component.setState(e.putIn(component.state, path, value))
     },
     value: componentValue,
     defaultChecked: f.getIn(component.state, path) === componentValue,
