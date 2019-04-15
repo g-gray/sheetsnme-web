@@ -1,4 +1,5 @@
 import React from 'react'
+import {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {Switch, Route, Redirect, NavLink, Link} from 'react-router-dom'
 
@@ -456,10 +457,9 @@ class _AccountForm extends u.ViewComponent {
 
       const {formValues} = this.state
 
-      const initial = formValues.initial ? Number(formValues.initial) : 0
       const promise = formValues.id
-        ? this.props.updateAccount({...this.state.formValues, initial}, formValues.id)
-        : this.props.createAccount({...this.state.formValues, initial})
+        ? this.props.updateAccount(this.state.formValues, formValues.id)
+        : this.props.createAccount(this.state.formValues)
 
       promise.then(() => {
         if (this.props.onSubmit) this.props.onSubmit(event)
@@ -762,7 +762,16 @@ class _TransactionForm extends u.ViewComponent {
   constructor() {
     super(...arguments)
 
-    this.state = {formValues: this.props.transaction || {date: u.formatDate(new Date())}}
+    const transaction = this.props.transaction || {date: u.formatDate(new Date())}
+
+    this.state = {
+      type: transaction.outcomeAccountId && !transaction.incomeAccountId
+        ? 'outcome'
+        : !transaction.outcomeAccountId && transaction.incomeAccountId
+        ? 'income'
+        : 'outcome',
+      formValues: transaction,
+    }
 
     this.onSubmit = event => {
       u.preventDefault(event)
@@ -779,36 +788,39 @@ class _TransactionForm extends u.ViewComponent {
       })
     }
 
-    this.onAmountUpdate = (__, value) => {
-      const {incomeAmount, incomeAccountId} = this.state.formValues
-
-      const amountType = incomeAmount || incomeAccountId ? 'incomeAmount' : 'outcomeAmount'
-
-      this.setState({formValues: e.put(this.state.formValues, amountType, Number(value))})
-    }
-
-    this.onAccountUpdate = (__, value) => {
-      const {incomeAmount, incomeAccountId} = this.state.formValues
-
-      const accountType = incomeAmount || incomeAccountId ? 'incomeAccountId' : 'outcomeAccountId'
-
-      this.setState({formValues: e.put(this.state.formValues, accountType, value)})
-    }
-
-    this.onTypeUpdate = () => {
+    this.onTypeUpdated = value => {
       const {
-        outcomeAmount,
-        incomeAmount,
         outcomeAccountId,
+        outcomeAmount,
         incomeAccountId,
+        incomeAmount,
       } = this.state.formValues
 
-      this.setState({formValues: e.patch(this.state.formValues, {
-        outcomeAmount: incomeAmount,
-        incomeAmount: outcomeAmount,
-        outcomeAccountId: incomeAccountId,
-        incomeAccountId: outcomeAccountId,
-      })})
+      if (this.state.type === 'outcome' && value === 'income') {
+        this.setState({
+          type: value,
+          formValues: {
+            ...this.state.formValues,
+            incomeAccountId : outcomeAccountId,
+            incomeAmount    : outcomeAmount,
+            outcomeAccountId: incomeAccountId,
+            outcomeAmount   : incomeAmount,
+          }
+        })
+      }
+
+      if (this.state.type === 'income' && value === 'outcome') {
+        this.setState ({
+          type: value,
+          formValues: {
+            ...this.state.formValues,
+            outcomeAccountId: incomeAccountId,
+            outcomeAmount   : incomeAmount,
+            incomeAccountId : outcomeAccountId,
+            incomeAmount    : outcomeAmount,
+          }
+        })
+      }
     }
   }
 
@@ -834,37 +846,55 @@ class _TransactionForm extends u.ViewComponent {
                 <Radio
                   name='type'
                   value='outcome'
-                  onUpdate={this.onTypeUpdate}
-                  defaultChecked={!formValues.incomeAmount} />
+                  onUpdate={this.onTypeUpdated}
+                  checked={this.state.type === 'outcome'} />
                 <span>Outcome</span>
               </label>
               <label className='row-start-center gaps-h-0x5'>
                 <Radio
                   name='type'
                   value='income'
-                  onUpdate={this.onTypeUpdate}
-                  defaultChecked={formValues.incomeAmount} />
+                  onUpdate={this.onTypeUpdated}
+                  checked={this.state.type === 'income'} />
                 <span>Income</span>
               </label>
             </div>
           </G7FormLine>
-          <FormTextElement
-            label='Amount'
-            ident='amount'
-            onUpdate={this.onAmountUpdate}
-            defaultValue={formValues.outcomeAmount || formValues.incomeAmount} />
-          <FormSelectElement
-            label='Account'
-            ident='accountId'
-            onUpdate={this.onAccountUpdate}
-            defaultValue={formValues.outcomeAccountId || formValues.incomeAccountId}>
-            <option value='' />
-            {f.map(accounts, ({id, title}) => (
-              <option value={id} key={`account-${id}`}>
-                {title}
-              </option>
-            ))}
-          </FormSelectElement>
+
+          {this.state.type !== 'outcome' ? null :
+          <Fragment>
+            <FormTextElement
+              label='Outcome Amount'
+              {...u.bindValue(this, ['formValues', 'outcomeAmount'], u.parseNum)} />
+            <FormSelectElement
+              label='Outcome Account'
+              {...u.bindValue(this, ['formValues', 'outcomeAccountId'])}>
+              <option value='' />
+              {f.map(accounts, ({id, title}) => (
+                <option value={id} key={`account-${id}`}>
+                  {title}
+                </option>
+              ))}
+            </FormSelectElement>
+          </Fragment>}
+
+          {this.state.type !== 'income' ? null :
+          <Fragment>
+            <FormTextElement
+              label='Income Amount'
+              {...u.bindValue(this, ['formValues', 'incomeAmount'], u.parseNum)} />
+            <FormSelectElement
+              label='Income Account'
+              {...u.bindValue(this, ['formValues', 'incomeAccountId'])}>
+              <option value='' />
+              {f.map(accounts, ({id, title}) => (
+                <option value={id} key={`account-${id}`}>
+                  {title}
+                </option>
+              ))}
+            </FormSelectElement>
+          </Fragment>}
+
           <FormSelectElement
             label='Category'
             {...u.bindValue(this, ['formValues', 'categoryId'])}>
@@ -954,13 +984,13 @@ class _TransactionsList extends u.ViewComponent {
               className='row-start-center gaps-h-1 padding-h-1 list-item text-left theme-light-menu-busy'>
               <div className='row-start-center padding-v-1'>
                 {
-                  tr.incomeAmount ?
+                  tr.incomeAccountId ?
                   <div className='relative width-2x5 square circle bg-success'>
                     <div className='row-center-center abs-center fg-white font-large'>
                       {f.scan(categoriesById, tr.categoryId, 'title', 0) || <s.Plus />}
                     </div>
                   </div> :
-                  tr.outcomeAmount ?
+                  tr.outcomeAccountId ?
                   <div className='relative width-2x5 square circle bg-warning-100'>
                     <div className='row-center-center abs-center fg-white font-large'>
                       {f.scan(categoriesById, tr.categoryId, 'title', 0) || <s.Minus />}
@@ -976,7 +1006,7 @@ class _TransactionsList extends u.ViewComponent {
                   <div className='col-start-stretch'>
                     <span>
                       {
-                        tr.incomeAmount && f.scan(payeesById, tr.payeeId, 'title') ?
+                        tr.incomeAccountId && f.scan(payeesById, tr.payeeId, 'title') ?
                         <span>{f.scan(payeesById, tr.payeeId, 'title')}&nbsp;> </span> : null
                       }
                       {
@@ -984,7 +1014,7 @@ class _TransactionsList extends u.ViewComponent {
                         <i className='fg-black-35'>Without category</i>
                       }
                       {
-                        tr.outcomeAmount && f.scan(payeesById, tr.payeeId, 'title') ?
+                        tr.outcomeAccountId && f.scan(payeesById, tr.payeeId, 'title') ?
                         <span> >&nbsp;{f.scan(payeesById, tr.payeeId, 'title')}</span> : null
                       }
                     </span>
@@ -994,8 +1024,8 @@ class _TransactionsList extends u.ViewComponent {
                   </div>
                   <div className='col-start-stretch text-right wspace-nowrap'>
                     {
-                      tr.incomeAmount ? <span className='fg-success'>{`+${tr.incomeAmount}`}</span> :
-                      tr.outcomeAmount ? <span>{`-${tr.outcomeAmount}`}</span> : null
+                      tr.incomeAccountId ? <span className='fg-success'>{`+${tr.incomeAmount}`}</span> :
+                      tr.outcomeAccountId ? <span>{`-${tr.outcomeAmount}`}</span> : null
                     }
                     <span className='font-midsmall fg-black-50'>
                       {f.scan(accountsById, tr.incomeAccountId || tr.outcomeAccountId, 'title')}
