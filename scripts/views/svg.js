@@ -137,6 +137,17 @@ export class ChevronLeft extends u.ViewComponent {
   }
 }
 
+export class ChevronsRight extends u.ViewComponent {
+  render({props}) {
+    return (
+      <svg {...featherProps(props)}>
+        <polyline points="13 17 18 12 13 7" />
+        <polyline points="6 17 11 12 6 7" />
+      </svg>
+    )
+  }
+}
+
 export class CornerUpLeft extends u.ViewComponent {
   render({props}) {
     return (
