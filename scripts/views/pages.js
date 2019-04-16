@@ -790,12 +790,21 @@ class _TransactionForm extends u.ViewComponent {
     this.onSubmit = event => {
       u.preventDefault(event)
 
-      const {formValues} = this.state
+      const {formValues, type} = this.state
       const date = u.formatDate(this.state.formValues.date)
 
+      let data = type === OUTCOME
+        ? {...formValues, incomeAccountId: '', incomeAmount: 0}
+        : type === INCOME
+        ? {...formValues, outcomeAccountId: '', outcomeAmount: 0}
+        : type === TRANSFER
+        ? {...formValues, categoryById: '', payeeId: ''}
+        : formValues
+      data = {...data, date}
+
       const promise = formValues.id
-        ? this.props.updateTransaction({...this.state.formValues, date}, formValues.id)
-        : this.props.createTransaction({...this.state.formValues, date})
+        ? this.props.updateTransaction(data, formValues.id)
+        : this.props.createTransaction(data)
 
       promise.then(() => {
         if (this.props.onSubmit) this.props.onSubmit(event)
@@ -803,13 +812,14 @@ class _TransactionForm extends u.ViewComponent {
     }
 
     this.onTypeUpdated = value => {
-      const {outcomeAccountId, outcomeAmount, incomeAccountId, incomeAmount} = this.state.formValues
+      const {formValues, type} = this.state
+      const {outcomeAccountId, outcomeAmount, incomeAccountId, incomeAmount} = formValues
 
-      if (this.state.type === OUTCOME && value === INCOME) {
+      if (type === OUTCOME && value === INCOME) {
         this.setState({
           type: value,
           formValues: {
-            ...this.state.formValues,
+            ...formValues,
             incomeAccountId : outcomeAccountId,
             incomeAmount    : outcomeAmount,
             outcomeAccountId: incomeAccountId,
@@ -819,11 +829,11 @@ class _TransactionForm extends u.ViewComponent {
         return
       }
 
-      if (this.state.type === INCOME && value === OUTCOME) {
+      if (type === INCOME && value === OUTCOME) {
         this.setState({
           type: value,
           formValues: {
-            ...this.state.formValues,
+            ...formValues,
             outcomeAccountId: incomeAccountId,
             outcomeAmount   : incomeAmount,
             incomeAccountId : outcomeAccountId,
@@ -833,38 +843,18 @@ class _TransactionForm extends u.ViewComponent {
         return
       }
 
-      if (f.includes([OUTCOME, INCOME], this.state.type) && value === TRANSFER) {
+      if (type === OUTCOME && value === TRANSFER) {
         this.setState({
           type: value,
-          formValues: {
-            ...this.state.formValues,
-            categoryById: '',
-            payeeId: '',
-          },
+          formValues: {...formValues, incomeAmount: outcomeAmount},
         })
         return
       }
 
-      if (this.state.type === TRANSFER && value === OUTCOME) {
+      if (type === INCOME && value === TRANSFER) {
         this.setState({
           type: value,
-          formValues: {
-            ...this.state.formValues,
-            incomeAccountId: '',
-            incomeAmount   : 0,
-          },
-        })
-        return
-      }
-
-      if (this.state.type === TRANSFER && value === INCOME) {
-        this.setState({
-          type: value,
-          formValues: {
-            ...this.state.formValues,
-            outcomeAccountId: '',
-            outcomeAmount   : 0,
-          },
+          formValues: {...formValues, outcomeAmount: incomeAmount},
         })
         return
       }
@@ -1041,12 +1031,21 @@ class _Transaction extends u.ViewComponent {
         <div className='flex-1 col-start-stretch'>
           <div className='row-between-center gaps-h-1 padding-v-1'>
             <div className='col-start-stretch'>
+              {type === OUTCOME ?
+              <span>
+                {!tx.categoryId ? null :
+                <span>{categoriesById[tx.categoryId].title}&nbsp;> </span>}
+                {!tx.payeeId ? null :
+                <span>{payeesById[tx.payeeId].title}</span>}
+              </span>
+              : type === INCOME ?
               <span>
                 {!tx.payeeId ? null :
                 <span>{payeesById[tx.payeeId].title}&nbsp;> </span>}
                 {!tx.categoryId ? null :
-                <span>categoriesById[tx.categoryId].title</span>}
+                <span>{categoriesById[tx.categoryId].title}</span>}
               </span>
+              : null}
               <span className='font-midsmall fg-black-50'>
                 {tx.date} {tx.date && tx.comment ? '·' : ''} {tx.comment}
               </span>
