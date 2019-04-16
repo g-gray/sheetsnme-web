@@ -689,6 +689,17 @@ export class Tag extends u.ViewComponent {
   }
 }
 
+export class ArrowDown extends u.ViewComponent {
+  render({props}) {
+    return (
+      <svg {...featherProps(props)}>
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <polyline points="19 12 12 19 5 12" />
+      </svg>
+    )
+  }
+}
+
 export class MaleFigure extends u.ViewComponent {
   render({props}) {
     return (

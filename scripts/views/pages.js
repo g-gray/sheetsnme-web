@@ -747,7 +747,7 @@ class _FormDialog extends u.ViewComponent {
         <m.DialogCentered onClick={close}>
           <div
             className='col-start-stretch rounded bg-white shadow-dept-3'
-            style={{minWidth: '30rem'}}>
+            style={{minWidth: '31rem'}}>
             <div className='row-between-center gaps-h-1 padding-h-1x25 navbar-height'>
               <h2 className='font-large weight-medium'>
                 {title}
@@ -904,34 +904,70 @@ class _TransactionForm extends u.ViewComponent {
             </div>
           </G7FormLine>
 
-          {!f.includes([OUTCOME, TRANSFER], this.state.type) ? null :
+          {this.state.type !== OUTCOME ? null :
           <Fragment>
             <FormTextElement
-              label='Outcome Amount'
+              label='Amount'
               {...u.bindValue(this, ['formValues', 'outcomeAmount'], u.parseNum)} />
             <FormSelectElement
-              label='Outcome Account'
+              label='Account'
               {...u.bindValue(this, ['formValues', 'outcomeAccountId'])}>
               <option value='' />
               {f.map(accounts, ({id, title}) => (
-                <option value={id} key={`account-${id}`}>
+                <option value={id} key={`outcome-account-${id}`}>
                   {title}
                 </option>
               ))}
             </FormSelectElement>
           </Fragment>}
 
-          {!f.includes([INCOME, TRANSFER], this.state.type) ? null :
+          {this.state.type !== INCOME ? null :
           <Fragment>
             <FormTextElement
-              label='Income Amount'
+              label='Amount'
               {...u.bindValue(this, ['formValues', 'incomeAmount'], u.parseNum)} />
             <FormSelectElement
-              label='Income Account'
+              label='Account'
               {...u.bindValue(this, ['formValues', 'incomeAccountId'])}>
               <option value='' />
               {f.map(accounts, ({id, title}) => (
-                <option value={id} key={`account-${id}`}>
+                <option value={id} key={`income-account-${id}`}>
+                  {title}
+                </option>
+              ))}
+            </FormSelectElement>
+          </Fragment>}
+
+          {this.state.type !== TRANSFER ? null :
+          <Fragment>
+            <FormTextElement
+              label='Amount'
+              {...u.bindValue(this, ['formValues', 'outcomeAmount'], u.parseNum)} />
+            <FormSelectElement
+              label='Account'
+              {...u.bindValue(this, ['formValues', 'outcomeAccountId'])}>
+              <option value='' />
+              {f.map(accounts, ({id, title}) => (
+                <option value={id} key={`outcome-account-${id}`}>
+                  {title}
+                </option>
+              ))}
+            </FormSelectElement>
+            <G7FormLine>
+              <span />
+              <span className='row-center-center'>
+                <s.ArrowDown className='font-large' />
+              </span>
+            </G7FormLine>
+            <FormTextElement
+              label='Amount'
+              {...u.bindValue(this, ['formValues', 'incomeAmount'], u.parseNum)} />
+            <FormSelectElement
+              label='Account'
+              {...u.bindValue(this, ['formValues', 'incomeAccountId'])}>
+              <option value='' />
+              {f.map(accounts, ({id, title}) => (
+                <option value={id} key={`income-account-${id}`}>
                   {title}
                 </option>
               ))}
