@@ -564,7 +564,7 @@ class _AccountsList extends u.ViewComponent {
               <div className='flex-1 col-start-stretch'>
                 <div className='flex-1 row-between-center gaps-h-1 padding-v-1'>
                   <span>{acc.title}</span>
-                  <span className='fg-black-50'>{acc.initial}</span>
+                  <span className='fg-black-50'>{acc.balance}</span>
                 </div>
               </div>
             </m.FakeButton>
