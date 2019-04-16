@@ -66,14 +66,12 @@ export const requestError = error => dispatch => {
 
 export const init = () => dispatch => {
   dispatch(fetchUser())
-    .then(() => {
-      return window.Promise.all([
-        dispatch(fetchCategories()),
-        dispatch(fetchAccounts()),
-        dispatch(fetchPayees()),
-        dispatch(fetchTransactions()),
-      ])
-    })
+    .then(() => window.Promise.all([
+      dispatch(fetchCategories()),
+      dispatch(fetchAccounts()),
+      dispatch(fetchPayees()),
+    ]))
+    .then(() => dispatch(fetchTransactions()))
     .catch(error => error)
 }
 
