@@ -362,6 +362,7 @@ class _CategoryForm extends u.ViewComponent {
       <form className='col-start-stretch' onSubmit={this.onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
+            name='title'
             label='Name'
             {...u.bindValue(this, ['formValues', 'title'])} />
         </div>
@@ -484,9 +485,11 @@ class _AccountForm extends u.ViewComponent {
       <form className='col-start-stretch' onSubmit={this.onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
+            name='title'
             label='Name'
             {...u.bindValue(this, ['formValues', 'title'])} />
           <FormTextElement
+            name='initial'
             label='Initial'
             type='number'
             {...u.bindValue(this, ['formValues', 'initial'], u.parseNum)} />
@@ -611,6 +614,7 @@ class _PayeeForm extends u.ViewComponent {
       <form className='col-start-stretch' onSubmit={this.onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
+            name='title'
             label='Name'
             {...u.bindValue(this, ['formValues', 'title'])} />
         </div>
@@ -873,6 +877,7 @@ class _TransactionForm extends u.ViewComponent {
       <form className='col-start-stretch' onSubmit={this.onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormDateElement
+            name='date'
             label='Date'
             {...u.bindValue(this, ['formValues', 'date'])} />
           <G7FormLine>
@@ -907,9 +912,11 @@ class _TransactionForm extends u.ViewComponent {
           {this.state.type !== OUTCOME ? null :
           <Fragment>
             <FormTextElement
+              name='outcomeAmount'
               label='Amount'
               {...u.bindValue(this, ['formValues', 'outcomeAmount'], u.parseNum)} />
             <FormSelectElement
+              name='outcomeAccountId'
               label='Account'
               {...u.bindValue(this, ['formValues', 'outcomeAccountId'])}>
               <option value='' />
@@ -924,9 +931,11 @@ class _TransactionForm extends u.ViewComponent {
           {this.state.type !== INCOME ? null :
           <Fragment>
             <FormTextElement
+              name='incomeAmount'
               label='Amount'
               {...u.bindValue(this, ['formValues', 'incomeAmount'], u.parseNum)} />
             <FormSelectElement
+              name='incomeAccountId'
               label='Account'
               {...u.bindValue(this, ['formValues', 'incomeAccountId'])}>
               <option value='' />
@@ -941,9 +950,11 @@ class _TransactionForm extends u.ViewComponent {
           {this.state.type !== TRANSFER ? null :
           <Fragment>
             <FormTextElement
+              name='outcomeAmount'
               label='Amount'
               {...u.bindValue(this, ['formValues', 'outcomeAmount'], u.parseNum)} />
             <FormSelectElement
+              name='outcomeAccountId'
               label='Account'
               {...u.bindValue(this, ['formValues', 'outcomeAccountId'])}>
               <option value='' />
@@ -960,9 +971,11 @@ class _TransactionForm extends u.ViewComponent {
               </span>
             </G7FormLine>
             <FormTextElement
+              name='incomeAmount'
               label='Amount'
               {...u.bindValue(this, ['formValues', 'incomeAmount'], u.parseNum)} />
             <FormSelectElement
+              name='incomeAccountId'
               label='Account'
               {...u.bindValue(this, ['formValues', 'incomeAccountId'])}>
               <option value='' />
@@ -977,6 +990,7 @@ class _TransactionForm extends u.ViewComponent {
           {!f.includes([OUTCOME, INCOME], this.state.type) ? null :
           <Fragment>
             <FormSelectElement
+              name='categoryId'
               label='Category'
               {...u.bindValue(this, ['formValues', 'categoryId'])}>
               <option value='' />
@@ -987,6 +1001,7 @@ class _TransactionForm extends u.ViewComponent {
               ))}
             </FormSelectElement>
             <FormSelectElement
+              name='payeeId'
               label='Payee'
               {...u.bindValue(this, ['formValues', 'payeeId'])}>
               <option value='' />
@@ -997,6 +1012,7 @@ class _TransactionForm extends u.ViewComponent {
               ))}
             </FormSelectElement>
             <FormTextElement
+              name='comment'
               label='Comment'
               {...u.bindValue(this, ['formValues', 'comment'])} />
           </Fragment>}
@@ -1248,7 +1264,7 @@ class FormTextElement extends u.ViewComponent {
           {label}
         </FormLabel>
         <input
-          id={`${name}_${value}`}
+          id={name}
           name={name}
           type={type || 'text'}
           className='input'
