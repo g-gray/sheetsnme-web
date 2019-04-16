@@ -1207,7 +1207,7 @@ class FormTextElement extends u.ViewComponent {
           {label}
         </FormLabel>
         <input
-          id={name}
+          id={`${name}_${value}`}
           name={name}
           type={type || 'text'}
           className='input'
@@ -1385,7 +1385,7 @@ class FormSelectElement extends u.ViewComponent {
           {label}
         </FormLabel>
         <select
-          id={name}
+          id={`${name}_${value}`}
           name={name}
           className='select-native'
           value={value}
@@ -1416,7 +1416,7 @@ class Radio extends u.ViewComponent {
     return (
       <label className='radio'>
         <input
-          id={name}
+          id={`${name}_${value}`}
           name={name}
           value={value}
           type='radio'
