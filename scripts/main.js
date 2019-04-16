@@ -11,7 +11,7 @@ import * as u from './utils'
 
 import {AppRouter} from './views/routes'
 
-const store = createStore(combineReducers(r), applyMiddleware(thunk, logger))
+export const store = createStore(combineReducers(r), applyMiddleware(thunk, logger))
 
 class App extends u.ViewComponent {
   constructor(props) {
