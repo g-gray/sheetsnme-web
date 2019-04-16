@@ -1192,8 +1192,7 @@ class FormTextElement extends u.ViewComponent {
   constructor({onUpdate}) {
     super(...arguments)
     this.onChange = ({target: {value}}) => {
-      f.validate(onUpdate, f.isFunction)
-      if (onUpdate) onUpdate(value)
+      if (f.isFunction(onUpdate)) onUpdate(value)
     }
   }
 
@@ -1370,8 +1369,7 @@ class FormSelectElement extends u.ViewComponent {
   constructor({onUpdate}) {
     super(...arguments)
     this.onChange = ({target: {value}}) => {
-      f.validate(onUpdate, f.isFunction)
-      if (onUpdate) onUpdate(value)
+      if (f.isFunction(onUpdate)) onUpdate(value)
     }
   }
 
@@ -1404,8 +1402,7 @@ class Radio extends u.ViewComponent {
   constructor({onUpdate}) {
     super(...arguments)
     this.onChange = ({target: {value}}) => {
-      f.validate(onUpdate, f.isFunction)
-      if (onUpdate) onUpdate(value)
+      if (f.isFunction(onUpdate)) onUpdate(value)
     }
   }
 
