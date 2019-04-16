@@ -1068,16 +1068,20 @@ class _Transaction extends u.ViewComponent {
           <div className='row-between-center gaps-h-1 padding-v-1'>
             <div className='col-start-stretch'>
               {type === OUTCOME ?
-              <span>
+              <span className='row-start-center gaps-h-0x25'>
                 {!tx.categoryId ? null :
-                <span>{categoriesById[tx.categoryId].title}&nbsp;> </span>}
+                <span>{categoriesById[tx.categoryId].title}</span>}
+                {!tx.categoryId || !tx.payeeId ? null :
+                <s.ArrowRight className='font-midlarge' />}
                 {!tx.payeeId ? null :
                 <span>{payeesById[tx.payeeId].title}</span>}
               </span>
               : type === INCOME ?
-              <span>
+              <span className='row-start-center gaps-h-0x25'>
                 {!tx.payeeId ? null :
-                <span>{payeesById[tx.payeeId].title}&nbsp;> </span>}
+                <span>{payeesById[tx.payeeId].title}</span>}
+                {!tx.payeeId || !tx.categoryId ? null :
+                <s.ArrowRight className='font-midlarge' />}
                 {!tx.categoryId ? null :
                 <span>{categoriesById[tx.categoryId].title}</span>}
               </span>
