@@ -1232,7 +1232,9 @@ class FormTextElement extends u.ViewComponent {
   constructor({onUpdate}) {
     super(...arguments)
     this.onChange = ({target: {value}}) => {
-      if (f.isFunction(onUpdate)) onUpdate(value)
+      if (!onUpdate) return
+      f.validate(onUpdate, f.isFunction)
+      onUpdate(value)
     }
   }
 
@@ -1291,13 +1293,15 @@ class FormDateElement extends u.ViewComponent {
     }
 
     this.onDateInput = (year, month, day) => {
+      if (!onUpdate) return
+      f.validate(onUpdate, f.isFunction)
+
       if (year != null && month != null && day != null) {
         const date = u.addBrowserOffset(new Date(year, month, day))
-        if (onUpdate) onUpdate(date)
+        onUpdate(date)
       }
       else {
-        f.validate(onUpdate, f.isFunction)
-        if (onUpdate) onUpdate(undefined)
+        onUpdate(undefined)
         console.warn('Entered date is invalid')
       }
     }
@@ -1409,7 +1413,9 @@ class FormSelectElement extends u.ViewComponent {
   constructor({onUpdate}) {
     super(...arguments)
     this.onChange = ({target: {value}}) => {
-      if (f.isFunction(onUpdate)) onUpdate(value)
+      if (!onUpdate) return
+      f.validate(onUpdate, f.isFunction)
+      onUpdate(value)
     }
   }
 
@@ -1442,7 +1448,9 @@ class Radio extends u.ViewComponent {
   constructor({onUpdate}) {
     super(...arguments)
     this.onChange = ({target: {value}}) => {
-      if (f.isFunction(onUpdate)) onUpdate(value)
+      if (!onUpdate) return
+      f.validate(onUpdate, f.isFunction)
+      onUpdate(value)
     }
   }
 
