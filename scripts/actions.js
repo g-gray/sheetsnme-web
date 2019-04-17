@@ -2,6 +2,7 @@ import * as n from './net'
 
 export const RESIZE                 = 'RESIZE'
 export const SET_DIALOG             = 'SET_DIALOG'
+
 export const ADD_NOTIFICATION       = 'ADD_NOTIFICATION'
 export const REMOVE_NOTIFICATION    = 'REMOVE_NOTIFICATION'
 
@@ -39,14 +40,9 @@ export const setDialog = (dialog, props) => ({
   props,
 })
 
-export const notifySuccess = notification => ({
+export const notify = notification => ({
   type: ADD_NOTIFICATION,
-  notification: newNotification({...notification, type: 'SUCCESS'}),
-})
-
-export const notifyError = notification => ({
-  type: ADD_NOTIFICATION,
-  notification: newNotification({...notification, type: 'ERROR'}),
+  notification: createNotification(notification),
 })
 
 export const removeNotification = time => ({
@@ -82,21 +78,18 @@ export const init = () => dispatch => {
       dispatch(fetchPayees()),
     ]))
     .then(() => dispatch(fetchTransactions()))
-    .catch(error => error)
 }
 
 export const fetchUser = () => dispatch => {
   dispatch({type: REQUEST_USER})
   return n.authedJsonFetch('/api/user')
     .then(user => dispatch({type: RECEIVE_USER, user}))
-    .catch(error => dispatch(notifyError({text: error.message || 'Network error'})))
 }
 
 export const fetchCategories  = () => dispatch => {
   dispatch({type: REQUEST_CATEGORIES})
   return n.authedJsonFetch('/api/categories')
     .then(categories => dispatch({type: RECEIVE_CATEGORIES, categories}))
-    .catch(error => dispatch(notifyError({text: error.message || 'Network error'})))
 }
 
 export const createCategory = category => dispatch => {
@@ -105,10 +98,6 @@ export const createCategory = category => dispatch => {
     method: 'POST',
     body: JSON.stringify(category),
   })
-    .then(() => dispatch(receiveCategory()))
-    .then(() => dispatch(notifySuccess({text: 'Category added'})))
-    .then(() => dispatch(fetchCategories()))
-    .catch(error => dispatch(notifyError({text: error.message || 'Network error'})))
 }
 
 export const updateCategory = (category, id) => dispatch => {
@@ -117,17 +106,12 @@ export const updateCategory = (category, id) => dispatch => {
     method: 'POST',
     body: JSON.stringify(category),
   })
-    .then(() => dispatch(receiveCategory()))
-    .then(() => dispatch(notifySuccess({text: 'Category saved'})))
-    .then(() => dispatch(fetchCategories()))
-    .catch(error => dispatch(notifyError({text: error.message || 'Network error'})))
 }
 
 export const fetchAccounts  = () => dispatch => {
   dispatch({type: REQUEST_ACCOUNTS})
   return n.authedJsonFetch('/api/accounts')
     .then(accounts => dispatch({type: RECEIVE_ACCOUNTS, accounts}))
-    .catch(error => dispatch(notifyError({text: error.message || 'Network error'})))
 }
 
 export const createAccount = account => dispatch => {
@@ -136,10 +120,6 @@ export const createAccount = account => dispatch => {
     method: 'POST',
     body: JSON.stringify(account),
   })
-    .then(() => dispatch(receiveAccount()))
-    .then(() => dispatch(notifySuccess({text: 'Account added'})))
-    .then(() => dispatch(fetchAccounts()))
-    .catch(error => dispatch(notifyError({text: error.message || 'Network error'})))
 }
 
 export const updateAccount = (account, id) => dispatch => {
@@ -148,17 +128,12 @@ export const updateAccount = (account, id) => dispatch => {
     method: 'POST',
     body: JSON.stringify(account),
   })
-    .then(() => dispatch(receiveAccount()))
-    .then(() => dispatch(notifySuccess({text: 'Account saved'})))
-    .then(() => dispatch(fetchAccounts()))
-    .catch(error => dispatch(notifyError({text: error.message || 'Network error'})))
 }
 
 export const fetchPayees  = () => dispatch => {
   dispatch({type: REQUEST_PAYEES})
   return n.authedJsonFetch('/api/payees')
     .then(payees => dispatch({type: RECEIVE_PAYEES, payees}))
-    .catch(error => dispatch(notifyError({text: error.message || 'Network error'})))
 }
 
 export const createPayee = payee => dispatch => {
@@ -167,10 +142,6 @@ export const createPayee = payee => dispatch => {
     method: 'POST',
     body: JSON.stringify(payee),
   })
-    .then(() => dispatch(receivePayee()))
-    .then(() => dispatch(notifySuccess({text: 'Payee added'})))
-    .then(() => dispatch(fetchPayees()))
-    .catch(error => dispatch(notifyError({text: error.message || 'Network error'})))
 }
 
 export const updatePayee = (payee, id) => dispatch => {
@@ -179,17 +150,12 @@ export const updatePayee = (payee, id) => dispatch => {
     method: 'POST',
     body: JSON.stringify(payee),
   })
-    .then(() => dispatch(receivePayee()))
-    .then(() => dispatch(notifySuccess({text: 'Payee saved'})))
-    .then(() => dispatch(fetchPayees()))
-    .catch(error => dispatch(notifyError({text: error.message || 'Network error'})))
 }
 
 export const fetchTransactions = () => dispatch => {
   dispatch({type: REQUEST_TRANSACTIONS})
   return n.authedJsonFetch('/api/transactions')
     .then(transactions => dispatch({type: RECEIVE_TRANSACTIONS, transactions}))
-    .catch(error => dispatch(notifyError({text: error.message || 'Network error'})))
 }
 
 export const createTransaction = transaction => dispatch => {
@@ -198,10 +164,6 @@ export const createTransaction = transaction => dispatch => {
     method: 'POST',
     body: JSON.stringify(transaction),
   })
-    .then(() => dispatch(receiveTransaction()))
-    .then(() => dispatch(notifySuccess({text: 'Transaction added'})))
-    .then(() => dispatch(fetchTransactions()))
-    .catch(error => dispatch(notifyError({text: error.message || 'Network error'})))
 }
 
 export const updateTransaction = (transaction, id) => dispatch => {
@@ -210,17 +172,12 @@ export const updateTransaction = (transaction, id) => dispatch => {
     method: 'POST',
     body: JSON.stringify(transaction),
   })
-    .then(() => dispatch(receiveTransaction()))
-    .then(() => dispatch(notifySuccess({text: 'Transaction saved'})))
-    .then(() => dispatch(fetchTransactions()))
-    .catch(error => dispatch(notifyError({text: error.message || 'Network error'})))
 }
 
-function newNotification({type = 'SUCCESS', text, timeout = 4000}) {
+function createNotification({timeout = 4000, ...props}) {
   return {
-    type,
-    text,
     timeout,
     time: new Date().getTime(),
+    ...props,
   }
 }

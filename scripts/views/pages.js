@@ -268,17 +268,17 @@ const Drawer = connect(state => ({
 }))(_Drawer)
 
 class Snackbar extends u.ViewComponent {
-  render({props: {text, action}}) {
+  render({props: {children, action}}) {
     return action ? (
       <div className='row-start-center padding-l-1 padding-v-0x25 snackbar'>
-        <span>{text}</span>
+        <div className='col-start-stretch'>{children}</div>
         <div className='row-start-center padding-h-0x5'>
           {action}
         </div>
       </div>
     ) : (
       <div className='row-start-center padding-h-1 padding-v-0x75 snackbar'>
-        {text}
+        {children}
       </div>
     )
   }
@@ -293,12 +293,21 @@ class _Notifications extends u.ViewComponent {
     const notification = notifications[0]
 
     if (notification) {
-      this.timeoutId = setTimeout(() => {
-        dispatch(a.removeNotification(notification.time))
-      }, notification.timeout)
+      if (notification.timeout) {
+        this.timeoutId = setTimeout(() => {
+          dispatch(a.removeNotification(notification.time))
+        }, notification.timeout)
+      }
 
       return (
-        <Snackbar text={notification.text} />
+        <Snackbar>
+          <div>
+            {notification.messages ?
+              f.map(notification.messages, ({text}, index) => (
+                <p key={`notification-${index}`}>{text}</p>
+              )) : notification.text}
+          </div>
+        </Snackbar>
       )
     }
 
@@ -427,20 +436,32 @@ class _CategoryForm extends u.ViewComponent {
     this.onSubmit = event => {
       u.preventDefault(event)
 
+      this.setState({errors: null})
+
+      const {dispatch} = this.props
       const {formValues} = this.state
 
       const promise = formValues.id
-        ? this.props.updateCategory(this.state.formValues, formValues.id)
-        : this.props.createCategory(this.state.formValues)
+        ? dispatch(a.updateCategory(this.state.formValues, formValues.id))
+        : dispatch(a.createCategory(this.state.formValues))
 
-      promise.then(() => {
-        if (this.props.onSubmit) this.props.onSubmit(event)
-      })
+      promise
+        .catch(errors => {
+          this.setState({errors})
+          return window.Promise.reject(errors)
+        })
+        .then(() => dispatch(a.receiveCategory()))
+        .then(() => dispatch(a.fetchCategories()))
+        .then(() => {
+          if (this.props.onSubmit) this.props.onSubmit(event)
+        })
+        .then(() => dispatch(a.notify({text: `Category ${formValues.id ? 'saved' : 'added'}`})))
     }
   }
 
   render({
     context,
+    state: {errors},
   }) {
     const isMobile = u.isMobile(context)
 
@@ -460,6 +481,9 @@ class _CategoryForm extends u.ViewComponent {
             Submit
           </button>
         </div>
+        {!errors ? null :
+        <hr className='hr margin-h-1x25' />}
+        <FormErrors errors={errors} />
       </form>
     )
   }
@@ -467,9 +491,6 @@ class _CategoryForm extends u.ViewComponent {
 
 const CategoryForm = connect(state => ({
   category: state.net.category,
-}), dispatch => ({
-  createCategory: category => dispatch(a.createCategory(category)),
-  updateCategory: (category, id) => dispatch(a.updateCategory(category, id)),
 }))(_CategoryForm)
 
 class _CategoriesList extends u.ViewComponent {
@@ -524,20 +545,32 @@ class _AccountForm extends u.ViewComponent {
     this.onSubmit = event => {
       u.preventDefault(event)
 
+      this.setState({errors: null})
+
+      const {dispatch} = this.props
       const {formValues} = this.state
 
       const promise = formValues.id
-        ? this.props.updateAccount(this.state.formValues, formValues.id)
-        : this.props.createAccount(this.state.formValues)
+        ? dispatch(a.updateAccount(this.state.formValues, formValues.id))
+        : dispatch(a.createAccount(this.state.formValues))
 
-      promise.then(() => {
-        if (this.props.onSubmit) this.props.onSubmit(event)
-      })
+      promise
+        .catch(errors => {
+          this.setState({errors})
+          return window.Promise.reject(errors)
+        })
+        .then(() => dispatch(a.receiveAccount()))
+        .then(() => dispatch(a.fetchAccounts()))
+        .then(() => {
+          if (this.props.onSubmit) this.props.onSubmit(event)
+        })
+        .then(() => dispatch(a.notify({text: `Account ${formValues.id ? 'saved' : 'added'}`})))
     }
   }
 
   render({
     context,
+    state: {errors},
   }) {
     const isMobile = u.isMobile(context)
 
@@ -562,6 +595,9 @@ class _AccountForm extends u.ViewComponent {
             Submit
           </button>
         </div>
+        {!errors ? null :
+        <hr className='hr margin-h-1x25' />}
+        <FormErrors errors={errors} />
       </form>
     )
   }
@@ -569,9 +605,6 @@ class _AccountForm extends u.ViewComponent {
 
 const AccountForm = connect(state => ({
   account: state.net.account,
-}), dispatch => ({
-  createAccount: account => dispatch(a.createAccount(account)),
-  updateAccount: (account, id) => dispatch(a.updateAccount(account, id)),
 }))(_AccountForm)
 
 class _AccountsList extends u.ViewComponent {
@@ -627,20 +660,32 @@ class _PayeeForm extends u.ViewComponent {
     this.onSubmit = event => {
       u.preventDefault(event)
 
+      this.setState({errors: null})
+
+      const {dispatch} = this.props
       const {formValues} = this.state
 
       const promise = formValues.id
-        ? this.props.updatePayee(this.state.formValues, formValues.id)
-        : this.props.createPayee(this.state.formValues)
+        ? dispatch(a.updatePayee(this.state.formValues, formValues.id))
+        : dispatch(a.createPayee(this.state.formValues))
 
-      promise.then(() => {
-        if (this.props.onSubmit) this.props.onSubmit(event)
-      })
+      promise
+        .catch(errors => {
+          this.setState({errors})
+          return window.Promise.reject(errors)
+        })
+        .then(() => dispatch(a.receivePayee()))
+        .then(() => dispatch(a.fetchPayees()))
+        .then(() => {
+          if (this.props.onSubmit) this.props.onSubmit(event)
+        })
+        .then(() => dispatch(a.notify({text: `Payee ${formValues.id ? 'saved' : 'added'}`})))
     }
   }
 
   render({
     context,
+    state: {errors},
   }) {
     const isMobile = u.isMobile(context)
 
@@ -660,6 +705,9 @@ class _PayeeForm extends u.ViewComponent {
             Submit
           </button>
         </div>
+        {!errors ? null :
+        <hr className='hr margin-h-1x25' />}
+        <FormErrors errors={errors} />
       </form>
     )
   }
@@ -667,9 +715,6 @@ class _PayeeForm extends u.ViewComponent {
 
 const PayeeForm = connect(state => ({
   payee: state.net.payee,
-}), dispatch => ({
-  createPayee: payee => dispatch(a.createPayee(payee)),
-  updatePayee: (payee, id) => dispatch(a.updatePayee(payee, id)),
 }))(_PayeeForm)
 
 class _PayeesList extends u.ViewComponent {
@@ -802,6 +847,9 @@ class _TransactionForm extends u.ViewComponent {
     this.onSubmit = event => {
       u.preventDefault(event)
 
+      this.setState({errors: null})
+
+      const {dispatch} = this.props
       const {formValues, type} = this.state
       const date = u.formatDate(this.state.formValues.date)
 
@@ -815,12 +863,20 @@ class _TransactionForm extends u.ViewComponent {
       data = {...data, date}
 
       const promise = formValues.id
-        ? this.props.updateTransaction(data, formValues.id)
-        : this.props.createTransaction(data)
+        ? dispatch(a.updateTransaction(data, formValues.id))
+        : dispatch(a.createTransaction(data))
 
-      promise.then(() => {
-        if (this.props.onSubmit) this.props.onSubmit(event)
-      })
+      promise
+        .catch(errors => {
+          this.setState({errors})
+          return window.Promise.reject(errors)
+        })
+        .then(() => dispatch(a.receiveTransaction()))
+        .then(() => dispatch(a.fetchTransactions()))
+        .then(() => {
+          if (this.props.onSubmit) this.props.onSubmit(event)
+        })
+        .then(() => dispatch(a.notify({text: `Transaction ${formValues.id ? 'saved' : 'added'}`})))
     }
 
     this.onTypeUpdated = value => {
@@ -877,6 +933,7 @@ class _TransactionForm extends u.ViewComponent {
 
   render({
     context,
+    state: {errors},
     props: {categories, accounts, payees},
   }) {
     const isMobile = u.isMobile(context)
@@ -1033,6 +1090,9 @@ class _TransactionForm extends u.ViewComponent {
             Submit
           </button>
         </div>
+        {!errors ? null :
+        <hr className='hr margin-h-1x25' />}
+        <FormErrors errors={errors} />
       </form>
     )
   }
@@ -1043,9 +1103,6 @@ const TransactionForm = connect(state => ({
   accounts: state.net.accounts,
   payees: state.net.payees,
   transaction: state.net.transaction,
-}), dispatch => ({
-  createTransaction: transaction => dispatch(a.createTransaction(transaction)),
-  updateTransaction: (transaction, id) => dispatch(a.updateTransaction(transaction, id)),
 }))(_TransactionForm)
 
 class _Transaction extends u.ViewComponent {
@@ -1439,6 +1496,18 @@ class FormSelectElement extends u.ViewComponent {
           {children}
         </select>
       </G7FormLine>
+    )
+  }
+}
+
+class FormErrors extends u.ViewComponent {
+  render({props: {errors}}) {
+    return !errors ? null : (
+      <div className='col-start-center padding-v-1 fg-accent font-midsmall'>
+        {f.map(errors, ({text}, index) => (
+          <p key={`error-${index}`}>{text}</p>
+        ))}
+      </div>
     )
   }
 }
