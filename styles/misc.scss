@@ -257,30 +257,6 @@ input[type=checkbox]:focus {
  * Misc
  */
 
-.fixed-loading-indicator {
-  @extend .fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: $z-index-tooltip;
-
-  @extend .row-center-center;
-  @extend .padding-h-1;
-  @extend .padding-v-0x5;
-  @extend .rounded;
-
-  box-shadow: 0 0 0 1px rgba($color-primary-100, 0.2);
-  background-color: $color-primary-175;
-  color: $color-white;
-
-  animation-name: fade-in;
-  animation-duration: 0.2s;
-}
-
-@keyframes fade-in {
-  0% {opacity: 0}
-  // Implicit: transition back to opacity 1
-}
-
 .feather {
   @extend .square-em;
   @extend .flex-shrink-none;

@@ -12,7 +12,9 @@ import * as m from './misc'
 import * as s from './svg'
 
 class PageLayout extends u.ViewComponent {
-  render({props: {className: cls, style, children}}) {
+  render({
+    props: {className: cls, style, children},
+  }) {
     return (
       <div className='relative col-start-stretch stretch-to-viewport-v'>
         <Navbar />
@@ -23,7 +25,7 @@ class PageLayout extends u.ViewComponent {
             style={style}
             children={children} />
         </div>
-        <div className='fix-b-l width-100p row-start-center padding-0x5'>
+        <div className='fix-b-l z-index-tooltip width-100p row-start-center padding-0x5'>
           <Notifications />
         </div>
         <m.GlobalDialog />
@@ -32,8 +34,10 @@ class PageLayout extends u.ViewComponent {
   }
 }
 
-class MobilePageLayout extends u.ViewComponent {
-  render({props: {className: cls, style, children, action}}) {
+class _MobilePageLayout extends u.ViewComponent {
+  render({
+    props: {className: cls, style, children, action, dialogs},
+  }) {
     return (
       <div className='relative col-start-stretch stretch-to-viewport-v'>
         <Navbar />
@@ -41,9 +45,9 @@ class MobilePageLayout extends u.ViewComponent {
           className={`flex-1 ${cls || ''}`}
           style={style}
           children={children} />
-        <div className='fix-b-l width-100p col-start-stretch gaps-v-0x5 padding-0x5'>
+        <div className='fix-b-l z-index-tooltip width-100p col-start-stretch gaps-v-0x5 padding-0x5'>
           <Notifications />
-          {!action ? null :
+          {!action || dialogs ? null :
           <div className='row-end-center padding-0x5'>
             {action}
           </div>}
@@ -53,6 +57,10 @@ class MobilePageLayout extends u.ViewComponent {
     )
   }
 }
+
+const MobilePageLayout = connect(state => ({
+  dialogs: state.dom.dialogs,
+}))(_MobilePageLayout)
 
 
 
@@ -450,12 +458,12 @@ class _CategoryForm extends u.ViewComponent {
           this.setState({errors})
           return window.Promise.reject(errors)
         })
+        .then(() => dispatch(a.notify({text: `Category ${formValues.id ? 'saved' : 'added'}`})))
         .then(() => dispatch(a.receiveCategory()))
         .then(() => dispatch(a.fetchCategories()))
         .then(() => {
           if (this.props.onSubmit) this.props.onSubmit(event)
         })
-        .then(() => dispatch(a.notify({text: `Category ${formValues.id ? 'saved' : 'added'}`})))
     }
   }
 
@@ -559,12 +567,12 @@ class _AccountForm extends u.ViewComponent {
           this.setState({errors})
           return window.Promise.reject(errors)
         })
+        .then(() => dispatch(a.notify({text: `Account ${formValues.id ? 'saved' : 'added'}`})))
         .then(() => dispatch(a.receiveAccount()))
         .then(() => dispatch(a.fetchAccounts()))
         .then(() => {
           if (this.props.onSubmit) this.props.onSubmit(event)
         })
-        .then(() => dispatch(a.notify({text: `Account ${formValues.id ? 'saved' : 'added'}`})))
     }
   }
 
@@ -674,12 +682,12 @@ class _PayeeForm extends u.ViewComponent {
           this.setState({errors})
           return window.Promise.reject(errors)
         })
+        .then(() => dispatch(a.notify({text: `Payee ${formValues.id ? 'saved' : 'added'}`})))
         .then(() => dispatch(a.receivePayee()))
         .then(() => dispatch(a.fetchPayees()))
         .then(() => {
           if (this.props.onSubmit) this.props.onSubmit(event)
         })
-        .then(() => dispatch(a.notify({text: `Payee ${formValues.id ? 'saved' : 'added'}`})))
     }
   }
 
@@ -871,12 +879,12 @@ class _TransactionForm extends u.ViewComponent {
           this.setState({errors})
           return window.Promise.reject(errors)
         })
+        .then(() => dispatch(a.notify({text: `Transaction ${formValues.id ? 'saved' : 'added'}`})))
         .then(() => dispatch(a.receiveTransaction()))
         .then(() => dispatch(a.fetchTransactions()))
         .then(() => {
           if (this.props.onSubmit) this.props.onSubmit(event)
         })
-        .then(() => dispatch(a.notify({text: `Transaction ${formValues.id ? 'saved' : 'added'}`})))
     }
 
     this.onTypeUpdated = value => {
