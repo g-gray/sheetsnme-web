@@ -44,27 +44,6 @@
   @include theme-drawer-link-current;
 }
 
-.data-table {
-  @extend .table;
-}
-
-.data-table-row {
-  @extend .table-row;
-}
-
-.data-table-head {
-  padding: 0.75rem 1rem;
-  color: $color-black-50;
-  border-bottom: 1px solid $color-black-90;
-  @extend .font-midsmall;
-  @extend .table-cell;
-}
-
-.data-table-cell {
-  padding: 0.75rem 1rem;
-  @extend .table-cell;
-}
-
 .shadow-dept-1 {
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
@@ -79,4 +58,21 @@
 }
 .shadow-dept-5 {
   box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+}
+
+@mixin theme-snackbar {
+  background-color: $color-snackbar;
+  color: $color-white;
+}
+
+.theme-snackbar {
+  @include theme-snackbar;
+}
+
+.snackbar {
+  min-width: 18rem;
+  min-height: 3rem;
+  @extend .rounded;
+  @extend .theme-snackbar;
+  @extend .shadow-dept-2;
 }

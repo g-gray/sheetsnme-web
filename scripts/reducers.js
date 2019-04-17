@@ -5,6 +5,7 @@ import * as u from './utils'
 export const dom = (state = {
   dialog: null,
   dialogs: 0,
+  notifications: [],
   geometry: u.geometry(window.innerWidth),
 }, action) => {
   switch (action.type) {
@@ -15,11 +16,24 @@ export const dom = (state = {
         dialogs: action.dialog ? state.dialogs + 1 : state.dialogs - 1,
         dialogProps: action.props,
       }
+
+    case a.ADD_NOTIFICATION:
+      return {
+        ...state,
+        notifications: [...state.notifications, action.notification],
+      }
+    case a.REMOVE_NOTIFICATION:
+      return {
+        ...state,
+        notifications: f.filter(state.notifications, item => item.time !== action.time),
+      }
+
     case a.RESIZE:
       return {
         ...state,
         geometry: action.geometry,
       }
+
     default:
       return state
   }
@@ -35,7 +49,6 @@ export const net = (state = {
   payees: [],
   payeesById: {},
   pending: [],
-  errors: [],
 }, action) => {
   switch (action.type) {
     case a.REQUEST_USER:
@@ -147,12 +160,6 @@ export const net = (state = {
         ...state,
         pending: f.filter(state.pending, item => item !== a.POST_TRANSACTION),
         transaction: action.transaction,
-      }
-
-    case a.REQUEST_ERROR:
-      return {
-        ...state,
-        error: [...state.errors, action.error],
       }
 
     default:

@@ -47,7 +47,8 @@ $color-danger-125:  hsb(10, 70, 78);
 $color-body:        white;
 $color-text:        hsb(0, 0, 25);
 
-$color-accent:      #FF5252;
+$color-accent:         #FF5252;
+$color-snackbar:       #323232;
 
 /**
  * Layout
@@ -92,7 +93,7 @@ $transition-duration-medium: 0.5s;
  * Misc
  */
 
-$radius: 3px;
+$radius: 4px;
 
 $font-size-h1: 1.6rem;
 $font-size-h2: 1.4rem;

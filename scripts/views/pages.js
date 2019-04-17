@@ -1,10 +1,9 @@
 import React from 'react'
 import {Fragment} from 'react'
 import {connect} from 'react-redux'
-import {Switch, Route, Redirect, NavLink, Link} from 'react-router-dom'
+import {NavLink, Link} from 'react-router-dom'
 
 import * as f from 'fpx'
-import * as e from 'emerge'
 
 import * as a from '../actions'
 import * as u from '../utils'
@@ -24,6 +23,9 @@ class PageLayout extends u.ViewComponent {
             style={style}
             children={children} />
         </div>
+        <div className='fix-b-l width-100p row-start-center padding-0x5'>
+          <Notifications />
+        </div>
         <m.GlobalDialog />
       </div>
     )
@@ -31,7 +33,7 @@ class PageLayout extends u.ViewComponent {
 }
 
 class MobilePageLayout extends u.ViewComponent {
-  render({props: {className: cls, style, children}}) {
+  render({props: {className: cls, style, children, action}}) {
     return (
       <div className='relative col-start-stretch stretch-to-viewport-v'>
         <Navbar />
@@ -39,6 +41,13 @@ class MobilePageLayout extends u.ViewComponent {
           className={`flex-1 ${cls || ''}`}
           style={style}
           children={children} />
+        <div className='fix-b-l width-100p col-start-stretch gaps-v-0x5 padding-0x5'>
+          <Notifications />
+          {!action ? null :
+          <div className='row-end-center padding-0x5'>
+            {action}
+          </div>}
+        </div>
         <m.GlobalDialog />
       </div>
     )
@@ -228,21 +237,21 @@ class _Drawer extends u.ViewComponent {
         <hr className='hr' />
         <div className='col-start-stretch'>
           <NavLink
-            to='/settings/categories'
+            to='/categories'
             exact
             className='drawer-link decorate-drawer-link'>
             <s.Tag className='drawer-icon font-large' />
             <span>Categories</span>
           </NavLink>
           <NavLink
-            to='/settings/accounts'
+            to='/accounts'
             exact
             className='drawer-link decorate-drawer-link'>
             <s.CreditCard className='drawer-icon font-large' />
             <span>Accounts</span>
           </NavLink>
           <NavLink
-            to='/settings/payees'
+            to='/payees'
             exact
             className='drawer-link decorate-drawer-link'>
             <s.Users className='drawer-icon font-large' />
@@ -258,77 +267,154 @@ const Drawer = connect(state => ({
   transactions: state.net.transactions,
 }))(_Drawer)
 
+class Snackbar extends u.ViewComponent {
+  render({props: {text, action}}) {
+    return action ? (
+      <div className='row-start-center padding-l-1 padding-v-0x25 snackbar'>
+        <span>{text}</span>
+        <div className='row-start-center padding-h-0x5'>
+          {action}
+        </div>
+      </div>
+    ) : (
+      <div className='row-start-center padding-h-1 padding-v-0x75 snackbar'>
+        {text}
+      </div>
+    )
+  }
+}
 
+class _Notifications extends u.ViewComponent {
+  componentWillUnmount() {
+    if (this.timeoutId) clearTimeout(this.timeoutId)
+  }
+
+  render({props: {notifications, dispatch}}) {
+    const notification = notifications[0]
+
+    if (notification) {
+      this.timeoutId = setTimeout(() => {
+        dispatch(a.removeNotification(notification.time))
+      }, notification.timeout)
+
+      return (
+        <Snackbar text={notification.text} />
+      )
+    }
+
+    return null
+  }
+}
+
+const Notifications = connect(state => ({
+  notifications: state.dom.notifications,
+}))(_Notifications)
+
+
+
+class ListPage extends u.ViewComponent {
+  render({
+    context,
+    props: {action, children},
+  }) {
+    if (u.isMobile(context)) {
+      return (
+        <MobilePageLayout action={action}>
+          <div className='col-start-stretch'>
+            {children}
+          </div>
+        </MobilePageLayout>
+      )
+    }
+
+    return (
+      <PageLayout className='relative col-start-center padding-r-1x25'>
+        <div className='limit-content-width col-start-stretch gaps-v-1'>
+          <div className='col-start-stretch padding-h-0x5' style={{marginTop: '-1.75rem'}}>
+            {action}
+          </div>
+          {children}
+        </div>
+      </PageLayout>
+    )
+  }
+}
 
 export class HomePage extends u.ViewComponent {
-  render({context}) {
-    if (u.isMobile(context)) {
-      return (
-        <MobilePageLayout>
-          <div className='col-start-stretch'>
-            <TransactionsList />
-          </div>
-        </MobilePageLayout>
-      )
-    }
+  render(__, {dispatch}) {
+    const action = (
+      <Fab
+        onClick={() => dispatch(a.setDialog(FormDialog, {
+          form: TransactionForm,
+          title: 'New transaction',
+          onClose: transaction => dispatch(a.receiveTransaction(transaction)),
+        }))} />
+    )
 
     return (
-      <PageLayout className='col-start-center padding-r-1x25'>
-        <div className='limit-content-width col-start-stretch'>
-          <TransactionsList />
-        </div>
-      </PageLayout>
+      <ListPage action={action}>
+        <TransactionsList />
+      </ListPage>
     )
   }
 }
 
-class _SettingsPage extends u.ViewComponent {
-  render({context}) {
-    if (u.isMobile(context)) {
-      return (
-        <MobilePageLayout>
-          <div className='col-start-stretch'>
-            <Switch>
-              <Route path='/settings/categories'>
-                <CategoriesList />
-              </Route>
-              <Route path='/settings/accounts'>
-                <AccountsList />
-              </Route>
-              <Route path='/settings/payees'>
-                <PayeesList />
-              </Route>
-              <Redirect from='/settings' to='settings/categories' />
-            </Switch>
-          </div>
-        </MobilePageLayout>
-      )
-    }
+export class CategoriesPage extends u.ViewComponent {
+  render(__, {dispatch}) {
+    const action = (
+      <Fab
+        onClick={() => dispatch(a.setDialog(FormDialog, {
+          form: CategoryForm,
+          title: 'New category',
+          onClose: category => dispatch(a.receiveCategory(category)),
+        }))} />
+    )
 
     return (
-      <PageLayout className='col-start-center padding-r-1x25'>
-        <div className='limit-content-width col-start-stretch'>
-          <Switch>
-            <Route path='/settings/categories'>
-              <CategoriesList />
-            </Route>
-            <Route path='/settings/accounts'>
-              <AccountsList />
-            </Route>
-            <Route path='/settings/payees'>
-              <PayeesList />
-            </Route>
-            <Redirect from='/settings' to='settings/categories' />
-          </Switch>
-        </div>
-      </PageLayout>
+      <ListPage action={action}>
+        <CategoriesList />
+      </ListPage>
     )
   }
 }
 
-export const SettingsPage = connect(state => ({
-  payees: state.net.payees,
-}))(_SettingsPage)
+export class AccountsPage extends u.ViewComponent {
+  render(__, {dispatch}) {
+    const action = (
+      <Fab
+        onClick={() => dispatch(a.setDialog(FormDialog, {
+          form: AccountForm,
+          title: 'New account',
+          onClose: account => dispatch(a.receiveAccount(account)),
+        }))} />
+    )
+
+    return (
+      <ListPage action={action}>
+        <AccountsList />
+      </ListPage>
+    )
+  }
+}
+
+export class PayeesPage extends u.ViewComponent {
+  render(__, {dispatch}) {
+    const action = (
+      <Fab
+        onClick={() => dispatch(a.setDialog(FormDialog, {
+          form: PayeeForm,
+          title: 'New payee',
+          onClose: payee => dispatch(a.receivePayee(payee)),
+        }))} />
+    )
+
+    return (
+      <ListPage action={action}>
+        <PayeesList />
+      </ListPage>
+    )
+  }
+}
 
 
 
@@ -388,59 +474,33 @@ const CategoryForm = connect(state => ({
 
 class _CategoriesList extends u.ViewComponent {
   render({
-    context,
     props: {categories, setDialog, setCategory},
   }) {
-    const isMobile = u.isMobile(context)
-
     return (
-      <div className={`relative col-start-stretch ${isMobile ? '' : 'gaps-v-1'}`}>
-        {isMobile ? null :
-        <div className='col-start-stretch padding-h-0x5' style={{marginTop: '-1.75rem'}}>
-          <Fab
+      <div className='col-start-stretch'>
+        {f.map(categories, cat => (
+          <m.FakeButton
+            type='div'
+            key={cat.id}
             onClick={() => {
+              setCategory(cat)
               setDialog(FormDialog, {
                 form: CategoryForm,
-                title: 'New category',
+                title: 'Edit category',
                 onClose: setCategory,
               })
-            }} />
-        </div>}
-        {!isMobile ? null :
-        <Fab
-          className='fix-b-r margin-1'
-          onClick={() => {
-            setDialog(FormDialog, {
-              form: CategoryForm,
-              title: 'New category',
-              onClose: setCategory,
-            })
-          }} />}
-        <div className='col-start-stretch'>
-          {f.map(categories, cat => (
-            <m.FakeButton
-              type='div'
-              key={cat.id}
-              onClick={() => {
-                setCategory(cat)
-                setDialog(FormDialog, {
-                  form: CategoryForm,
-                  title: 'Edit category',
-                  onClose: setCategory,
-                })
-              }}
-              className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
-              <div className='row-start-center padding-1'>
-                <s.Tag className='font-large fg-primary-100' />
+            }}
+            className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
+            <div className='row-start-center padding-1'>
+              <s.Tag className='font-large fg-primary-100' />
+            </div>
+            <div className='flex-1 col-start-stretch'>
+              <div className='flex-1 row-between-center padding-v-1'>
+                {cat.title}
               </div>
-              <div className='flex-1 col-start-stretch'>
-                <div className='flex-1 row-between-center padding-v-1'>
-                  {cat.title}
-                </div>
-              </div>
-            </m.FakeButton>
-          ))}
-        </div>
+            </div>
+          </m.FakeButton>
+        ))}
       </div>
     )
   }
@@ -516,60 +576,34 @@ const AccountForm = connect(state => ({
 
 class _AccountsList extends u.ViewComponent {
   render({
-    context,
     props: {accounts, setDialog, setAccount},
   }) {
-    const isMobile = u.isMobile(context)
-
     return (
-      <div className={`relative col-start-stretch ${isMobile ? '' : 'gaps-v-1'}`}>
-        {isMobile ? null :
-        <div className='col-start-stretch padding-h-0x5' style={{marginTop: '-1.75rem'}}>
-          <Fab
+      <div className='col-start-stretch'>
+        {f.map(accounts, acc => (
+          <m.FakeButton
+            type='div'
+            key={acc.id}
             onClick={() => {
+              setAccount(acc)
               setDialog(FormDialog, {
                 form: AccountForm,
-                title: 'New account',
+                title: 'Edit account',
                 onClose: setAccount,
               })
-            }} />
-        </div>}
-        {!isMobile ? null :
-        <Fab
-          className='fix-b-r margin-1'
-          onClick={() => {
-            setDialog(FormDialog, {
-              form: AccountForm,
-              title: 'New account',
-              onClose: setAccount,
-            })
-          }} />}
-        <div className='col-start-stretch'>
-          {f.map(accounts, acc => (
-            <m.FakeButton
-              type='div'
-              key={acc.id}
-              onClick={() => {
-                setAccount(acc)
-                setDialog(FormDialog, {
-                  form: AccountForm,
-                  title: 'Edit account',
-                  onClose: setAccount,
-                })
-              }}
-              className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
-              <div className='row-start-center padding-1'>
-                <s.CreditCard className='font-large fg-primary-100' />
+            }}
+            className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
+            <div className='row-start-center padding-1'>
+              <s.CreditCard className='font-large fg-primary-100' />
+            </div>
+            <div className='flex-1 col-start-stretch'>
+              <div className='flex-1 row-between-center gaps-h-1 padding-v-1'>
+                <span>{acc.title}</span>
+                <span className='fg-black-50'>{acc.balance}</span>
               </div>
-              <div className='flex-1 col-start-stretch'>
-                <div className='flex-1 row-between-center gaps-h-1 padding-v-1'>
-                  <span>{acc.title}</span>
-                  <span className='fg-black-50'>{acc.balance}</span>
-                </div>
-              </div>
-            </m.FakeButton>
-          ))}
-        </div>
+            </div>
+          </m.FakeButton>
+        ))}
       </div>
     )
   }
@@ -640,59 +674,33 @@ const PayeeForm = connect(state => ({
 
 class _PayeesList extends u.ViewComponent {
   render({
-    context,
     props: {payees, setDialog, setPayee},
   }) {
-    const isMobile = u.isMobile(context)
-
     return (
-      <div className={`relative col-start-stretch ${isMobile ? '' : 'gaps-v-1'}`}>
-        {isMobile ? null :
-        <div className='col-start-stretch padding-h-0x5' style={{marginTop: '-1.75rem'}}>
-          <Fab
+      <div className='col-start-stretch'>
+        {f.map(payees, payee => (
+          <m.FakeButton
+            type='div'
+            key={payee.id}
             onClick={() => {
+              setPayee(payee)
               setDialog(FormDialog, {
                 form: PayeeForm,
-                title: 'New payee',
+                title: 'Edit payee',
                 onClose: setPayee,
               })
-            }} />
-        </div>}
-        {!isMobile ? null :
-        <Fab
-          className='fix-b-r margin-1'
-          onClick={() => {
-            setDialog(FormDialog, {
-              form: PayeeForm,
-              title: 'New payee',
-              onClose: setPayee,
-            })
-          }} />}
-        <div className='col-start-stretch'>
-          {f.map(payees, payee => (
-            <m.FakeButton
-              type='div'
-              key={payee.id}
-              onClick={() => {
-                setPayee(payee)
-                setDialog(FormDialog, {
-                  form: PayeeForm,
-                  title: 'Edit payee',
-                  onClose: setPayee,
-                })
-              }}
-              className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
-              <div className='row-start-center padding-1'>
-                <s.Users className='font-large fg-primary-100' />
+            }}
+            className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
+            <div className='row-start-center padding-1'>
+              <s.Users className='font-large fg-primary-100' />
+            </div>
+            <div className='flex-1 col-start-stretch'>
+              <div className='flex-1 row-between-center gaps-h-1 padding-v-1'>
+                <span>{payee.title}</span>
               </div>
-              <div className='flex-1 col-start-stretch'>
-                <div className='flex-1 row-between-center gaps-h-1 padding-v-1'>
-                  <span>{payee.title}</span>
-                </div>
-              </div>
-            </m.FakeButton>
-          ))}
-        </div>
+            </div>
+          </m.FakeButton>
+        ))}
       </div>
     )
   }
@@ -1057,7 +1065,7 @@ class _Transaction extends u.ViewComponent {
         }}
         className='row-start-center gaps-h-1 padding-h-1 list-item text-left theme-light-menu-busy'>
         <div className='row-start-center padding-v-1'>
-          {type === OUTCOME ?
+          {type === OUTCOME ? (
           <div className='relative width-2x5 square circle bg-warning-100'>
             <div className='row-center-center abs-center fg-white font-large'>
               {tx.categoryId
@@ -1065,7 +1073,7 @@ class _Transaction extends u.ViewComponent {
                 : <s.Minus />}
             </div>
           </div>
-          : type === INCOME ?
+          ) : type === INCOME ? (
           <div className='relative width-2x5 square circle bg-success'>
             <div className='row-center-center abs-center fg-white font-large'>
               {tx.categoryId
@@ -1073,12 +1081,12 @@ class _Transaction extends u.ViewComponent {
                 : <s.Plus />}
             </div>
           </div>
-          :
+          ) : (
           <div className='relative width-2x5 square circle bg-accent'>
             <div className='row-center-center abs-center fg-white font-large'>
               <s.ChevronsRight />
             </div>
-          </div>}
+          </div>)}
         </div>
         <div className='flex-1 col-start-stretch'>
           <div className='row-between-center gaps-h-1 padding-v-1'>
@@ -1141,35 +1149,13 @@ const Transaction = connect(state => ({
 
 class _TransactionsList extends u.ViewComponent {
   render({
-    context,
-    props: {transactions, setTransaction, setDialog},
+    props: {transactions},
   }) {
-    const isMobile = u.isMobile(context)
-
     return (
-      <div className={`relative col-start-stretch ${isMobile ? '' : 'gaps-v-1'}`}>
-        {isMobile ? null :
-        <div className='col-start-stretch padding-h-0x5' style={{marginTop: '-1.75rem'}}>
-          <Fab
-            onClick={() => setDialog(FormDialog, {
-              form: TransactionForm,
-              title: 'New transaction',
-              onClose: setTransaction,
-            })} />
-        </div>}
-        {!isMobile ? null :
-        <Fab
-          className='fix-b-r margin-1'
-          onClick={() => setDialog(FormDialog, {
-            form: TransactionForm,
-            title: 'New transaction',
-            onClose: setTransaction,
-          })} />}
-        <div className='col-start-stretch'>
-          {f.map(transactions, tx => (
-            <Transaction key={tx.id} tx={tx} />
-          ))}
-        </div>
+      <div className='col-start-stretch'>
+        {f.map(transactions, tx => (
+          <Transaction key={tx.id} tx={tx} />
+        ))}
       </div>
     )
   }
@@ -1177,9 +1163,6 @@ class _TransactionsList extends u.ViewComponent {
 
 const TransactionsList = connect(state => ({
   transactions: state.net.transactions,
-}), dispatch => ({
-  setTransaction: transaction => dispatch(a.receiveTransaction(transaction)),
-  setDialog: (dialog, props) => dispatch(a.setDialog(dialog, props)),
 }))(_TransactionsList)
 
 function defineTransactionType(transaction) {
