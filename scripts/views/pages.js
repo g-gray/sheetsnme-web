@@ -590,11 +590,6 @@ class _AccountForm extends u.ViewComponent {
             name='title'
             label='Name'
             {...u.bindValue(this, ['formValues', 'title'])} />
-          <FormTextElement
-            name='initial'
-            label='Initial'
-            type='number'
-            {...u.bindValue(this, ['formValues', 'initial'], u.parseNum)} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>
