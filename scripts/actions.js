@@ -8,6 +8,9 @@ export const REMOVE_NOTIFICATION    = 'REMOVE_NOTIFICATION'
 
 export const RECEIVE_USER           = 'RECEIVE_USER'
 
+export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
+export const RECEIVE_TRANSACTION    = 'RECEIVE_TRANSACTION'
+
 export const RECEIVE_CATEGORIES     = 'RECEIVE_CATEGORIES'
 export const RECEIVE_CATEGORY       = 'RECEIVE_CATEGORY'
 
@@ -17,8 +20,8 @@ export const RECEIVE_ACCOUNT        = 'RECEIVE_ACCOUNT'
 export const RECEIVE_PAYEES         = 'RECEIVE_PAYEES'
 export const RECEIVE_PAYEE          = 'RECEIVE_PAYEE'
 
-export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
-export const RECEIVE_TRANSACTION    = 'RECEIVE_TRANSACTION'
+export const REQUEST_START          = 'REQUEST_START'
+export const REQUEST_END            = 'REQUEST_END'
 
 export const resize = geometry => ({
   type: RESIZE,
@@ -61,6 +64,16 @@ export const receivePayee = payee => ({
   payee,
 })
 
+export const requestStart = request => ({
+  type: REQUEST_START,
+  request,
+})
+
+export const requestEnd = name => ({
+  type: REQUEST_END,
+  name,
+})
+
 export const init = () => dispatch => {
   dispatch(fetchUser())
     .then(() => window.Promise.all([
@@ -72,143 +85,148 @@ export const init = () => dispatch => {
 }
 
 export const fetchUser = () => dispatch => {
-  return authedNotifyingJsonFetch({
+  return trackRequest({
     dispatch,
     message: 'Fetching user data...',
-    url: '/api/user',
+    requestName: 'getUser',
+    promise: n.authedJsonFetch('/api/user'),
   })
     .then(user => dispatch({type: RECEIVE_USER, user}))
 }
 
-export const fetchCategories  = () => dispatch => {
-  return authedNotifyingJsonFetch({
-    dispatch,
-    message: 'Fetching categories...',
-    url: '/api/categories',
-  })
-    .then(categories => dispatch({type: RECEIVE_CATEGORIES, categories}))
-}
-
-export const createCategory = category => dispatch => {
-  return authedNotifyingJsonFetch({
-    dispatch,
-    message: 'Saving...',
-    url: '/api/categories',
-    params: {
-      method: 'POST',
-      body: JSON.stringify(category),
-    },
-  })
-}
-
-export const updateCategory = (category, id) => dispatch => {
-  return authedNotifyingJsonFetch({
-    dispatch,
-    message: 'Saving...',
-    url: `/api/categories/${id}`,
-    params: {
-      method: 'POST',
-      body: JSON.stringify(category),
-    },
-  })
-}
-
-export const fetchAccounts  = () => dispatch => {
-  return authedNotifyingJsonFetch({
-    dispatch,
-    message: 'Fetching accounts...',
-    url: '/api/accounts',
-  })
-    .then(accounts => dispatch({type: RECEIVE_ACCOUNTS, accounts}))
-}
-
-export const createAccount = account => dispatch => {
-  return authedNotifyingJsonFetch({
-    dispatch,
-    message: 'Saving...',
-    url: '/api/accounts',
-    params: {
-      method: 'POST',
-      body: JSON.stringify(account),
-    },
-  })
-}
-
-export const updateAccount = (account, id) => dispatch => {
-  return authedNotifyingJsonFetch({
-    dispatch,
-    message: 'Saving...',
-    url: `/api/accounts/${id}`,
-    params: {
-      method: 'POST',
-      body: JSON.stringify(account),
-    },
-  })
-}
-
-export const fetchPayees  = () => dispatch => {
-  return authedNotifyingJsonFetch({
-    dispatch,
-    message: 'Fetching payees...',
-    url: '/api/payees',
-  })
-    .then(payees => dispatch({type: RECEIVE_PAYEES, payees}))
-}
-
-export const createPayee = payee => dispatch => {
-  return authedNotifyingJsonFetch({
-    dispatch,
-    message: 'Saving...',
-    url: '/api/payees',
-    params: {
-      method: 'POST',
-      body: JSON.stringify(payee),
-    },
-  })
-}
-
-export const updatePayee = (payee, id) => dispatch => {
-  return authedNotifyingJsonFetch({
-    dispatch,
-    message: 'Saving...',
-    url: `/api/payees/${id}`,
-    params: {
-      method: 'POST',
-      body: JSON.stringify(payee),
-    },
-  })
-}
-
 export const fetchTransactions = () => dispatch => {
-  return authedNotifyingJsonFetch({
+  return trackRequest({
     dispatch,
     message: 'Fetching transactions...',
-    url: '/api/transactions',
+    requestName: 'getTransactions',
+    promise: n.authedJsonFetch('/api/transactions'),
   })
     .then(transactions => dispatch({type: RECEIVE_TRANSACTIONS, transactions}))
 }
 
 export const createTransaction = transaction => dispatch => {
-  return authedNotifyingJsonFetch({
+  return trackRequest({
     dispatch,
     message: 'Saving...',
-    url: '/api/transactions',
-    params: {
+    requestName: 'postTransaction',
+    promise: n.authedJsonFetch('/api/transactions', {
       method: 'POST',
       body: JSON.stringify(transaction),
-    },
+    }),
   })
 }
 
 export const updateTransaction = (transaction, id) => dispatch => {
-  return authedNotifyingJsonFetch({
+  return trackRequest({
     dispatch,
     message: 'Saving...',
-    url: `/api/transactions/${id}`,
-    params: {
+    requestName: 'postTransaction',
+    promise: n.authedJsonFetch(`/api/transactions/${id}`, {
       method: 'POST',
       body: JSON.stringify(transaction),
-    },
+    }),
+  })
+}
+
+export const fetchCategories  = () => dispatch => {
+  return trackRequest({
+    dispatch,
+    message: 'Fetching categories...',
+    requestName: 'getCategories',
+    promise: n.authedJsonFetch('/api/categories'),
+  })
+    .then(categories => dispatch({type: RECEIVE_CATEGORIES, categories}))
+}
+
+export const createCategory = category => dispatch => {
+  return trackRequest({
+    dispatch,
+    message: 'Saving...',
+    requestName: 'postCategory',
+    promise: n.authedJsonFetch('/api/categories', {
+      method: 'POST',
+      body: JSON.stringify(category),
+    }),
+  })
+}
+
+export const updateCategory = (category, id) => dispatch => {
+  return trackRequest({
+    dispatch,
+    message: 'Saving...',
+    requestName: 'postCategory',
+    promise: n.authedJsonFetch(`/api/categories/${id}`, {
+      method: 'POST',
+      body: JSON.stringify(category),
+    }),
+  })
+}
+
+export const fetchAccounts  = () => dispatch => {
+  return trackRequest({
+    dispatch,
+    message: 'Fetching accounts...',
+    requestName: 'getAccounts',
+    promise: n.authedJsonFetch('/api/accounts'),
+  })
+    .then(accounts => dispatch({type: RECEIVE_ACCOUNTS, accounts}))
+}
+
+export const createAccount = account => dispatch => {
+  return trackRequest({
+    dispatch,
+    message: 'Saving...',
+    requestName: 'postAccount',
+    promise: n.authedJsonFetch('/api/accounts', {
+      method: 'POST',
+      body: JSON.stringify(account),
+    }),
+  })
+}
+
+export const updateAccount = (account, id) => dispatch => {
+  return trackRequest({
+    dispatch,
+    message: 'Saving...',
+    requestName: 'postAccount',
+    promise: n.authedJsonFetch(`/api/accounts/${id}`, {
+      method: 'POST',
+      body: JSON.stringify(account),
+    }),
+  })
+}
+
+export const fetchPayees  = () => dispatch => {
+  return trackRequest({
+    dispatch,
+    message: 'Fetching payees...',
+    requestName: 'getPayees',
+    promise: n.authedJsonFetch('/api/payees'),
+  })
+    .then(payees => dispatch({type: RECEIVE_PAYEES, payees}))
+}
+
+export const createPayee = payee => dispatch => {
+  return trackRequest({
+    dispatch,
+    message: 'Saving...',
+    requestName: 'postPayee',
+    promise: n.authedJsonFetch('/api/payees', {
+      method: 'POST',
+      body: JSON.stringify(payee),
+    }),
+  })
+}
+
+export const updatePayee = (payee, id) => dispatch => {
+  return trackRequest({
+    dispatch,
+    message: 'Saving...',
+    requestName: 'postPayee',
+    promise: n.authedJsonFetch(`/api/payees/${id}`, {
+      method: 'POST',
+      body: JSON.stringify(payee),
+    }),
   })
 }
 
@@ -220,20 +238,19 @@ function createNotification({timeout = 4000, ...props}) {
   }
 }
 
-function authedNotifyingJsonFetch({dispatch, message, url, params}) {
-  if (dispatch && message) {
-    const {notification: {time}} = dispatch(notify({text: message, timeout: 0}))
+function trackRequest({dispatch, message, requestName, promise}) {
+  const {notification: {time}} = dispatch(notify({text: message, timeout: 0}))
+  dispatch(requestStart({[requestName]: true}))
 
-    return n.authedJsonFetch(url, params)
-      .then(response => {
-        if (time) dispatch(removeNotification(time))
-        return response
-      })
-      .catch(response => {
-        if (time) dispatch(removeNotification(time))
-        return window.Promise.reject(response)
-      })
-  }
-
-  return n.authedJsonFetch(url, params)
+  return promise
+    .then(response => {
+      dispatch(requestEnd(requestName))
+      if (time) dispatch(removeNotification(time))
+      return response
+    })
+    .catch(response => {
+      dispatch(requestEnd(requestName))
+      if (time) dispatch(removeNotification(time))
+      return window.Promise.reject(response)
+    })
 }
