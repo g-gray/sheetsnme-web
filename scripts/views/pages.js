@@ -337,7 +337,7 @@ class ListPage extends u.ViewComponent {
     if (u.isMobile(context)) {
       return (
         <MobilePageLayout action={action}>
-          <div className='col-start-stretch'>
+          <div className='col-start-stretch padding-v-0x5'>
             {children}
           </div>
         </MobilePageLayout>
