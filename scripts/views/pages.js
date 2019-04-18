@@ -520,8 +520,10 @@ class _CategoriesList extends u.ViewComponent {
               })
             }}
             className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
-            <div className='row-start-center padding-1'>
-              <s.Tag className='font-large fg-primary-100' />
+            <div className='relative width-2x5 square'>
+              <div className='row-center-center abs-center'>
+                <s.Tag className='font-large fg-primary-100' />
+              </div>
             </div>
             <div className='flex-1 col-start-stretch'>
               <div className='flex-1 row-between-center padding-v-1'>
@@ -634,8 +636,10 @@ class _AccountsList extends u.ViewComponent {
               })
             }}
             className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
-            <div className='row-start-center padding-1'>
-              <s.CreditCard className='font-large fg-primary-100' />
+            <div className='relative width-2x5 square'>
+              <div className='row-center-center abs-center'>
+                <s.CreditCard className='font-large fg-primary-100' />
+              </div>
             </div>
             <div className='flex-1 col-start-stretch'>
               <div className='flex-1 row-between-center gaps-h-1 padding-v-1'>
@@ -744,8 +748,10 @@ class _PayeesList extends u.ViewComponent {
               })
             }}
             className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
-            <div className='row-start-center padding-1'>
-              <s.Users className='font-large fg-primary-100' />
+            <div className='relative width-2x5 square'>
+              <div className='row-center-center abs-center'>
+                <s.Users className='font-large fg-primary-100' />
+              </div>
             </div>
             <div className='flex-1 col-start-stretch'>
               <div className='flex-1 row-between-center gaps-h-1 padding-v-1'>
