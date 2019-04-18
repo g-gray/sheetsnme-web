@@ -458,9 +458,9 @@ class _CategoryForm extends u.ViewComponent {
           this.setState({errors})
           return window.Promise.reject(errors)
         })
-        .then(() => dispatch(a.notify({text: `Category ${formValues.id ? 'saved' : 'added'}`})))
         .then(() => dispatch(a.receiveCategory()))
         .then(() => dispatch(a.fetchCategories()))
+        .then(() => dispatch(a.notify({text: `Category ${formValues.id ? 'saved' : 'added'}`})))
         .then(() => {
           if (this.props.onSubmit) this.props.onSubmit(event)
         })
@@ -567,9 +567,9 @@ class _AccountForm extends u.ViewComponent {
           this.setState({errors})
           return window.Promise.reject(errors)
         })
-        .then(() => dispatch(a.notify({text: `Account ${formValues.id ? 'saved' : 'added'}`})))
         .then(() => dispatch(a.receiveAccount()))
         .then(() => dispatch(a.fetchAccounts()))
+        .then(() => dispatch(a.notify({text: `Account ${formValues.id ? 'saved' : 'added'}`})))
         .then(() => {
           if (this.props.onSubmit) this.props.onSubmit(event)
         })
@@ -682,9 +682,9 @@ class _PayeeForm extends u.ViewComponent {
           this.setState({errors})
           return window.Promise.reject(errors)
         })
-        .then(() => dispatch(a.notify({text: `Payee ${formValues.id ? 'saved' : 'added'}`})))
         .then(() => dispatch(a.receivePayee()))
         .then(() => dispatch(a.fetchPayees()))
+        .then(() => dispatch(a.notify({text: `Payee ${formValues.id ? 'saved' : 'added'}`})))
         .then(() => {
           if (this.props.onSubmit) this.props.onSubmit(event)
         })
@@ -879,9 +879,9 @@ class _TransactionForm extends u.ViewComponent {
           this.setState({errors})
           return window.Promise.reject(errors)
         })
-        .then(() => dispatch(a.notify({text: `Transaction ${formValues.id ? 'saved' : 'added'}`})))
         .then(() => dispatch(a.receiveTransaction()))
         .then(() => dispatch(a.fetchTransactions()))
+        .then(() => dispatch(a.notify({text: `Transaction ${formValues.id ? 'saved' : 'added'}`})))
         .then(() => {
           if (this.props.onSubmit) this.props.onSubmit(event)
         })
