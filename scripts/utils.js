@@ -30,12 +30,6 @@ function renderWithArg() {
   return this.constructor.prototype.render.call(this, this, store)
 }
 
-export function isViewInstance(value) {
-  return f.isObject(value) &&
-    f.isFunction(value.setState) &&
-    f.isFunction(value.forceUpdate)
-}
-
 // React-specific
 export function findDomNode(element) {
   element = ReactDom.findDOMNode(element)
