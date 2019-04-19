@@ -469,8 +469,10 @@ class _CategoryForm extends u.ViewComponent {
   render({
     context,
     state: {errors},
+    props: {pending},
   }) {
     const isMobile = u.isMobile(context)
+    const disabled = f.size(pending)
 
     return (
       <form className='col-start-stretch' onSubmit={this.onSubmit}>
@@ -478,13 +480,15 @@ class _CategoryForm extends u.ViewComponent {
           <FormTextElement
             name='title'
             label='Name'
+            disabled={disabled}
             {...u.bindValue(this, ['formValues', 'title'])} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>
           <button
             type='submit'
-            className='btn-primary btn-wide'>
+            className='btn-primary btn-wide'
+            disabled={disabled}>
             Submit
           </button>
         </div>
@@ -498,6 +502,7 @@ class _CategoryForm extends u.ViewComponent {
 
 const CategoryForm = connect(state => ({
   category: state.net.category,
+  pending: state.net.pending,
 }))(_CategoryForm)
 
 class _CategoriesList extends u.ViewComponent {
@@ -587,8 +592,10 @@ class _AccountForm extends u.ViewComponent {
   render({
     context,
     state: {errors},
+    props: {pending},
   }) {
     const isMobile = u.isMobile(context)
+    const disabled = f.size(pending)
 
     return (
       <form className='col-start-stretch' onSubmit={this.onSubmit}>
@@ -596,13 +603,15 @@ class _AccountForm extends u.ViewComponent {
           <FormTextElement
             name='title'
             label='Name'
+            disabled={disabled}
             {...u.bindValue(this, ['formValues', 'title'])} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>
           <button
             type='submit'
-            className='btn-primary btn-wide'>
+            className='btn-primary btn-wide'
+            disabled={disabled}>
             Submit
           </button>
         </div>
@@ -616,6 +625,7 @@ class _AccountForm extends u.ViewComponent {
 
 const AccountForm = connect(state => ({
   account: state.net.account,
+  pending: state.net.pending,
 }))(_AccountForm)
 
 class _AccountsList extends u.ViewComponent {
@@ -706,8 +716,10 @@ class _PayeeForm extends u.ViewComponent {
   render({
     context,
     state: {errors},
+    props: {pending},
   }) {
     const isMobile = u.isMobile(context)
+    const disabled = f.size(pending)
 
     return (
       <form className='col-start-stretch' onSubmit={this.onSubmit}>
@@ -715,13 +727,15 @@ class _PayeeForm extends u.ViewComponent {
           <FormTextElement
             name='title'
             label='Name'
+            disabled={disabled}
             {...u.bindValue(this, ['formValues', 'title'])} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>
           <button
             type='submit'
-            className='btn-primary btn-wide'>
+            className='btn-primary btn-wide'
+            disabled={disabled}>
             Submit
           </button>
         </div>
@@ -735,6 +749,7 @@ class _PayeeForm extends u.ViewComponent {
 
 const PayeeForm = connect(state => ({
   payee: state.net.payee,
+  pending: state.net.pending,
 }))(_PayeeForm)
 
 class _PayeesList extends u.ViewComponent {
@@ -963,9 +978,10 @@ class _TransactionForm extends u.ViewComponent {
   render({
     context,
     state: {errors},
-    props: {categories, accounts, payees},
+    props: {categories, accounts, payees, pending},
   }) {
     const isMobile = u.isMobile(context)
+    const disabled = f.size(pending)
 
     return (
       <form className='col-start-stretch' onSubmit={this.onSubmit}>
@@ -973,6 +989,7 @@ class _TransactionForm extends u.ViewComponent {
           <FormDateElement
             name='date'
             label='Date'
+            disabled={disabled}
             {...u.bindValue(this, ['formValues', 'date'])} />
           <G7FormLine>
             <FormLabel>
@@ -982,6 +999,7 @@ class _TransactionForm extends u.ViewComponent {
               <label className='row-start-center gaps-h-0x5'>
                 <Radio
                   name='type'
+                  disabled={disabled}
                   {...u.bindChecked(this, ['type'], OUTCOME)}
                   onUpdate={this.onTypeUpdated} />
                 <span>Outcome</span>
@@ -989,6 +1007,7 @@ class _TransactionForm extends u.ViewComponent {
               <label className='row-start-center gaps-h-0x5'>
                 <Radio
                   name='type'
+                  disabled={disabled}
                   {...u.bindChecked(this, ['type'], INCOME)}
                   onUpdate={this.onTypeUpdated} />
                 <span>Income</span>
@@ -996,6 +1015,7 @@ class _TransactionForm extends u.ViewComponent {
               <label className='row-start-center gaps-h-0x5'>
                 <Radio
                   name='type'
+                  disabled={disabled}
                   {...u.bindChecked(this, ['type'], TRANSFER)}
                   onUpdate={this.onTypeUpdated} />
                 <span>Transfer</span>
@@ -1008,10 +1028,12 @@ class _TransactionForm extends u.ViewComponent {
             <FormTextElement
               name='outcomeAmount'
               label='Amount'
+              disabled={disabled}
               {...u.bindValue(this, ['formValues', 'outcomeAmount'], u.parseNum)} />
             <FormSelectElement
               name='outcomeAccountId'
               label='Account'
+              disabled={disabled}
               {...u.bindValue(this, ['formValues', 'outcomeAccountId'])}>
               <option value='' />
               {f.map(accounts, ({id, title}) => (
@@ -1027,10 +1049,12 @@ class _TransactionForm extends u.ViewComponent {
             <FormTextElement
               name='incomeAmount'
               label='Amount'
+              disabled={disabled}
               {...u.bindValue(this, ['formValues', 'incomeAmount'], u.parseNum)} />
             <FormSelectElement
               name='incomeAccountId'
               label='Account'
+              disabled={disabled}
               {...u.bindValue(this, ['formValues', 'incomeAccountId'])}>
               <option value='' />
               {f.map(accounts, ({id, title}) => (
@@ -1046,10 +1070,12 @@ class _TransactionForm extends u.ViewComponent {
             <FormTextElement
               name='outcomeAmount'
               label='Amount'
+              disabled={disabled}
               {...u.bindValue(this, ['formValues', 'outcomeAmount'], u.parseNum)} />
             <FormSelectElement
               name='outcomeAccountId'
               label='Account'
+              disabled={disabled}
               {...u.bindValue(this, ['formValues', 'outcomeAccountId'])}>
               <option value='' />
               {f.map(accounts, ({id, title}) => (
@@ -1067,10 +1093,12 @@ class _TransactionForm extends u.ViewComponent {
             <FormTextElement
               name='incomeAmount'
               label='Amount'
+              disabled={disabled}
               {...u.bindValue(this, ['formValues', 'incomeAmount'], u.parseNum)} />
             <FormSelectElement
               name='incomeAccountId'
               label='Account'
+              disabled={disabled}
               {...u.bindValue(this, ['formValues', 'incomeAccountId'])}>
               <option value='' />
               {f.map(accounts, ({id, title}) => (
@@ -1086,6 +1114,7 @@ class _TransactionForm extends u.ViewComponent {
             <FormSelectElement
               name='categoryId'
               label='Category'
+              disabled={disabled}
               {...u.bindValue(this, ['formValues', 'categoryId'])}>
               <option value='' />
               {f.map(categories, ({id, title}) => (
@@ -1097,6 +1126,7 @@ class _TransactionForm extends u.ViewComponent {
             <FormSelectElement
               name='payeeId'
               label='Payee'
+              disabled={disabled}
               {...u.bindValue(this, ['formValues', 'payeeId'])}>
               <option value='' />
               {f.map(payees, ({id, title}) => (
@@ -1108,6 +1138,7 @@ class _TransactionForm extends u.ViewComponent {
             <FormTextElement
               name='comment'
               label='Comment'
+              disabled={disabled}
               {...u.bindValue(this, ['formValues', 'comment'])} />
           </Fragment>}
         </div>
@@ -1115,7 +1146,8 @@ class _TransactionForm extends u.ViewComponent {
         <div className='row-center-center padding-v-1 padding-h-1x25'>
           <button
             type='submit'
-            className='btn-primary btn-wide'>
+            className='btn-primary btn-wide'
+            disabled={disabled}>
             Submit
           </button>
         </div>
@@ -1132,6 +1164,7 @@ const TransactionForm = connect(state => ({
   accounts: state.net.accounts,
   payees: state.net.payees,
   transaction: state.net.transaction,
+  pending: state.net.pending,
 }))(_TransactionForm)
 
 class TransactionPlaceholder extends u.ViewComponent {
