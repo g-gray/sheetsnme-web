@@ -502,9 +502,15 @@ const CategoryForm = connect(state => ({
 
 class _CategoriesList extends u.ViewComponent {
   render({
-    props: {categories, setDialog, setCategory},
+    props: {categories, setDialog, setCategory, pending},
   }) {
-    return (
+    return f.size(pending) ? (
+      <div className='col-start-stretch'>
+        {f.map(new Array(3), (__, index) => (
+          <EntityPlaceholder key={`placeholder-${index}`} />
+        ))}
+      </div>
+    ) : (
       <div className='col-start-stretch'>
         {f.map(categories, cat => (
           <m.FakeButton
@@ -538,6 +544,7 @@ class _CategoriesList extends u.ViewComponent {
 
 const CategoriesList = connect(state => ({
   categories: state.net.categories,
+  pending: state.net.pending,
 }), dispatch => ({
   setCategory: category => dispatch(a.receiveCategory(category)),
   setDialog: (dialog, props) => dispatch(a.setDialog(dialog, props)),
@@ -613,9 +620,15 @@ const AccountForm = connect(state => ({
 
 class _AccountsList extends u.ViewComponent {
   render({
-    props: {accounts, setDialog, setAccount},
+    props: {accounts, setDialog, setAccount, pending},
   }) {
-    return (
+    return f.size(pending) ? (
+      <div className='col-start-stretch'>
+        {f.map(new Array(3), (__, index) => (
+          <EntityPlaceholder key={`placeholder-${index}`} />
+        ))}
+      </div>
+    ) : (
       <div className='col-start-stretch'>
         {f.map(accounts, acc => (
           <m.FakeButton
@@ -650,6 +663,7 @@ class _AccountsList extends u.ViewComponent {
 
 const AccountsList = connect(state => ({
   accounts: state.net.accounts,
+  pending: state.net.pending,
 }), dispatch => ({
   setAccount: account => dispatch(a.receiveAccount(account)),
   setDialog: (dialog, props) => dispatch(a.setDialog(dialog, props)),
@@ -725,9 +739,15 @@ const PayeeForm = connect(state => ({
 
 class _PayeesList extends u.ViewComponent {
   render({
-    props: {payees, setDialog, setPayee},
+    props: {payees, setDialog, setPayee, pending},
   }) {
-    return (
+    return f.size(pending) ? (
+      <div className='col-start-stretch'>
+        {f.map(new Array(3), (__, index) => (
+          <EntityPlaceholder key={`placeholder-${index}`} />
+        ))}
+      </div>
+    ) : (
       <div className='col-start-stretch'>
         {f.map(payees, payee => (
           <m.FakeButton
@@ -761,6 +781,7 @@ class _PayeesList extends u.ViewComponent {
 
 const PayeesList = connect(state => ({
   payees: state.net.payees,
+  pending: state.net.pending,
 }), dispatch => ({
   setPayee: payee => dispatch(a.receivePayee(payee)),
   setDialog: (dialog, props) => dispatch(a.setDialog(dialog, props)),
@@ -1113,6 +1134,62 @@ const TransactionForm = connect(state => ({
   transaction: state.net.transaction,
 }))(_TransactionForm)
 
+class TransactionPlaceholder extends u.ViewComponent {
+  render() {
+    return (
+      <div className='row-start-center gaps-h-1 padding-h-1 list-item'>
+        <div className='row-start-center padding-v-1'>
+          <div className='relative width-2x5 square circle bg-primary-275' />
+        </div>
+        <div className='flex-1 col-start-stretch'>
+          <div className='row-between-center gaps-h-1 padding-v-1'>
+            <div className='col-start-stretch'>
+              <Placeholder style={{width: '8em'}} />
+              <Placeholder style={{width: '6em'}} className='font-midsmall' />
+            </div>
+            <div className='col-start-stretch text-right wspace-nowrap'>
+              <Placeholder style={{width: '3em'}} />
+              <Placeholder style={{width: '5em'}} className='font-midsmall' />
+            </div>
+          </div>
+          <hr className='hr hide-in-list-last-child' />
+        </div>
+      </div>
+    )
+  }
+}
+
+class EntityPlaceholder extends u.ViewComponent {
+  render() {
+    return (
+      <div className='row-start-stretch gaps-h-1 padding-h-1'>
+        <div className='relative width-2x5 square'>
+          <div className='row-center-center abs-center'>
+            <div className='width-1x5 square circle bg-primary-275' />
+          </div>
+        </div>
+        <div className='flex-1 col-start-stretch'>
+          <div className='flex-1 row-between-center padding-v-1'>
+            <Placeholder style={{width: '8em'}} />
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+class Placeholder extends u.ViewComponent {
+  render({props: {style, className: cls}}) {
+    return (
+      <span className={`inline-block ${cls || ''}`}>
+        <span
+          className='inline-block valign-middle bg-primary-275 rounded-50p'
+          style={{width: '3em', height: '1em', ...style}} />
+      </span>
+    )
+  }
+}
+
 class _Transaction extends u.ViewComponent {
   render({props}) {
     const {categoriesById, accountsById, payeesById, tx, setTransaction, setDialog} = props
@@ -1214,9 +1291,15 @@ const Transaction = connect(state => ({
 
 class _TransactionsList extends u.ViewComponent {
   render({
-    props: {transactions},
+    props: {transactions, pending},
   }) {
-    return (
+    return f.size(pending) ? (
+      <div className='col-start-stretch'>
+        {f.map(new Array(3), (__, index) => (
+          <TransactionPlaceholder key={`placeholder-${index}`} />
+        ))}
+      </div>
+    ) : (
       <div className='col-start-stretch'>
         {f.map(transactions, tx => (
           <Transaction key={tx.id} tx={tx} />
@@ -1228,6 +1311,7 @@ class _TransactionsList extends u.ViewComponent {
 
 const TransactionsList = connect(state => ({
   transactions: state.net.transactions,
+  pending: state.net.pending,
 }))(_TransactionsList)
 
 function defineTransactionType(transaction) {
