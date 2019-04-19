@@ -210,7 +210,7 @@ class _MobileMenu extends u.ViewComponent {
       <m.Dialog onEscape={close}>
         <m.DialogScrollable className='row-start-stretch bg-overlay-dark fade-in-fast' onClick={close}>
           <div className='relative col-start-stretch gaps-v-0x5 bg-white slide-in-left-fast' onClick={close}>
-            <div className='row-start-center padding-h-1 bg-primary-100 navbar-height'>
+            <div className='row-start-center padding-h-1 bg-primary-100 navbar-height shadow-dept-1'>
               <Logo />
             </div>
             <Drawer />
@@ -1680,6 +1680,40 @@ class Fab extends u.ViewComponent {
           <s.Plus className='abs-center font-large fg-white' />
         </span>
       </m.FakeButton>
+    )
+  }
+}
+
+export class Page404 extends u.ViewComponent {
+  render({context}) {
+    const content = (
+      <Fragment>
+        <div className='col-start-center gaps-v-0x5'>
+          <h2 style={{lineHeight: '1', fontSize: '3em'}}>404</h2>
+          <p>Page Not Found</p>
+        </div>
+        <p className='row-center-center'>
+          <Link to='/' className='btn-primary'>Dashboard</Link>
+        </p>
+      </Fragment>
+    )
+
+    if (u.isMobile(context)) {
+      return (
+        <MobilePageLayout>
+          <div className='col-start-stretch gaps-v-1 padding-v-3'>
+            {content}
+          </div>
+        </MobilePageLayout>
+      )
+    }
+
+    return (
+      <PageLayout className='relative col-start-center padding-r-1x25'>
+        <div className='limit-content-width col-start-center gaps-v-1 padding-v-3'>
+          {content}
+        </div>
+      </PageLayout>
     )
   }
 }
