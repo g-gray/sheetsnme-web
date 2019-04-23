@@ -128,6 +128,17 @@ export const updateTransaction = (transaction, id) => dispatch => {
   })
 }
 
+export const deleteTransaction = id => dispatch => {
+  return trackRequest({
+    dispatch,
+    message: 'Deleting...',
+    requestName: 'deleteTransaction',
+    promise: n.authedJsonFetch(`/api/transactions/${id}`, {
+      method: 'DELETE',
+    }),
+  })
+}
+
 export const fetchCategories  = () => dispatch => {
   return trackRequest({
     dispatch,

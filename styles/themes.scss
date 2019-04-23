@@ -237,14 +237,22 @@ ones.
   }
 }
 
+@mixin theme-light-menu-icon {
+  svg {
+    color: $color-black-50;
+  }
+}
+
 .theme-light-menu {@include theme-light-menu;}
 .theme-light-menu-busy {@include theme-light-menu-busy;}
 .theme-light-menu-current {@include theme-light-menu-current;}
+.theme-light-menu-icon {@include theme-light-menu-icon;}
 
 .decorate-light-menu-item {
   @include theme-light-menu;
   @include theme-light-menu-busy;
   @include theme-light-menu-current;
+  @include theme-light-menu-icon;
 }
 
 @mixin theme-dark-menu {

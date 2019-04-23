@@ -401,9 +401,8 @@ $dropdown-color-shadow: rgba(black, 0.1);
 
 .dropdown {
   background-color: $dropdown-color-bg;
-  border: 1px solid $dropdown-color-edge;
   border-radius: $radius;
-  box-shadow: 0 1px 3px $dropdown-color-shadow;
+  @extend .shadow-dept-2;
 }
 
 .dropdown-padding {

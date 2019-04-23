@@ -540,6 +540,18 @@ export class MoreHorizontal extends u.ViewComponent {
   }
 }
 
+export class MoreVertical extends u.ViewComponent {
+  render({props}) {
+    return (
+      <svg {...featherProps(props)}>
+        <circle cx="12" cy="12" r="1" />
+        <circle cx="12" cy="5" r="1" />
+        <circle cx="12" cy="19" r="1" />
+      </svg>
+    )
+  }
+}
+
 export class Activity extends u.ViewComponent {
   render({props}) {
     return (
@@ -706,6 +718,30 @@ export class ArrowRight extends u.ViewComponent {
       <svg {...featherProps(props)}>
         <line x1="5" y1="12" x2="19" y2="12" />
         <polyline points="12 5 19 12 12 19" />
+      </svg>
+    )
+  }
+}
+
+export class Trash extends u.ViewComponent {
+  render({props}) {
+    return (
+      <svg {...featherProps(props)}>
+        <polyline points="3 6 5 6 21 6" />
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+      </svg>
+    )
+  }
+}
+
+export class Trash2 extends u.ViewComponent {
+  render({props}) {
+    return (
+      <svg {...featherProps(props)}>
+        <polyline points="3 6 5 6 21 6" />
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+        <line x1="10" y1="11" x2="10" y2="17" />
+        <line x1="14" y1="11" x2="14" y2="17" />
       </svg>
     )
   }

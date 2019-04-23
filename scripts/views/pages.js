@@ -162,7 +162,7 @@ class _UserMenu extends u.ViewComponent {
         {!expanded ? null :
         <m.Closer root={this} close={this.close}>
           <div
-            className='dropdown-position z-index-1'
+            className='dropdown-position z-index-tooltip'
             onClick={this.close}>
             <div className='dropdown dropdown-padding col-start-stretch' style={{minWidth: '11rem'}}>
               <div className='row-start-center gaps-h-0x75 padding-v-0x5 padding-h-1'>
@@ -1187,6 +1187,11 @@ class TransactionPlaceholder extends u.ViewComponent {
           </div>
           <hr className='hr hide-in-list-last-child' />
         </div>
+        <div className='row-center-center'>
+          <m.FakeButton className='row-center-center'>
+            <s.Trash2 className='font-large' style={{color: 'transparent'}} />
+          </m.FakeButton>
+        </div>
       </div>
     )
   }
@@ -1224,21 +1229,37 @@ class Placeholder extends u.ViewComponent {
 }
 
 class _Transaction extends u.ViewComponent {
+  constructor() {
+    super(...arguments)
+    this.actions = React.createRef()
+
+    this.onDelete = id => {
+      const {dispatch} = this.props
+      dispatch(a.deleteTransaction(id))
+        .then(() => dispatch(a.notify({text: 'Transaction deleted'})))
+        .then(() => dispatch(a.fetchTransactions()))
+    }
+  }
+
   render({props}) {
-    const {categoriesById, accountsById, payeesById, tx, setTransaction, setDialog} = props
+    const {categoriesById, accountsById, payeesById, tx, dispatch} = props
     const type = defineTransactionType(tx)
+
     return (
       <m.FakeButton
         type='div'
-        onClick={() => {
-          setTransaction(tx)
-          setDialog(FormDialog, {
+        onClick={event => {
+          const actions = u.findDomNode(this.actions.current)
+          if (u.isAncestorOf(actions, event.target)) return
+
+          dispatch(a.receiveTransaction(tx))
+          dispatch(a.setDialog(FormDialog, {
             form: TransactionForm,
             title: 'Edit transaction',
-            onClose: setTransaction,
-          })
+            onClose: () => dispatch(a.receiveTransaction()),
+          }))
         }}
-        className='row-start-center gaps-h-1 padding-h-1 list-item text-left theme-light-menu-busy'>
+        className='row-start-center gaps-h-1 padding-h-1 list-item trigger text-left theme-light-menu-busy'>
         <div className='row-start-center padding-v-1'>
           {type === OUTCOME ? (
           <div className='relative width-2x5 square circle bg-warning-100'>
@@ -1308,6 +1329,18 @@ class _Transaction extends u.ViewComponent {
           </div>
           <hr className='hr hide-in-list-last-child' />
         </div>
+        <div className='row-center-center' ref={this.actions}>
+          <m.FakeButton
+            className='row-center-center show-on-trigger-hover decorate-light-menu-item'
+            onClick={() => {
+              dispatch(a.setDialog(ConfirmDialog, {
+                question: 'Delete this transaction?',
+                onConfirm: () => this.onDelete(tx.id),
+              }))
+            }}>
+            <s.Trash2 className='font-large' />
+          </m.FakeButton>
+        </div>
       </m.FakeButton>
     )
   }
@@ -1317,9 +1350,6 @@ const Transaction = connect(state => ({
   categoriesById: state.net.categoriesById,
   accountsById: state.net.accountsById,
   payeesById: state.net.payeesById,
-}), dispatch => ({
-  setTransaction: transaction => dispatch(a.receiveTransaction(transaction)),
-  setDialog: (dialog, props) => dispatch(a.setDialog(dialog, props)),
 }))(_Transaction)
 
 class _TransactionsList extends u.ViewComponent {
@@ -1683,6 +1713,95 @@ class Fab extends u.ViewComponent {
     )
   }
 }
+
+class _ActionsMenu extends u.ViewComponent {
+  constructor() {
+    super(...arguments)
+
+    this.state = {expanded: false}
+
+    this.close = () => {
+      this.setState({expanded: false})
+    }
+
+    this.toggle = () => {
+      this.setState({expanded: !this.state.expanded})
+    }
+  }
+
+  render({
+    props: {children},
+    state: {expanded},
+  }) {
+    return !children ? null : (
+      <div className='relative row-start-stretch'>
+        <m.FakeButton
+          onClick={this.toggle}
+          className='relative row-start-center decorate-light-menu-item z-index-2'
+          aria-expanded={expanded}>
+          <s.MoreVertical className='font-large' />
+        </m.FakeButton>
+        {!expanded ? null :
+        <m.Closer root={this} close={this.close}>
+          <div
+            className='dropdown-position z-index-1'
+            onClick={this.close}>
+            <div className='dropdown dropdown-padding col-start-stretch' style={{minWidth: '11rem'}}>
+              {children}
+            </div>
+          </div>
+        </m.Closer>}
+      </div>
+    )
+  }
+}
+
+class _ConfirmDialog extends u.ViewComponent {
+  constructor() {
+    super(...arguments)
+
+    this.close = () => {
+      this.props.setDialog()
+      if (this.props.onClose) this.props.onClose()
+    }
+
+    this.confirm = () => {
+      this.props.setDialog()
+      if (this.props.onConfirm) this.props.onConfirm()
+    }
+  }
+
+  render({
+    props: {question, cancelText, confirmText},
+  }) {
+    return (
+      <m.Dialog onEscape={this.close}>
+        <m.DialogOverlay className='bg-overlay-dark' />
+        <m.DialogCentered onClick={this.close}>
+          <div
+            className='col-start-stretch gaps-v-1 padding-v-1 rounded bg-white shadow-dept-3'
+            style={{minWidth: '11rem'}}>
+            <p className='padding-h-1x25 font-midlarge weight-medium'>
+              {question}
+            </p>
+            <div className='row-center-center gaps-h-1'>
+              <m.FakeButton className='btn-secondary' onClick={this.close}>
+                {cancelText || 'Cancel'}
+              </m.FakeButton>
+              <m.FakeButton className='btn-primary' onClick={this.confirm}>
+                {confirmText || 'Ok'}
+              </m.FakeButton>
+            </div>
+          </div>
+        </m.DialogCentered>
+      </m.Dialog>
+    )
+  }
+}
+
+const ConfirmDialog = connect(null, dispatch => ({
+  setDialog: dialog => dispatch(a.setDialog(dialog)),
+}))(_ConfirmDialog)
 
 export class Page404 extends u.ViewComponent {
   render({context}) {
