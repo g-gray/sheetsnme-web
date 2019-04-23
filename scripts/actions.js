@@ -173,6 +173,17 @@ export const updateCategory = (category, id) => dispatch => {
   })
 }
 
+export const deleteCategory = id => dispatch => {
+  return trackRequest({
+    dispatch,
+    message: 'Deleting...',
+    requestName: 'deleteCategory',
+    promise: n.authedJsonFetch(`/api/categories/${id}`, {
+      method: 'DELETE',
+    }),
+  })
+}
+
 export const fetchAccounts  = () => dispatch => {
   return trackRequest({
     dispatch,
@@ -207,6 +218,17 @@ export const updateAccount = (account, id) => dispatch => {
   })
 }
 
+export const deleteAccount = id => dispatch => {
+  return trackRequest({
+    dispatch,
+    message: 'Deleting...',
+    requestName: 'deleteAccount',
+    promise: n.authedJsonFetch(`/api/accounts/${id}`, {
+      method: 'DELETE',
+    }),
+  })
+}
+
 export const fetchPayees  = () => dispatch => {
   return trackRequest({
     dispatch,
@@ -237,6 +259,17 @@ export const updatePayee = (payee, id) => dispatch => {
     promise: n.authedJsonFetch(`/api/payees/${id}`, {
       method: 'POST',
       body: JSON.stringify(payee),
+    }),
+  })
+}
+
+export const deletePayee = id => dispatch => {
+  return trackRequest({
+    dispatch,
+    message: 'Deleting...',
+    requestName: 'deletePayee',
+    promise: n.authedJsonFetch(`/api/payees/${id}`, {
+      method: 'DELETE',
     }),
   })
 }

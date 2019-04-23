@@ -507,7 +507,7 @@ const CategoryForm = connect(state => ({
 
 class _CategoriesList extends u.ViewComponent {
   render({
-    props: {categories, setDialog, setCategory, pending},
+    props: {categories, pending, dispatch},
   }) {
     return f.size(pending) ? (
       <div className='col-start-stretch'>
@@ -518,29 +518,28 @@ class _CategoriesList extends u.ViewComponent {
     ) : (
       <div className='col-start-stretch'>
         {f.map(categories, cat => (
-          <m.FakeButton
-            type='div'
+          <EntityItem
             key={cat.id}
-            onClick={() => {
-              setCategory(cat)
-              setDialog(FormDialog, {
+            onOpen={() => {
+              dispatch(a.receiveCategory(cat))
+              dispatch(a.setDialog(FormDialog, {
                 form: CategoryForm,
                 title: 'Edit category',
-                onClose: setCategory,
-              })
+                onClose: () => dispatch(a.receiveCategory()),
+              }))
             }}
-            className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
-            <div className='relative width-2x5 square'>
-              <div className='row-center-center abs-center'>
-                <s.Tag className='font-large fg-primary-100' />
-              </div>
-            </div>
-            <div className='flex-1 col-start-stretch'>
-              <div className='flex-1 row-between-center padding-v-1'>
-                {cat.title}
-              </div>
-            </div>
-          </m.FakeButton>
+            onDelete={() => {
+              dispatch(a.setDialog(ConfirmDialog, {
+                question: 'Delete this category?',
+                onConfirm: () => {
+                  dispatch(a.deleteCategory(cat.id))
+                    .then(() => dispatch(a.notify({text: 'Category deleted'})))
+                    .then(() => dispatch(a.fetchCategories()))
+                },
+              }))
+            }}>
+            {cat.title}
+          </EntityItem>
         ))}
       </div>
     )
@@ -550,9 +549,6 @@ class _CategoriesList extends u.ViewComponent {
 const CategoriesList = connect(state => ({
   categories: state.net.categories,
   pending: state.net.pending,
-}), dispatch => ({
-  setCategory: category => dispatch(a.receiveCategory(category)),
-  setDialog: (dialog, props) => dispatch(a.setDialog(dialog, props)),
 }))(_CategoriesList)
 
 
@@ -630,7 +626,7 @@ const AccountForm = connect(state => ({
 
 class _AccountsList extends u.ViewComponent {
   render({
-    props: {accounts, setDialog, setAccount, pending},
+    props: {accounts, pending, dispatch},
   }) {
     return f.size(pending) ? (
       <div className='col-start-stretch'>
@@ -641,30 +637,31 @@ class _AccountsList extends u.ViewComponent {
     ) : (
       <div className='col-start-stretch'>
         {f.map(accounts, acc => (
-          <m.FakeButton
-            type='div'
+          <EntityItem
             key={acc.id}
-            onClick={() => {
-              setAccount(acc)
-              setDialog(FormDialog, {
+            onOpen={() => {
+              dispatch(a.receiveAccount(acc))
+              dispatch(a.setDialog(FormDialog, {
                 form: AccountForm,
                 title: 'Edit account',
-                onClose: setAccount,
-              })
+                onClose: () => dispatch(a.receiveAccount()),
+              }))
             }}
-            className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
-            <div className='relative width-2x5 square'>
-              <div className='row-center-center abs-center'>
-                <s.CreditCard className='font-large fg-primary-100' />
-              </div>
+            onDelete={() => {
+              dispatch(a.setDialog(ConfirmDialog, {
+                question: 'Delete this account?',
+                onConfirm: () => {
+                  dispatch(a.deleteAccount(acc.id))
+                    .then(() => dispatch(a.notify({text: 'Account deleted'})))
+                    .then(() => dispatch(a.fetchAccounts()))
+                },
+              }))
+            }}>
+            <div className='flex-1 row-between-center gaps-h-1'>
+              <span>{acc.title}</span>
+              <span className='fg-black-50'>{acc.balance}</span>
             </div>
-            <div className='flex-1 col-start-stretch'>
-              <div className='flex-1 row-between-center gaps-h-1 padding-v-1'>
-                <span>{acc.title}</span>
-                <span className='fg-black-50'>{acc.balance}</span>
-              </div>
-            </div>
-          </m.FakeButton>
+          </EntityItem>
         ))}
       </div>
     )
@@ -674,9 +671,6 @@ class _AccountsList extends u.ViewComponent {
 const AccountsList = connect(state => ({
   accounts: state.net.accounts,
   pending: state.net.pending,
-}), dispatch => ({
-  setAccount: account => dispatch(a.receiveAccount(account)),
-  setDialog: (dialog, props) => dispatch(a.setDialog(dialog, props)),
 }))(_AccountsList)
 
 
@@ -754,7 +748,7 @@ const PayeeForm = connect(state => ({
 
 class _PayeesList extends u.ViewComponent {
   render({
-    props: {payees, setDialog, setPayee, pending},
+    props: {payees, pending, dispatch},
   }) {
     return f.size(pending) ? (
       <div className='col-start-stretch'>
@@ -765,29 +759,28 @@ class _PayeesList extends u.ViewComponent {
     ) : (
       <div className='col-start-stretch'>
         {f.map(payees, payee => (
-          <m.FakeButton
-            type='div'
+          <EntityItem
             key={payee.id}
-            onClick={() => {
-              setPayee(payee)
-              setDialog(FormDialog, {
+            onOpen={() => {
+              dispatch(a.receivePayee(payee))
+              dispatch(a.setDialog(FormDialog, {
                 form: PayeeForm,
                 title: 'Edit payee',
-                onClose: setPayee,
-              })
+                onClose: () => dispatch(a.receivePayee()),
+              }))
             }}
-            className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy'>
-            <div className='relative width-2x5 square'>
-              <div className='row-center-center abs-center'>
-                <s.Users className='font-large fg-primary-100' />
-              </div>
-            </div>
-            <div className='flex-1 col-start-stretch'>
-              <div className='flex-1 row-between-center gaps-h-1 padding-v-1'>
-                <span>{payee.title}</span>
-              </div>
-            </div>
-          </m.FakeButton>
+            onDelete={() => {
+              dispatch(a.setDialog(ConfirmDialog, {
+                question: 'Delete this payee?',
+                onConfirm: () => {
+                  dispatch(a.deletePayee(payee.id))
+                    .then(() => dispatch(a.notify({text: 'Payee deleted'})))
+                    .then(() => dispatch(a.fetchPayees()))
+                },
+              }))
+            }}>
+            {payee.title}
+          </EntityItem>
         ))}
       </div>
     )
@@ -797,9 +790,6 @@ class _PayeesList extends u.ViewComponent {
 const PayeesList = connect(state => ({
   payees: state.net.payees,
   pending: state.net.pending,
-}), dispatch => ({
-  setPayee: payee => dispatch(a.receivePayee(payee)),
-  setDialog: (dialog, props) => dispatch(a.setDialog(dialog, props)),
 }))(_PayeesList)
 
 
@@ -1207,11 +1197,60 @@ class EntityPlaceholder extends u.ViewComponent {
           </div>
         </div>
         <div className='flex-1 col-start-stretch'>
-          <div className='flex-1 row-between-center padding-v-1'>
+          <div className='flex-1 row-start-center padding-v-1'>
             <Placeholder style={{width: '8em'}} />
           </div>
         </div>
       </div>
+    )
+  }
+}
+
+class EntityItem extends u.ViewComponent {
+  constructor({onOpen}) {
+    super(...arguments)
+    this.actions = React.createRef()
+
+    this.onClick = event => {
+      if (!onOpen) return
+      f.validate(onOpen, f.isFunction)
+
+      const actions = u.findDomNode(this.actions.current)
+      if (u.isAncestorOf(actions, event.target)) return
+
+      onOpen()
+    }
+  }
+
+  render({
+    context,
+    props: {children, onDelete},
+  }) {
+    const isMobile = u.isMobile(context)
+
+    return (
+      <m.FakeButton
+        type='div'
+        onClick={this.onClick}
+        className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy trigger'>
+        <div className='relative width-2x5 square'>
+          <div className='row-center-center abs-center'>
+            <s.Tag className='font-large fg-primary-100' />
+          </div>
+        </div>
+        <div className='flex-1 col-start-stretch'>
+          <div className='flex-1 row-between-center padding-v-1'>
+            {children}
+          </div>
+        </div>
+        <div className='row-center-center' ref={this.actions}>
+          <m.FakeButton
+            className={`row-center-center decorate-light-menu-item ${!isMobile ? 'show-on-trigger-hover' : ''}`}
+            onClick={onDelete}>
+            <s.Trash2 className='font-large' />
+          </m.FakeButton>
+        </div>
+      </m.FakeButton>
     )
   }
 }
