@@ -3,7 +3,6 @@ import {render} from 'react-dom'
 import {createStore, combineReducers, applyMiddleware} from 'redux'
 import {Provider, connect} from 'react-redux'
 import thunk from 'redux-thunk'
-import logger from 'redux-logger'
 
 import * as r from './reducers'
 import * as a from './actions'
@@ -11,7 +10,7 @@ import * as u from './utils'
 
 import {AppRouter} from './views/routes'
 
-export const store = createStore(combineReducers(r), applyMiddleware(thunk, logger))
+export const store = createStore(combineReducers(r), applyMiddleware(thunk))
 
 class App extends u.ViewComponent {
   constructor(props) {

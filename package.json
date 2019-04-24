@@ -26,6 +26,7 @@
     "gulp-watch": "^5.0.1",
     "http-proxy": "^1.17.0",
     "statil": "^0.9.0",
+    "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "^4.29.6"
   },
   "dependencies": {
@@ -36,7 +37,6 @@
     "react-redux": "^6.0.1",
     "react-router-dom": "^5.0.0",
     "redux": "^4.0.1",
-    "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "stylebox": "^0.0.15"
   }
