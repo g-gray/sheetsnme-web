@@ -85,6 +85,7 @@ gulp.task('templates:build', () => {
       transform(file, __, done) {
         const rendered = compileTemplate(String(file.contents))({
           PROD,
+          BACKEND_HOST,
           COMMIT: commit,
         })
         file.contents = Buffer.from(rendered)

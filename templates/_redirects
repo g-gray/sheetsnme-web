@@ -1,0 +1,6 @@
+<< if ($.BACKEND_HOST) { >>
+/auth/* {{$.BACKEND_HOST}}/auth/:splat   200
+/api/*  {{$.BACKEND_HOST}}/api/:splat    200
+<< } >>
+
+/*     /index.html                       200
