@@ -19,7 +19,7 @@ class App extends u.ViewComponent {
   }
 
   render({props: {isMobile, user}}) {
-    return !user.id ? null : (
+    return (
       <u.Context.Provider value={{isMobile}}>
         <AppRouter />
       </u.Context.Provider>

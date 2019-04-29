@@ -509,7 +509,7 @@ class _CategoriesList extends u.ViewComponent {
   render({
     props: {categories, pending, dispatch},
   }) {
-    return f.size(pending) ? (
+    return f.size(pending) || !f.size(categories) ? (
       <div className='col-start-stretch'>
         {f.map(new Array(3), (__, index) => (
           <EntityPlaceholder key={`placeholder-${index}`} />
@@ -628,7 +628,7 @@ class _AccountsList extends u.ViewComponent {
   render({
     props: {accounts, pending, dispatch},
   }) {
-    return f.size(pending) ? (
+    return f.size(pending) || !f.size(accounts) ? (
       <div className='col-start-stretch'>
         {f.map(new Array(3), (__, index) => (
           <EntityPlaceholder key={`placeholder-${index}`} />
@@ -750,7 +750,7 @@ class _PayeesList extends u.ViewComponent {
   render({
     props: {payees, pending, dispatch},
   }) {
-    return f.size(pending) ? (
+    return f.size(pending) || !f.size(payees) ? (
       <div className='col-start-stretch'>
         {f.map(new Array(3), (__, index) => (
           <EntityPlaceholder key={`placeholder-${index}`} />
@@ -1395,7 +1395,7 @@ class _TransactionsList extends u.ViewComponent {
   render({
     props: {transactions, pending},
   }) {
-    return f.size(pending) ? (
+    return f.size(pending) || !f.size(transactions) ? (
       <div className='col-start-stretch'>
         {f.map(new Array(3), (__, index) => (
           <TransactionPlaceholder key={`placeholder-${index}`} />
