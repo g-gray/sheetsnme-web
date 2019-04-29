@@ -105,7 +105,6 @@ class _Navbar extends u.ViewComponent {
                 style={{fontSize: '1.5rem'}}
                 onClick={() => {setDialog(MobileMenu)}} />
             </m.FakeButton>
-            <span className='font-large fg-white'>Accounting</span>
           </div>
           <UserMenu />
         </header>
@@ -116,7 +115,6 @@ class _Navbar extends u.ViewComponent {
       <header className='row-between-stretch bg-primary-100 navbar-height shadow-dept-1'>
         <Link to='/' className='row-center-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
           <Logo />
-          <span className='font-large'>Accounting</span>
         </Link>
         <UserMenu />
       </header>
