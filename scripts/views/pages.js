@@ -861,20 +861,17 @@ const FormDialog = connect(null, dispatch => ({
 
 
 
-const OUTCOME  = 'outcome'
-const INCOME   = 'income'
-const TRANSFER = 'transfer'
+const OUTCOME  = 'OUTCOME'
+const INCOME   = 'INCOME'
+const TRANSFER = 'TRANSFER'
+const LOAN     = 'LOAN'
+const BORROW   = 'BORROW'
 
 class _TransactionForm extends u.ViewComponent {
   constructor() {
     super(...arguments)
 
-    const transaction = this.props.transaction || {date: u.formatDate(new Date())}
-
-    this.state = {
-      type: defineTransactionType(transaction),
-      formValues: transaction,
-    }
+    this.state = {formValues: this.props.transaction || {type: OUTCOME, date: u.formatDate(new Date())}}
 
     this.onSubmit = event => {
       u.preventDefault(event)
@@ -882,17 +879,8 @@ class _TransactionForm extends u.ViewComponent {
       this.setState({errors: null})
 
       const {dispatch} = this.props
-      const {formValues, type} = this.state
-      const date = u.formatDate(this.state.formValues.date)
-
-      let data = type === OUTCOME
-        ? {...formValues, incomeAccountId: '', incomeAmount: 0}
-        : type === INCOME
-        ? {...formValues, outcomeAccountId: '', outcomeAmount: 0}
-        : type === TRANSFER
-        ? {...formValues, categoryById: '', payeeId: ''}
-        : formValues
-      data = {...data, date}
+      const {formValues} = this.state
+      const data = {...formValues, date: u.formatDate(formValues.date)}
 
       const promise = formValues.id
         ? dispatch(a.updateTransaction(data, formValues.id))
@@ -912,14 +900,14 @@ class _TransactionForm extends u.ViewComponent {
     }
 
     this.onTypeUpdated = value => {
-      const {formValues, type} = this.state
-      const {outcomeAccountId, outcomeAmount, incomeAccountId, incomeAmount} = formValues
+      const {formValues} = this.state
+      const {type, outcomeAccountId, outcomeAmount, incomeAccountId, incomeAmount} = formValues
 
-      if (type === OUTCOME && value === INCOME) {
+      if (f.includes([OUTCOME, LOAN], type) && f.includes([INCOME, BORROW], value)) {
         this.setState({
-          type: value,
           formValues: {
             ...formValues,
+            type: value,
             incomeAccountId : outcomeAccountId,
             incomeAmount    : outcomeAmount,
             outcomeAccountId: incomeAccountId,
@@ -929,11 +917,11 @@ class _TransactionForm extends u.ViewComponent {
         return
       }
 
-      if (type === INCOME && value === OUTCOME) {
+      if (f.includes([INCOME, BORROW], type) && f.includes([OUTCOME, LOAN], value)) {
         this.setState({
-          type: value,
           formValues: {
             ...formValues,
+            type: value,
             outcomeAccountId: incomeAccountId,
             outcomeAmount   : incomeAmount,
             incomeAccountId : outcomeAccountId,
@@ -943,29 +931,38 @@ class _TransactionForm extends u.ViewComponent {
         return
       }
 
-      if (type === OUTCOME && value === TRANSFER) {
+      if (f.includes([OUTCOME, LOAN], type) && value === TRANSFER) {
         this.setState({
-          type: value,
-          formValues: {...formValues, incomeAmount: outcomeAmount},
+          formValues: {
+            ...formValues,
+            type: value,
+            incomeAmount: outcomeAmount,
+          },
         })
         return
       }
 
-      if (type === INCOME && value === TRANSFER) {
+      if (f.includes([INCOME, BORROW], type) && value === TRANSFER) {
         this.setState({
-          type: value,
-          formValues: {...formValues, outcomeAmount: incomeAmount},
+          formValues: {
+            ...formValues,
+            type: value,
+            outcomeAmount: incomeAmount,
+          },
         })
         return
       }
 
-      this.setState({type: value})
+      this.setState({formValues: {
+        ...formValues,
+        type: value,
+      }})
     }
   }
 
   render({
     context,
-    state: {errors},
+    state: {formValues: {type}, errors},
     props: {categories, accounts, payees, pending},
   }) {
     const isMobile = u.isMobile(context)
@@ -983,35 +980,55 @@ class _TransactionForm extends u.ViewComponent {
             <FormLabel>
               Type
             </FormLabel>
-            <div className={isMobile ? 'col-start-stretch gaps-v-0x5' : 'row-start-center gaps-h-1'}>
-              <label className='row-start-center gaps-h-0x5'>
-                <Radio
-                  name='type'
-                  disabled={disabled}
-                  {...u.bindChecked(this, ['type'], OUTCOME)}
-                  onUpdate={this.onTypeUpdated} />
-                <span>Outcome</span>
-              </label>
-              <label className='row-start-center gaps-h-0x5'>
-                <Radio
-                  name='type'
-                  disabled={disabled}
-                  {...u.bindChecked(this, ['type'], INCOME)}
-                  onUpdate={this.onTypeUpdated} />
-                <span>Income</span>
-              </label>
-              <label className='row-start-center gaps-h-0x5'>
-                <Radio
-                  name='type'
-                  disabled={disabled}
-                  {...u.bindChecked(this, ['type'], TRANSFER)}
-                  onUpdate={this.onTypeUpdated} />
-                <span>Transfer</span>
-              </label>
+            <div className='col-start-stretch gaps-v-0x5'>
+              <div className={isMobile ? 'col-start-stretch gaps-v-0x5' : 'row-start-center gaps-h-1'}>
+                <label className='row-start-center gaps-h-0x5'>
+                  <Radio
+                    name='type'
+                    disabled={disabled}
+                    {...u.bindChecked(this, ['formValues', 'type'], OUTCOME)}
+                    onUpdate={this.onTypeUpdated} />
+                  <span>Outcome</span>
+                </label>
+                <label className='row-start-center gaps-h-0x5'>
+                  <Radio
+                    name='type'
+                    disabled={disabled}
+                    {...u.bindChecked(this, ['formValues', 'type'], INCOME)}
+                    onUpdate={this.onTypeUpdated} />
+                  <span>Income</span>
+                </label>
+                <label className='row-start-center gaps-h-0x5'>
+                  <Radio
+                    name='type'
+                    disabled={disabled}
+                    {...u.bindChecked(this, ['formValues', 'type'], TRANSFER)}
+                    onUpdate={this.onTypeUpdated} />
+                  <span>Transfer</span>
+                </label>
+              </div>
+              <div className={isMobile ? 'col-start-stretch gaps-v-0x5' : 'row-start-center gaps-h-1'}>
+                <label className='row-start-center gaps-h-0x5'>
+                  <Radio
+                    name='type'
+                    disabled={disabled}
+                    {...u.bindChecked(this, ['formValues', 'type'], LOAN)}
+                    onUpdate={this.onTypeUpdated} />
+                  <span>I loaned</span>
+                </label>
+                <label className='row-start-center gaps-h-0x5'>
+                  <Radio
+                    name='type'
+                    disabled={disabled}
+                    {...u.bindChecked(this, ['formValues', 'type'], BORROW)}
+                    onUpdate={this.onTypeUpdated} />
+                  <span>I borrowed</span>
+                </label>
+              </div>
             </div>
           </G7FormLine>
 
-          {this.state.type !== OUTCOME ? null :
+          {!f.includes([OUTCOME, LOAN, TRANSFER], type) ? null :
           <Fragment>
             <FormTextElement
               name='outcomeAmount'
@@ -1032,7 +1049,7 @@ class _TransactionForm extends u.ViewComponent {
             </FormSelectElement>
           </Fragment>}
 
-          {this.state.type !== INCOME ? null :
+          {!f.includes([INCOME, BORROW, TRANSFER], type) ? null :
           <Fragment>
             <FormTextElement
               name='incomeAmount'
@@ -1053,82 +1070,39 @@ class _TransactionForm extends u.ViewComponent {
             </FormSelectElement>
           </Fragment>}
 
-          {this.state.type !== TRANSFER ? null :
-          <Fragment>
-            <FormTextElement
-              name='outcomeAmount'
-              label='Amount'
-              disabled={disabled}
-              {...u.bindValue(this, ['formValues', 'outcomeAmount'], u.parseNum)} />
-            <FormSelectElement
-              name='outcomeAccountId'
-              label='Account'
-              disabled={disabled}
-              {...u.bindValue(this, ['formValues', 'outcomeAccountId'])}>
-              <option value='' />
-              {f.map(accounts, ({id, title}) => (
-                <option value={id} key={`outcome-account-${id}`}>
-                  {title}
-                </option>
-              ))}
-            </FormSelectElement>
-            <G7FormLine>
-              <span />
-              <span className='row-center-center'>
-                <s.ArrowDown className='font-large' />
-              </span>
-            </G7FormLine>
-            <FormTextElement
-              name='incomeAmount'
-              label='Amount'
-              disabled={disabled}
-              {...u.bindValue(this, ['formValues', 'incomeAmount'], u.parseNum)} />
-            <FormSelectElement
-              name='incomeAccountId'
-              label='Account'
-              disabled={disabled}
-              {...u.bindValue(this, ['formValues', 'incomeAccountId'])}>
-              <option value='' />
-              {f.map(accounts, ({id, title}) => (
-                <option value={id} key={`income-account-${id}`}>
-                  {title}
-                </option>
-              ))}
-            </FormSelectElement>
-          </Fragment>}
+          {!f.includes([OUTCOME, INCOME], type) ? null :
+          <FormSelectElement
+            name='categoryId'
+            label='Category'
+            disabled={disabled}
+            {...u.bindValue(this, ['formValues', 'categoryId'])}>
+            <option value='' />
+            {f.map(categories, ({id, title}) => (
+              <option value={id} key={`category-${id}`}>
+                {title}
+              </option>
+            ))}
+          </FormSelectElement>}
 
-          {!f.includes([OUTCOME, INCOME], this.state.type) ? null :
-          <Fragment>
-            <FormSelectElement
-              name='categoryId'
-              label='Category'
-              disabled={disabled}
-              {...u.bindValue(this, ['formValues', 'categoryId'])}>
-              <option value='' />
-              {f.map(categories, ({id, title}) => (
-                <option value={id} key={`category-${id}`}>
-                  {title}
-                </option>
-              ))}
-            </FormSelectElement>
-            <FormSelectElement
-              name='payeeId'
-              label='Payee'
-              disabled={disabled}
-              {...u.bindValue(this, ['formValues', 'payeeId'])}>
-              <option value='' />
-              {f.map(payees, ({id, title}) => (
-                <option value={id} key={`payee-${id}`}>
-                  {title}
-                </option>
-              ))}
-            </FormSelectElement>
-            <FormTextElement
-              name='comment'
-              label='Comment'
-              disabled={disabled}
-              {...u.bindValue(this, ['formValues', 'comment'])} />
-          </Fragment>}
+          {!f.includes([OUTCOME, INCOME, LOAN, BORROW], type) ? null :
+          <FormSelectElement
+            name='payeeId'
+            label='Payee'
+            disabled={disabled}
+            {...u.bindValue(this, ['formValues', 'payeeId'])}>
+            <option value='' />
+            {f.map(payees, ({id, title}) => (
+              <option value={id} key={`payee-${id}`}>
+                {title}
+              </option>
+            ))}
+          </FormSelectElement>}
+
+          <FormTextElement
+            name='comment'
+            label='Comment'
+            disabled={disabled}
+            {...u.bindValue(this, ['formValues', 'comment'])} />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-center-center padding-v-1 padding-h-1x25'>
@@ -1280,7 +1254,6 @@ class _Transaction extends u.ViewComponent {
 
   render({props}) {
     const {categoriesById, accountsById, payeesById, tx, dispatch} = props
-    const type = defineTransactionType(tx)
 
     return (
       <m.FakeButton
@@ -1298,7 +1271,7 @@ class _Transaction extends u.ViewComponent {
         }}
         className='row-start-center gaps-h-1 padding-h-1 list-item trigger text-left theme-light-menu-busy'>
         <div className='row-start-center padding-v-1'>
-          {type === OUTCOME ? (
+          {f.includes([OUTCOME, LOAN], tx.type) ? (
           <div className='relative width-2x5 square circle bg-warning-100'>
             <div className='row-center-center abs-center fg-white font-large'>
               {tx.categoryId
@@ -1306,7 +1279,7 @@ class _Transaction extends u.ViewComponent {
                 : <s.Minus />}
             </div>
           </div>
-          ) : type === INCOME ? (
+          ) : f.includes([INCOME, BORROW], tx.type) ? (
           <div className='relative width-2x5 square circle bg-success'>
             <div className='row-center-center abs-center fg-white font-large'>
               {tx.categoryId
@@ -1319,12 +1292,13 @@ class _Transaction extends u.ViewComponent {
             <div className='row-center-center abs-center fg-white font-large'>
               <s.ChevronsRight />
             </div>
-          </div>)}
+          </div>
+          )}
         </div>
         <div className='flex-1 col-start-stretch'>
           <div className='row-between-center gaps-h-1 padding-v-1'>
             <div className='col-start-stretch'>
-              {type === OUTCOME ?
+              {tx.type === OUTCOME ? (
               <span className='row-start-center gaps-h-0x25'>
                 {!tx.categoryId ? null :
                 <span>{categoriesById[tx.categoryId].title}</span>}
@@ -1333,7 +1307,13 @@ class _Transaction extends u.ViewComponent {
                 {!tx.payeeId ? null :
                 <span>{payeesById[tx.payeeId].title}</span>}
               </span>
-              : type === INCOME ?
+              ) : tx.type === LOAN ? (
+              <span className='row-start-center gaps-h-0x25'>
+                <span>Debt</span>
+                <s.ArrowRight className='font-midlarge' />
+                <span>{payeesById[tx.payeeId].title}</span>
+              </span>
+              ) : tx.type === INCOME ? (
               <span className='row-start-center gaps-h-0x25'>
                 {!tx.payeeId ? null :
                 <span>{payeesById[tx.payeeId].title}</span>}
@@ -1342,20 +1322,26 @@ class _Transaction extends u.ViewComponent {
                 {!tx.categoryId ? null :
                 <span>{categoriesById[tx.categoryId].title}</span>}
               </span>
-              : null}
+              ) : tx.type === BORROW ? (
+              <span className='row-start-center gaps-h-0x25'>
+                <span>{payeesById[tx.payeeId].title}</span>
+                <s.ArrowRight className='font-midlarge' />
+                <span>Debt</span>
+              </span>
+              ) : null}
               <span className='font-midsmall fg-black-50'>
                 {tx.date} {tx.date && tx.comment ? '·' : ''} {tx.comment}
               </span>
             </div>
             <div className='row-end-center gaps-h-1'>
-              {!f.includes([OUTCOME, TRANSFER], type) ? null :
+              {!f.includes([OUTCOME, LOAN, TRANSFER], tx.type) ? null :
               <div className='col-start-stretch text-right wspace-nowrap'>
                 <span>{`-${tx.outcomeAmount}`}</span>
                 <span className='font-midsmall fg-black-50'>
                   {accountsById[tx.outcomeAccountId].title}
                 </span>
               </div>}
-              {!f.includes([INCOME, TRANSFER], type) ? null :
+              {!f.includes([INCOME, BORROW, TRANSFER], tx.type) ? null :
               <div className='col-start-stretch text-right wspace-nowrap'>
                 <span className='fg-success'>{`+${tx.incomeAmount}`}</span>
                 <span className='font-midsmall fg-black-50'>
@@ -1413,18 +1399,6 @@ const TransactionsList = connect(state => ({
   transactions: state.net.transactions,
   pending: state.net.pending,
 }))(_TransactionsList)
-
-function defineTransactionType(transaction) {
-  const {outcomeAccountId, incomeAccountId} = transaction
-
-  return outcomeAccountId && !incomeAccountId
-    ? OUTCOME
-    : !outcomeAccountId && incomeAccountId
-    ? INCOME
-    : outcomeAccountId && incomeAccountId
-    ? TRANSFER
-    : OUTCOME
-}
 
 class G7FormLine extends u.ViewComponent {
   render({
