@@ -1130,7 +1130,11 @@ const TransactionForm = connect(state => ({
 }))(_TransactionForm)
 
 class TransactionPlaceholder extends u.ViewComponent {
-  render() {
+  render({
+    context,
+  }) {
+    const isMobile = u.isMobile(context)
+
     return (
       <div className='row-start-center gaps-h-1 padding-h-1 list-item'>
         <div className='row-start-center padding-v-1'>
@@ -1149,9 +1153,10 @@ class TransactionPlaceholder extends u.ViewComponent {
           </div>
           <hr className='hr hide-in-list-last-child' />
         </div>
+        {isMobile ? null :
         <div className='row-center-center padding-v-1'>
           <div className='width-2x5 square' disabled />
-        </div>
+        </div>}
       </div>
     )
   }
@@ -1251,8 +1256,11 @@ class _Transaction extends u.ViewComponent {
   }
 
   render({
+    context,
     props: {tx, dispatch},
   }) {
+    const isMobile = u.isMobile(context)
+
     return (
       <m.FakeButton
         type='div'
@@ -1284,6 +1292,7 @@ class _Transaction extends u.ViewComponent {
           </div>
           <hr className='hr hide-in-list-last-child' />
         </div>
+        {isMobile ? null :
         <div className='row-center-center padding-v-1' ref={this.actions}>
           <m.FakeButton
             className='relative width-2x5 square circle show-on-trigger-hover bg-primary-125'
@@ -1297,7 +1306,7 @@ class _Transaction extends u.ViewComponent {
               <s.Trash2 />
             </div>
           </m.FakeButton>
-        </div>
+        </div>}
       </m.FakeButton>
     )
   }
@@ -1363,7 +1372,7 @@ class _TransactionAccount extends u.ViewComponent {
     const incomeAccount  = f.scan(accountsById, tx.incomeAccountId, 'title')
 
     return (
-      <span className='row-start-center gaps-h-0x25'>
+      <span className='row-start-center gaps-h-0x25 wspace-nowrap'>
         {!outcomeAccount ? null :
         <span>{outcomeAccount}</span>}
         {!outcomeAccount || !incomeAccount ? null :
@@ -1384,9 +1393,9 @@ class _TransactionOrigin extends u.ViewComponent {
     props: {transaction: tx, categoriesById, payeesById},
   }) {
     return (
-      <span>
+      <span className='flex-1 width-0 text-ellipsis'>
         {f.scan(payeesById, tx.payeeId, 'title') ||
-         f.scan(categoriesById, tx.categoryId, 'title') || 'Without category'}
+         f.scan(categoriesById, tx.categoryId, 'title') || 'Without category category category'}
       </span>
     )
   }
@@ -1419,10 +1428,15 @@ class _TransactionsList extends u.ViewComponent {
 
 class TransactionMeta extends u.ViewComponent {
   render({
+    context,
     props: {transaction: tx},
   }) {
+    const isMobile = u.isMobile(context)
+
     return (
-      <span>{tx.date} {tx.date && tx.comment ? '·' : ''} {tx.comment}</span>
+      <span>
+        {tx.date} {!isMobile && tx.date && tx.comment ? '·' : ''} {!isMobile && tx.comment}
+      </span>
     )
   }
 }
