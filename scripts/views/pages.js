@@ -1136,23 +1136,21 @@ class TransactionPlaceholder extends u.ViewComponent {
         <div className='row-start-center padding-v-1'>
           <div className='relative width-2x5 square circle bg-primary-275' />
         </div>
-        <div className='flex-1 col-start-stretch'>
-          <div className='row-between-center gaps-h-1 padding-v-1'>
-            <div className='col-start-stretch'>
-              <Placeholder style={{width: '8em'}} />
-              <Placeholder style={{width: '6em'}} className='font-midsmall' />
+        <div className='flex-1 col-start-stretch transaction-line-height'>
+          <div className='col-start-stretch gaps-v-0x25 padding-v-1'>
+            <div className='row-between-center gaps-h-1 font-midsmall fg-black-50'>
+              <Placeholder style={{width: '4em'}} />
+              <Placeholder style={{width: '6em'}} />
             </div>
-            <div className='col-start-stretch text-right wspace-nowrap'>
+            <div className='row-between-start gaps-h-1'>
+              <Placeholder style={{width: '8em'}} />
               <Placeholder style={{width: '3em'}} />
-              <Placeholder style={{width: '5em'}} className='font-midsmall' />
             </div>
           </div>
           <hr className='hr hide-in-list-last-child' />
         </div>
-        <div className='row-center-center'>
-          <m.FakeButton className='row-center-center'>
-            <s.Trash2 className='font-large' style={{color: 'transparent'}} />
-          </m.FakeButton>
+        <div className='row-center-center padding-v-1'>
+          <div className='width-2x5 square' disabled />
         </div>
       </div>
     )
@@ -1269,99 +1267,43 @@ class _Transaction extends u.ViewComponent {
             onClose: () => dispatch(a.receiveTransaction()),
           }))
         }}
-        className='row-start-center gaps-h-1 padding-h-1 list-item trigger text-left theme-light-menu-busy'>
+        className='row-start-start gaps-h-1 padding-h-1 list-item trigger text-left theme-light-menu-busy'>
         <div className='row-start-center padding-v-1'>
-          {f.includes([OUTCOME, LOAN], tx.type) ? (
-          <div className='relative width-2x5 square circle bg-warning-100'>
-            <div className='row-center-center abs-center fg-white font-large'>
-              {tx.categoryId
-                ? categoriesById[tx.categoryId].title[0]
-                : <s.Minus />}
-            </div>
-          </div>
-          ) : f.includes([INCOME, BORROW], tx.type) ? (
-          <div className='relative width-2x5 square circle bg-success'>
-            <div className='row-center-center abs-center fg-white font-large'>
-              {tx.categoryId
-                ? categoriesById[tx.categoryId].title[0]
-                : <s.Plus />}
-            </div>
-          </div>
-          ) : (
-          <div className='relative width-2x5 square circle bg-accent'>
-            <div className='row-center-center abs-center fg-white font-large'>
-              <s.ChevronsRight />
-            </div>
-          </div>
-          )}
+          <TransactionIcon transaction={tx} />
         </div>
-        <div className='flex-1 col-start-stretch'>
-          <div className='row-between-center gaps-h-1 padding-v-1'>
-            <div className='col-start-stretch'>
-              {tx.type === OUTCOME ? (
-              <span className='row-start-center gaps-h-0x25'>
-                {!tx.categoryId ? null :
-                <span>{categoriesById[tx.categoryId].title}</span>}
-                {!tx.categoryId || !tx.payeeId ? null :
-                <s.ArrowRight className='font-midlarge' />}
-                {!tx.payeeId ? null :
-                <span>{payeesById[tx.payeeId].title}</span>}
+        <div className='flex-1 col-start-stretch transaction-line-height'>
+          <div className='col-start-stretch gaps-v-0x25 padding-v-1'>
+            <div className='row-between-center gaps-h-1 font-midsmall fg-black-50'>
+              <span>
+                {f.scan(payeesById, tx.payeeId, 'title') ||
+                 f.scan(categoriesById, tx.categoryId, 'title') || 'Without category'}
               </span>
-              ) : tx.type === LOAN ? (
-              <span className='row-start-center gaps-h-0x25'>
-                <span>Debt</span>
-                <s.ArrowRight className='font-midlarge' />
-                <span>{payeesById[tx.payeeId].title}</span>
+              <span>
+                {f.scan(accountsById, tx.outcomeAccountId, 'title') ||
+                 f.scan(accountsById, tx.incomeAccountId, 'title')}
               </span>
-              ) : tx.type === INCOME ? (
-              <span className='row-start-center gaps-h-0x25'>
-                {!tx.payeeId ? null :
-                <span>{payeesById[tx.payeeId].title}</span>}
-                {!tx.payeeId || !tx.categoryId ? null :
-                <s.ArrowRight className='font-midlarge' />}
-                {!tx.categoryId ? null :
-                <span>{categoriesById[tx.categoryId].title}</span>}
-              </span>
-              ) : tx.type === BORROW ? (
-              <span className='row-start-center gaps-h-0x25'>
-                <span>{payeesById[tx.payeeId].title}</span>
-                <s.ArrowRight className='font-midlarge' />
-                <span>Debt</span>
-              </span>
-              ) : null}
-              <span className='font-midsmall fg-black-50'>
+            </div>
+            <div className='row-between-start gaps-h-1'>
+              <span>
                 {tx.date} {tx.date && tx.comment ? '·' : ''} {tx.comment}
               </span>
-            </div>
-            <div className='row-end-center gaps-h-1'>
-              {!f.includes([OUTCOME, LOAN, TRANSFER], tx.type) ? null :
-              <div className='col-start-stretch text-right wspace-nowrap'>
-                <span>{`-${tx.outcomeAmount}`}</span>
-                <span className='font-midsmall fg-black-50'>
-                  {accountsById[tx.outcomeAccountId].title}
-                </span>
-              </div>}
-              {!f.includes([INCOME, BORROW, TRANSFER], tx.type) ? null :
-              <div className='col-start-stretch text-right wspace-nowrap'>
-                <span className='fg-success'>{`+${tx.incomeAmount}`}</span>
-                <span className='font-midsmall fg-black-50'>
-                  {accountsById[tx.incomeAccountId].title}
-                </span>
-              </div>}
+              <TransactionAmount transaction={tx} />
             </div>
           </div>
           <hr className='hr hide-in-list-last-child' />
         </div>
-        <div className='row-center-center' ref={this.actions}>
+        <div className='row-center-center padding-v-1' ref={this.actions}>
           <m.FakeButton
-            className='row-center-center show-on-trigger-hover decorate-light-menu-item'
+            className='relative width-2x5 square circle show-on-trigger-hover bg-primary-125'
             onClick={() => {
               dispatch(a.setDialog(ConfirmDialog, {
                 question: 'Delete this transaction?',
                 onConfirm: () => this.onDelete(tx.id),
               }))
             }}>
-            <s.Trash2 className='font-large' />
+            <div className='row-center-center abs-center fg-white font-large'>
+              <s.Trash2 />
+            </div>
           </m.FakeButton>
         </div>
       </m.FakeButton>
@@ -1374,6 +1316,56 @@ const Transaction = connect(state => ({
   accountsById: state.net.accountsById,
   payeesById: state.net.payeesById,
 }))(_Transaction)
+
+class TransactionIcon extends u.ViewComponent {
+  render({
+    props: {transaction},
+  }) {
+    return (
+      <div className='row-start-center'>
+        {f.includes([OUTCOME, LOAN], transaction.type) ? (
+        <div className='relative width-2x5 square circle bg-warning-100'>
+          <div className='row-center-center abs-center fg-white font-large'>
+            <s.Minus />
+          </div>
+        </div>
+        ) : f.includes([INCOME, BORROW], transaction.type) ? (
+        <div className='relative width-2x5 square circle bg-success'>
+          <div className='row-center-center abs-center fg-white font-large'>
+            <s.Plus />
+          </div>
+        </div>
+        ) : (
+        <div className='relative width-2x5 square circle bg-black-75'>
+          <div className='row-center-center abs-center fg-white font-large'>
+            <s.Repeat />
+          </div>
+        </div>
+        )}
+      </div>
+    )
+  }
+}
+
+class TransactionAmount extends u.ViewComponent {
+  render({
+    props: {transaction: {type, outcomeAmount, incomeAmount}},
+  }) {
+    return (
+      <span className='wspace-nowrap'>
+        { type === BORROW
+        ? <span className='fg-warning-100'>{`+${outcomeAmount}`}</span>
+        : type === LOAN
+        ? <span className='fg-warning-100'>{`-${incomeAmount}`}</span>
+        : type === INCOME
+        ? <span className='fg-success'>{`+${incomeAmount}`}</span>
+        : type === OUTCOME
+        ? <span>{`-${outcomeAmount}`}</span>
+        : <span>{outcomeAmount || incomeAmount}</span>}
+      </span>
+    )
+  }
+}
 
 class _TransactionsList extends u.ViewComponent {
   render({
@@ -1718,7 +1710,7 @@ class Fab extends u.ViewComponent {
         className={`row-start-stretch width-3x5 ${cls || ''}`}
         {...props}>
         <span className='flex-1 relative circle square bg-accent shadow-dept-2'>
-          <s.Plus className='abs-center font-large fg-white' />
+          <s.Plus className='abs-center font-giant fg-white' />
         </span>
       </m.FakeButton>
     )

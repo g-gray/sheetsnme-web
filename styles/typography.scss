@@ -96,3 +96,7 @@ sub {
 .text-ellipsis > * {
   @extend .text-ellipsis;
 }
+
+.transaction-line-height * {
+  line-height: 1.125rem;
+}
