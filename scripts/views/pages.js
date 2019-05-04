@@ -1250,9 +1250,9 @@ class _Transaction extends u.ViewComponent {
     }
   }
 
-  render({props}) {
-    const {categoriesById, accountsById, payeesById, tx, dispatch} = props
-
+  render({
+    props: {tx, dispatch},
+  }) {
     return (
       <m.FakeButton
         type='div'
@@ -1274,19 +1274,11 @@ class _Transaction extends u.ViewComponent {
         <div className='flex-1 col-start-stretch transaction-line-height'>
           <div className='col-start-stretch gaps-v-0x25 padding-v-1'>
             <div className='row-between-center gaps-h-1 font-midsmall fg-black-50'>
-              <span>
-                {f.scan(payeesById, tx.payeeId, 'title') ||
-                 f.scan(categoriesById, tx.categoryId, 'title') || 'Without category'}
-              </span>
-              <span>
-                {f.scan(accountsById, tx.outcomeAccountId, 'title') ||
-                 f.scan(accountsById, tx.incomeAccountId, 'title')}
-              </span>
+              <TransactionOrigin transaction={tx} />
+              <TransactionAccount transaction={tx} />
             </div>
             <div className='row-between-start gaps-h-1'>
-              <span>
-                {tx.date} {tx.date && tx.comment ? '·' : ''} {tx.comment}
-              </span>
+              <TransactionMeta transaction={tx} />
               <TransactionAmount transaction={tx} />
             </div>
           </div>
@@ -1311,25 +1303,21 @@ class _Transaction extends u.ViewComponent {
   }
 }
 
-const Transaction = connect(state => ({
-  categoriesById: state.net.categoriesById,
-  accountsById: state.net.accountsById,
-  payeesById: state.net.payeesById,
-}))(_Transaction)
+const Transaction = connect()(_Transaction)
 
 class TransactionIcon extends u.ViewComponent {
   render({
-    props: {transaction},
+    props: {transaction: tx},
   }) {
     return (
       <div className='row-start-center'>
-        {f.includes([OUTCOME, LOAN], transaction.type) ? (
+        {f.includes([OUTCOME, LOAN], tx.type) ? (
         <div className='relative width-2x5 square circle bg-warning-100'>
           <div className='row-center-center abs-center fg-white font-large'>
             <s.Minus />
           </div>
         </div>
-        ) : f.includes([INCOME, BORROW], transaction.type) ? (
+        ) : f.includes([INCOME, BORROW], tx.type) ? (
         <div className='relative width-2x5 square circle bg-success'>
           <div className='row-center-center abs-center fg-white font-large'>
             <s.Plus />
@@ -1349,23 +1337,65 @@ class TransactionIcon extends u.ViewComponent {
 
 class TransactionAmount extends u.ViewComponent {
   render({
-    props: {transaction: {type, outcomeAmount, incomeAmount}},
+    props: {transaction: tx},
   }) {
     return (
       <span className='wspace-nowrap'>
-        { type === BORROW
-        ? <span className='fg-warning-100'>{`+${outcomeAmount}`}</span>
-        : type === LOAN
-        ? <span className='fg-warning-100'>{`-${incomeAmount}`}</span>
-        : type === INCOME
-        ? <span className='fg-success'>{`+${incomeAmount}`}</span>
-        : type === OUTCOME
-        ? <span>{`-${outcomeAmount}`}</span>
-        : <span>{outcomeAmount || incomeAmount}</span>}
+        { tx.type === BORROW
+        ? <span className='fg-warning-100'>{`+${tx.outcomeAmount}`}</span>
+        : tx.type === LOAN
+        ? <span className='fg-warning-100'>{`-${tx.incomeAmount}`}</span>
+        : tx.type === INCOME
+        ? <span className='fg-success'>{`+${tx.incomeAmount}`}</span>
+        : tx.type === OUTCOME
+        ? <span>{`-${tx.outcomeAmount}`}</span>
+        : <span>{tx.outcomeAmount || tx.incomeAmount}</span>}
       </span>
     )
   }
 }
+
+class _TransactionAccount extends u.ViewComponent {
+  render({
+    props: {transaction: tx, accountsById},
+  }) {
+    const outcomeAccount = f.scan(accountsById, tx.outcomeAccountId, 'title')
+    const incomeAccount  = f.scan(accountsById, tx.incomeAccountId, 'title')
+
+    return (
+      <span className='row-start-center gaps-h-0x25'>
+        {!outcomeAccount ? null :
+        <span>{outcomeAccount}</span>}
+        {!outcomeAccount || !incomeAccount ? null :
+        <s.ArrowRight />}
+        {!incomeAccount ? null :
+        <span>{incomeAccount}</span>}
+      </span>
+    )
+  }
+}
+
+const TransactionAccount = connect(state => ({
+  accountsById: state.net.accountsById,
+}))(_TransactionAccount)
+
+class _TransactionOrigin extends u.ViewComponent {
+  render({
+    props: {transaction: tx, categoriesById, payeesById},
+  }) {
+    return (
+      <span>
+        {f.scan(payeesById, tx.payeeId, 'title') ||
+         f.scan(categoriesById, tx.categoryId, 'title') || 'Without category'}
+      </span>
+    )
+  }
+}
+
+const TransactionOrigin = connect(state => ({
+  categoriesById: state.net.categoriesById,
+  payeesById: state.net.payeesById,
+}))(_TransactionOrigin)
 
 class _TransactionsList extends u.ViewComponent {
   render({
@@ -1383,6 +1413,16 @@ class _TransactionsList extends u.ViewComponent {
           <Transaction key={tx.id} tx={tx} />
         ))}
       </div>
+    )
+  }
+}
+
+class TransactionMeta extends u.ViewComponent {
+  render({
+    props: {transaction: tx},
+  }) {
+    return (
+      <span>{tx.date} {tx.date && tx.comment ? '·' : ''} {tx.comment}</span>
     )
   }
 }
