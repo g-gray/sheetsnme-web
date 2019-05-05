@@ -40,6 +40,10 @@
   @media not screen and (max-width: $page-breakpoint-sm) {@content;}
 }
 
+@mixin media-mobile {
+  @media screen and (max-width: $page-width-mobile) {@content;}
+}
+
 @mixin media-touch {
   @media (any-hover: none) {@content;}
 }
