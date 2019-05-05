@@ -487,6 +487,7 @@ $dropdown-color-shadow: rgba(black, 0.1);
   height: 100%;
   @extend .relative;
   @extend .overflow-y-scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 .dialog-center {
