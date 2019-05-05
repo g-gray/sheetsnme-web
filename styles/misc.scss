@@ -484,7 +484,7 @@ $dropdown-color-shadow: rgba(black, 0.1);
 }
 
 .dialog-scrollable {
-  height: 100vh;
+  height: 100%;
   @extend .relative;
   @extend .overflow-y-scroll;
 }

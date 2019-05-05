@@ -811,8 +811,8 @@ class _FormDialog extends u.ViewComponent {
     if (u.isMobile(context)) {
       return (
         <m.Dialog onEscape={close}>
-          <m.DialogScrollable className='col-start-stretch'>
-            <div className='flex-1 relative col-start-stretch bg-white'>
+          <m.DialogScrollable className='bg-white'>
+            <div className='relative col-start-stretch'>
               <div className='row-between-center gaps-h-1 padding-l-1x25 navbar-height'>
                 <h2 className='font-large weight-medium'>
                   {title}
