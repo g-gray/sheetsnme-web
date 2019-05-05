@@ -18,7 +18,7 @@ class App extends u.ViewComponent {
     props.dispatch(a.init())
   }
 
-  render({props: {isMobile, user}}) {
+  render({props: {isMobile}}) {
     return (
       <u.Context.Provider value={{isMobile}}>
         <AppRouter />
