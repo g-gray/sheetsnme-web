@@ -94,7 +94,7 @@ class _Navbar extends u.ViewComponent {
 
   render({
     context,
-    props: {setDialog},
+    props: {dispatch},
   }) {
     if (u.isMobile(context)) {
       return (
@@ -103,7 +103,7 @@ class _Navbar extends u.ViewComponent {
             <m.FakeButton className='row-center-center padding-0x5 circle decorate-dark-menu-item'>
               <s.Menu
                 style={{fontSize: '1.5rem'}}
-                onClick={() => {setDialog(MobileMenu)}} />
+                onClick={() => dispatch(a.addDialog(MobileMenu))} />
             </m.FakeButton>
           </div>
           <UserMenu />
@@ -122,9 +122,7 @@ class _Navbar extends u.ViewComponent {
   }
 }
 
-const Navbar = connect(null, dispatch => ({
-  setDialog: dialog => dispatch(a.setDialog(dialog)),
-}))(_Navbar)
+const Navbar = connect()(_Navbar)
 
 class _UserMenu extends u.ViewComponent {
   constructor() {
@@ -197,10 +195,10 @@ const UserMenu = connect(state => ({
 }))(_UserMenu)
 
 class _MobileMenu extends u.ViewComponent {
-  constructor() {
+  constructor({dispatch}) {
     super(...arguments)
 
-    this.close = this.props.setDialog.bind(null, null)
+    this.close = () => dispatch(a.removeDialog())
   }
 
   render({close}) {
@@ -219,9 +217,7 @@ class _MobileMenu extends u.ViewComponent {
   }
 }
 
-const MobileMenu = connect(null, dispatch => ({
-  setDialog: dialog => dispatch(a.setDialog(dialog)),
-}))(_MobileMenu)
+const MobileMenu = connect()(_MobileMenu)
 
 class _Drawer extends u.ViewComponent {
   render({props: {transactions}}) {
@@ -358,7 +354,7 @@ export class HomePage extends u.ViewComponent {
   render(__, {dispatch}) {
     const action = (
       <Fab
-        onClick={() => dispatch(a.setDialog(FormDialog, {
+        onClick={() => dispatch(a.addDialog(FormDialog, {
           form: TransactionForm,
           title: 'New transaction',
           onClose: transaction => dispatch(a.receiveTransaction(transaction)),
@@ -377,7 +373,7 @@ export class CategoriesPage extends u.ViewComponent {
   render(__, {dispatch}) {
     const action = (
       <Fab
-        onClick={() => dispatch(a.setDialog(FormDialog, {
+        onClick={() => dispatch(a.addDialog(FormDialog, {
           form: CategoryForm,
           title: 'New category',
           onClose: category => dispatch(a.receiveCategory(category)),
@@ -396,7 +392,7 @@ export class AccountsPage extends u.ViewComponent {
   render(__, {dispatch}) {
     const action = (
       <Fab
-        onClick={() => dispatch(a.setDialog(FormDialog, {
+        onClick={() => dispatch(a.addDialog(FormDialog, {
           form: AccountForm,
           title: 'New account',
           onClose: account => dispatch(a.receiveAccount(account)),
@@ -415,7 +411,7 @@ export class PayeesPage extends u.ViewComponent {
   render(__, {dispatch}) {
     const action = (
       <Fab
-        onClick={() => dispatch(a.setDialog(FormDialog, {
+        onClick={() => dispatch(a.addDialog(FormDialog, {
           form: PayeeForm,
           title: 'New payee',
           onClose: payee => dispatch(a.receivePayee(payee)),
@@ -520,14 +516,14 @@ class _CategoriesList extends u.ViewComponent {
             key={cat.id}
             onOpen={() => {
               dispatch(a.receiveCategory(cat))
-              dispatch(a.setDialog(FormDialog, {
+              dispatch(a.addDialog(FormDialog, {
                 form: CategoryForm,
                 title: 'Edit category',
                 onClose: () => dispatch(a.receiveCategory()),
               }))
             }}
             onDelete={() => {
-              dispatch(a.setDialog(ConfirmDialog, {
+              dispatch(a.addDialog(ConfirmDialog, {
                 question: 'Delete this category?',
                 onConfirm: () => {
                   dispatch(a.deleteCategory(cat.id))
@@ -639,14 +635,14 @@ class _AccountsList extends u.ViewComponent {
             key={acc.id}
             onOpen={() => {
               dispatch(a.receiveAccount(acc))
-              dispatch(a.setDialog(FormDialog, {
+              dispatch(a.addDialog(FormDialog, {
                 form: AccountForm,
                 title: 'Edit account',
                 onClose: () => dispatch(a.receiveAccount()),
               }))
             }}
             onDelete={() => {
-              dispatch(a.setDialog(ConfirmDialog, {
+              dispatch(a.addDialog(ConfirmDialog, {
                 question: 'Delete this account?',
                 onConfirm: () => {
                   dispatch(a.deleteAccount(acc.id))
@@ -761,14 +757,14 @@ class _PayeesList extends u.ViewComponent {
             key={payee.id}
             onOpen={() => {
               dispatch(a.receivePayee(payee))
-              dispatch(a.setDialog(FormDialog, {
+              dispatch(a.addDialog(FormDialog, {
                 form: PayeeForm,
                 title: 'Edit payee',
                 onClose: () => dispatch(a.receivePayee()),
               }))
             }}
             onDelete={() => {
-              dispatch(a.setDialog(ConfirmDialog, {
+              dispatch(a.addDialog(ConfirmDialog, {
                 question: 'Delete this payee?',
                 onConfirm: () => {
                   dispatch(a.deletePayee(payee.id))
@@ -793,11 +789,11 @@ const PayeesList = connect(state => ({
 
 
 class _FormDialog extends u.ViewComponent {
-  constructor() {
+  constructor({dispatch}) {
     super(...arguments)
 
     this.close = () => {
-      this.props.setDialog()
+      dispatch(a.removeDialog())
 
       if (this.props.onClose) this.props.onClose()
     }
@@ -855,9 +851,7 @@ class _FormDialog extends u.ViewComponent {
   }
 }
 
-const FormDialog = connect(null, dispatch => ({
-  setDialog: dialog => dispatch(a.setDialog(dialog)),
-}))(_FormDialog)
+const FormDialog = connect()(_FormDialog)
 
 
 
@@ -1269,7 +1263,7 @@ class _Transaction extends u.ViewComponent {
           if (u.isAncestorOf(actions, event.target)) return
 
           dispatch(a.receiveTransaction(tx))
-          dispatch(a.setDialog(FormDialog, {
+          dispatch(a.addDialog(FormDialog, {
             form: TransactionForm,
             title: 'Edit transaction',
             onClose: () => dispatch(a.receiveTransaction()),
@@ -1297,7 +1291,7 @@ class _Transaction extends u.ViewComponent {
           <m.FakeButton
             className='relative width-2x5 square circle show-on-trigger-hover bg-primary-125'
             onClick={() => {
-              dispatch(a.setDialog(ConfirmDialog, {
+              dispatch(a.addDialog(ConfirmDialog, {
                 question: 'Delete this transaction?',
                 onConfirm: () => this.onDelete(tx.id),
               }))
@@ -1814,16 +1808,16 @@ class _ActionsMenu extends u.ViewComponent {
 }
 
 class _ConfirmDialog extends u.ViewComponent {
-  constructor() {
+  constructor({dispatch}) {
     super(...arguments)
 
     this.close = () => {
-      this.props.setDialog()
+      dispatch(a.removeDialog())
       if (this.props.onClose) this.props.onClose()
     }
 
     this.confirm = () => {
-      this.props.setDialog()
+      dispatch(a.removeDialog())
       if (this.props.onConfirm) this.props.onConfirm()
     }
   }
@@ -1856,9 +1850,7 @@ class _ConfirmDialog extends u.ViewComponent {
   }
 }
 
-const ConfirmDialog = connect(null, dispatch => ({
-  setDialog: dialog => dispatch(a.setDialog(dialog)),
-}))(_ConfirmDialog)
+const ConfirmDialog = connect()(_ConfirmDialog)
 
 export class Page404 extends u.ViewComponent {
   render({context}) {

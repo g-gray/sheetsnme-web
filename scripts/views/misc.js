@@ -9,11 +9,14 @@ import * as u from '../utils'
  */
 
 export const GlobalDialog = connect(state => ({
-  dialog       : state.dom.dialog,
-  dialogsNumber: state.dom.dialogsNumber,
-  dialogProps  : state.dom.dialogProps,
-}))(({dialog: Dialog, dialogsNumber, dialogProps}) => {
-  return Dialog ? <Dialog dialogsNumber={dialogsNumber} {...dialogProps} /> : null
+  dialogs: state.dom.dialogs,
+}))(({dialogs}) => {
+  return f.map(dialogs, ({dialog: Dialog, dialogProps}, index) => (
+    <Dialog
+      key={`dialog-${index}`}
+      dialogsNumber={f.size(dialogs)}
+      {...dialogProps} />
+  ))
 })
 
 export class Dialog extends u.ViewComponent {
@@ -81,8 +84,6 @@ export class DialogCentered extends u.ViewComponent {
 }
 
 function onDialogOpen(dialogsNumber) {
-  dialogsNumber = (dialogsNumber || 0) + 1
-
   if (dialogsNumber > 0) {
     document.body.style.marginRight = `${u.getGlobalScrollbarWidth()}px`
     document.body.classList.add('overflow-x-scroll')
@@ -90,8 +91,6 @@ function onDialogOpen(dialogsNumber) {
 }
 
 function onDialogClose(dialogsNumber) {
-  dialogsNumber = Math.max(0, (dialogsNumber || 0) - 1)
-
   if (!dialogsNumber) {
     document.body.style.marginRight = null
     document.body.classList.remove('overflow-x-scroll')

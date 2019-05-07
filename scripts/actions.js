@@ -1,7 +1,8 @@
 import * as n from './net'
 
 export const RESIZE                 = 'RESIZE'
-export const SET_DIALOG             = 'SET_DIALOG'
+export const ADD_DIALOG             = 'ADD_DIALOG'
+export const REMOVE_DIALOG          = 'REMOVE_DIALOG'
 
 export const ADD_NOTIFICATION       = 'ADD_NOTIFICATION'
 export const REMOVE_NOTIFICATION    = 'REMOVE_NOTIFICATION'
@@ -28,10 +29,14 @@ export const resize = geometry => ({
   geometry,
 })
 
-export const setDialog = (dialog, props) => ({
-  type: SET_DIALOG,
+export const addDialog = (dialog, props) => ({
+  type: ADD_DIALOG,
   dialog,
   props,
+})
+
+export const removeDialog = () => ({
+  type: REMOVE_DIALOG,
 })
 
 export const notify = notification => ({
