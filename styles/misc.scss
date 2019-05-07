@@ -103,6 +103,18 @@ input[type=checkbox]:focus {
   }
 }
 
+.btn-transparent {
+  @include button-core;
+  @include button-focus;
+  color: $color-link;
+  background-color: transparent;
+  border-color: transparent;
+  @include busy {
+    background-color: $color-primary-275;
+    border-color: $color-primary-275;
+  }
+}
+
 /**
  * Inputs
  */

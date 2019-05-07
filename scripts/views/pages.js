@@ -862,7 +862,7 @@ const LOAN     = 'LOAN'
 const BORROW   = 'BORROW'
 
 class _TransactionForm extends u.ViewComponent {
-  constructor() {
+  constructor({dispatch}) {
     super(...arguments)
 
     this.state = {formValues: this.props.transaction || {type: OUTCOME, date: u.formatDate(new Date())}}
@@ -872,7 +872,6 @@ class _TransactionForm extends u.ViewComponent {
 
       this.setState({errors: null})
 
-      const {dispatch} = this.props
       const {formValues} = this.state
       const data = {...formValues, date: u.formatDate(formValues.date)}
 
@@ -891,6 +890,26 @@ class _TransactionForm extends u.ViewComponent {
         .then(() => dispatch(a.notify({text: `Transaction ${formValues.id ? 'saved' : 'added'}`})))
         .then(() => dispatch(a.receiveTransaction()))
         .then(() => dispatch(a.fetchTransactions()))
+    }
+
+    this.onDelete = event => {
+      u.preventDefault(event)
+
+      this.setState({errors: null})
+
+      const {formValues} = this.state
+
+      dispatch(a.addDialog(ConfirmDialog, {
+        question: 'Delete this transaction?',
+        onConfirm: () => {
+          dispatch(a.deleteTransaction(formValues.id))
+            .then(() => {
+              if (this.props.onSubmitSuccess) this.props.onSubmitSuccess()
+            })
+            .then(() => dispatch(a.notify({text: 'Transaction deleted'})))
+            .then(() => dispatch(a.fetchTransactions()))
+        },
+      }))
     }
 
     this.onTypeUpdated = value => {
@@ -956,7 +975,7 @@ class _TransactionForm extends u.ViewComponent {
 
   render({
     context,
-    state: {formValues: {type}, errors},
+    state: {formValues: {type, id}, errors},
     props: {categories, accounts, payees, pending},
   }) {
     const isMobile = u.isMobile(context)
@@ -1099,13 +1118,23 @@ class _TransactionForm extends u.ViewComponent {
             {...u.bindValue(this, ['formValues', 'comment'])} />
         </div>
         <hr className='hr margin-h-1x25' />
-        <div className='row-center-center padding-v-1 padding-h-1x25'>
+        <div className='row-between-stretch padding-v-1 padding-h-1x25'>
+          <div className='flex-1 row-start-stretch'>
+            {!id ? null :
+            <m.FakeButton
+              className='btn-transparent'
+              onClick={this.onDelete}
+              disabled={disabled}>
+              Delete
+            </m.FakeButton>}
+          </div>
           <button
             type='submit'
-            className='btn-primary btn-wide'
+            className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
             disabled={disabled}>
             Submit
           </button>
+          <div className='flex-1' />
         </div>
         {!errors ? null :
         <hr className='hr margin-h-1x25' />}
