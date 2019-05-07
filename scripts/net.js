@@ -15,7 +15,7 @@ export function authedJsonFetch(url, params) {
 }
 
 export function authedHttpFetch(url, params) {
-  return httpFetch(url, params)
+  return httpFetch(url, {credentials: 'same-origin', ...params})
     .then(response => {
       if (response.status === 401) {
         window.location = `/auth/login?redirectTo=${encodeURIComponent(window.location.href)}`
