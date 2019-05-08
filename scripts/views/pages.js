@@ -1272,8 +1272,10 @@ class TransactionPlaceholder extends u.ViewComponent {
           <hr className='hr hide-in-list-last-child' />
         </div>
         {isMobile ? null :
-        <div className='row-center-center padding-v-1'>
-          <div className='width-2x5 square' disabled />
+        <div className='row-center-center padding-v-1 padding-h-0x25'>
+          <div className='row-center-center' style={{minHeight: '2.5rem'}}>
+            <s.Trash2 className='font-large fg-transparent' />
+          </div>
         </div>}
       </div>
     )
@@ -1281,7 +1283,11 @@ class TransactionPlaceholder extends u.ViewComponent {
 }
 
 class EntityPlaceholder extends u.ViewComponent {
-  render() {
+  render({
+    context,
+  }) {
+    const isMobile = u.isMobile(context)
+
     return (
       <div className='row-start-stretch gaps-h-1 padding-h-1'>
         <div className='relative width-2x5 square'>
@@ -1294,6 +1300,12 @@ class EntityPlaceholder extends u.ViewComponent {
             <Placeholder style={{width: '8em'}} />
           </div>
         </div>
+        {isMobile ? null :
+        <div className='row-center-center padding-h-0x25'>
+          <div className='row-center-center' style={{minHeight: '2.5rem'}}>
+            <s.Trash2 className='font-large fg-transparent' />
+          </div>
+        </div>}
       </div>
     )
   }
