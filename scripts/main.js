@@ -32,11 +32,9 @@ const ConnectedApp = connect(state => ({
 }))(App)
 
 const elem = (
-  <div id='root'>
-    <Provider store={store}>
-      <ConnectedApp />
-    </Provider>
-  </div>
+  <Provider store={store}>
+    <ConnectedApp />
+  </Provider>
 )
 
 const rootNode = document.getElementById('root')
