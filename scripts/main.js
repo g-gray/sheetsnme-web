@@ -28,7 +28,6 @@ class App extends u.ViewComponent {
 }
 
 const ConnectedApp = connect(state => ({
-  user: state.net.user,
   isMobile: state.dom.geometry.isMobile,
 }))(App)
 

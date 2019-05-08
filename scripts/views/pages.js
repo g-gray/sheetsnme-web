@@ -46,7 +46,7 @@ class _MobilePageLayout extends u.ViewComponent {
           children={children} />
         <div className='fix-b-l z-index-tooltip width-100p col-start-stretch gaps-v-0x5 padding-0x5'>
           <Notifications />
-          {!action || dialogs ? null :
+          {!action || f.size(dialogs) ? null :
           <div className='row-end-center padding-0x5'>
             {action}
           </div>}
@@ -350,8 +350,8 @@ class ListPage extends u.ViewComponent {
   }
 }
 
-export class HomePage extends u.ViewComponent {
-  render(__, {dispatch}) {
+class _HomePage extends u.ViewComponent {
+  render({props: {dispatch}}) {
     const action = (
       <Fab
         onClick={() => dispatch(a.addDialog(FormDialog, {
@@ -369,8 +369,10 @@ export class HomePage extends u.ViewComponent {
   }
 }
 
-export class CategoriesPage extends u.ViewComponent {
-  render(__, {dispatch}) {
+export const HomePage = connect()(_HomePage)
+
+class _CategoriesPage extends u.ViewComponent {
+  render({props: {dispatch}}) {
     const action = (
       <Fab
         onClick={() => dispatch(a.addDialog(FormDialog, {
@@ -388,8 +390,10 @@ export class CategoriesPage extends u.ViewComponent {
   }
 }
 
-export class AccountsPage extends u.ViewComponent {
-  render(__, {dispatch}) {
+export const CategoriesPage = connect()(_CategoriesPage)
+
+class _AccountsPage extends u.ViewComponent {
+  render({props: {dispatch}}) {
     const action = (
       <Fab
         onClick={() => dispatch(a.addDialog(FormDialog, {
@@ -407,8 +411,10 @@ export class AccountsPage extends u.ViewComponent {
   }
 }
 
-export class PayeesPage extends u.ViewComponent {
-  render(__, {dispatch}) {
+export const AccountsPage = connect()(_AccountsPage)
+
+class _PayeesPage extends u.ViewComponent {
+  render({props: {dispatch}}) {
     const action = (
       <Fab
         onClick={() => dispatch(a.addDialog(FormDialog, {
@@ -426,10 +432,12 @@ export class PayeesPage extends u.ViewComponent {
   }
 }
 
+export const PayeesPage = connect()(_PayeesPage)
+
 
 
 class _CategoryForm extends u.ViewComponent {
-  constructor() {
+  constructor({dispatch}) {
     super(...arguments)
 
     this.state = {formValues: this.props.category || {}}
@@ -439,7 +447,6 @@ class _CategoryForm extends u.ViewComponent {
 
       this.setState({errors: null})
 
-      const {dispatch} = this.props
       const {formValues} = this.state
 
       const promise = formValues.id
@@ -458,11 +465,31 @@ class _CategoryForm extends u.ViewComponent {
         .then(() => dispatch(a.receiveCategory()))
         .then(() => dispatch(a.fetchCategories()))
     }
+
+    this.onDelete = event => {
+      u.preventDefault(event)
+
+      this.setState({errors: null})
+
+      const {formValues} = this.state
+
+      dispatch(a.addDialog(ConfirmDialog, {
+        question: 'Delete this category?',
+        onConfirm: () => {
+          dispatch(a.deleteCategory(formValues.id))
+            .then(() => {
+              if (this.props.onSubmitSuccess) this.props.onSubmitSuccess()
+            })
+            .then(() => dispatch(a.notify({text: 'Category deleted'})))
+            .then(() => dispatch(a.fetchCategories()))
+        },
+      }))
+    }
   }
 
   render({
     context,
-    state: {errors},
+    state: {errors, formValues: {id}},
     props: {pending},
   }) {
     const isMobile = u.isMobile(context)
@@ -478,13 +505,23 @@ class _CategoryForm extends u.ViewComponent {
             {...u.bindValue(this, ['formValues', 'title'])} />
         </div>
         <hr className='hr margin-h-1x25' />
-        <div className='row-center-center padding-v-1 padding-h-1x25'>
+        <div className='row-between-stretch padding-v-1 padding-h-1x25'>
+          <div className='flex-1 row-start-stretch'>
+            {!id ? null :
+            <m.FakeButton
+              className='btn-transparent'
+              onClick={this.onDelete}
+              disabled={disabled}>
+              Delete
+            </m.FakeButton>}
+          </div>
           <button
             type='submit'
-            className='btn-primary btn-wide'
+            className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
             disabled={disabled}>
             Submit
           </button>
+          <div className='flex-1' />
         </div>
         {!errors ? null :
         <hr className='hr margin-h-1x25' />}
@@ -548,7 +585,7 @@ const CategoriesList = connect(state => ({
 
 
 class _AccountForm extends u.ViewComponent {
-  constructor() {
+  constructor({dispatch}) {
     super(...arguments)
 
     this.state = {formValues: this.props.account || {}}
@@ -558,7 +595,6 @@ class _AccountForm extends u.ViewComponent {
 
       this.setState({errors: null})
 
-      const {dispatch} = this.props
       const {formValues} = this.state
 
       const promise = formValues.id
@@ -577,11 +613,31 @@ class _AccountForm extends u.ViewComponent {
         .then(() => dispatch(a.receiveAccount()))
         .then(() => dispatch(a.fetchAccounts()))
     }
+
+    this.onDelete = event => {
+      u.preventDefault(event)
+
+      this.setState({errors: null})
+
+      const {formValues} = this.state
+
+      dispatch(a.addDialog(ConfirmDialog, {
+        question: 'Delete this account?',
+        onConfirm: () => {
+          dispatch(a.deleteAccount(formValues.id))
+            .then(() => {
+              if (this.props.onSubmitSuccess) this.props.onSubmitSuccess()
+            })
+            .then(() => dispatch(a.notify({text: 'Account deleted'})))
+            .then(() => dispatch(a.fetchAccounts()))
+        },
+      }))
+    }
   }
 
   render({
     context,
-    state: {errors},
+    state: {errors, formValues: {id}},
     props: {pending},
   }) {
     const isMobile = u.isMobile(context)
@@ -597,13 +653,23 @@ class _AccountForm extends u.ViewComponent {
             {...u.bindValue(this, ['formValues', 'title'])} />
         </div>
         <hr className='hr margin-h-1x25' />
-        <div className='row-center-center padding-v-1 padding-h-1x25'>
+        <div className='row-between-stretch padding-v-1 padding-h-1x25'>
+          <div className='flex-1 row-start-stretch'>
+            {!id ? null :
+            <m.FakeButton
+              className='btn-transparent'
+              onClick={this.onDelete}
+              disabled={disabled}>
+              Delete
+            </m.FakeButton>}
+          </div>
           <button
             type='submit'
-            className='btn-primary btn-wide'
+            className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
             disabled={disabled}>
             Submit
           </button>
+          <div className='flex-1' />
         </div>
         {!errors ? null :
         <hr className='hr margin-h-1x25' />}
@@ -670,7 +736,7 @@ const AccountsList = connect(state => ({
 
 
 class _PayeeForm extends u.ViewComponent {
-  constructor() {
+  constructor({dispatch}) {
     super(...arguments)
 
     this.state = {formValues: this.props.payee || {}}
@@ -680,7 +746,6 @@ class _PayeeForm extends u.ViewComponent {
 
       this.setState({errors: null})
 
-      const {dispatch} = this.props
       const {formValues} = this.state
 
       const promise = formValues.id
@@ -699,11 +764,31 @@ class _PayeeForm extends u.ViewComponent {
         .then(() => dispatch(a.receivePayee()))
         .then(() => dispatch(a.fetchPayees()))
     }
+
+    this.onDelete = event => {
+      u.preventDefault(event)
+
+      this.setState({errors: null})
+
+      const {formValues} = this.state
+
+      dispatch(a.addDialog(ConfirmDialog, {
+        question: 'Delete this payee?',
+        onConfirm: () => {
+          dispatch(a.deletePayee(formValues.id))
+            .then(() => {
+              if (this.props.onSubmitSuccess) this.props.onSubmitSuccess()
+            })
+            .then(() => dispatch(a.notify({text: 'Payee deleted'})))
+            .then(() => dispatch(a.fetchPayees()))
+        },
+      }))
+    }
   }
 
   render({
     context,
-    state: {errors},
+    state: {errors, formValues: {id}},
     props: {pending},
   }) {
     const isMobile = u.isMobile(context)
@@ -719,13 +804,23 @@ class _PayeeForm extends u.ViewComponent {
             {...u.bindValue(this, ['formValues', 'title'])} />
         </div>
         <hr className='hr margin-h-1x25' />
-        <div className='row-center-center padding-v-1 padding-h-1x25'>
+        <div className='row-between-stretch padding-v-1 padding-h-1x25'>
+          <div className='flex-1 row-start-stretch'>
+            {!id ? null :
+            <m.FakeButton
+              className='btn-transparent'
+              onClick={this.onDelete}
+              disabled={disabled}>
+              Delete
+            </m.FakeButton>}
+          </div>
           <button
             type='submit'
-            className='btn-primary btn-wide'
+            className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
             disabled={disabled}>
             Submit
           </button>
+          <div className='flex-1' />
         </div>
         {!errors ? null :
         <hr className='hr margin-h-1x25' />}
@@ -1241,13 +1336,16 @@ class EntityItem extends u.ViewComponent {
             {children}
           </div>
         </div>
-        <div className='row-center-center' ref={this.actions}>
-          <m.FakeButton
-            className={`row-center-center decorate-light-menu-item ${!isMobile ? 'show-on-trigger-hover' : ''}`}
-            onClick={onDelete}>
-            <s.Trash2 className='font-large' />
-          </m.FakeButton>
-        </div>
+        {isMobile ? null :
+        <div className='row-center-center padding-h-0x25' ref={this.actions}>
+          <div className='row-center-center' style={{minHeight: '2.5rem'}}>
+            <m.FakeButton
+              className='row-center-center show-on-trigger-hover decorate-icon-button'
+              onClick={onDelete}>
+              <s.Trash2 className='font-large' />
+            </m.FakeButton>
+          </div>
+        </div>}
       </m.FakeButton>
     )
   }
@@ -1316,19 +1414,19 @@ class _Transaction extends u.ViewComponent {
           <hr className='hr hide-in-list-last-child' />
         </div>
         {isMobile ? null :
-        <div className='row-center-center padding-v-1' ref={this.actions}>
-          <m.FakeButton
-            className='relative width-2x5 square circle show-on-trigger-hover bg-primary-125'
-            onClick={() => {
-              dispatch(a.addDialog(ConfirmDialog, {
-                question: 'Delete this transaction?',
-                onConfirm: () => this.onDelete(tx.id),
-              }))
-            }}>
-            <div className='row-center-center abs-center fg-white font-large'>
-              <s.Trash2 />
-            </div>
-          </m.FakeButton>
+        <div className='row-center-center padding-v-1 padding-h-0x25' ref={this.actions}>
+          <div className='row-center-center' style={{minHeight: '2.5rem'}}>
+            <m.FakeButton
+              className='row-center-center show-on-trigger-hover decorate-icon-button'
+              onClick={() => {
+                dispatch(a.addDialog(ConfirmDialog, {
+                  question: 'Delete this transaction?',
+                  onConfirm: () => this.onDelete(tx.id),
+                }))
+              }}>
+              <s.Trash2 className='font-large' />
+            </m.FakeButton>
+          </div>
         </div>}
       </m.FakeButton>
     )

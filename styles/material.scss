@@ -44,6 +44,32 @@
   @include theme-drawer-link-current;
 }
 
+@mixin theme-icon-button {
+  color: $color-black-50;
+}
+
+@mixin theme-icon-button-busy {
+  @include busy {
+    color: $color-black-35;
+  }
+}
+
+@mixin theme-icon-button-current {
+  @include if-current {
+    color: $color-black-35;
+  }
+}
+
+.theme-icon-button {@include theme-icon-button;}
+.theme-icon-button-busy {@include theme-icon-button-busy;}
+.theme-icon-button-current {@include theme-icon-button-current;}
+
+.decorate-icon-button {
+  @include theme-icon-button;
+  @include theme-icon-button-busy;
+  @include theme-icon-button-current;
+}
+
 .shadow-dept-1 {
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }

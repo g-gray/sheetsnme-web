@@ -4,8 +4,6 @@ import ReactDom from 'react-dom'
 import * as f from 'fpx'
 import * as e from 'emerge'
 
-import {store} from './main'
-
 export const MOBILE_WIDTH_MAX = 980
 
 /**
@@ -27,7 +25,7 @@ export class ViewComponent extends React.Component {
 
 function renderWithArg() {
   // Minor convenience: pass self as argument.
-  return this.constructor.prototype.render.call(this, this, store)
+  return this.constructor.prototype.render.call(this, this)
 }
 
 // React-specific
