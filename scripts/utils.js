@@ -7,7 +7,7 @@ import * as e from 'emerge'
 export const MOBILE_WIDTH_MAX = 980
 
 /**
- * View
+ * React-specific
  */
 
 export const Context = React.createContext({})
@@ -28,12 +28,42 @@ function renderWithArg() {
   return this.constructor.prototype.render.call(this, this)
 }
 
-// React-specific
 export function findDomNode(element) {
   element = ReactDom.findDOMNode(element)
   if (element != null) f.validate(element, isElement)
   return element
 }
+
+function isComponent(value) {
+  return f.isInstance(value, React.Component)
+}
+
+export function bindValue(component, path, fun) {
+  f.validate(component, isComponent)
+  f.validate(path, isPath)
+
+  return {
+    onUpdate: value => {
+      component.setState(e.putIn(component.state, path, f.isFunction(fun) ? fun(value) : value))
+    },
+    defaultValue: f.getIn(component.state, path),
+  }
+}
+
+export function bindChecked(component, path, componentValue) {
+  f.validate(component, isComponent)
+  f.validate(path, isPath)
+
+  return {
+    onUpdate: value => {
+      component.setState(e.putIn(component.state, path, value))
+    },
+    value: componentValue,
+    defaultChecked: f.getIn(component.state, path) === componentValue,
+  }
+}
+
+
 
 /**
  * Dom
@@ -113,6 +143,8 @@ export function getGlobalScrollbarWidth() {
   return window.innerWidth - document.documentElement.clientWidth
 }
 
+
+
 /**
  * Format
  */
@@ -175,6 +207,55 @@ const jsonHeaders = {
   'content-type': 'application/json',
 }
 
+
+
+/**
+ * i18n
+ */
+
+export const AVAILABLE_LANGS = ['en', 'ru']
+export const DEFAULT_LANG = f.intersection(
+  window.navigator.languages.map(langPrefix),
+  AVAILABLE_LANGS,
+)[0] || AVAILABLE_LANGS[0]
+
+function langPrefix(langCode) {return langCode.split('-')[0]}
+
+export function xln(context, translations, args) {
+  f.validate(context, f.isObject)
+
+  if (translations == null) return ''
+  f.validate(translations, f.isDict)
+
+  let translation
+  if (translations[context.lang]) {
+    translation = translations[context.lang]
+  }
+  else if (translations[DEFAULT_LANG]) {
+    translation = translations[DEFAULT_LANG]
+  }
+  else {
+    for (const lang in translations) {
+      if (translations[lang]) {
+        translation = translations[lang]
+        break
+      }
+    }
+  }
+
+  return f.isFunction(translation) ? translation(...args) : (translation || '')
+}
+
+export function nextLang(context) {
+  f.validate(context, f.isObject)
+
+  const lang = context.lang || DEFAULT_LANG
+  const nextIndex = (AVAILABLE_LANGS.indexOf(lang) + 1) % AVAILABLE_LANGS.length
+  return AVAILABLE_LANGS[nextIndex] || DEFAULT_LANG
+}
+
+
+
 /**
  * Misc
  */
@@ -186,35 +267,6 @@ export function bgUrl(url) {
   if (url == null || url === '') return undefined
   f.validate(url, f.isString)
   return {backgroundImage: `url(${url})`}
-}
-
-export function bindValue(component, path, fun) {
-  f.validate(component, isComponent)
-  f.validate(path, isPath)
-
-  return {
-    onUpdate: value => {
-      component.setState(e.putIn(component.state, path, f.isFunction(fun) ? fun(value) : value))
-    },
-    defaultValue: f.getIn(component.state, path),
-  }
-}
-
-export function bindChecked(component, path, componentValue) {
-  f.validate(component, isComponent)
-  f.validate(path, isPath)
-
-  return {
-    onUpdate: value => {
-      component.setState(e.putIn(component.state, path, value))
-    },
-    value: componentValue,
-    defaultChecked: f.getIn(component.state, path) === componentValue,
-  }
-}
-
-function isComponent(value) {
-  return f.isInstance(value, React.Component)
 }
 
 function isPath (value) {

@@ -24,10 +24,16 @@ export const RECEIVE_PAYEE          = 'RECEIVE_PAYEE'
 export const REQUEST_START          = 'REQUEST_START'
 export const REQUEST_END            = 'REQUEST_END'
 
+export const NEXT_LANG              = 'NEXT_LANG'
+
+
+
 export const resize = geometry => ({
   type: RESIZE,
   geometry,
 })
+
+
 
 export const addDialog = (dialog, props) => ({
   type: ADD_DIALOG,
@@ -39,6 +45,8 @@ export const removeDialog = () => ({
   type: REMOVE_DIALOG,
 })
 
+
+
 export const notify = notification => ({
   type: ADD_NOTIFICATION,
   notification: createNotification(notification),
@@ -49,35 +57,21 @@ export const removeNotification = time => ({
   time,
 })
 
-export const receiveTransaction = transaction => ({
-  type: RECEIVE_TRANSACTION,
-  transaction,
+function createNotification({timeout = 4000, ...props}) {
+  return {
+    timeout,
+    time: new Date().getTime(),
+    ...props,
+  }
+}
+
+
+export const nextLang = lang => ({
+  type: NEXT_LANG,
+  lang,
 })
 
-export const receiveCategory = category => ({
-  type: RECEIVE_CATEGORY,
-  category,
-})
 
-export const receiveAccount = account => ({
-  type: RECEIVE_ACCOUNT,
-  account,
-})
-
-export const receivePayee = payee => ({
-  type: RECEIVE_PAYEE,
-  payee,
-})
-
-export const requestStart = request => ({
-  type: REQUEST_START,
-  request,
-})
-
-export const requestEnd = name => ({
-  type: REQUEST_END,
-  name,
-})
 
 export const init = () => dispatch => {
   dispatch(fetchUser())
@@ -89,6 +83,7 @@ export const init = () => dispatch => {
     .then(() => dispatch(fetchTransactions()))
 }
 
+
 export const fetchUser = () => dispatch => {
   return trackRequest({
     dispatch,
@@ -98,6 +93,7 @@ export const fetchUser = () => dispatch => {
   })
     .then(user => dispatch({type: RECEIVE_USER, user}))
 }
+
 
 export const fetchTransactions = () => dispatch => {
   return trackRequest({
@@ -144,6 +140,12 @@ export const deleteTransaction = id => dispatch => {
   })
 }
 
+export const receiveTransaction = transaction => ({
+  type: RECEIVE_TRANSACTION,
+  transaction,
+})
+
+
 export const fetchCategories  = () => dispatch => {
   return trackRequest({
     dispatch,
@@ -188,6 +190,12 @@ export const deleteCategory = id => dispatch => {
     }),
   })
 }
+
+export const receiveCategory = category => ({
+  type: RECEIVE_CATEGORY,
+  category,
+})
+
 
 export const fetchAccounts  = () => dispatch => {
   return trackRequest({
@@ -234,6 +242,12 @@ export const deleteAccount = id => dispatch => {
   })
 }
 
+export const receiveAccount = account => ({
+  type: RECEIVE_ACCOUNT,
+  account,
+})
+
+
 export const fetchPayees  = () => dispatch => {
   return trackRequest({
     dispatch,
@@ -279,13 +293,11 @@ export const deletePayee = id => dispatch => {
   })
 }
 
-function createNotification({timeout = 4000, ...props}) {
-  return {
-    timeout,
-    time: new Date().getTime(),
-    ...props,
-  }
-}
+export const receivePayee = payee => ({
+  type: RECEIVE_PAYEE,
+  payee,
+})
+
 
 function trackRequest({dispatch, message, requestName, promise}) {
   const {notification: {time}} = dispatch(notify({text: message, timeout: 0}))
@@ -303,3 +315,13 @@ function trackRequest({dispatch, message, requestName, promise}) {
       return window.Promise.reject(response)
     })
 }
+
+const requestStart = request => ({
+  type: REQUEST_START,
+  request,
+})
+
+const requestEnd = name => ({
+  type: REQUEST_END,
+  name,
+})

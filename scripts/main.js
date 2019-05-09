@@ -18,9 +18,9 @@ class App extends u.ViewComponent {
     props.dispatch(a.init())
   }
 
-  render({props: {isMobile}}) {
+  render({props: {isMobile, lang}}) {
     return (
-      <u.Context.Provider value={{isMobile}}>
+      <u.Context.Provider value={{isMobile, lang}}>
         <AppRouter />
       </u.Context.Provider>
     )
@@ -29,6 +29,7 @@ class App extends u.ViewComponent {
 
 const ConnectedApp = connect(state => ({
   isMobile: state.dom.geometry.isMobile,
+  lang: state.dom.lang,
 }))(App)
 
 const elem = (

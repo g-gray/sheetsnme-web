@@ -6,6 +6,7 @@ export const dom = (state = {
   dialogs: [],
   notifications: [],
   geometry: u.geometry(window.innerWidth),
+  lang: u.DEFAULT_LANG,
 }, action) => {
   switch (action.type) {
     case a.ADD_DIALOG:
@@ -37,6 +38,12 @@ export const dom = (state = {
       return {
         ...state,
         geometry: action.geometry,
+      }
+
+    case a.NEXT_LANG:
+      return {
+        ...state,
+        lang: action.lang,
       }
 
     default:
