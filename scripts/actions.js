@@ -1,3 +1,4 @@
+import * as u from './utils'
 import * as n from './net'
 
 export const RESIZE                 = 'RESIZE'
@@ -66,10 +67,13 @@ function createNotification({timeout = 4000, ...props}) {
 }
 
 
-export const nextLang = lang => ({
-  type: NEXT_LANG,
-  lang,
-})
+export const nextLang = lang => dispatch => {
+  u.storageWrite(['lang'], lang)
+  dispatch({
+    type: NEXT_LANG,
+    lang,
+  })
+}
 
 
 

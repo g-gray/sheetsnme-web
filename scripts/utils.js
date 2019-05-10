@@ -210,6 +210,50 @@ const jsonHeaders = {
 
 
 /**
+ * Local storage
+ *
+ * Accessing localStorage may throw an error depending on browser / device /
+ * browsing mode. For instance, writing to LS throws in Safari (iOS / OS X) in
+ * private mode. We ignore all storage errors.
+ */
+
+// TODO Move to env.properties
+const STORAGE_KEY = 'data'
+
+export const storage = initStorage() || {}
+
+function initStorage () {
+  try {return localStorage}
+  catch (err) {
+    console.warn('Failed to initialise localStorage:', err)
+    return undefined
+  }
+}
+
+export function storageRead (path) {
+  f.validate(path, isPath)
+  try {
+    if (!storage[STORAGE_KEY]) return undefined
+    return e.getIn(JSON.parse(storage[STORAGE_KEY]), path)
+  }
+  catch (err) {
+    console.warn('Failed to read from storage:', err)
+    return undefined
+  }
+}
+
+export function storageWrite (path, value) {
+  f.validate(path, isPath)
+
+  try {storage[STORAGE_KEY] = JSON.stringify(e.putIn(storageRead([]), path, value))}
+  catch (err) {
+    console.warn('Failed to save to storage:', err)
+  }
+}
+
+
+
+/**
  * i18n
  */
 
