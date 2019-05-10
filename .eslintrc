@@ -81,7 +81,7 @@
     "no-delete-var": "error",
     "no-restricted-globals": ["error",
       // window (browser)
-      "alert", "blur", "confirm", "event", "fetch", "find", "focus", "history",
+      "alert", "blur", "confirm", "event", "find", "focus", "history",
       "length", "location", "name", "navigator", "open", "parent", "print",
       "prompt", "scroll", "self", "status", "stop", "top",
       // global (node)
