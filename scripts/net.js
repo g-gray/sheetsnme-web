@@ -1,6 +1,9 @@
 import * as u from './utils'
 
 export function authedJsonFetch(url, params) {
+  if (params && params.body) {
+    params = {...params, body: JSON.stringify(params.body)}
+  }
   return authedHttpFetch(url, u.jsonParams(params))
     .then(response => response.json())
     .then(json => {

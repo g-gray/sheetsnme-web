@@ -142,7 +142,7 @@ export const createTransaction = (transaction, message) => dispatch => {
     requestName: 'postTransaction',
     promise: n.authedJsonFetch('/api/transactions', {
       method: 'POST',
-      body: JSON.stringify(transaction),
+      body: transaction,
     }),
   }))
 }
@@ -153,7 +153,7 @@ export const updateTransaction = (id, transaction, message) => dispatch => {
     requestName: 'postTransaction',
     promise: n.authedJsonFetch(`/api/transactions/${id}`, {
       method: 'POST',
-      body: JSON.stringify(transaction),
+      body: transaction,
     }),
   }))
 }
@@ -189,7 +189,7 @@ export const createCategory = (category, message) => dispatch => {
     requestName: 'postCategory',
     promise: n.authedJsonFetch('/api/categories', {
       method: 'POST',
-      body: JSON.stringify(category),
+      body: category,
     }),
   }))
 }
@@ -200,7 +200,7 @@ export const updateCategory = (id, category, message) => dispatch => {
     requestName: 'postCategory',
     promise: n.authedJsonFetch(`/api/categories/${id}`, {
       method: 'POST',
-      body: JSON.stringify(category),
+      body: category,
     }),
   }))
 }
@@ -236,7 +236,7 @@ export const createAccount = (account, message) => dispatch => {
     requestName: 'postAccount',
     promise: n.authedJsonFetch('/api/accounts', {
       method: 'POST',
-      body: JSON.stringify(account),
+      body: account,
     }),
   }))
 }
@@ -247,7 +247,7 @@ export const updateAccount = (id, account, message) => dispatch => {
     requestName: 'postAccount',
     promise: n.authedJsonFetch(`/api/accounts/${id}`, {
       method: 'POST',
-      body: JSON.stringify(account),
+      body: account,
     }),
   }))
 }
@@ -283,7 +283,7 @@ export const createPayee = (payee, message) => dispatch => {
     requestName: 'postPayee',
     promise: n.authedJsonFetch('/api/payees', {
       method: 'POST',
-      body: JSON.stringify(payee),
+      body: payee,
     }),
   }))
 }
@@ -294,7 +294,7 @@ export const updatePayee = (id, payee, message) => dispatch => {
     requestName: 'postPayee',
     promise: n.authedJsonFetch(`/api/payees/${id}`, {
       method: 'POST',
-      body: JSON.stringify(payee),
+      body: payee,
     }),
   }))
 }
