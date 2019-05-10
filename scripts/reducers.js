@@ -76,22 +76,12 @@ export const net = (state = {
         transactions: action.transactions,
         transactionsById: f.keyBy(action.transactions, ({id}) => id),
       }
-    case a.RECEIVE_TRANSACTION:
-      return {
-        ...state,
-        transaction: action.transaction,
-      }
 
     case a.RECEIVE_CATEGORIES:
       return {
         ...state,
         categories: action.categories,
         categoriesById: f.keyBy(action.categories, ({id}) => id),
-      }
-    case a.RECEIVE_CATEGORY:
-      return {
-        ...state,
-        category: action.category,
       }
 
     case a.RECEIVE_ACCOUNTS:
@@ -100,22 +90,12 @@ export const net = (state = {
         accounts: action.accounts,
         accountsById: f.keyBy(action.accounts, ({id}) => id),
       }
-    case a.RECEIVE_ACCOUNT:
-      return {
-        ...state,
-        account: action.account,
-      }
 
     case a.RECEIVE_PAYEES:
       return {
         ...state,
         payees: action.payees,
         payeesById: f.keyBy(action.payees, ({id}) => id),
-      }
-    case a.RECEIVE_PAYEE:
-      return {
-        ...state,
-        payee: action.payee,
       }
 
     case a.REQUEST_START:

@@ -9,18 +9,10 @@ export const ADD_NOTIFICATION       = 'ADD_NOTIFICATION'
 export const REMOVE_NOTIFICATION    = 'REMOVE_NOTIFICATION'
 
 export const RECEIVE_USER           = 'RECEIVE_USER'
-
 export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
-export const RECEIVE_TRANSACTION    = 'RECEIVE_TRANSACTION'
-
 export const RECEIVE_CATEGORIES     = 'RECEIVE_CATEGORIES'
-export const RECEIVE_CATEGORY       = 'RECEIVE_CATEGORY'
-
 export const RECEIVE_ACCOUNTS       = 'RECEIVE_ACCOUNTS'
-export const RECEIVE_ACCOUNT        = 'RECEIVE_ACCOUNT'
-
 export const RECEIVE_PAYEES         = 'RECEIVE_PAYEES'
-export const RECEIVE_PAYEE          = 'RECEIVE_PAYEE'
 
 export const REQUEST_START          = 'REQUEST_START'
 export const REQUEST_END            = 'REQUEST_END'
@@ -168,11 +160,6 @@ export const deleteTransaction = (id, message) => dispatch => {
   }))
 }
 
-export const receiveTransaction = transaction => ({
-  type: RECEIVE_TRANSACTION,
-  transaction,
-})
-
 
 export const fetchCategories  = message => dispatch => {
   return dispatch(trackRequest({
@@ -214,11 +201,6 @@ export const deleteCategory = (id, message) => dispatch => {
     }),
   }))
 }
-
-export const receiveCategory = category => ({
-  type: RECEIVE_CATEGORY,
-  category,
-})
 
 
 export const fetchAccounts  = message => dispatch => {
@@ -262,11 +244,6 @@ export const deleteAccount = (id, message) => dispatch => {
   }))
 }
 
-export const receiveAccount = account => ({
-  type: RECEIVE_ACCOUNT,
-  account,
-})
-
 
 export const fetchPayees  = message => dispatch => {
   return dispatch(trackRequest({
@@ -308,8 +285,3 @@ export const deletePayee = (id, message) => dispatch => {
     }),
   }))
 }
-
-export const receivePayee = payee => ({
-  type: RECEIVE_PAYEE,
-  payee,
-})

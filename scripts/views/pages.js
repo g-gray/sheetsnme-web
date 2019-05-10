@@ -380,7 +380,6 @@ class _HomePage extends u.ViewComponent {
         onClick={() => dispatch(a.addDialog(FormDialog, {
           form: TransactionForm,
           title: u.xln(context, t.NEW_TRANSACTION),
-          onClose: transaction => dispatch(a.receiveTransaction(transaction)),
         }))} />
     )
 
@@ -404,7 +403,6 @@ class _CategoriesPage extends u.ViewComponent {
         onClick={() => dispatch(a.addDialog(FormDialog, {
           form: CategoryForm,
           title: u.xln(context, t.NEW_CATEGORY),
-          onClose: category => dispatch(a.receiveCategory(category)),
         }))} />
     )
 
@@ -428,7 +426,6 @@ class _AccountsPage extends u.ViewComponent {
         onClick={() => dispatch(a.addDialog(FormDialog, {
           form: AccountForm,
           title: u.xln(context, t.NEW_ACCOUNT),
-          onClose: account => dispatch(a.receiveAccount(account)),
         }))} />
     )
 
@@ -452,7 +449,6 @@ class _PayeesPage extends u.ViewComponent {
         onClick={() => dispatch(a.addDialog(FormDialog, {
           form: PayeeForm,
           title: u.xln(context, t.NEW_PAYEE),
-          onClose: payee => dispatch(a.receivePayee(payee)),
         }))} />
     )
 
@@ -497,7 +493,6 @@ class _CategoryForm extends u.ViewComponent {
         .then(() => dispatch(a.notify({
           text: formValues.id ? u.xln(context, t.CATEGORY_UPDATED) : u.xln(context, t.CATEGORY_CREATED),
         })))
-        .then(() => dispatch(a.receiveCategory()))
         .then(() => dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))))
     }
 
@@ -568,7 +563,6 @@ class _CategoryForm extends u.ViewComponent {
 }
 
 const CategoryForm = connect(state => ({
-  category: state.net.category,
   pending: state.net.pending,
 }))(_CategoryForm)
 
@@ -585,28 +579,27 @@ class _CategoriesList extends u.ViewComponent {
       </div>
     ) : (
       <div className='col-start-stretch'>
-        {f.map(categories, cat => (
+        {f.map(categories, category => (
           <EntityItem
-            key={cat.id}
+            key={category.id}
             onOpen={() => {
-              dispatch(a.receiveCategory(cat))
               dispatch(a.addDialog(FormDialog, {
                 form: CategoryForm,
+                formProps: {category},
                 title: u.xln(context, t.EDIT_CATEGORY),
-                onClose: () => dispatch(a.receiveCategory()),
               }))
             }}
             onDelete={() => {
               dispatch(a.addDialog(ConfirmDialog, {
                 question: u.xln(context, t.DELETE_CATEGORY),
                 onConfirm: () => {
-                  dispatch(a.deleteCategory(cat.id, u.xln(context, t.DELETING_CATEGORY)))
+                  dispatch(a.deleteCategory(category.id, u.xln(context, t.DELETING_CATEGORY)))
                     .then(() => dispatch(a.notify({text: u.xln(context, t.CATEGORY_DELETED)})))
                     .then(() => dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))))
                 },
               }))
             }}>
-            {cat.title}
+            {category.title}
           </EntityItem>
         ))}
       </div>
@@ -650,7 +643,6 @@ class _AccountForm extends u.ViewComponent {
         .then(() => dispatch(a.notify({
           text: formValues.id ? u.xln(context, t.ACCOUNT_UPDATED) : u.xln(context, t.ACCOUNT_CREATED),
         })))
-        .then(() => dispatch(a.receiveAccount()))
         .then(() => dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))))
     }
 
@@ -721,7 +713,6 @@ class _AccountForm extends u.ViewComponent {
 }
 
 const AccountForm = connect(state => ({
-  account: state.net.account,
   pending: state.net.pending,
 }))(_AccountForm)
 
@@ -738,30 +729,29 @@ class _AccountsList extends u.ViewComponent {
       </div>
     ) : (
       <div className='col-start-stretch'>
-        {f.map(accounts, acc => (
+        {f.map(accounts, account => (
           <EntityItem
-            key={acc.id}
+            key={account.id}
             onOpen={() => {
-              dispatch(a.receiveAccount(acc))
               dispatch(a.addDialog(FormDialog, {
                 form: AccountForm,
+                formProps: {account},
                 title: u.xln(context, t.EDIT_ACCOUNT),
-                onClose: () => dispatch(a.receiveAccount()),
               }))
             }}
             onDelete={() => {
               dispatch(a.addDialog(ConfirmDialog, {
                 question: u.xln(context, t.DELETE_ACCOUNT),
                 onConfirm: () => {
-                  dispatch(a.deleteAccount(acc.id, u.xln(context, t.DELETING_ACCOUNT)))
+                  dispatch(a.deleteAccount(account.id, u.xln(context, t.DELETING_ACCOUNT)))
                     .then(() => dispatch(a.notify({text: u.xln(context, t.ACCOUNT_DELETED)})))
                     .then(() => dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))))
                 },
               }))
             }}>
             <div className='flex-1 row-between-center gaps-h-1'>
-              <span>{acc.title}</span>
-              <span className='fg-black-50'>{acc.balance}</span>
+              <span>{account.title}</span>
+              <span className='fg-black-50'>{account.balance}</span>
             </div>
           </EntityItem>
         ))}
@@ -806,7 +796,6 @@ class _PayeeForm extends u.ViewComponent {
         .then(() => dispatch(a.notify({
           text: formValues.id ? u.xln(context, t.PAYEE_UPDATED) : u.xln(context, t.PAYEE_CREATED),
         })))
-        .then(() => dispatch(a.receivePayee()))
         .then(() => dispatch(a.fetchPayees(u.xln(context, t.FETCHING_PAYEES))))
     }
 
@@ -877,7 +866,6 @@ class _PayeeForm extends u.ViewComponent {
 }
 
 const PayeeForm = connect(state => ({
-  payee: state.net.payee,
   pending: state.net.pending,
 }))(_PayeeForm)
 
@@ -898,11 +886,10 @@ class _PayeesList extends u.ViewComponent {
           <EntityItem
             key={payee.id}
             onOpen={() => {
-              dispatch(a.receivePayee(payee))
               dispatch(a.addDialog(FormDialog, {
                 form: PayeeForm,
+                formProps: {payee},
                 title: u.xln(context, t.EDIT_PAYEE),
-                onClose: () => dispatch(a.receivePayee()),
               }))
             }}
             onDelete={() => {
@@ -944,7 +931,7 @@ class _FormDialog extends u.ViewComponent {
   render({
     close,
     context,
-    props: {title, form: Form},
+    props: {title, form: Form, formProps},
   }) {
     if (u.isMobile(context)) {
       return (
@@ -961,7 +948,7 @@ class _FormDialog extends u.ViewComponent {
               </div>
               <hr className='hr' />
               {!Form ? null :
-              <Form onSubmitSuccess={close} />}
+              <Form {...formProps} onSubmitSuccess={close} />}
             </div>
           </m.DialogScrollable>
         </m.Dialog>
@@ -985,7 +972,7 @@ class _FormDialog extends u.ViewComponent {
             </div>
             <hr className='hr' />
             {!Form ? null :
-            <Form onSubmitSuccess={close} />}
+            <Form {...formProps} onSubmitSuccess={close} />}
           </div>
         </m.DialogCentered>
       </m.Dialog>
@@ -1033,7 +1020,6 @@ class _TransactionForm extends u.ViewComponent {
         .then(() => dispatch(a.notify({
           text: formValues.id ? u.xln(context, t.TRANSACTION_UPDATED) : u.xln(context, t.TRANSACTION_CREATED),
         })))
-        .then(() => dispatch(a.receiveTransaction()))
         .then(() => dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS))))
     }
 
@@ -1293,7 +1279,6 @@ const TransactionForm = connect(state => ({
   categories: state.net.categories,
   accounts: state.net.accounts,
   payees: state.net.payees,
-  transaction: state.net.transaction,
   pending: state.net.pending,
 }))(_TransactionForm)
 
@@ -1441,7 +1426,7 @@ class _Transaction extends u.ViewComponent {
 
   render({
     context,
-    props: {tx, dispatch},
+    props: {transaction, dispatch},
   }) {
     const isMobile = u.isMobile(context)
 
@@ -1452,26 +1437,25 @@ class _Transaction extends u.ViewComponent {
           const actions = u.findDomNode(this.actions.current)
           if (u.isAncestorOf(actions, event.target)) return
 
-          dispatch(a.receiveTransaction(tx))
           dispatch(a.addDialog(FormDialog, {
             form: TransactionForm,
+            formProps: {transaction},
             title: u.xln(context, t.EDIT_TRANSACTION),
-            onClose: () => dispatch(a.receiveTransaction()),
           }))
         }}
         className='row-start-start gaps-h-1 padding-h-1 list-item trigger text-left theme-light-menu-busy'>
         <div className='row-start-center padding-v-1'>
-          <TransactionIcon transaction={tx} />
+          <TransactionIcon transaction={transaction} />
         </div>
         <div className='flex-1 col-start-stretch transaction-line-height'>
           <div className='col-start-stretch gaps-v-0x25 padding-v-1'>
             <div className='row-between-center gaps-h-1 font-midsmall fg-black-50'>
-              <TransactionOrigin transaction={tx} />
-              <TransactionAccount transaction={tx} />
+              <TransactionOrigin transaction={transaction} />
+              <TransactionAccount transaction={transaction} />
             </div>
             <div className='row-between-start gaps-h-1'>
-              <TransactionMeta transaction={tx} />
-              <TransactionAmount transaction={tx} />
+              <TransactionMeta transaction={transaction} />
+              <TransactionAmount transaction={transaction} />
             </div>
           </div>
           <hr className='hr hide-in-list-last-child' />
@@ -1484,7 +1468,7 @@ class _Transaction extends u.ViewComponent {
               onClick={() => {
                 dispatch(a.addDialog(ConfirmDialog, {
                   question: u.xln(context, t.DELETE_TRANSACTION),
-                  onConfirm: () => this.onDelete(tx.id),
+                  onConfirm: () => this.onDelete(transaction.id),
                 }))
               }}>
               <s.Trash2 className='font-large' />
@@ -1500,17 +1484,17 @@ const Transaction = connect()(_Transaction)
 
 class TransactionIcon extends u.ViewComponent {
   render({
-    props: {transaction: tx},
+    props: {transaction},
   }) {
     return (
       <div className='row-start-center'>
-        {f.includes([OUTCOME, LOAN], tx.type) ? (
+        {f.includes([OUTCOME, LOAN], transaction.type) ? (
         <div className='relative width-2x5 square circle bg-warning-100'>
           <div className='row-center-center abs-center fg-white font-large'>
             <s.Minus />
           </div>
         </div>
-        ) : f.includes([INCOME, BORROW], tx.type) ? (
+        ) : f.includes([INCOME, BORROW], transaction.type) ? (
         <div className='relative width-2x5 square circle bg-success'>
           <div className='row-center-center abs-center fg-white font-large'>
             <s.Plus />
@@ -1530,19 +1514,19 @@ class TransactionIcon extends u.ViewComponent {
 
 class TransactionAmount extends u.ViewComponent {
   render({
-    props: {transaction: tx},
+    props: {transaction},
   }) {
     return (
       <span className='wspace-nowrap'>
-        { tx.type === BORROW
-        ? <span className='fg-warning-100'>{`+${tx.outcomeAmount}`}</span>
-        : tx.type === LOAN
-        ? <span className='fg-warning-100'>{`-${tx.incomeAmount}`}</span>
-        : tx.type === INCOME
-        ? <span className='fg-success'>{`+${tx.incomeAmount}`}</span>
-        : tx.type === OUTCOME
-        ? <span>{`-${tx.outcomeAmount}`}</span>
-        : <span>{tx.outcomeAmount || tx.incomeAmount}</span>}
+        { transaction.type === BORROW
+        ? <span className='fg-warning-100'>{`+${transaction.outcomeAmount}`}</span>
+        : transaction.type === LOAN
+        ? <span className='fg-warning-100'>{`-${transaction.incomeAmount}`}</span>
+        : transaction.type === INCOME
+        ? <span className='fg-success'>{`+${transaction.incomeAmount}`}</span>
+        : transaction.type === OUTCOME
+        ? <span>{`-${transaction.outcomeAmount}`}</span>
+        : <span>{transaction.outcomeAmount || transaction.incomeAmount}</span>}
       </span>
     )
   }
@@ -1550,10 +1534,10 @@ class TransactionAmount extends u.ViewComponent {
 
 class _TransactionAccount extends u.ViewComponent {
   render({
-    props: {transaction: tx, accountsById},
+    props: {transaction, accountsById},
   }) {
-    const outcomeAccount = f.scan(accountsById, tx.outcomeAccountId, 'title')
-    const incomeAccount  = f.scan(accountsById, tx.incomeAccountId, 'title')
+    const outcomeAccount = f.scan(accountsById, transaction.outcomeAccountId, 'title')
+    const incomeAccount  = f.scan(accountsById, transaction.incomeAccountId, 'title')
 
     return (
       <span className='row-start-center gaps-h-0x25 wspace-nowrap'>
@@ -1574,12 +1558,12 @@ const TransactionAccount = connect(state => ({
 
 class _TransactionOrigin extends u.ViewComponent {
   render({
-    props: {transaction: tx, categoriesById, payeesById},
+    props: {transaction, categoriesById, payeesById},
   }) {
     return (
       <span className='flex-1 width-0 text-ellipsis'>
-        {f.scan(payeesById, tx.payeeId, 'title') ||
-         f.scan(categoriesById, tx.categoryId, 'title') || 'Without category category category'}
+        {f.scan(payeesById, transaction.payeeId, 'title') ||
+         f.scan(categoriesById, transaction.categoryId, 'title') || 'Without category category category'}
       </span>
     )
   }
@@ -1602,8 +1586,8 @@ class _TransactionsList extends u.ViewComponent {
       </div>
     ) : (
       <div className='col-start-stretch'>
-        {f.map(transactions, tx => (
-          <Transaction key={tx.id} tx={tx} />
+        {f.map(transactions, transaction => (
+          <Transaction key={transaction.id} transaction={transaction} />
         ))}
       </div>
     )
@@ -1613,13 +1597,13 @@ class _TransactionsList extends u.ViewComponent {
 class TransactionMeta extends u.ViewComponent {
   render({
     context,
-    props: {transaction: tx},
+    props: {transaction},
   }) {
     const isMobile = u.isMobile(context)
 
     return (
       <span>
-        {tx.date} {!isMobile && tx.date && tx.comment ? '·' : ''} {!isMobile && tx.comment}
+        {transaction.date} {!isMobile && transaction.date && transaction.comment ? '·' : ''} {!isMobile && transaction.comment}
       </span>
     )
   }
