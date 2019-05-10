@@ -1,4 +1,5 @@
 export const LANG                  = {en: 'En', ru: 'Ру'}
+export const LOGOUT                = {en: 'Logout', ru: 'Выход'}
 
 export const ACCOUNTS              = {en: 'Accounts', ru: 'Счета'}
 export const CATEGORIES            = {en: 'Categories', ru: 'Категории'}
@@ -40,21 +41,24 @@ export const CANCEL                = {en: 'Cancel', ru: 'Отмена'}
 export const DELETE                = {en: 'Delete', ru: 'Удалить'}
 export const SUBMIT                = {en: 'Submit', ru: 'Подтвердить'}
 
-export const LOGOUT                = {en: 'Logout', ru: 'Выход'}
-
 export const FETCHING_USER         = {en: 'Fetching user', ru: 'Загрузка пользователя...'}
 export const FETCHING_ACCOUNTS     = {en: 'Fetching accounts', ru: 'Загрузка счетов...'}
 export const FETCHING_CATEGORIES   = {en: 'Fetching categories', ru: 'Загрузка категорий...'}
 export const FETCHING_PAYEES       = {en: 'Fetching payees', ru: 'Загрузка плательщиков...'}
 export const FETCHING_TRANSACTIONS = {en: 'Fetching transactions', ru: 'Загрузка транзакций...'}
 
+export const CREATING_ACCOUNT      = {en: 'Creating account', ru: 'Добавление счета...'}
+export const CREATING_CATEGORY     = {en: 'Creating category', ru: 'Добавление категории...'}
+export const CREATING_PAYEE        = {en: 'Creating payee', ru: 'Добавление плательщика...'}
+export const CREATING_TRANSACTION  = {en: 'Creating transaction', ru: 'Добавление транзакции...'}
+
 export const UPDATING_ACCOUNT      = {en: 'Updating account', ru: 'Обновление счета...'}
-export const UPDATING_CATEGORIE    = {en: 'Updating category', ru: 'Обновление категории...'}
+export const UPDATING_CATEGORY     = {en: 'Updating category', ru: 'Обновление категории...'}
 export const UPDATING_PAYEE        = {en: 'Updating payee', ru: 'Обновление плательщика...'}
 export const UPDATING_TRANSACTION  = {en: 'Updating transaction', ru: 'Обновление транзакции...'}
 
 export const DELETING_ACCOUNT      = {en: 'Deleting account', ru: 'Удаление счета...'}
-export const DELETING_CATEGORIE    = {en: 'Deleting category', ru: 'Удаление категории...'}
+export const DELETING_CATEGORY     = {en: 'Deleting category', ru: 'Удаление категории...'}
 export const DELETING_PAYEE        = {en: 'Deleting payee', ru: 'Удаление плательщика...'}
 export const DELETING_TRANSACTION  = {en: 'Deleting transaction', ru: 'Удаление транзакции...'}
 

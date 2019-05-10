@@ -495,7 +495,7 @@ class _CategoryForm extends u.ViewComponent {
           if (props.onSubmitSuccess) props.onSubmitSuccess(event)
         })
         .then(() => dispatch(a.notify({
-          text: formValues.id ? u.xln(context, t.CATEGORY_SAVED) : u.xln(context, t.CATEGORY_ADDED),
+          text: formValues.id ? u.xln(context, t.CATEGORY_UPDATED) : u.xln(context, t.CATEGORY_CREATED),
         })))
         .then(() => dispatch(a.receiveCategory()))
         .then(() => dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))))
