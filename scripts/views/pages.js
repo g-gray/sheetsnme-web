@@ -524,7 +524,7 @@ class _CategoryForm extends u.ViewComponent {
     props: {pending},
   }) {
     const isMobile = u.isMobile(context)
-    const disabled = f.size(pending)
+    const disabled = pending
 
     return (
       <form className='col-start-stretch' onSubmit={this.onSubmit}>
@@ -563,7 +563,7 @@ class _CategoryForm extends u.ViewComponent {
 }
 
 const CategoryForm = connect(state => ({
-  pending: state.net.pending,
+  pending: !f.isEmpty(state.net.pending),
 }))(_CategoryForm)
 
 class _CategoriesList extends u.ViewComponent {
@@ -571,7 +571,7 @@ class _CategoriesList extends u.ViewComponent {
     context,
     props: {categories, pending, dispatch},
   }) {
-    return f.size(pending) || !f.size(categories) ? (
+    return pending || !f.size(categories) ? (
       <div className='col-start-stretch'>
         {f.map(new Array(3), (__, index) => (
           <EntityPlaceholder key={`placeholder-${index}`} />
@@ -609,7 +609,7 @@ class _CategoriesList extends u.ViewComponent {
 
 const CategoriesList = connect(state => ({
   categories: state.net.categories,
-  pending: state.net.pending,
+  pending: !f.isEmpty(state.net.pending),
 }))(_CategoriesList)
 
 
@@ -674,7 +674,7 @@ class _AccountForm extends u.ViewComponent {
     props: {pending},
   }) {
     const isMobile = u.isMobile(context)
-    const disabled = f.size(pending)
+    const disabled = pending
 
     return (
       <form className='col-start-stretch' onSubmit={this.onSubmit}>
@@ -713,7 +713,7 @@ class _AccountForm extends u.ViewComponent {
 }
 
 const AccountForm = connect(state => ({
-  pending: state.net.pending,
+  pending: !f.isEmpty(state.net.pending),
 }))(_AccountForm)
 
 class _AccountsList extends u.ViewComponent {
@@ -721,7 +721,7 @@ class _AccountsList extends u.ViewComponent {
     context,
     props: {accounts, pending, dispatch},
   }) {
-    return f.size(pending) || !f.size(accounts) ? (
+    return pending || !f.size(accounts) ? (
       <div className='col-start-stretch'>
         {f.map(new Array(3), (__, index) => (
           <EntityPlaceholder key={`placeholder-${index}`} />
@@ -762,7 +762,7 @@ class _AccountsList extends u.ViewComponent {
 
 const AccountsList = connect(state => ({
   accounts: state.net.accounts,
-  pending: state.net.pending,
+  pending: !f.isEmpty(state.net.pending),
 }))(_AccountsList)
 
 
@@ -827,7 +827,7 @@ class _PayeeForm extends u.ViewComponent {
     props: {pending},
   }) {
     const isMobile = u.isMobile(context)
-    const disabled = f.size(pending)
+    const disabled = pending
 
     return (
       <form className='col-start-stretch' onSubmit={this.onSubmit}>
@@ -866,7 +866,7 @@ class _PayeeForm extends u.ViewComponent {
 }
 
 const PayeeForm = connect(state => ({
-  pending: state.net.pending,
+  pending: !f.isEmpty(state.net.pending),
 }))(_PayeeForm)
 
 class _PayeesList extends u.ViewComponent {
@@ -874,7 +874,7 @@ class _PayeesList extends u.ViewComponent {
     context,
     props: {payees, pending, dispatch},
   }) {
-    return f.size(pending) || !f.size(payees) ? (
+    return pending || !f.size(payees) ? (
       <div className='col-start-stretch'>
         {f.map(new Array(3), (__, index) => (
           <EntityPlaceholder key={`placeholder-${index}`} />
@@ -912,7 +912,7 @@ class _PayeesList extends u.ViewComponent {
 
 const PayeesList = connect(state => ({
   payees: state.net.payees,
-  pending: state.net.pending,
+  pending: !f.isEmpty(state.net.pending),
 }))(_PayeesList)
 
 
@@ -1110,7 +1110,7 @@ class _TransactionForm extends u.ViewComponent {
     props: {categories, accounts, payees, pending},
   }) {
     const isMobile = u.isMobile(context)
-    const disabled = f.size(pending)
+    const disabled = pending
 
     return (
       <form className='col-start-stretch' onSubmit={this.onSubmit}>
@@ -1279,7 +1279,7 @@ const TransactionForm = connect(state => ({
   categories: state.net.categories,
   accounts: state.net.accounts,
   payees: state.net.payees,
-  pending: state.net.pending,
+  pending: !f.isEmpty(state.net.pending),
 }))(_TransactionForm)
 
 class TransactionPlaceholder extends u.ViewComponent {
@@ -1578,7 +1578,7 @@ class _TransactionsList extends u.ViewComponent {
   render({
     props: {transactions, pending},
   }) {
-    return f.size(pending) || !f.size(transactions) ? (
+    return pending || !f.size(transactions) ? (
       <div className='col-start-stretch'>
         {f.map(new Array(3), (__, index) => (
           <TransactionPlaceholder key={`placeholder-${index}`} />
@@ -1611,7 +1611,7 @@ class TransactionMeta extends u.ViewComponent {
 
 const TransactionsList = connect(state => ({
   transactions: state.net.transactions,
-  pending: state.net.pending,
+  pending: !f.isEmpty(state.net.pending),
 }))(_TransactionsList)
 
 class G7FormLine extends u.ViewComponent {
