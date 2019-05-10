@@ -83,20 +83,22 @@ class _Navbar extends u.ViewComponent {
   constructor() {
     super(...arguments)
 
-    this.state = {menuOpened: false}
+    const {context, props} = this
+    const {dispatch} = props
 
-    this.openMenu = () => {
-      this.setState({menuOpened: true})
+    this.open = () => {
+      dispatch(a.addDialog(MobileMenu))
     }
 
-    this.closeMenu = () => {
-      this.setState({menuOpened: false})
+    this.close = () => {
+      dispatch(a.nextLang(u.nextLang(context)))
     }
   }
 
   render({
     context,
     props: {dispatch},
+    open, close,
   }) {
     if (u.isMobile(context)) {
       return (
@@ -105,12 +107,12 @@ class _Navbar extends u.ViewComponent {
             <m.FakeButton className='row-center-center padding-0x5 circle decorate-dark-menu-item'>
               <s.Menu
                 style={{fontSize: '1.5rem'}}
-                onClick={() => dispatch(a.addDialog(MobileMenu))} />
+                onClick={open} />
             </m.FakeButton>
           </div>
           <div className='row-start-stretch gaps-h-0x75 padding-h-1'>
             <m.FakeButton
-              onClick={() => dispatch(a.nextLang(u.nextLang(context)))}
+              onClick={close}
               className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
               {u.xln(context, t.LANG)}
             </m.FakeButton>
