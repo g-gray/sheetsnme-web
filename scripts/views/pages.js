@@ -483,8 +483,8 @@ class _CategoryForm extends u.ViewComponent {
       const {formValues} = state
 
       const promise = formValues.id
-        ? dispatch(a.updateCategory(formValues, formValues.id))
-        : dispatch(a.createCategory(formValues))
+        ? dispatch(a.updateCategory(formValues.id, formValues, u.xln(context, t.UPDATING_CATEGORY)))
+        : dispatch(a.createCategory(formValues, u.xln(context, t.CREATING_CATEGORY)))
 
       promise
         .catch(errors => {
@@ -498,7 +498,7 @@ class _CategoryForm extends u.ViewComponent {
           text: formValues.id ? u.xln(context, t.CATEGORY_SAVED) : u.xln(context, t.CATEGORY_ADDED),
         })))
         .then(() => dispatch(a.receiveCategory()))
-        .then(() => dispatch(a.fetchCategories()))
+        .then(() => dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))))
     }
 
     this.onDelete = event => {
@@ -512,12 +512,12 @@ class _CategoryForm extends u.ViewComponent {
       dispatch(a.addDialog(ConfirmDialog, {
         question: u.xln(context, t.DELETE_CATEGORY),
         onConfirm: () => {
-          dispatch(a.deleteCategory(formValues.id))
+          dispatch(a.deleteCategory(formValues.id, u.xln(context, t.DELETING_CATEGORY)))
             .then(() => {
               if (props.onSubmitSuccess) props.onSubmitSuccess()
             })
             .then(() => dispatch(a.notify({text: u.xln(context, t.CATEGORY_DELETED)})))
-            .then(() => dispatch(a.fetchCategories()))
+            .then(() => dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))))
         },
       }))
     }
@@ -600,9 +600,9 @@ class _CategoriesList extends u.ViewComponent {
               dispatch(a.addDialog(ConfirmDialog, {
                 question: u.xln(context, t.DELETE_CATEGORY),
                 onConfirm: () => {
-                  dispatch(a.deleteCategory(cat.id))
+                  dispatch(a.deleteCategory(cat.id, u.xln(context, t.DELETING_CATEGORY)))
                     .then(() => dispatch(a.notify({text: u.xln(context, t.CATEGORY_DELETED)})))
-                    .then(() => dispatch(a.fetchCategories()))
+                    .then(() => dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))))
                 },
               }))
             }}>
@@ -636,8 +636,8 @@ class _AccountForm extends u.ViewComponent {
       const {formValues} = state
 
       const promise = formValues.id
-        ? dispatch(a.updateAccount(formValues, formValues.id))
-        : dispatch(a.createAccount(formValues))
+        ? dispatch(a.updateAccount(formValues.id, formValues, u.xln(context, t.UPDATING_ACCOUNT)))
+        : dispatch(a.createAccount(formValues, u.xln(context, t.CREATING_ACCOUNT)))
 
       promise
         .catch(errors => {
@@ -651,7 +651,7 @@ class _AccountForm extends u.ViewComponent {
           text: formValues.id ? u.xln(context, t.ACCOUNT_UPDATED) : u.xln(context, t.ACCOUNT_CREATED),
         })))
         .then(() => dispatch(a.receiveAccount()))
-        .then(() => dispatch(a.fetchAccounts()))
+        .then(() => dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))))
     }
 
     this.onDelete = event => {
@@ -665,12 +665,12 @@ class _AccountForm extends u.ViewComponent {
       dispatch(a.addDialog(ConfirmDialog, {
         question: u.xln(context, t.DELETE_ACCOUNT),
         onConfirm: () => {
-          dispatch(a.deleteAccount(formValues.id))
+          dispatch(a.deleteAccount(formValues.id, u.xln(context, t.DELETING_ACCOUNT)))
             .then(() => {
               if (props.onSubmitSuccess) props.onSubmitSuccess()
             })
             .then(() => dispatch(a.notify({text: u.xln(context, t.ACCOUNT_DELETED)})))
-            .then(() => dispatch(a.fetchAccounts()))
+            .then(() => dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))))
         },
       }))
     }
@@ -753,9 +753,9 @@ class _AccountsList extends u.ViewComponent {
               dispatch(a.addDialog(ConfirmDialog, {
                 question: u.xln(context, t.DELETE_ACCOUNT),
                 onConfirm: () => {
-                  dispatch(a.deleteAccount(acc.id))
+                  dispatch(a.deleteAccount(acc.id, u.xln(context, t.DELETING_ACCOUNT)))
                     .then(() => dispatch(a.notify({text: u.xln(context, t.ACCOUNT_DELETED)})))
-                    .then(() => dispatch(a.fetchAccounts()))
+                    .then(() => dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))))
                 },
               }))
             }}>
@@ -792,8 +792,8 @@ class _PayeeForm extends u.ViewComponent {
       const {formValues} = state
 
       const promise = formValues.id
-        ? dispatch(a.updatePayee(formValues, formValues.id))
-        : dispatch(a.createPayee(formValues))
+        ? dispatch(a.updatePayee(formValues.id, formValues, u.xln(context, t.UPDATING_PAYEE)))
+        : dispatch(a.createPayee(formValues, u.xln(context, t.CREATING_PAYEE)))
 
       promise
         .catch(errors => {
@@ -807,7 +807,7 @@ class _PayeeForm extends u.ViewComponent {
           text: formValues.id ? u.xln(context, t.PAYEE_UPDATED) : u.xln(context, t.PAYEE_CREATED),
         })))
         .then(() => dispatch(a.receivePayee()))
-        .then(() => dispatch(a.fetchPayees()))
+        .then(() => dispatch(a.fetchPayees(u.xln(context, t.FETCHING_PAYEES))))
     }
 
     this.onDelete = event => {
@@ -821,12 +821,12 @@ class _PayeeForm extends u.ViewComponent {
       dispatch(a.addDialog(ConfirmDialog, {
         question: u.xln(context, t.DELETE_PAYEE),
         onConfirm: () => {
-          dispatch(a.deletePayee(formValues.id))
+          dispatch(a.deletePayee(formValues.id, u.xln(context, t.DELETING_PAYEE)))
             .then(() => {
               if (props.onSubmitSuccess) props.onSubmitSuccess()
             })
             .then(() => dispatch(a.notify({text: u.xln(context, t.PAYEE_DELETED)})))
-            .then(() => dispatch(a.fetchPayees()))
+            .then(() => dispatch(a.fetchPayees(u.xln(context, t.FETCHING_PAYEES))))
         },
       }))
     }
@@ -909,9 +909,9 @@ class _PayeesList extends u.ViewComponent {
               dispatch(a.addDialog(ConfirmDialog, {
                 question: u.xln(context, t.DELETE_PAYEE),
                 onConfirm: () => {
-                  dispatch(a.deletePayee(payee.id))
+                  dispatch(a.deletePayee(payee.id, u.xln(context, t.DELETING_PAYEE)))
                     .then(() => dispatch(a.notify({text: u.xln(context, t.PAYEE_DELETED)})))
-                    .then(() => dispatch(a.fetchPayees()))
+                    .then(() => dispatch(a.fetchPayees(u.xln(context, t.FETCHING_PAYEES))))
                 },
               }))
             }}>
@@ -1019,8 +1019,8 @@ class _TransactionForm extends u.ViewComponent {
       const data = {...formValues, date: u.formatDate(formValues.date)}
 
       const promise = formValues.id
-        ? dispatch(a.updateTransaction(data, formValues.id))
-        : dispatch(a.createTransaction(data))
+        ? dispatch(a.updateTransaction(formValues.id, data, u.xln(context, t.UPDATING_TRANSACTION)))
+        : dispatch(a.createTransaction(data, u.xln(context, t.CREATING_TRANSACTION)))
 
       promise
         .catch(errors => {
@@ -1034,7 +1034,7 @@ class _TransactionForm extends u.ViewComponent {
           text: formValues.id ? u.xln(context, t.TRANSACTION_UPDATED) : u.xln(context, t.TRANSACTION_CREATED),
         })))
         .then(() => dispatch(a.receiveTransaction()))
-        .then(() => dispatch(a.fetchTransactions()))
+        .then(() => dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS))))
     }
 
     this.onDelete = event => {
@@ -1047,12 +1047,12 @@ class _TransactionForm extends u.ViewComponent {
       dispatch(a.addDialog(ConfirmDialog, {
         question: u.xln(context, t.DELETE_TRANSACTION),
         onConfirm: () => {
-          dispatch(a.deleteTransaction(formValues.id))
+          dispatch(a.deleteTransaction(formValues.id, u.xln(context, t.DELETING_TRANSACTION)))
             .then(() => {
               if (props.onSubmitSuccess) props.onSubmitSuccess()
             })
             .then(() => dispatch(a.notify({text: u.xln(context, t.TRANSACTION_DELETED)})))
-            .then(() => dispatch(a.fetchTransactions()))
+            .then(() => dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS))))
         },
       }))
     }
@@ -1433,9 +1433,9 @@ class _Transaction extends u.ViewComponent {
     this.onDelete = id => {
       const {context, props} = this
       const {dispatch} = props
-      dispatch(a.deleteTransaction(id))
+      dispatch(a.deleteTransaction(id, u.xln(context, t.DELETING_TRANSACTION)))
         .then(() => dispatch(a.notify({text: u.xln(context, t.TRANSACTION_DELETED)})))
-        .then(() => dispatch(a.fetchTransactions()))
+        .then(() => dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS))))
     }
   }
 

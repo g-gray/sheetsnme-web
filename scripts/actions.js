@@ -77,233 +77,7 @@ export const nextLang = lang => dispatch => {
 
 
 
-export const init = () => dispatch => {
-  return dispatch(fetchUser())
-    .then(() => Promise.all([
-      dispatch(fetchCategories()),
-      dispatch(fetchAccounts()),
-      dispatch(fetchPayees()),
-    ]))
-    .then(() => dispatch(fetchTransactions()))
-}
-
-
-export const fetchUser = () => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Fetching user data...',
-    requestName: 'getUser',
-    promise: n.authedJsonFetch('/api/user'),
-  })
-    .then(user => dispatch({type: RECEIVE_USER, user}))
-}
-
-
-export const fetchTransactions = () => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Fetching transactions...',
-    requestName: 'getTransactions',
-    promise: n.authedJsonFetch('/api/transactions'),
-  })
-    .then(transactions => dispatch({type: RECEIVE_TRANSACTIONS, transactions}))
-}
-
-export const createTransaction = transaction => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Saving...',
-    requestName: 'postTransaction',
-    promise: n.authedJsonFetch('/api/transactions', {
-      method: 'POST',
-      body: JSON.stringify(transaction),
-    }),
-  })
-}
-
-export const updateTransaction = (transaction, id) => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Saving...',
-    requestName: 'postTransaction',
-    promise: n.authedJsonFetch(`/api/transactions/${id}`, {
-      method: 'POST',
-      body: JSON.stringify(transaction),
-    }),
-  })
-}
-
-export const deleteTransaction = id => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Deleting...',
-    requestName: 'deleteTransaction',
-    promise: n.authedJsonFetch(`/api/transactions/${id}`, {
-      method: 'DELETE',
-    }),
-  })
-}
-
-export const receiveTransaction = transaction => ({
-  type: RECEIVE_TRANSACTION,
-  transaction,
-})
-
-
-export const fetchCategories  = () => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Fetching categories...',
-    requestName: 'getCategories',
-    promise: n.authedJsonFetch('/api/categories'),
-  })
-    .then(categories => dispatch({type: RECEIVE_CATEGORIES, categories}))
-}
-
-export const createCategory = category => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Saving...',
-    requestName: 'postCategory',
-    promise: n.authedJsonFetch('/api/categories', {
-      method: 'POST',
-      body: JSON.stringify(category),
-    }),
-  })
-}
-
-export const updateCategory = (category, id) => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Saving...',
-    requestName: 'postCategory',
-    promise: n.authedJsonFetch(`/api/categories/${id}`, {
-      method: 'POST',
-      body: JSON.stringify(category),
-    }),
-  })
-}
-
-export const deleteCategory = id => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Deleting...',
-    requestName: 'deleteCategory',
-    promise: n.authedJsonFetch(`/api/categories/${id}`, {
-      method: 'DELETE',
-    }),
-  })
-}
-
-export const receiveCategory = category => ({
-  type: RECEIVE_CATEGORY,
-  category,
-})
-
-
-export const fetchAccounts  = () => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Fetching accounts...',
-    requestName: 'getAccounts',
-    promise: n.authedJsonFetch('/api/accounts'),
-  })
-    .then(accounts => dispatch({type: RECEIVE_ACCOUNTS, accounts}))
-}
-
-export const createAccount = account => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Saving...',
-    requestName: 'postAccount',
-    promise: n.authedJsonFetch('/api/accounts', {
-      method: 'POST',
-      body: JSON.stringify(account),
-    }),
-  })
-}
-
-export const updateAccount = (account, id) => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Saving...',
-    requestName: 'postAccount',
-    promise: n.authedJsonFetch(`/api/accounts/${id}`, {
-      method: 'POST',
-      body: JSON.stringify(account),
-    }),
-  })
-}
-
-export const deleteAccount = id => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Deleting...',
-    requestName: 'deleteAccount',
-    promise: n.authedJsonFetch(`/api/accounts/${id}`, {
-      method: 'DELETE',
-    }),
-  })
-}
-
-export const receiveAccount = account => ({
-  type: RECEIVE_ACCOUNT,
-  account,
-})
-
-
-export const fetchPayees  = () => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Fetching payees...',
-    requestName: 'getPayees',
-    promise: n.authedJsonFetch('/api/payees'),
-  })
-    .then(payees => dispatch({type: RECEIVE_PAYEES, payees}))
-}
-
-export const createPayee = payee => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Saving...',
-    requestName: 'postPayee',
-    promise: n.authedJsonFetch('/api/payees', {
-      method: 'POST',
-      body: JSON.stringify(payee),
-    }),
-  })
-}
-
-export const updatePayee = (payee, id) => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Saving...',
-    requestName: 'postPayee',
-    promise: n.authedJsonFetch(`/api/payees/${id}`, {
-      method: 'POST',
-      body: JSON.stringify(payee),
-    }),
-  })
-}
-
-export const deletePayee = id => dispatch => {
-  return trackRequest({
-    dispatch,
-    message: 'Deleting...',
-    requestName: 'deletePayee',
-    promise: n.authedJsonFetch(`/api/payees/${id}`, {
-      method: 'DELETE',
-    }),
-  })
-}
-
-export const receivePayee = payee => ({
-  type: RECEIVE_PAYEE,
-  payee,
-})
-
-
-function trackRequest({dispatch, message, requestName, promise}) {
+const trackRequest = ({message, requestName, promise}) => dispatch => {
   const {notification: {time}} = dispatch(notify({text: message, timeout: 0}))
   dispatch(requestStart({[requestName]: true}))
 
@@ -328,4 +102,214 @@ const requestStart = request => ({
 const requestEnd = name => ({
   type: REQUEST_END,
   name,
+})
+
+
+
+export const init = messages => dispatch => {
+  return dispatch(fetchUser(messages.fetchUser))
+    .then(() => Promise.all([
+      dispatch(fetchCategories(messages.fetchCategories)),
+      dispatch(fetchAccounts(messages.fetchAccounts)),
+      dispatch(fetchPayees(messages.fetchPayees)),
+    ]))
+    .then(() => dispatch(fetchTransactions(messages.fetchTransactions)))
+}
+
+
+export const fetchUser = message => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'getUser',
+    promise: n.authedJsonFetch('/api/user'),
+  }))
+    .then(user => dispatch({type: RECEIVE_USER, user}))
+}
+
+
+export const fetchTransactions = message => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'getTransactions',
+    promise: n.authedJsonFetch('/api/transactions'),
+  }))
+    .then(transactions => dispatch({type: RECEIVE_TRANSACTIONS, transactions}))
+}
+
+export const createTransaction = (transaction, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'postTransaction',
+    promise: n.authedJsonFetch('/api/transactions', {
+      method: 'POST',
+      body: JSON.stringify(transaction),
+    }),
+  }))
+}
+
+export const updateTransaction = (id, transaction, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'postTransaction',
+    promise: n.authedJsonFetch(`/api/transactions/${id}`, {
+      method: 'POST',
+      body: JSON.stringify(transaction),
+    }),
+  }))
+}
+
+export const deleteTransaction = (id, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'deleteTransaction',
+    promise: n.authedJsonFetch(`/api/transactions/${id}`, {
+      method: 'DELETE',
+    }),
+  }))
+}
+
+export const receiveTransaction = transaction => ({
+  type: RECEIVE_TRANSACTION,
+  transaction,
+})
+
+
+export const fetchCategories  = message => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'getCategories',
+    promise: n.authedJsonFetch('/api/categories'),
+  }))
+    .then(categories => dispatch({type: RECEIVE_CATEGORIES, categories}))
+}
+
+export const createCategory = (category, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'postCategory',
+    promise: n.authedJsonFetch('/api/categories', {
+      method: 'POST',
+      body: JSON.stringify(category),
+    }),
+  }))
+}
+
+export const updateCategory = (id, category, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'postCategory',
+    promise: n.authedJsonFetch(`/api/categories/${id}`, {
+      method: 'POST',
+      body: JSON.stringify(category),
+    }),
+  }))
+}
+
+export const deleteCategory = (id, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'deleteCategory',
+    promise: n.authedJsonFetch(`/api/categories/${id}`, {
+      method: 'DELETE',
+    }),
+  }))
+}
+
+export const receiveCategory = category => ({
+  type: RECEIVE_CATEGORY,
+  category,
+})
+
+
+export const fetchAccounts  = message => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'getAccounts',
+    promise: n.authedJsonFetch('/api/accounts'),
+  }))
+    .then(accounts => dispatch({type: RECEIVE_ACCOUNTS, accounts}))
+}
+
+export const createAccount = (account, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'postAccount',
+    promise: n.authedJsonFetch('/api/accounts', {
+      method: 'POST',
+      body: JSON.stringify(account),
+    }),
+  }))
+}
+
+export const updateAccount = (id, account, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'postAccount',
+    promise: n.authedJsonFetch(`/api/accounts/${id}`, {
+      method: 'POST',
+      body: JSON.stringify(account),
+    }),
+  }))
+}
+
+export const deleteAccount = (id, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'deleteAccount',
+    promise: n.authedJsonFetch(`/api/accounts/${id}`, {
+      method: 'DELETE',
+    }),
+  }))
+}
+
+export const receiveAccount = account => ({
+  type: RECEIVE_ACCOUNT,
+  account,
+})
+
+
+export const fetchPayees  = message => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'getPayees',
+    promise: n.authedJsonFetch('/api/payees'),
+  }))
+    .then(payees => dispatch({type: RECEIVE_PAYEES, payees}))
+}
+
+export const createPayee = (payee, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'postPayee',
+    promise: n.authedJsonFetch('/api/payees', {
+      method: 'POST',
+      body: JSON.stringify(payee),
+    }),
+  }))
+}
+
+export const updatePayee = (id, payee, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'postPayee',
+    promise: n.authedJsonFetch(`/api/payees/${id}`, {
+      method: 'POST',
+      body: JSON.stringify(payee),
+    }),
+  }))
+}
+
+export const deletePayee = (id, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'deletePayee',
+    promise: n.authedJsonFetch(`/api/payees/${id}`, {
+      method: 'DELETE',
+    }),
+  }))
+}
+
+export const receivePayee = payee => ({
+  type: RECEIVE_PAYEE,
+  payee,
 })

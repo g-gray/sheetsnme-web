@@ -7,15 +7,24 @@ import thunk from 'redux-thunk'
 import * as r from './reducers'
 import * as a from './actions'
 import * as u from './utils'
+import * as t from './views/translations'
 
 import {AppRouter} from './views/routes'
 
 export const store = createStore(combineReducers(r), applyMiddleware(thunk))
+window.store = store
 
 class App extends u.ViewComponent {
   constructor(props) {
     super(props)
-    props.dispatch(a.init())
+    const contextMock = {lang: props.lang}
+    props.dispatch(a.init({
+      fetchUser        : u.xln(contextMock, t.FETCHING_USER),
+      fetchAccounts    : u.xln(contextMock, t.FETCHING_ACCOUNTS),
+      fetchCategories  : u.xln(contextMock, t.FETCHING_CATEGORIES),
+      fetchPayees      : u.xln(contextMock, t.FETCHING_PAYEES),
+      fetchTransactions: u.xln(contextMock, t.FETCHING_TRANSACTIONS),
+    }))
   }
 
   render({props: {isMobile, lang}}) {

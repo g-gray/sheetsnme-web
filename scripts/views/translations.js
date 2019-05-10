@@ -48,6 +48,16 @@ export const FETCHING_CATEGORIES   = {en: 'Fetching categories', ru: 'Загру
 export const FETCHING_PAYEES       = {en: 'Fetching payees', ru: 'Загрузка плательщиков...'}
 export const FETCHING_TRANSACTIONS = {en: 'Fetching transactions', ru: 'Загрузка транзакций...'}
 
+export const UPDATING_ACCOUNT      = {en: 'Updating account', ru: 'Обновление счета...'}
+export const UPDATING_CATEGORIE    = {en: 'Updating category', ru: 'Обновление категории...'}
+export const UPDATING_PAYEE        = {en: 'Updating payee', ru: 'Обновление плательщика...'}
+export const UPDATING_TRANSACTION  = {en: 'Updating transaction', ru: 'Обновление транзакции...'}
+
+export const DELETING_ACCOUNT      = {en: 'Deleting account', ru: 'Удаление счета...'}
+export const DELETING_CATEGORIE    = {en: 'Deleting category', ru: 'Удаление категории...'}
+export const DELETING_PAYEE        = {en: 'Deleting payee', ru: 'Удаление плательщика...'}
+export const DELETING_TRANSACTION  = {en: 'Deleting transaction', ru: 'Удаление транзакции...'}
+
 export const ACCOUNT_CREATED       = {en: 'Account created', ru: 'Счет добавлен'}
 export const CATEGORY_CREATED      = {en: 'Category created', ru: 'Категория добавлена'}
 export const PAYEE_CREATED         = {en: 'Payee created', ru: 'Плательщик добавлен'}
