@@ -2,15 +2,13 @@ import * as u from './utils'
 
 export function authedJsonFetch(url, params) {
   return authedHttpFetch(url, u.jsonParams(params))
-    .then(response => {
-      return response.json()
-        .then(json => {
-          if (json.errors) {
-            return window.Promise.reject(json.errors)
-          }
+    .then(response => response.json())
+    .then(json => {
+      if (json.errors) {
+        return Promise.reject(json.errors)
+      }
 
-          return json
-        })
+      return json
     })
 }
 
@@ -26,5 +24,5 @@ export function authedHttpFetch(url, params) {
 }
 
 export function httpFetch(url, params) {
-  return window.fetch(url, params)
+  return fetch(url, params)
 }

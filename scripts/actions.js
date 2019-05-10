@@ -78,8 +78,8 @@ export const nextLang = lang => dispatch => {
 
 
 export const init = () => dispatch => {
-  dispatch(fetchUser())
-    .then(() => window.Promise.all([
+  return dispatch(fetchUser())
+    .then(() => Promise.all([
       dispatch(fetchCategories()),
       dispatch(fetchAccounts()),
       dispatch(fetchPayees()),
@@ -316,7 +316,7 @@ function trackRequest({dispatch, message, requestName, promise}) {
     .catch(response => {
       dispatch(requestEnd(requestName))
       if (time) dispatch(removeNotification(time))
-      return window.Promise.reject(response)
+      return Promise.reject(response)
     })
 }
 
