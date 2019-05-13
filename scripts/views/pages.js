@@ -83,22 +83,20 @@ class _Navbar extends u.ViewComponent {
   constructor() {
     super(...arguments)
 
-    const {context, props} = this
-    const {dispatch} = props
+    const {props: {dispatch}} = this
 
     this.open = () => {
       dispatch(a.addDialog(MobileMenu))
     }
 
-    this.close = () => {
+    this.nextLang = context => () => {
       dispatch(a.nextLang(u.nextLang(context)))
     }
   }
 
   render({
     context,
-    props: {dispatch},
-    open, close,
+    open, nextLang,
   }) {
     if (u.isMobile(context)) {
       return (
@@ -112,7 +110,7 @@ class _Navbar extends u.ViewComponent {
           </div>
           <div className='row-start-stretch gaps-h-0x75 padding-h-1'>
             <m.FakeButton
-              onClick={close}
+              onClick={nextLang(context)}
               className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
               {u.xln(context, t.LANG)}
             </m.FakeButton>
@@ -129,7 +127,7 @@ class _Navbar extends u.ViewComponent {
         </Link>
         <div className='row-start-stretch gaps-h-0x75 padding-h-1'>
           <m.FakeButton
-            onClick={() => dispatch(a.nextLang(u.nextLang(context)))}
+            onClick={nextLang(context)}
             className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
             {u.xln(context, t.LANG)}
           </m.FakeButton>
@@ -161,13 +159,14 @@ class _UserMenu extends u.ViewComponent {
     context,
     props: {user},
     state: {expanded},
+    close, toggle,
   }) {
     const {firstName, lastName, pictureUrl, email} = user
 
     return f.isEmpty(user) ? null : (
       <div className='relative row-start-stretch'>
         <m.FakeButton
-          onClick={this.toggle}
+          onClick={toggle}
           className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item z-index-2'
           aria-expanded={expanded}>
           <m.CircleUserPic
@@ -175,10 +174,10 @@ class _UserMenu extends u.ViewComponent {
             size='2' />
         </m.FakeButton>
         {!expanded ? null :
-        <m.Closer root={this} close={this.close}>
+        <m.Closer root={this} close={close}>
           <div
             className='dropdown-position z-index-tooltip'
-            onClick={this.close}>
+            onClick={close}>
             <div className='dropdown dropdown-padding col-start-stretch' style={{minWidth: '11rem'}}>
               <div className='row-start-center gaps-h-0x75 padding-v-0x5 padding-h-1'>
                 <m.CircleUserPic
@@ -217,7 +216,9 @@ class _MobileMenu extends u.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
 
-    this.close = () => dispatch(a.removeDialog())
+    this.close = () => {
+      dispatch(a.removeDialog())
+    }
   }
 
   render({close}) {
@@ -925,9 +926,9 @@ class _FormDialog extends u.ViewComponent {
   }
 
   render({
-    close,
     context,
     props: {title, form: Form, formProps},
+    close,
   }) {
     if (u.isMobile(context)) {
       return (
