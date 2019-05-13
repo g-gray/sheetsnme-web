@@ -1,9 +1,11 @@
+import * as e from 'emerge'
 import * as u from './utils'
 
 export function authedJsonFetch(url, params) {
-  if (params && params.body) {
-    params = {...params, body: JSON.stringify(params.body)}
-  }
+  // TODO Review this approach
+  const state = window.env.store.getState()
+  params = e.merge(params, {headers: u.langHeaders(state.dom.lang)})
+
   return authedHttpFetch(url, u.jsonParams(params))
     .then(response => response.json())
     .then(json => {

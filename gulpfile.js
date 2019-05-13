@@ -33,6 +33,7 @@ const OUT_IMAGE_DIR = 'public/images'
 const PROD                = process.env.NODE_ENV === 'production'
 const BACKEND_HOST        = process.env.BACKEND_HOST
 const LOCAL_PORT          = process.env.LOCAL_PORT
+const LANG_HEADER_NAME    = process.env.LANG_HEADER_NAME
 
 const autoprefixerConfig = {browsers: ['> 1%', 'IE >= 10', 'iOS 7']}
 
@@ -87,6 +88,7 @@ gulp.task('templates:build', () => {
           PROD,
           BACKEND_HOST,
           COMMIT: commit,
+          LANG_HEADER_NAME,
         })
         file.contents = Buffer.from(rendered)
         done(undefined, file)

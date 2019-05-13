@@ -199,13 +199,18 @@ export function parseNum(value) {
  */
 
 export function jsonParams(params) {
-  return e.merge(params, {headers: jsonHeaders})
+  return e.merge(params, {
+    headers: jsonHeaders,
+    body: e.get(params, 'body') ? JSON.stringify(params.body) : undefined,
+  })
 }
 
 const jsonHeaders = {
   accept: 'application/json',
   'content-type': 'application/json',
 }
+
+export const langHeaders = lang => ({[window.VARS.LANG_HEADER_NAME]: lang})
 
 
 

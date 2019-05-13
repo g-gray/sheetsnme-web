@@ -12,7 +12,7 @@ import * as t from './views/translations'
 import {AppRouter} from './views/routes'
 
 export const store = createStore(combineReducers(r), applyMiddleware(thunk))
-window.store = store
+window.env = {store}
 
 class App extends u.ViewComponent {
   constructor(props) {
