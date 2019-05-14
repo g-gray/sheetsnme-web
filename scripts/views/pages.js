@@ -1170,6 +1170,7 @@ class _TransactionForm extends u.ViewComponent {
           {!f.includes([OUTCOME, LOAN, TRANSFER], type) ? null :
           <Fragment>
             <FormTextElement
+              type='number'
               name='outcomeAmount'
               label={u.xln(context, t.AMOUNT)}
               disabled={disabled}
@@ -1191,6 +1192,7 @@ class _TransactionForm extends u.ViewComponent {
           {!f.includes([INCOME, BORROW, TRANSFER], type) ? null :
           <Fragment>
             <FormTextElement
+              type='number'
               name='incomeAmount'
               label={u.xln(context, t.AMOUNT)}
               disabled={disabled}
