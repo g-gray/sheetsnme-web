@@ -19,7 +19,6 @@ body {
 .font-regular   {font-size: 14px;}
 .font-midsmall  {font-size: 12.5px;}
 .font-small     {font-size: 12px;}
-.font-null      {font-size: 0;}
 
 .weight-light {
   font-weight: 300;
@@ -91,10 +90,6 @@ sub {
   }
 
   @extend .decorate-fancy-links;
-}
-
-.text-ellipsis > * {
-  @extend .text-ellipsis;
 }
 
 .transaction-line-height * {

@@ -1524,7 +1524,7 @@ class TransactionIcon extends u.ViewComponent {
     return (
       <div className='row-start-center'>
         {f.includes([OUTCOME, LOAN], transaction.type) ? (
-        <div className='relative width-2x5 square circle bg-warning-100'>
+        <div className='relative width-2x5 square circle bg-warning'>
           <div className='row-center-center abs-center fg-white font-large'>
             <s.Minus />
           </div>
@@ -1554,9 +1554,9 @@ class TransactionAmount extends u.ViewComponent {
     return (
       <span className='wspace-nowrap'>
         { transaction.type === BORROW
-        ? <span className='fg-warning-100'>{`+${transaction.outcomeAmount}`}</span>
+        ? <span className='fg-warning'>{`+${transaction.outcomeAmount}`}</span>
         : transaction.type === LOAN
-        ? <span className='fg-warning-100'>{`-${transaction.incomeAmount}`}</span>
+        ? <span className='fg-warning'>{`-${transaction.incomeAmount}`}</span>
         : transaction.type === INCOME
         ? <span className='fg-success'>{`+${transaction.incomeAmount}`}</span>
         : transaction.type === OUTCOME

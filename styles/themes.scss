@@ -26,18 +26,6 @@ ones.
 .fg-black          {color: $color-black}
 .bg-black          {background-color: $color-black}
 
-.fg-pale           {color: $color-pale}
-.bg-pale           {background-color: $color-pale}
-
-.fg-faded          {color: $color-faded}
-.bg-faded          {background-color: $color-faded}
-
-.fg-pink           {color: $color-pink}
-.bg-pink           {background-color: $color-pink}
-
-.fg-blue           {color: $color-blue}
-.bg-blue           {background-color: $color-blue}
-
 .fg-black-25       {color: $color-black-25}
 .bg-black-25       {background-color: $color-black-25}
 
@@ -56,26 +44,11 @@ ones.
 .fg-black-97       {color: $color-black-97}
 .bg-black-97       {background-color: $color-black-97}
 
-.fg-primary-50     {color: $color-primary-50}
-.bg-primary-50     {background-color: $color-primary-50}
-
-.fg-primary-75     {color: $color-primary-75}
-.bg-primary-75     {background-color: $color-primary-75}
-
 .fg-primary-100    {color: $color-primary-100}
 .bg-primary-100    {background-color: $color-primary-100}
 
 .fg-primary-125    {color: $color-primary-125}
 .bg-primary-125    {background-color: $color-primary-125}
-
-.fg-primary-175    {color: $color-primary-175}
-.bg-primary-175    {background-color: $color-primary-175}
-
-.fg-primary-200    {color: $color-primary-200}
-.bg-primary-200    {background-color: $color-primary-200}
-
-.fg-primary-225    {color: $color-primary-225}
-.bg-primary-225    {background-color: $color-primary-225}
 
 .fg-primary-250    {color: $color-primary-250}
 .bg-primary-250    {background-color: $color-primary-250}
@@ -86,14 +59,8 @@ ones.
 .fg-link           {color: $color-link}
 .bg-link           {background-color: $color-link}
 
-.fg-link-icon      {color: $color-link-icon}
-.bg-link-icon      {background-color: $color-link-icon}
-
-.fg-warning-100    {color: $color-warning-100}
-.bg-warning-100    {background-color: $color-warning-100}
-
-.fg-danger-100     {color: $color-danger-100}
-.bg-danger-100     {background-color: $color-danger-100}
+.fg-warning        {color: $color-warning}
+.bg-warning        {background-color: $color-warning}
 
 .fg-accent         {color: $color-accent}
 .bg-accent         {background-color: $color-accent}
@@ -103,19 +70,6 @@ ones.
 
 .bg-overlay-dark   {background-color: $color-overlay-dark}
 .bg-overlay-light  {background-color: $color-overlay-light}
-
-.edge-in-black-90-b  {box-shadow: #{sb-shadow-bottom(inset, $color-black-90)}}
-.edge-in-black-90-v  {box-shadow: #{sb-shadow-bottom(inset, $color-black-90)}, #{sb-shadow-top(inset, $color-black-90)}}
-
-.edge-in-primary-100-b-2px  {box-shadow: inset 0 -2px 0 0 $color-primary-100}
-
-.border-pale {border: 1px solid $color-pale}
-
-.border-white-2px {border: 2px solid $color-white}
-
-.border-black-90 {border: 1px solid $color-black-90}
-
-.shadow-drop-around {box-shadow: 0 1px 3px 1px rgba($color-black, 0.12)}
 
 /**
  * Link Decoration
@@ -289,63 +243,4 @@ ones.
   @include theme-dark-menu;
   @include theme-dark-menu-busy;
   @include theme-dark-menu-expanded;
-}
-
-@mixin theme-body-menu {
-  color: $color-link;
-}
-
-@mixin theme-body-menu-busy {
-  @include busy {
-    background-color: hsb(204, 6, 90);
-  }
-}
-
-@mixin theme-body-menu-disabled {
-  @include disabled {
-    color: rgba($color-link, 0.5);
-  }
-}
-
-.theme-body-menu {@include theme-body-menu;}
-.theme-body-menu-busy {@include theme-body-menu-busy;}
-.theme-body-menu-disabled {@include theme-body-menu-disabled;}
-
-.decorate-body-menu-item {
-  @include theme-body-menu;
-  @include theme-body-menu-busy;
-  @include theme-body-menu-disabled;
-}
-
-@mixin theme-tab {
-  color: $color-black-35;
-}
-
-@mixin theme-tab-busy {
-  @include busy {
-    box-shadow: inset 0 -2px rgba($color-primary-100, 0.2);
-  }
-}
-
-@mixin theme-tab-current {
-  @include if-current {
-    box-shadow: inset 0 -2px $color-primary-100;
-    color: $color-black;
-  }
-}
-
-.theme-tab {@include theme-tab;}
-.theme-tab-busy {@include theme-tab-busy;}
-.theme-tab-current {@include theme-tab-current;}
-
-.decorate-tab-item {
-  @include theme-tab;
-  @include theme-tab-busy;
-  @include theme-tab-current;
-}
-
-@mixin current-primary-edge-left {
-  @include if-current {
-    box-shadow: inset 2px 0 $color-primary-100;
-  }
 }

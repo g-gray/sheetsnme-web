@@ -2,72 +2,45 @@
  * Colors
  */
 
-$color-white: white;
-$color-black: black;
+$color-white:         white;
+$color-black:         black;
 
-$color-pale:  hsl(0, 0%, 80%);
-$color-faded: hsl(0, 0%, 46%);
-$color-deep:  hsl(0, 0%, 13%);
-
-$color-pink: hsl(350, 100%, 70%);
-$color-blue: hsl(200, 100%, 30%);
+$color-deep:          hsl(0, 0%, 13%);
 
 $color-overlay-dark:  rgba(black, 0.5);
 $color-overlay-light: rgba(white, 0.66);
 
-$color-black-25:    hsb(0, 0, 25);
-$color-black-35:    hsb(0, 0, 35);
-$color-black-50:    hsb(0, 0, 50);
-$color-black-70:    hsb(0, 0, 70);
-$color-black-75:    hsb(0, 0, 75);
-$color-black-90:    hsb(0, 0, 90);
-$color-black-97:    hsb(0, 0, 97);
+$color-black-25:      hsb(0, 0, 25);
+$color-black-35:      hsb(0, 0, 35);
+$color-black-50:      hsb(0, 0, 50);
+$color-black-70:      hsb(0, 0, 70);
+$color-black-75:      hsb(0, 0, 75);
+$color-black-90:      hsb(0, 0, 90);
+$color-black-97:      hsb(0, 0, 97);
 
-$color-primary-50:  hsb(204, 84, 46);
-$color-primary-75:  hsb(204, 84, 56);
-$color-primary-100: hsb(204, 84, 76);
-$color-primary-125: hsb(204, 84, 86);
-$color-primary-175: hsb(204, 84, 97);
-$color-primary-200: hsb(204, 84, 100);
-$color-primary-225: hsb(204, 20, 95);
-$color-primary-250: hsb(204, 08, 94);
-$color-primary-275: hsb(204, 04, 94);
+$color-primary-100:   hsb(204, 84, 76);
+$color-primary-125:   hsb(204, 84, 86);
+$color-primary-250:   hsb(204, 08, 94);
+$color-primary-275:   hsb(204, 04, 94);
 
-$color-link:        hsb(204, 68, 52);
-$color-link-icon:   hsb(204, 22, 78);
+$color-body:          white;
+$color-text:          hsb(0, 0, 25);
+$color-link:          hsb(204, 68, 52);
 
-$color-warning-100: hsb(14, 87, 100);
-
-$color-success-100: hsb(122, 57, 69);
-$color-success: $color-success-100;
-
-$color-danger-100:  hsb(10, 97, 78);
-$color-danger-125:  hsb(10, 70, 78);
-
-$color-body:        white;
-$color-text:        hsb(0, 0, 25);
-
-$color-accent:         #FF5252;
-$color-snackbar:       #323232;
+$color-warning:       hsb(14, 87, 100);
+$color-success:       hsb(122, 57, 69);
+$color-snackbar:      #323232;
+$color-accent:        #FF5252;
 
 /**
  * Layout
  */
 
-$page-padding-h: 10px;
 $page-width-min: 320px;
-$page-width-max: 940px + $page-padding-h * 2;
 $page-width-mobile: 980px;
 
 $page-breakpoint-sm: 480px;
 $page-breakpoint-md: 768px;
-
-$columns-space-lg-h: 2rem;
-
-$grid-space-lg-h: 1rem;
-$grid-space-lg-v: 1rem;
-
-$dialog-max-width: 28rem;
 
 $content-width-max: 900px;
 
@@ -75,9 +48,6 @@ $content-width-max: 900px;
  * z-index
  */
 
-$z-index-select: 50;
-$z-index-high: 100;
-$z-index-overlay: 500;
 $z-index-dialog: 1000;
 $z-index-tooltip: 2000;
 
@@ -94,7 +64,4 @@ $transition-duration-medium: 0.5s;
  */
 
 $radius: 4px;
-
-$font-size-h1: 1.6rem;
-$font-size-h2: 1.4rem;
-$font-size-h3: 1.2rem;
+$navbar-height: 3.5rem;

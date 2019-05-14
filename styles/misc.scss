@@ -30,7 +30,7 @@ $color-focus: rgba($color-primary-100, 0.3);
 
 .enable-focus-indicators {
   :focus:not(%nofocus) {
-    // @extend %focus;
+    @extend %focus;
   }
 
   // Experimental
@@ -67,7 +67,7 @@ input[type=checkbox]:focus {
 @mixin button-focus {
   &:focus, .enable-focus-indicators &:focus {
     outline: 0;
-    box-shadow: 0 0 0 3px $color-primary-225;
+    box-shadow: 0 0 0 3px $color-primary-250;
   }
 }
 
@@ -178,214 +178,6 @@ input[type=checkbox]:focus {
 }
 
 /**
- * Photo
- */
-
-@mixin bg-square-rounded($val: 1rem) {
-  width: $val;
-  height: $val;
-  border-radius: $radius;
-  flex-shrink: 0;
-  @extend .bg-cover;
-}
-
-.bg-square-rounded-10 {
-  @include bg-square-rounded(10rem);
-}
-
-.bg-circle-trick {
-  @include bg-cover-circle;
-  @include sb-height-percentage-trick(100%);
-}
-
-@mixin bg-circle($val: 1rem) {
-  width: $val;
-  height: $val;
-  @include bg-cover-circle;
-}
-
-.bg-circle-1 {
-  @include bg-circle(1rem);
-}
-
-.bg-circle-1x5 {
-  @include bg-circle(1.5rem);
-}
-
-.bg-circle-1x75 {
-  @include bg-circle(1.75rem);
-}
-
-.bg-circle-2 {
-  @include bg-circle(2rem);
-}
-
-.bg-circle-2x25 {
-  @include bg-circle(2.25rem);
-}
-
-.bg-circle-2x5 {
-  @include bg-circle(2.5rem);
-}
-
-.bg-circle-3 {
-  @include bg-circle(3rem);
-}
-
-.bg-circle-3x5 {
-  @include bg-circle(3.5rem);
-}
-
-.bg-circle-4 {
-  @include bg-circle(4rem);
-}
-
-.bg-circle-4x5 {
-  @include bg-circle(4.5rem);
-}
-
-.bg-circle-5 {
-  @include bg-circle(5rem);
-}
-
-.square-em {
-  width: 1em;
-  height: 1em;
-}
-
-.square-3x4 {
-  @include sb-height-percentage-trick(133%);
-}
-
-.square-4x3 {
-  @include sb-height-percentage-trick(75%);
-}
-
-.square-16x9 {
-  @include sb-height-percentage-trick(56%);
-}
-
-/**
- * Misc
- */
-
-.feather {
-  @extend .square-em;
-  @extend .flex-shrink-none;
-}
-
-.pane {
-  @extend .padding-1;
-  @extend .col-start-stretch;
-  @extend .gaps-v-1;
-  &.--warning {
-    background-color: hsl(hue($color-warning-100), saturation($color-warning-100), 95%);
-    box-shadow: 0 0 0 1px $color-warning-100;
-  }
-   &.--success {
-     background-color: hsl(hue($color-success), saturation($color-success), 95%);
-     box-shadow: 0 0 0 1px $color-success;
-   }
-}
-
-%hide {
-  opacity: 0;
-  visibility: hidden;
-}
-
-%show {
-  opacity: 1;
-  visibility: visible;
-}
-
-.show-on-parent-hover {
-  @extend %hide;
-}
-
-:hover > .show-on-parent-hover {
-  @extend %show;
-}
-
-.show-on-parent-busy {
-  @extend %hide;
-}
-
-@include busy {
-  > .show-on-parent-busy {
-    @extend %show;
-  }
-}
-
-.show-on-trigger-hover {
-  @extend %hide;
-}
-
-.trigger:hover .show-on-trigger-hover {
-  @extend %show;
-}
-
-.transition {
-  @include sb-transition;
-}
-
-.transition-fast-all {
-  transition: $transition-duration-fast ease all;
-}
-
-.transition-fast-opacity {
-  transition: $transition-duration-fast ease opacity;
-}
-
-.widget {
-  border-radius: $radius;
-  background-color: $color-white;
-  box-shadow: 0 0 1px $color-black-70;
-}
-
-.mobile-widget {
-  background-color: $color-white;
-  box-shadow: 0 0 1px $color-black-75;
-}
-
-.offset-right-0x5 > :not(:last-child) {
-  margin-right: -0.5rem;
-}
-
-.list-item:last-child .hide-in-list-last-child {
-  display: none;
-}
-
-.tab-padding {
-  padding: 1rem 0.25rem;
-}
-
-/**
- * Submenu
- */
-
-.submenu-item {
-  @extend .decorate-light-menu-item;
-  @extend .submenu-item-padding;
-  @include current-primary-edge-left;
-}
-
-.submenu-nested-item {
-  color: $color-black-50;
-  @extend .decorate-light-menu-item;
-  @extend .submenu-nested-item-padding;
-  @include current-primary-edge-left;
-}
-
-.submenu-item-padding {
-  padding: 0.5rem 1.5rem;
-}
-
-.submenu-nested-item-padding {
-  padding-left: 2rem;
-  @extend .submenu-item-padding;
-}
-
-/**
  * Dropdown Menu
  */
 
@@ -439,38 +231,6 @@ $dropdown-color-shadow: rgba(black, 0.1);
 }
 
 /**
- * Tables
- */
-
-// Colors must be replaced
-
- .striped-table > .table-row:nth-child(odd) .table-cell {
-   background-color: $color-pale;
- }
-
- .striped-table > .table-row:nth-child(even) .table-cell {
-   background-color: $color-faded;
- }
-
- .striped-table > .table-row.head-table-row .table-cell {
-   background-color: $color-deep;
-   color: $color-white;
- }
-
- .padded-table > .table-row .table-cell {
-   padding: 0.5rem 1rem;
-   border: 1px solid $color-body;
- }
-
- .padded-table > .head-table-row .table-cell {
-   border-bottom-width: 4px;
- }
-
- .cell-valign-middle .table-cell {
-   vertical-align: middle;
- }
-
-/**
  * Dialog
  */
 
@@ -504,9 +264,68 @@ $dropdown-color-shadow: rgba(black, 0.1);
 
 .dialog-center {
   min-height: 100vh;
-  @include limit-width;
   @extend .col-center-center;
-  @extend .padding-v-1;
+  @extend .padding-1;
+}
+
+/**
+ * Misc
+ */
+
+.bg-circle-trick {
+  @extend .bg-cover;
+  @extend .circle;
+  @include sb-height-percentage-trick(100%);
+}
+
+.square-em {
+  width: 1em;
+  height: 1em;
+}
+
+.feather {
+  @extend .square-em;
+  @extend .flex-shrink-none;
+}
+
+%hide {
+  opacity: 0;
+  visibility: hidden;
+}
+
+%show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.show-on-parent-hover {
+  @extend %hide;
+}
+
+:hover > .show-on-parent-hover {
+  @extend %show;
+}
+
+.show-on-parent-busy {
+  @extend %hide;
+}
+
+@include busy {
+  > .show-on-parent-busy {
+    @extend %show;
+  }
+}
+
+.show-on-trigger-hover {
+  @extend %hide;
+}
+
+.trigger:hover .show-on-trigger-hover {
+  @extend %show;
+}
+
+.list-item:last-child .hide-in-list-last-child {
+  display: none;
 }
 
 .z-index-1 {
@@ -519,11 +338,6 @@ $dropdown-color-shadow: rgba(black, 0.1);
 
 .z-index-tooltip {
   z-index: $z-index-tooltip;
-}
-
-.padding-broad {
-  @extend .padding-v-0x5;
-  @extend .padding-h-1;
 }
 
 @mixin form-element-spacing($val) {

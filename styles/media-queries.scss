@@ -48,57 +48,6 @@
   @media (any-hover: none) {@content;}
 }
 
-@mixin row-start-center($prefix: '') {
-  .#{$prefix}row-start-center {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-  }
-}
-
-@mixin row-between-center($prefix: '') {
-  .#{$prefix}row-between-center {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-}
-
-@mixin col-start-stretch($prefix: '') {
-  .#{$prefix}col-start-stretch {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch;
-  }
-}
-
-@include media-lg {
-  .lg-hide {display: none}
-}
-
-@include media-md {
-  .md-hide {display: none}
-}
-
-@include media-sm {
-  .sm-hide {display: none}
-}
-
-@include media-not-sm {
-  .not-sm-hide {display: none}
-}
-
-@include media-not-md {
-  .not-md-hide {display: none}
-}
-
-@include media-not-lg {
-  .not-lg-hide {display: none}
-}
-
 @include media-touch {
   * {cursor: pointer}
 }
