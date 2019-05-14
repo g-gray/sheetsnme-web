@@ -83,11 +83,13 @@ class _Navbar extends u.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
 
+    const {context} = this
+
     this.open = () => {
       dispatch(a.addDialog(MobileMenu))
     }
 
-    this.nextLang = context => () => {
+    this.nextLang = () => {
       dispatch(a.nextLang(u.nextLang(context)))
     }
   }
@@ -108,7 +110,7 @@ class _Navbar extends u.ViewComponent {
           </div>
           <div className='row-start-stretch gaps-h-0x75 padding-h-1'>
             <m.FakeButton
-              onClick={nextLang(context)}
+              onClick={nextLang}
               className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
               {u.xln(context, t.LANG)}
             </m.FakeButton>
@@ -125,7 +127,7 @@ class _Navbar extends u.ViewComponent {
         </Link>
         <div className='row-start-stretch gaps-h-0x75 padding-h-1'>
           <m.FakeButton
-            onClick={nextLang(context)}
+            onClick={nextLang}
             className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
             {u.xln(context, t.LANG)}
           </m.FakeButton>
@@ -565,9 +567,34 @@ const CategoryForm = connect(state => ({
 }))(_CategoryForm)
 
 class _CategoriesList extends u.ViewComponent {
+  constructor({dispatch}) {
+    super(...arguments)
+
+    const {context} = this
+
+    this.onOpen = category => () => {
+      dispatch(a.addDialog(FormDialog, {
+        form: CategoryForm,
+        formProps: {category},
+        title: u.xln(context, t.EDIT_CATEGORY),
+      }))
+    }
+
+    this.onDelete = category => () => {
+      dispatch(a.addDialog(ConfirmDialog, {
+        question: u.xln(context, t.DELETE_CATEGORY),
+        onConfirm: () => {
+          dispatch(a.deleteCategory(category.id, u.xln(context, t.DELETING_CATEGORY)))
+            .then(() => dispatch(a.notify({text: u.xln(context, t.CATEGORY_DELETED)})))
+            .then(() => dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))))
+        },
+      }))
+    }
+  }
+
   render({
-    context,
-    props: {categories, pending, dispatch},
+    props: {categories, pending},
+    onOpen, onDelete,
   }) {
     return pending || !f.size(categories) ? (
       <div className='col-start-stretch'>
@@ -580,23 +607,8 @@ class _CategoriesList extends u.ViewComponent {
         {f.map(categories, category => (
           <EntityItem
             key={category.id}
-            onOpen={() => {
-              dispatch(a.addDialog(FormDialog, {
-                form: CategoryForm,
-                formProps: {category},
-                title: u.xln(context, t.EDIT_CATEGORY),
-              }))
-            }}
-            onDelete={() => {
-              dispatch(a.addDialog(ConfirmDialog, {
-                question: u.xln(context, t.DELETE_CATEGORY),
-                onConfirm: () => {
-                  dispatch(a.deleteCategory(category.id, u.xln(context, t.DELETING_CATEGORY)))
-                    .then(() => dispatch(a.notify({text: u.xln(context, t.CATEGORY_DELETED)})))
-                    .then(() => dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))))
-                },
-              }))
-            }}>
+            onOpen={onOpen(category)}
+            onDelete={onDelete(category)}>
             {category.title}
           </EntityItem>
         ))}
@@ -714,9 +726,34 @@ const AccountForm = connect(state => ({
 }))(_AccountForm)
 
 class _AccountsList extends u.ViewComponent {
+  constructor({dispatch}) {
+    super(...arguments)
+
+    const {context} = this
+
+    this.onOpen = account => () => {
+      dispatch(a.addDialog(FormDialog, {
+        form: AccountForm,
+        formProps: {account},
+        title: u.xln(context, t.EDIT_ACCOUNT),
+      }))
+    }
+
+    this.onDelete = account => () => {
+      dispatch(a.addDialog(ConfirmDialog, {
+        question: u.xln(context, t.DELETE_ACCOUNT),
+        onConfirm: () => {
+          dispatch(a.deleteAccount(account.id, u.xln(context, t.DELETING_ACCOUNT)))
+            .then(() => dispatch(a.notify({text: u.xln(context, t.ACCOUNT_DELETED)})))
+            .then(() => dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))))
+        },
+      }))
+    }
+  }
+
   render({
-    context,
-    props: {accounts, pending, dispatch},
+    props: {accounts, pending},
+    onOpen, onDelete,
   }) {
     return pending || !f.size(accounts) ? (
       <div className='col-start-stretch'>
@@ -729,23 +766,8 @@ class _AccountsList extends u.ViewComponent {
         {f.map(accounts, account => (
           <EntityItem
             key={account.id}
-            onOpen={() => {
-              dispatch(a.addDialog(FormDialog, {
-                form: AccountForm,
-                formProps: {account},
-                title: u.xln(context, t.EDIT_ACCOUNT),
-              }))
-            }}
-            onDelete={() => {
-              dispatch(a.addDialog(ConfirmDialog, {
-                question: u.xln(context, t.DELETE_ACCOUNT),
-                onConfirm: () => {
-                  dispatch(a.deleteAccount(account.id, u.xln(context, t.DELETING_ACCOUNT)))
-                    .then(() => dispatch(a.notify({text: u.xln(context, t.ACCOUNT_DELETED)})))
-                    .then(() => dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))))
-                },
-              }))
-            }}>
+            onOpen={onOpen(account)}
+            onDelete={onDelete(account)}>
             <div className='flex-1 row-between-center gaps-h-1'>
               <span>{account.title}</span>
               <span className='fg-black-50'>{account.balance}</span>
@@ -866,9 +888,34 @@ const PayeeForm = connect(state => ({
 }))(_PayeeForm)
 
 class _PayeesList extends u.ViewComponent {
+  constructor({dispatch}) {
+    super(...arguments)
+
+    const {context} = this
+
+    this.onOpen = payee => () => {
+      dispatch(a.addDialog(FormDialog, {
+        form: PayeeForm,
+        formProps: {payee},
+        title: u.xln(context, t.EDIT_PAYEE),
+      }))
+    }
+
+    this.onDelete = payee => () => {
+      dispatch(a.addDialog(ConfirmDialog, {
+        question: u.xln(context, t.DELETE_PAYEE),
+        onConfirm: () => {
+          dispatch(a.deletePayee(payee.id, u.xln(context, t.DELETING_PAYEE)))
+            .then(() => dispatch(a.notify({text: u.xln(context, t.PAYEE_DELETED)})))
+            .then(() => dispatch(a.fetchPayees(u.xln(context, t.FETCHING_PAYEES))))
+        },
+      }))
+    }
+  }
+
   render({
-    context,
-    props: {payees, pending, dispatch},
+    props: {payees, pending},
+    onOpen, onDelete,
   }) {
     return pending || !f.size(payees) ? (
       <div className='col-start-stretch'>
@@ -881,23 +928,8 @@ class _PayeesList extends u.ViewComponent {
         {f.map(payees, payee => (
           <EntityItem
             key={payee.id}
-            onOpen={() => {
-              dispatch(a.addDialog(FormDialog, {
-                form: PayeeForm,
-                formProps: {payee},
-                title: u.xln(context, t.EDIT_PAYEE),
-              }))
-            }}
-            onDelete={() => {
-              dispatch(a.addDialog(ConfirmDialog, {
-                question: u.xln(context, t.DELETE_PAYEE),
-                onConfirm: () => {
-                  dispatch(a.deletePayee(payee.id, u.xln(context, t.DELETING_PAYEE)))
-                    .then(() => dispatch(a.notify({text: u.xln(context, t.PAYEE_DELETED)})))
-                    .then(() => dispatch(a.fetchPayees(u.xln(context, t.FETCHING_PAYEES))))
-                },
-              }))
-            }}>
+            onOpen={onOpen(payee)}
+            onDelete={onDelete(payee)}>
             {payee.title}
           </EntityItem>
         ))}
@@ -1346,14 +1378,14 @@ class EntityPlaceholder extends u.ViewComponent {
 class EntityItem extends u.ViewComponent {
   constructor({onOpen}) {
     super(...arguments)
-    this.actions = React.createRef()
+    this.actionsRef = React.createRef()
 
     this.onClick = event => {
       if (!onOpen) return
       f.validate(onOpen, f.isFunction)
 
-      const actions = u.findDomNode(this.actions.current)
-      if (u.isAncestorOf(actions, event.target)) return
+      const actionsNode = u.findDomNode(this.actionsRef.current)
+      if (u.isAncestorOf(actionsNode, event.target)) return
 
       onOpen()
     }
@@ -1362,7 +1394,7 @@ class EntityItem extends u.ViewComponent {
   render({
     context,
     props: {children, onDelete},
-    onClick, actions,
+    onClick, actionsRef,
   }) {
     const isMobile = u.isMobile(context)
 
@@ -1382,7 +1414,7 @@ class EntityItem extends u.ViewComponent {
           </div>
         </div>
         {isMobile ? null :
-        <div className='row-center-center padding-h-0x25' ref={actions}>
+        <div className='row-center-center padding-h-0x25' ref={actionsRef}>
           <div className='row-center-center' style={{minHeight: '2.5rem'}}>
             <m.FakeButton
               className='row-center-center show-on-trigger-hover decorate-icon-button'
@@ -1411,36 +1443,44 @@ class Placeholder extends u.ViewComponent {
 class _Transaction extends u.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
-    this.actions = React.createRef()
+    this.actionsRef = React.createRef()
 
-    this.onDelete = id => {
-      const {context, props} = this
-      dispatch(a.deleteTransaction(id, u.xln(context, t.DELETING_TRANSACTION)))
-        .then(() => dispatch(a.notify({text: u.xln(context, t.TRANSACTION_DELETED)})))
-        .then(() => dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS))))
+    const {context} = this
+
+    this.onOpen = transaction => event => {
+      const actionsNode = u.findDomNode(this.actionsRef.current)
+      if (u.isAncestorOf(actionsNode, event.target)) return
+
+      dispatch(a.addDialog(FormDialog, {
+        form: TransactionForm,
+        formProps: {transaction},
+        title: u.xln(context, t.EDIT_TRANSACTION),
+      }))
+    }
+
+    this.onDelete = transaction => () => {
+      dispatch(a.addDialog(ConfirmDialog, {
+        question: u.xln(context, t.DELETE_TRANSACTION),
+        onConfirm: () => {
+          dispatch(a.deleteTransaction(transaction.id, u.xln(context, t.DELETING_TRANSACTION)))
+            .then(() => dispatch(a.notify({text: u.xln(context, t.TRANSACTION_DELETED)})))
+            .then(() => dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS))))
+        },
+      }))
     }
   }
 
   render({
     context,
-    props: {transaction, dispatch},
-    actions
+    props: {transaction},
+    onOpen, onDelete, actionsRef,
   }) {
     const isMobile = u.isMobile(context)
 
     return (
       <m.FakeButton
         type='div'
-        onClick={event => {
-          const actions = u.findDomNode(this.actions.current)
-          if (u.isAncestorOf(actions, event.target)) return
-
-          dispatch(a.addDialog(FormDialog, {
-            form: TransactionForm,
-            formProps: {transaction},
-            title: u.xln(context, t.EDIT_TRANSACTION),
-          }))
-        }}
+        onClick={onOpen(transaction)}
         className='row-start-start gaps-h-1 padding-h-1 list-item trigger text-left theme-light-menu-busy'>
         <div className='row-start-center padding-v-1'>
           <TransactionIcon transaction={transaction} />
@@ -1459,16 +1499,11 @@ class _Transaction extends u.ViewComponent {
           <hr className='hr hide-in-list-last-child' />
         </div>
         {isMobile ? null :
-        <div className='row-center-center padding-v-1 padding-h-0x25' ref={actions}>
+        <div className='row-center-center padding-v-1 padding-h-0x25' ref={actionsRef}>
           <div className='row-center-center' style={{minHeight: '2.5rem'}}>
             <m.FakeButton
               className='row-center-center show-on-trigger-hover decorate-icon-button'
-              onClick={() => {
-                dispatch(a.addDialog(ConfirmDialog, {
-                  question: u.xln(context, t.DELETE_TRANSACTION),
-                  onConfirm: () => this.onDelete(transaction.id),
-                }))
-              }}>
+              onClick={onDelete(transaction)}>
               <s.Trash2 className='font-large' />
             </m.FakeButton>
           </div>
