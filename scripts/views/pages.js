@@ -108,7 +108,7 @@ class _Navbar extends u.ViewComponent {
                 onClick={open} />
             </m.FakeButton>
           </div>
-          <div className='row-start-stretch gaps-h-0x75 padding-h-1'>
+          <div className='row-start-stretch relative z-index-1'>
             <m.FakeButton
               onClick={nextLang}
               className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
@@ -125,7 +125,7 @@ class _Navbar extends u.ViewComponent {
         <Link to='/' className='row-center-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
           <Logo />
         </Link>
-        <div className='row-start-stretch gaps-h-0x75 padding-h-1'>
+        <div className='row-start-stretch relative z-index-1'>
           <m.FakeButton
             onClick={nextLang}
             className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
