@@ -80,10 +80,8 @@ class Logo extends u.ViewComponent {
 }
 
 class _Navbar extends u.ViewComponent {
-  constructor() {
+  constructor({dispatch}) {
     super(...arguments)
-
-    const {props: {dispatch}} = this
 
     this.open = () => {
       dispatch(a.addDialog(MobileMenu))
@@ -315,27 +313,25 @@ class _Notifications extends u.ViewComponent {
 
   render({props: {notifications, dispatch}}) {
     const notification = notifications[0]
+    if (!notification) return null
 
-    if (notification) {
-      if (notification.timeout) {
-        this.timeoutId = setTimeout(() => {
-          dispatch(a.removeNotification(notification.time))
-        }, notification.timeout)
-      }
-
-      return (
-        <Snackbar>
-          <div>
-            {notification.messages ?
-              f.map(notification.messages, ({text}, index) => (
-                <p key={`notification-${index}`}>{text}</p>
-              )) : notification.text}
-          </div>
-        </Snackbar>
-      )
+    if (notification.timeout) {
+      this.timeoutId = setTimeout(() => {
+        dispatch(a.removeNotification(notification.time))
+      }, notification.timeout)
     }
 
-    return null
+    return (
+      <Snackbar>
+        <div>
+          {notification.messages
+            ? f.map(notification.messages, ({text}, index) => (
+              <p key={`notification-${index}`}>{text}</p>
+            ))
+            : notification.text}
+        </div>
+      </Snackbar>
+    )
   }
 }
 
@@ -523,12 +519,13 @@ class _CategoryForm extends u.ViewComponent {
     context,
     state: {errors, formValues: {id}},
     props: {pending},
+    onSubmit, onDelete,
   }) {
     const isMobile = u.isMobile(context)
     const disabled = pending
 
     return (
-      <form className='col-start-stretch' onSubmit={this.onSubmit}>
+      <form className='col-start-stretch' onSubmit={onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
             name='title'
@@ -542,7 +539,7 @@ class _CategoryForm extends u.ViewComponent {
             {!id ? null :
             <m.FakeButton
               className='btn-transparent'
-              onClick={this.onDelete}
+              onClick={onDelete}
               disabled={disabled}>
               {u.xln(context, t.DELETE)}
             </m.FakeButton>}
@@ -671,12 +668,13 @@ class _AccountForm extends u.ViewComponent {
     context,
     state: {errors, formValues: {id}},
     props: {pending},
+    onSubmit, onDelete,
   }) {
     const isMobile = u.isMobile(context)
     const disabled = pending
 
     return (
-      <form className='col-start-stretch' onSubmit={this.onSubmit}>
+      <form className='col-start-stretch' onSubmit={onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
             name='title'
@@ -690,7 +688,7 @@ class _AccountForm extends u.ViewComponent {
             {!id ? null :
             <m.FakeButton
               className='btn-transparent'
-              onClick={this.onDelete}
+              onClick={onDelete}
               disabled={disabled}>
               {u.xln(context, t.DELETE)}
             </m.FakeButton>}
@@ -822,12 +820,13 @@ class _PayeeForm extends u.ViewComponent {
     context,
     state: {errors, formValues: {id}},
     props: {pending},
+    onSubmit, onDelete,
   }) {
     const isMobile = u.isMobile(context)
     const disabled = pending
 
     return (
-      <form className='col-start-stretch' onSubmit={this.onSubmit}>
+      <form className='col-start-stretch' onSubmit={onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
             name='title'
@@ -841,7 +840,7 @@ class _PayeeForm extends u.ViewComponent {
             {!id ? null :
             <m.FakeButton
               className='btn-transparent'
-              onClick={this.onDelete}
+              onClick={onDelete}
               disabled={disabled}>
               {u.xln(context, t.DELETE)}
             </m.FakeButton>}
@@ -1103,12 +1102,13 @@ class _TransactionForm extends u.ViewComponent {
     context,
     state: {formValues: {type, id}, errors},
     props: {categories, accounts, payees, pending},
+    onSubmit, onDelete, onTypeUpdated,
   }) {
     const isMobile = u.isMobile(context)
     const disabled = pending
 
     return (
-      <form className='col-start-stretch' onSubmit={this.onSubmit}>
+      <form className='col-start-stretch' onSubmit={onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormDateElement
             name='date'
@@ -1126,7 +1126,7 @@ class _TransactionForm extends u.ViewComponent {
                     name='type'
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], OUTCOME)}
-                    onUpdate={this.onTypeUpdated} />
+                    onUpdate={onTypeUpdated} />
                   <span>{u.xln(context, t.OUTCOME)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
@@ -1134,7 +1134,7 @@ class _TransactionForm extends u.ViewComponent {
                     name='type'
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], INCOME)}
-                    onUpdate={this.onTypeUpdated} />
+                    onUpdate={onTypeUpdated} />
                   <span>{u.xln(context, t.INCOME)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
@@ -1142,7 +1142,7 @@ class _TransactionForm extends u.ViewComponent {
                     name='type'
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], TRANSFER)}
-                    onUpdate={this.onTypeUpdated} />
+                    onUpdate={onTypeUpdated} />
                   <span>{u.xln(context, t.TRANSFER)}</span>
                 </label>
               </div>
@@ -1152,7 +1152,7 @@ class _TransactionForm extends u.ViewComponent {
                     name='type'
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], LOAN)}
-                    onUpdate={this.onTypeUpdated} />
+                    onUpdate={onTypeUpdated} />
                   <span>{u.xln(context, t.I_LOANED)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
@@ -1160,7 +1160,7 @@ class _TransactionForm extends u.ViewComponent {
                     name='type'
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], BORROW)}
-                    onUpdate={this.onTypeUpdated} />
+                    onUpdate={onTypeUpdated} />
                   <span>{u.xln(context, t.I_BORROWED)}</span>
                 </label>
               </div>
@@ -1251,7 +1251,7 @@ class _TransactionForm extends u.ViewComponent {
             {!id ? null :
             <m.FakeButton
               className='btn-transparent'
-              onClick={this.onDelete}
+              onClick={onDelete}
               disabled={disabled}>
               {u.xln(context, t.DELETE)}
             </m.FakeButton>}
@@ -1362,13 +1362,14 @@ class EntityItem extends u.ViewComponent {
   render({
     context,
     props: {children, onDelete},
+    onClick, actions,
   }) {
     const isMobile = u.isMobile(context)
 
     return (
       <m.FakeButton
         type='div'
-        onClick={this.onClick}
+        onClick={onClick}
         className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy trigger'>
         <div className='relative width-2x5 square'>
           <div className='row-center-center abs-center'>
@@ -1381,7 +1382,7 @@ class EntityItem extends u.ViewComponent {
           </div>
         </div>
         {isMobile ? null :
-        <div className='row-center-center padding-h-0x25' ref={this.actions}>
+        <div className='row-center-center padding-h-0x25' ref={actions}>
           <div className='row-center-center' style={{minHeight: '2.5rem'}}>
             <m.FakeButton
               className='row-center-center show-on-trigger-hover decorate-icon-button'
@@ -1408,13 +1409,12 @@ class Placeholder extends u.ViewComponent {
 }
 
 class _Transaction extends u.ViewComponent {
-  constructor() {
+  constructor({dispatch}) {
     super(...arguments)
     this.actions = React.createRef()
 
     this.onDelete = id => {
       const {context, props} = this
-      const {dispatch} = props
       dispatch(a.deleteTransaction(id, u.xln(context, t.DELETING_TRANSACTION)))
         .then(() => dispatch(a.notify({text: u.xln(context, t.TRANSACTION_DELETED)})))
         .then(() => dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS))))
@@ -1424,6 +1424,7 @@ class _Transaction extends u.ViewComponent {
   render({
     context,
     props: {transaction, dispatch},
+    actions
   }) {
     const isMobile = u.isMobile(context)
 
@@ -1458,7 +1459,7 @@ class _Transaction extends u.ViewComponent {
           <hr className='hr hide-in-list-last-child' />
         </div>
         {isMobile ? null :
-        <div className='row-center-center padding-v-1 padding-h-0x25' ref={this.actions}>
+        <div className='row-center-center padding-v-1 padding-h-0x25' ref={actions}>
           <div className='row-center-center' style={{minHeight: '2.5rem'}}>
             <m.FakeButton
               className='row-center-center show-on-trigger-hover decorate-icon-button'
@@ -1668,6 +1669,7 @@ class FormLabel extends u.ViewComponent {
 class FormTextElement extends u.ViewComponent {
   constructor({onUpdate}) {
     super(...arguments)
+
     this.onChange = ({target: {value}}) => {
       if (!onUpdate) return
       f.validate(onUpdate, f.isFunction)
@@ -1958,20 +1960,21 @@ class _ActionsMenu extends u.ViewComponent {
   render({
     props: {children},
     state: {expanded},
+    toggle, close,
   }) {
     return !children ? null : (
       <div className='relative row-start-stretch'>
         <m.FakeButton
-          onClick={this.toggle}
+          onClick={toggle}
           className='relative row-start-center decorate-light-menu-item z-index-2'
           aria-expanded={expanded}>
           <s.MoreVertical className='font-large' />
         </m.FakeButton>
         {!expanded ? null :
-        <m.Closer root={this} close={this.close}>
+        <m.Closer root={this} close={close}>
           <div
             className='dropdown-position z-index-1'
-            onClick={this.close}>
+            onClick={close}>
             <div className='dropdown dropdown-padding col-start-stretch' style={{minWidth: '11rem'}}>
               {children}
             </div>
@@ -2000,11 +2003,12 @@ class _ConfirmDialog extends u.ViewComponent {
   render({
     context,
     props: {question, cancelText, confirmText},
+    confirm, close,
   }) {
     return (
-      <m.Dialog onEscape={this.close}>
+      <m.Dialog onEscape={close}>
         <m.DialogOverlay className='bg-overlay-dark' />
-        <m.DialogCentered onClick={this.close}>
+        <m.DialogCentered onClick={close}>
           <div
             className='col-start-stretch gaps-v-1 padding-v-1 rounded bg-white shadow-dept-3'
             style={{minWidth: '11rem'}}>
@@ -2012,10 +2016,10 @@ class _ConfirmDialog extends u.ViewComponent {
               {question}
             </p>
             <div className='row-center-center gaps-h-1'>
-              <m.FakeButton className='btn-secondary' onClick={this.close}>
+              <m.FakeButton className='btn-secondary' onClick={close}>
                 {cancelText || u.xln(context, t.CANCEL)}
               </m.FakeButton>
-              <m.FakeButton className='btn-primary' onClick={this.confirm}>
+              <m.FakeButton className='btn-primary' onClick={confirm}>
                 {confirmText || u.xln(context, t.OK)}
               </m.FakeButton>
             </div>
