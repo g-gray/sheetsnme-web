@@ -30,7 +30,8 @@ class App extends u.ViewComponent {
   render({props: {isMobile, lang}}) {
     return (
       <u.Context.Provider value={{isMobile, lang}}>
-        <AppRouter />
+        {/* Force components render when language was changed */}
+        <AppRouter key={lang} />
       </u.Context.Provider>
     )
   }
