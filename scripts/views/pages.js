@@ -1203,6 +1203,7 @@ class _TransactionForm extends u.ViewComponent {
           <Fragment>
             <FormTextElement
               type='number'
+              step='0.01'
               name='outcomeAmount'
               label={u.xln(context, t.AMOUNT)}
               disabled={disabled}
@@ -1225,6 +1226,7 @@ class _TransactionForm extends u.ViewComponent {
           <Fragment>
             <FormTextElement
               type='number'
+              step='0.01'
               name='incomeAmount'
               label={u.xln(context, t.AMOUNT)}
               disabled={disabled}
@@ -1714,7 +1716,7 @@ class FormTextElement extends u.ViewComponent {
 
   render({
     onChange,
-    props: {label, name, type, value, defaultValue, readOnly, disabled},
+    props: {label, name, type, step, value, defaultValue, readOnly, disabled},
   }) {
     return (
       <G7FormLine>
@@ -1725,6 +1727,7 @@ class FormTextElement extends u.ViewComponent {
           id={name}
           name={name}
           type={type || 'text'}
+          step={step}
           className='input'
           value={value}
           defaultValue={defaultValue}
