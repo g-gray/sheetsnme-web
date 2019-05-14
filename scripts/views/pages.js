@@ -1533,17 +1533,17 @@ class _TransactionAccount extends u.ViewComponent {
   render({
     props: {transaction, accountsById},
   }) {
-    const outcomeAccount = f.scan(accountsById, transaction.outcomeAccountId, 'title')
-    const incomeAccount  = f.scan(accountsById, transaction.incomeAccountId, 'title')
+    const outcomeAccount = accountsById[transaction.outcomeAccountId]
+    const incomeAccount  = accountsById[transaction.incomeAccountId]
 
     return (
       <span className='row-start-center gaps-h-0x25 wspace-nowrap'>
         {!outcomeAccount ? null :
-        <span>{outcomeAccount}</span>}
+        <span>{outcomeAccount.title}</span>}
         {!outcomeAccount || !incomeAccount ? null :
         <s.ArrowRight />}
         {!incomeAccount ? null :
-        <span>{incomeAccount}</span>}
+        <span>{incomeAccount.title}</span>}
       </span>
     )
   }
@@ -1555,12 +1555,16 @@ const TransactionAccount = connect(state => ({
 
 class _TransactionOrigin extends u.ViewComponent {
   render({
+    context,
     props: {transaction, categoriesById, payeesById},
   }) {
     return (
       <span className='flex-1 width-0 text-ellipsis'>
-        {f.scan(payeesById, transaction.payeeId, 'title') ||
-         f.scan(categoriesById, transaction.categoryId, 'title') || 'Without category category category'}
+        {payeesById[transaction.payeeId]
+          ? payeesById[transaction.payeeId].title
+          : categoriesById[transaction.categoryId]
+          ? categoriesById[transaction.categoryId].title
+          : u.xln(context, t.WITHOUT_CATEGORY)}
       </span>
     )
   }

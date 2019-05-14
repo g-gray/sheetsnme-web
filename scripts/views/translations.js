@@ -76,3 +76,5 @@ export const ACCOUNT_DELETED       = {en: 'Account deleted', ru: 'Счет уд�
 export const CATEGORY_DELETED      = {en: 'Category deleted', ru: 'Категория удалена'}
 export const PAYEE_DELETED         = {en: 'Payee deleted', ru: 'Плательщик удален'}
 export const TRANSACTION_DELETED   = {en: 'Transaction deleted', ru: 'Транзакция удалена'}
+
+export const WITHOUT_CATEGORY      = {en: 'Without category', ru: 'Без категории'}
