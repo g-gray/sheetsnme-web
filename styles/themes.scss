@@ -17,10 +17,13 @@ ones.
   stroke: currentColor;
 }
 
-.fg-link                {color: $color-link}
-.bg-link                {background-color: $color-link}
+.fg-transparent      {color: transparent}
+.bg-transparent      {background-color: transparent}
 
-.bg-overlay             {background-color: rgba($color-on-surface, 0.32)}
+.fg-link             {color: $color-link}
+.bg-link             {background-color: $color-link}
+
+.bg-overlay          {background-color: rgba($color-on-surface, 0.32)}
 
 .fg-surface          {color: $color-surface}
 .bg-surface          {background-color: $color-surface}
