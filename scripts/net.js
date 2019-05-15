@@ -1,4 +1,5 @@
 import * as e from 'emerge'
+import * as xhttp from 'xhttp'
 import * as u from './utils'
 
 export function authedJsonFetch(url, params) {
@@ -7,27 +8,34 @@ export function authedJsonFetch(url, params) {
   params = e.merge(params, {headers: u.langHeaders(state.dom.lang)})
 
   return authedHttpFetch(url, u.jsonParams(params))
-    .then(response => response.json())
-    .then(json => {
-      if (json.errors) {
-        return Promise.reject(json.errors)
+    .then(({body}) => body)
+    .catch(response => {
+      if (response.body.errors) {
+        throw response.body.errors
       }
 
-      return json
+      throw response
     })
 }
 
 export function authedHttpFetch(url, params) {
-  return httpFetch(url, {credentials: 'same-origin', ...params})
-    .then(response => {
+  return httpFetch({url, ...params})
+    .catch(response => {
       if (response.status === 401) {
         window.location = `/auth/login?redirectTo=${encodeURIComponent(window.location.href)}`
+        return
       }
 
-      return response
+      throw response
     })
 }
 
-export function httpFetch(url, params) {
-  return fetch(url, params)
+function httpFetch(params) {
+  // eslint-disable-next-line promise/avoid-new
+  return new Promise((resolve, reject) => {
+    xhttp.Xhttp(params, response => {
+      if (response.ok) resolve(response)
+      else reject(response)
+    })
+  })
 }

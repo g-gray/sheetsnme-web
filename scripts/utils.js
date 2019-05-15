@@ -199,10 +199,7 @@ export function parseNum(value) {
  */
 
 export function jsonParams(params) {
-  return e.merge(params, {
-    headers: jsonHeaders,
-    body: e.get(params, 'body') ? JSON.stringify(params.body) : undefined,
-  })
+  return e.merge(params, {headers: jsonHeaders})
 }
 
 const jsonHeaders = {
