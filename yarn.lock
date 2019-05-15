@@ -3007,6 +3007,11 @@ form-data@~2.3.2:
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
 
+fpx@^0.5:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/fpx/-/fpx-0.5.1.tgz#276f962994886a3f2ed8d9a0f2de7361ca718a73"
+  integrity sha512-pzbH9u3SF0VgoLpGFBSvQ4qFKSNDCZNR4CgdHnEaXNFWpyXNh/zjT2xQrk0+J0/l1x80/mBlkm0Gq22UawFliQ==
+
 fpx@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/fpx/-/fpx-0.7.0.tgz#83a843052a5c127dfa6056b5e2e48de06fa104a9"
@@ -7321,6 +7326,13 @@ ws@~6.1.0:
   integrity sha512-eqZfL+NE/YQc1/ZynhojeV8q+H050oR8AZ2uIev7RU10svA9ZnJUddHcOUZTJLinZ9yEfdA2kSATS2qZK5fhJA==
   dependencies:
     async-limiter "~1.0.0"
+
+xhttp@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/xhttp/-/xhttp-0.11.0.tgz#9848d640b4c0d5e6e7dac99aaab72e6f30ddbabe"
+  integrity sha512-V4mig7Br09WoRPkepywbV/s7Z76gH4LRPUwMvmJazfEG7atL3EuRo4uxnFrowDNbOEPet1QPjazuGLguK2uGqQ==
+  dependencies:
+    fpx "^0.5"
 
 xmlhttprequest-ssl@~1.5.4:
   version "1.5.5"

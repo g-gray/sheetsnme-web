@@ -68,13 +68,7 @@ const MobilePageLayout = connect(state => ({
 class Logo extends u.ViewComponent {
   render() {
     return (
-      <span className='row-center-center padding-0x25'>
-        <span className='row-center-center padding-0x25 bg-surface circle'>
-          <s.PieChart
-            className='fg-primary'
-            style={{fontSize: '1.5rem'}} />
-        </span>
-      </span>
+      <s.Logo className='fg-surface' style={{width: '2rem', height: '2rem'}} />
     )
   }
 }
