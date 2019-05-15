@@ -1,5 +1,5 @@
 html {
-  color: $color-text;
+  color: $color-on-body;
   background-color: $color-body;
 }
 
@@ -17,59 +17,46 @@ ones.
   stroke: currentColor;
 }
 
-.fg-transparent    {color: transparent}
-.bg-transparent    {background-color: transparent}
+.fg-link                {color: $color-link}
+.bg-link                {background-color: $color-link}
 
-.fg-white          {color: $color-white}
-.bg-white          {background-color: $color-white}
+.bg-overlay             {background-color: rgba($color-on-surface, 0.32)}
 
-.fg-black          {color: $color-black}
-.bg-black          {background-color: $color-black}
+.fg-surface          {color: $color-surface}
+.bg-surface          {background-color: $color-surface}
 
-.fg-black-25       {color: $color-black-25}
-.bg-black-25       {background-color: $color-black-25}
+.fg-on-surface       {color: $color-on-surface}
+.bg-on-surface       {background-color: $color-on-surface}
 
-.fg-black-35       {color: $color-black-35}
-.bg-black-35       {background-color: $color-black-35}
+.fg-on-surface-pale  {color: rgba($color-on-surface, 0.60)}
+.bg-on-surface-pale  {background-color: rgba($color-on-surface, 0.60)}
 
-.fg-black-50       {color: $color-black-50}
-.bg-black-50       {background-color: $color-black-50}
+.fg-primary          {color: $color-primary}
+.bg-primary          {background-color: $color-primary}
 
-.fg-black-70       {color: $color-black-70}
-.bg-black-70       {background-color: $color-black-70}
+.fg-on-primary       {color: $color-on-primary}
+.bg-on-primary       {background-color: $color-on-primary}
 
-.fg-black-75       {color: $color-black-75}
-.bg-black-75       {background-color: $color-black-75}
+.fg-primary-light    {color: $color-primary-light}
+.bg-primary-light    {background-color: $color-primary-light}
 
-.fg-black-97       {color: $color-black-97}
-.bg-black-97       {background-color: $color-black-97}
+.fg-on-primary-light {color: $color-on-primary-light}
+.bg-on-primary-light {background-color: $color-on-primary-light}
 
-.fg-primary-100    {color: $color-primary-100}
-.bg-primary-100    {background-color: $color-primary-100}
+.fg-primary-dark     {color: $color-primary-dark}
+.bg-primary-dark     {background-color: $color-primary-dark}
 
-.fg-primary-125    {color: $color-primary-125}
-.bg-primary-125    {background-color: $color-primary-125}
+.fg-on-primary-dark  {color: $color-on-primary-dark}
+.bg-on-primary-dark  {background-color: $color-on-primary-dark}
 
-.fg-primary-250    {color: $color-primary-250}
-.bg-primary-250    {background-color: $color-primary-250}
+.fg-accent           {color: $color-accent}
+.bg-accent           {background-color: $color-accent}
 
-.fg-primary-275    {color: $color-primary-275}
-.bg-primary-275    {background-color: $color-primary-275}
+.fg-on-accent        {color: $color-on-accent}
+.bg-on-accent        {background-color: $color-on-accent}
 
-.fg-link           {color: $color-link}
-.bg-link           {background-color: $color-link}
-
-.fg-warning        {color: $color-warning}
-.bg-warning        {background-color: $color-warning}
-
-.fg-accent         {color: $color-accent}
-.bg-accent         {background-color: $color-accent}
-
-.fg-success        {color: $color-success}
-.bg-success        {background-color: $color-success}
-
-.bg-overlay-dark   {background-color: $color-overlay-dark}
-.bg-overlay-light  {background-color: $color-overlay-light}
+.fg-error            {color: $color-error}
+.bg-error            {background-color: $color-error}
 
 /**
  * Link Decoration
@@ -81,7 +68,7 @@ ones.
 
 @mixin theme-link-current {
   @include if-current {
-    color: $color-text;
+    color: $color-on-surface;
   }
 }
 
@@ -137,110 +124,159 @@ ones.
   }
 }
 
-@mixin theme-link-white {
-  color: $color-white;
-}
-
-@mixin theme-link-white-current {
-  @include if-current {
-    color: $color-white;
-  }
-}
-
-@mixin theme-link-white-href-busy {
-  @include if-href {
-    @include sb-transition($duration: $transition-duration-fast);
-    @include busy {
-      color: $color-white;
-      text-decoration: underline;
-    }
-  }
-}
-
-.theme-link-white {@include theme-link-white;}
-.theme-link-white-current {@include theme-link-white-current;}
-.theme-link-white-href-busy {@include theme-link-white-href-busy;}
-
-.decorate-white-link {
-  @include theme-link-white;
-  @include theme-link-white-current;
-  @include theme-link-white-href-busy;
-}
-
-.decorate-white-links a {
-  @include noclass {
-    @extend .decorate-white-link;
-  }
-}
-
 /**
  * Menu Decoration
  */
 
-@mixin theme-light-menu {
-  color: $color-link;
-}
-
-@mixin theme-light-menu-busy {
-  @include busy {
-    background-color: $color-black-97;
-  }
-}
-
-@mixin theme-light-menu-current {
-  @include if-current {
-    background-color: $color-black-97;
-    color: $color-text;
-  }
-}
-
-@mixin theme-light-menu-icon {
-  svg {
-    color: $color-black-50;
-  }
-}
-
-.theme-light-menu {@include theme-light-menu;}
-.theme-light-menu-busy {@include theme-light-menu-busy;}
-.theme-light-menu-current {@include theme-light-menu-current;}
-.theme-light-menu-icon {@include theme-light-menu-icon;}
-
-.decorate-light-menu-item {
-  @include theme-light-menu;
-  @include theme-light-menu-busy;
-  @include theme-light-menu-current;
-  @include theme-light-menu-icon;
-}
-
 @mixin theme-dark-menu {
-  color: $color-white;
+  color: $color-on-primary;
 }
 
 @mixin theme-dark-menu-busy {
   @include busy {
-    background-color: hsb(204, 84, 68);
+    background-color: $color-primary-dark;
   }
 }
 
 @mixin theme-dark-menu-expanded {
   @include if-expanded {
-    background-color: hsb(204, 84, 56);
-  }
-}
-
-@mixin theme-dark-menu-icon {
-  svg {
-    color: hsb(204, 69, 37);
+    background-color: $color-primary-dark;
   }
 }
 
 .theme-dark-menu {@include theme-dark-menu;}
 .theme-dark-menu-busy {@include theme-dark-menu-busy;}
 .theme-dark-menu-expanded {@include theme-dark-menu-expanded;}
-.theme-dark-menu-icon {@include theme-dark-menu-icon;}
 
 .decorate-dark-menu-item {
   @include theme-dark-menu;
   @include theme-dark-menu-busy;
   @include theme-dark-menu-expanded;
+}
+
+/**
+ * Drawer (side menu)
+ */
+
+@mixin theme-drawer-link {
+  background-color: $color-surface;
+  color: $color-on-surface;
+}
+
+@mixin theme-drawer-link-busy {
+  @include busy {
+    background-color: rgba($color-on-surface, 0.06);
+  }
+}
+
+@mixin theme-drawer-link-current {
+  @include if-current {
+    background-color: rgba($color-primary, 0.12);
+    color: $color-primary;
+
+    .theme-drawer-icon {
+      color: $color-primary;
+    }
+  }
+}
+
+@mixin theme-drawer-icon {
+  color: rgba($color-on-surface, 0.60);
+}
+
+.theme-drawer-link {@include theme-drawer-link;}
+.theme-drawer-link-busy {@include theme-drawer-link-busy;}
+.theme-drawer-link-current {@include theme-drawer-link-current;}
+.theme-drawer-icon {@include theme-drawer-icon;}
+
+.decorate-drawer-link {
+  @include theme-drawer-link;
+  @include theme-drawer-link-busy;
+  @include theme-drawer-link-current;
+}
+
+/**
+ * Icon buttons
+ */
+
+@mixin theme-icon-button {
+  color: rgba($color-on-surface, 0.60);
+}
+
+@mixin theme-icon-button-busy {
+  @include busy {
+    color: $color-on-surface;
+  }
+}
+
+@mixin theme-icon-button-current {
+  @include if-current {
+    color: $color-on-surface;
+  }
+}
+
+.theme-icon-button {@include theme-icon-button;}
+.theme-icon-button-busy {@include theme-icon-button-busy;}
+.theme-icon-button-current {@include theme-icon-button-current;}
+
+.decorate-icon-button {
+  @include theme-icon-button;
+  @include theme-icon-button-busy;
+  @include theme-icon-button-current;
+}
+
+/**
+ * Snackbar (notifications)
+ */
+
+@mixin theme-snackbar {
+  background-color: $color-snackbar;
+  color: $color-on-snackbar;
+}
+
+.theme-snackbar {
+  @include theme-snackbar;
+}
+
+.snackbar {
+  min-width: 18rem;
+  min-height: 3rem;
+  @extend .rounded;
+  @extend .theme-snackbar;
+  @extend .shadow-dept-2;
+}
+
+
+/**
+ * Shadows
+ */
+
+.shadow-dept-1 {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+.shadow-dept-2 {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.16), 0 2px 6px rgba(0,0,0,0.23);
+}
+.shadow-dept-3 {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+.shadow-dept-4 {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+.shadow-dept-5 {
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+}
+
+/**
+ * Misc
+ */
+
+@mixin theme-placeholder {
+  background-color: rgba($color-primary, 0.12);
+}
+
+.theme-placeholder {@include theme-placeholder;}
+
+.decorate-placeholder {
+  @include theme-placeholder;
 }

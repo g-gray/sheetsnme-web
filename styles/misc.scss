@@ -3,7 +3,7 @@
  */
 
 $focus-width: 3px;
-$color-focus: rgba($color-primary-100, 0.3);
+$color-focus: rgba($color-primary, 0.3);
 
 // Note: this uses an outline because box-shadow and border don't support an
 // offset. Outlines don't support rounding, so this can't be used for circular
@@ -56,7 +56,7 @@ input[type=checkbox]:focus {
   border: 1px solid;
   border-radius: $radius;
   padding: 0.5rem 1rem;
-  @include sb-transition($duration: $transition-duration-faster);
+  @include sb-transition($duration: $transition-duration-fast);
   @extend .wspace-nowrap;
 
   &[disabled] {
@@ -67,7 +67,7 @@ input[type=checkbox]:focus {
 @mixin button-focus {
   &:focus, .enable-focus-indicators &:focus {
     outline: 0;
-    box-shadow: 0 0 0 3px $color-primary-250;
+    box-shadow: 0 0 0 3px $color-primary-light;
   }
 }
 
@@ -82,36 +82,36 @@ input[type=checkbox]:focus {
 .btn-primary {
   @include button-core;
   @include button-focus;
-  color: $color-white;
-  background-color: $color-primary-125;
-  border-color: $color-primary-125;
+  color: $color-on-primary;
+  background-color: $color-primary;
+  border-color: transparent;
   @include busy {
-    background-color: $color-primary-100;
-    border-color: $color-primary-100;
+    background-color: $color-primary-dark;
   }
 }
 
 .btn-secondary {
   @include button-core;
   @include button-focus;
-  color: $color-black-35;
-  background-color: $color-primary-275;
-  border-color: $color-primary-275;
+  color: $color-primary;
+  background-color: rgba($color-on-surface, 0.06);
+  border-color: transparent;
   @include busy {
-    background-color: $color-primary-250;
-    border-color: $color-primary-250;
+    color: $color-primary-dark;
+    background-color: rgba($color-primary, 0.12);
   }
 }
 
 .btn-transparent {
   @include button-core;
   @include button-focus;
-  color: $color-link;
+  color: $color-primary;
   background-color: transparent;
   border-color: transparent;
   @include busy {
-    background-color: $color-primary-275;
-    border-color: $color-primary-275;
+    color: $color-primary-dark;
+    background-color: rgba($color-primary, 0.12);
+    border-color: transparent;
   }
 }
 
@@ -142,24 +142,24 @@ input[type=checkbox]:focus {
 @mixin input-focus {
   &:focus, .enable-focus-indicators &:focus {
     outline: 0;
-    background-color: $color-white;
-    border-color: $color-primary-125;
-    box-shadow: inset 0 1px 2px $color-black-97, 0 0 0 3px $color-primary-250;
+    background-color: $color-surface;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px $color-primary-light;
   }
 }
 
 .input {
   @include input-core;
   @include input-focus;
-  border-color: $color-black-75;
-  background-color: $color-white;
+  border-color: rgba($color-on-surface, 0.12);
+  background-color: $color-surface;
 }
 
 .input::placeholder {
   @extend .weight-light;
   @include sb-transition;
   opacity: 1;
-  color: $color-black-70;
+  color: rgba($color-on-surface, 0.32);
 }
 
 .textarea {
@@ -171,7 +171,8 @@ input[type=checkbox]:focus {
   @extend .input;
   padding-right: 1.5rem;
   appearance: none;
-  background-image: inline-feather-svg('<polyline points="6 9 12 15 18 9" />', $color-black-50);
+  background-image: inline-feather-svg('<polyline points="6 9 12 15 18 9" />', rgba($color-on-surface, 0.60));
+  background-color: $color-surface;
   background-position: right 0.25rem center;
   background-repeat: no-repeat;
   background-size: 16px;
@@ -182,7 +183,7 @@ input[type=checkbox]:focus {
  */
 
 $dropdown-color-edge:   hsb(208, 10%, 86%);
-$dropdown-color-bg:     $color-white;
+$dropdown-color-bg:     $color-surface;
 $dropdown-color-shadow: rgba(black, 0.1);
 
 .dropdown-chevron::before {
@@ -241,18 +242,7 @@ $dropdown-color-shadow: rgba(black, 0.1);
 
 .dialog-overlay {
   @extend .abs-fit;
-}
-
-.dialog-overlay.-light {
-  background-color: $color-overlay-light;
-
-  @include media-sm {
-    background-color: $color-white;
-  }
-}
-
-.dialog-overlay.-dark {
-  background-color: $color-overlay-dark;
+  @extend .bg-overlay;
 }
 
 .dialog-scrollable {
@@ -355,4 +345,15 @@ $dropdown-color-shadow: rgba(black, 0.1);
 
 .mobile-form-element-spacing {
   @include form-element-spacing(0.75rem);
+}
+
+.drawer-link {
+  padding: 0.75rem 0.75rem;
+  @extend .rounded;
+  @extend .gaps-h-1x25;
+  @extend .row-start-center;
+}
+
+.drawer-link * {
+  line-height: 1;
 }

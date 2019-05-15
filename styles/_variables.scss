@@ -2,35 +2,27 @@
  * Colors
  */
 
-$color-white:         white;
-$color-black:         black;
+$color-body:             #FFFFFF;
+$color-on-body:          #000000;
+$color-surface:          #FFFFFF;
+$color-on-surface:       #000000;
 
-$color-deep:          hsl(0, 0%, 13%);
+$color-primary:          #009688;
+$color-on-primary:       #FFFFFF;
+$color-primary-light:    #B2DFDB;
+$color-on-primary-light: #000000;
+$color-primary-dark:     #00796B;
+$color-on-primary-dark:  #FFFFFF;
 
-$color-overlay-dark:  rgba(black, 0.5);
-$color-overlay-light: rgba(white, 0.66);
+$color-accent:           #FF5252;
+$color-on-accent:        #FFFFFF;
 
-$color-black-25:      hsb(0, 0, 25);
-$color-black-35:      hsb(0, 0, 35);
-$color-black-50:      hsb(0, 0, 50);
-$color-black-70:      hsb(0, 0, 70);
-$color-black-75:      hsb(0, 0, 75);
-$color-black-90:      hsb(0, 0, 90);
-$color-black-97:      hsb(0, 0, 97);
+$color-error:            #B00020;
 
-$color-primary-100:   hsb(204, 84, 76);
-$color-primary-125:   hsb(204, 84, 86);
-$color-primary-250:   hsb(204, 08, 94);
-$color-primary-275:   hsb(204, 04, 94);
+$color-snackbar:            #323232;
+$color-on-snackbar:         #FFFFFF;
 
-$color-body:          white;
-$color-text:          hsb(0, 0, 25);
-$color-link:          hsb(204, 68, 52);
-
-$color-warning:       hsb(14, 87, 100);
-$color-success:       hsb(122, 57, 69);
-$color-snackbar:      #323232;
-$color-accent:        #FF5252;
+$color-link: $color-primary;
 
 /**
  * Layout
@@ -63,5 +55,5 @@ $transition-duration-medium: 0.5s;
  * Misc
  */
 
-$radius: 4px;
+$radius: 5px;
 $navbar-height: 3.5rem;

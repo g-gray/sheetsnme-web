@@ -1,5 +1,5 @@
-$color-tooltip-bg: rgba($color-deep, 0.8);
-$color-tooltip-fg: $color-white;
+$color-tooltip-bg: $color-snackbar;
+$color-tooltip-fg: $color-on-snackbar;
 $tooltip-offset: 1rem;
 
 [aria-label] {

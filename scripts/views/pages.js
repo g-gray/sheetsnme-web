@@ -69,9 +69,9 @@ class Logo extends u.ViewComponent {
   render() {
     return (
       <span className='row-center-center padding-0x25'>
-        <span className='row-center-center padding-0x25 bg-white circle'>
+        <span className='row-center-center padding-0x25 bg-surface circle'>
           <s.PieChart
-            className='fg-primary-100'
+            className='fg-primary'
             style={{fontSize: '1.5rem'}} />
         </span>
       </span>
@@ -100,7 +100,7 @@ class _Navbar extends u.ViewComponent {
   }) {
     if (u.isMobile(context)) {
       return (
-        <header className='row-between-stretch bg-primary-100 navbar-height shadow-dept-1'>
+        <header className='row-between-stretch bg-primary navbar-height shadow-dept-1'>
           <div className='row-start-center gaps-h-0x75 padding-h-1'>
             <m.FakeButton className='row-center-center padding-0x5 circle decorate-dark-menu-item'>
               <s.Menu
@@ -121,7 +121,7 @@ class _Navbar extends u.ViewComponent {
     }
 
     return (
-      <header className='row-between-stretch bg-primary-100 navbar-height shadow-dept-1'>
+      <header className='row-between-stretch bg-primary navbar-height shadow-dept-1'>
         <Link to='/' className='row-center-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
           <Logo />
         </Link>
@@ -224,9 +224,9 @@ class _MobileMenu extends u.ViewComponent {
   render({close}) {
     return (
       <m.Dialog onEscape={close}>
-        <m.DialogScrollable className='row-start-stretch bg-overlay-dark fade-in-fast' onClick={close}>
-          <div className='relative col-start-stretch gaps-v-0x5 bg-white slide-in-left-fast' onClick={close}>
-            <div className='row-start-center padding-h-1 bg-primary-100 navbar-height shadow-dept-1'>
+        <m.DialogScrollable className='row-start-stretch bg-overlay fade-in-fast' onClick={close}>
+          <div className='relative col-start-stretch gaps-v-0x5 bg-surface slide-in-left-fast' onClick={close}>
+            <div className='row-start-center padding-h-1 bg-primary navbar-height shadow-dept-1'>
               <Logo />
             </div>
             <Drawer />
@@ -245,13 +245,13 @@ class _Drawer extends u.ViewComponent {
     props: {transactions},
   }) {
     return (
-      <aside className='col-start-stretch gaps-v-0x5 padding-h-0x5 padding-v-1' style={{width: '16rem'}}>
-        <div className='col-start-stretch'>
+      <aside className='col-start-stretch gaps-v-1 padding-v-1' style={{width: '16rem'}}>
+        <div className='col-start-stretch padding-h-0x5'>
           <NavLink
             to='/'
             exact
             className='drawer-link decorate-drawer-link'>
-            <s.BarChart className='drawer-icon font-large' />
+            <s.BarChart className='font-large theme-drawer-icon' />
             <span>{u.xln(context, t.TRANSACTIONS)}</span>
             <span className='flex-1 text-right'>
               {transactions.length || ''}
@@ -259,26 +259,26 @@ class _Drawer extends u.ViewComponent {
           </NavLink>
         </div>
         <hr className='hr' />
-        <div className='col-start-stretch'>
+        <div className='col-start-stretch padding-h-0x5'>
           <NavLink
             to='/categories'
             exact
             className='drawer-link decorate-drawer-link'>
-            <s.Tag className='drawer-icon font-large' />
+            <s.Tag className='font-large theme-drawer-icon' />
             <span>{u.xln(context, t.CATEGORIES)}</span>
           </NavLink>
           <NavLink
             to='/accounts'
             exact
             className='drawer-link decorate-drawer-link'>
-            <s.CreditCard className='drawer-icon font-large' />
+            <s.CreditCard className='font-large theme-drawer-icon' />
             <span>{u.xln(context, t.ACCOUNTS)}</span>
           </NavLink>
           <NavLink
             to='/payees'
             exact
             className='drawer-link decorate-drawer-link'>
-            <s.Users className='drawer-icon font-large' />
+            <s.Users className='font-large theme-drawer-icon' />
             <span>{u.xln(context, t.PAYEES)}</span>
           </NavLink>
         </div>
@@ -770,7 +770,7 @@ class _AccountsList extends u.ViewComponent {
             onDelete={onDelete(account)}>
             <div className='flex-1 row-between-center gaps-h-1'>
               <span>{account.title}</span>
-              <span className='fg-black-50'>{account.balance}</span>
+              <span className='fg-on-surface-pale'>{account.balance}</span>
             </div>
           </EntityItem>
         ))}
@@ -964,7 +964,7 @@ class _FormDialog extends u.ViewComponent {
     if (u.isMobile(context)) {
       return (
         <m.Dialog onEscape={close}>
-          <m.DialogScrollable className='bg-white'>
+          <m.DialogScrollable className='bg-surface'>
             <div className='relative col-start-stretch'>
               <div className='row-between-center gaps-h-1 padding-l-1x25 navbar-height'>
                 <h2 className='font-large weight-medium'>
@@ -985,10 +985,10 @@ class _FormDialog extends u.ViewComponent {
 
     return (
       <m.Dialog onEscape={close}>
-        <m.DialogOverlay className='bg-overlay-dark' />
+        <m.DialogOverlay className='bg-overlay' />
         <m.DialogCentered onClick={close}>
           <div
-            className='col-start-stretch rounded bg-white shadow-dept-3'
+            className='col-start-stretch rounded bg-surface shadow-dept-3'
             style={{minWidth: '31rem'}}>
             <div className='row-between-center gaps-h-1 padding-h-1x25 navbar-height'>
               <h2 className='font-large weight-medium'>
@@ -1322,11 +1322,11 @@ class TransactionPlaceholder extends u.ViewComponent {
     return (
       <div className='row-start-center gaps-h-1 padding-h-1 list-item'>
         <div className='row-start-center padding-v-1'>
-          <div className='relative width-2x5 square circle bg-primary-275' />
+          <div className='relative width-2x5 square circle decorate-placeholder' />
         </div>
         <div className='flex-1 col-start-stretch transaction-line-height'>
           <div className='col-start-stretch gaps-v-0x25 padding-v-1'>
-            <div className='row-between-center gaps-h-1 font-midsmall fg-black-50'>
+            <div className='row-between-center gaps-h-1 font-midsmall fg-on-surface-pale'>
               <Placeholder style={{width: '4em'}} />
               <Placeholder style={{width: '6em'}} />
             </div>
@@ -1358,7 +1358,7 @@ class EntityPlaceholder extends u.ViewComponent {
       <div className='row-start-stretch gaps-h-1 padding-h-1'>
         <div className='relative width-2x5 square'>
           <div className='row-center-center abs-center'>
-            <div className='width-1x5 square circle bg-primary-275' />
+            <div className='width-1x5 square circle decorate-placeholder' />
           </div>
         </div>
         <div className='flex-1 col-start-stretch'>
@@ -1404,10 +1404,10 @@ class EntityItem extends u.ViewComponent {
       <m.FakeButton
         type='div'
         onClick={onClick}
-        className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-light-menu-busy trigger'>
+        className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-drawer-link-busy rounded trigger'>
         <div className='relative width-2x5 square'>
           <div className='row-center-center abs-center'>
-            <s.Tag className='font-large fg-primary-100' />
+            <s.Tag className='font-large fg-primary' />
           </div>
         </div>
         <div className='flex-1 col-start-stretch'>
@@ -1435,7 +1435,7 @@ class Placeholder extends u.ViewComponent {
     return (
       <span className={`inline-block ${cls || ''}`}>
         <span
-          className='inline-block valign-middle bg-primary-275 rounded-50p'
+          className='inline-block valign-middle decorate-placeholder rounded-50p'
           style={{width: '3em', height: '1em', ...style}} />
       </span>
     )
@@ -1483,13 +1483,13 @@ class _Transaction extends u.ViewComponent {
       <m.FakeButton
         type='div'
         onClick={onOpen(transaction)}
-        className='row-start-start gaps-h-1 padding-h-1 list-item trigger text-left theme-light-menu-busy'>
+        className='row-start-start gaps-h-1 padding-h-1 list-item trigger text-left theme-drawer-link-busy rounded'>
         <div className='row-start-center padding-v-1'>
           <TransactionIcon transaction={transaction} />
         </div>
         <div className='flex-1 col-start-stretch transaction-line-height'>
           <div className='col-start-stretch gaps-v-0x25 padding-v-1'>
-            <div className='row-between-center gaps-h-1 font-midsmall fg-black-50'>
+            <div className='row-between-center gaps-h-1 font-midsmall fg-on-surface-pale'>
               <TransactionOrigin transaction={transaction} />
               <TransactionAccount transaction={transaction} />
             </div>
@@ -1524,20 +1524,20 @@ class TransactionIcon extends u.ViewComponent {
     return (
       <div className='row-start-center'>
         {f.includes([OUTCOME, LOAN], transaction.type) ? (
-        <div className='relative width-2x5 square circle bg-warning'>
-          <div className='row-center-center abs-center fg-white font-large'>
+        <div className='relative width-2x5 square circle bg-primary'>
+          <div className='row-center-center abs-center fg-on-primary font-large'>
             <s.Minus />
           </div>
         </div>
         ) : f.includes([INCOME, BORROW], transaction.type) ? (
-        <div className='relative width-2x5 square circle bg-success'>
-          <div className='row-center-center abs-center fg-white font-large'>
+        <div className='relative width-2x5 square circle bg-primary'>
+          <div className='row-center-center abs-center fg-on-primary font-large'>
             <s.Plus />
           </div>
         </div>
         ) : (
-        <div className='relative width-2x5 square circle bg-black-75'>
-          <div className='row-center-center abs-center fg-white font-large'>
+        <div className='relative width-2x5 square circle bg-primary'>
+          <div className='row-center-center abs-center fg-on-primary font-large'>
             <s.Repeat />
           </div>
         </div>
@@ -1689,14 +1689,14 @@ class FormLabel extends u.ViewComponent {
   }) {
     if (u.isMobile(context)) {
       return (
-        <label className={`row-start-center fg-black-50 ${cls || ''}`} {...props}>
+        <label className={`row-start-center fg-on-surface-pale ${cls || ''}`} {...props}>
           {children}:
         </label>
       )
     }
 
     return (
-      <label className={`row-end-center fg-black-50 ${cls || ''}`} {...props}>
+      <label className={`row-end-center fg-on-surface-pale ${cls || ''}`} {...props}>
         {children}:
       </label>
     )
@@ -1973,7 +1973,7 @@ class Fab extends u.ViewComponent {
         className={`row-start-stretch width-3x5 ${cls || ''}`}
         {...props}>
         <span className='flex-1 relative circle square bg-accent shadow-dept-2'>
-          <s.Plus className='abs-center font-giant fg-white' />
+          <s.Plus className='abs-center font-giant fg-on-accent' />
         </span>
       </m.FakeButton>
     )
@@ -2004,7 +2004,7 @@ class _ActionsMenu extends u.ViewComponent {
       <div className='relative row-start-stretch'>
         <m.FakeButton
           onClick={toggle}
-          className='relative row-start-center decorate-light-menu-item z-index-2'
+          className='relative row-start-center decorate-drawer-link z-index-2'
           aria-expanded={expanded}>
           <s.MoreVertical className='font-large' />
         </m.FakeButton>
@@ -2045,10 +2045,10 @@ class _ConfirmDialog extends u.ViewComponent {
   }) {
     return (
       <m.Dialog onEscape={close}>
-        <m.DialogOverlay className='bg-overlay-dark' />
+        <m.DialogOverlay className='bg-overlay' />
         <m.DialogCentered onClick={close}>
           <div
-            className='col-start-stretch gaps-v-1 padding-v-1 rounded bg-white shadow-dept-3'
+            className='col-start-stretch gaps-v-1 padding-v-1 rounded bg-surface shadow-dept-3'
             style={{minWidth: '11rem'}}>
             <p className='padding-h-1x25 font-midlarge weight-medium'>
               {question}
