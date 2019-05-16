@@ -100,6 +100,7 @@ const requestEnd = name => ({
 
 export const init = messages => dispatch => {
   return dispatch(fetchUser(messages.fetchUser))
+    // eslint-disable-next-line promise/no-native
     .then(() => Promise.all([
       dispatch(fetchCategories(messages.fetchCategories)),
       dispatch(fetchAccounts(messages.fetchAccounts)),
