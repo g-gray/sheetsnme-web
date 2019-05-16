@@ -59,7 +59,7 @@ input[type=checkbox]:focus {
   @include sb-transition($duration: $transition-duration-fast);
   @extend .wspace-nowrap;
 
-  &[disabled] {
+  @include disabled {
     pointer-events: none;
   }
 }
@@ -88,6 +88,9 @@ input[type=checkbox]:focus {
   @include busy {
     background-color: $color-primary-dark;
   }
+  @include disabled {
+    opacity: 0.5;
+  }
 }
 
 .btn-secondary {
@@ -99,6 +102,13 @@ input[type=checkbox]:focus {
   @include busy {
     color: $color-primary-dark;
     background-color: rgba($color-primary, 0.12);
+  }
+  @include if-current {
+    color: $color-on-primary;
+    background-color: $color-primary-dark;
+  }
+  @include disabled {
+    opacity: 0.5;
   }
 }
 
@@ -112,6 +122,9 @@ input[type=checkbox]:focus {
     color: $color-primary-dark;
     background-color: rgba($color-primary, 0.12);
     border-color: transparent;
+  }
+  @include disabled {
+    opacity: 0.5;
   }
 }
 

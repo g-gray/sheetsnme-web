@@ -34,7 +34,7 @@
 }
 
 @mixin disabled {
-  &[disabled] {
+  &[disabled], &[aria-disabled]:not([aria-disabled='']):not([aria-disabled=false]) {
     @content;
   }
 }

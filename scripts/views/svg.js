@@ -723,6 +723,17 @@ export class ArrowDown extends u.ViewComponent {
   }
 }
 
+export class ArrowLeft extends u.ViewComponent {
+  render({props}) {
+    return (
+      <svg {...featherProps(props)}>
+        <line x1="19" y1="12" x2="5" y2="12" />
+        <polyline points="12 19 5 12 12 5" />
+      </svg>
+    )
+  }
+}
+
 export class ArrowRight extends u.ViewComponent {
   render({props}) {
     return (

@@ -1657,7 +1657,6 @@ class Paginator extends u.ViewComponent {
   }
 
   render({
-    context,
     props: {total},
     onPageChange,
   }) {
@@ -1670,8 +1669,8 @@ class Paginator extends u.ViewComponent {
 
           return (
             <ReactPaginate
-              previousLabel={u.xln(context, t.PREV)}
-              nextLabel={u.xln(context, t.NEXT)}
+              previousLabel={<s.ArrowLeft />}
+              nextLabel={<s.ArrowRight />}
               breakLabel='...'
               breakClassName='break-me'
               initialPage={initialPage - 1}
@@ -1684,9 +1683,9 @@ class Paginator extends u.ViewComponent {
               previousClassName='block'
               pageClassName='block'
               nextClassName='block'
-              previousLinkClassName='btn-secondary'
-              pageLinkClassName='btn-primary'
-              nextLinkClassName='btn-secondary'
+              previousLinkClassName='btn-secondary row-center-center'
+              pageLinkClassName='btn-secondary row-center-center'
+              nextLinkClassName='btn-secondary row-center-center'
             />
           )
         }}
