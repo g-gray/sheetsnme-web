@@ -480,7 +480,7 @@ class _CategoryForm extends u.ViewComponent {
       promise
         .catch(errors => {
           this.setState({errors})
-          return Promise.reject(errors)
+          throw errors
         })
         .then(() => {props.onSubmitSuccess()})
         .then(() => dispatch(a.notify({
@@ -639,7 +639,7 @@ class _AccountForm extends u.ViewComponent {
       promise
         .catch(errors => {
           this.setState({errors})
-          return Promise.reject(errors)
+          throw errors
         })
         .then(() => {props.onSubmitSuccess()})
         .then(() => dispatch(a.notify({
@@ -801,7 +801,7 @@ class _PayeeForm extends u.ViewComponent {
       promise
         .catch(errors => {
           this.setState({errors})
-          return Promise.reject(errors)
+          throw errors
         })
         .then(() => {props.onSubmitSuccess()})
         .then(() => dispatch(a.notify({
@@ -1034,7 +1034,7 @@ class _TransactionForm extends u.ViewComponent {
       promise
         .catch(errors => {
           this.setState({errors})
-          return Promise.reject(errors)
+          throw errors
         })
         .then(() => {props.onSubmitSuccess()})
         .then(() => dispatch(a.notify({

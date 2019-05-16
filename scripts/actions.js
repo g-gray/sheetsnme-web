@@ -82,7 +82,7 @@ const trackRequest = ({message, requestName, promise}) => dispatch => {
     .catch(response => {
       dispatch(requestEnd(requestName))
       if (time) dispatch(removeNotification(time))
-      return Promise.reject(response)
+      throw response
     })
 }
 
