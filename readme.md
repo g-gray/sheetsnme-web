@@ -1,6 +1,6 @@
 ## Overview
 
-Frontend starter kit.
+Frontend for sheetsn.me.
 
 ## Dependencies
 
