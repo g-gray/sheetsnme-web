@@ -1622,21 +1622,19 @@ class _TransactionsList extends u.ViewComponent {
     props: {transactions, transactionsTotal, pending},
     onPageChange,
   }) {
-    return (
-      <div className='gaps-v-1'>
-        {pending || !f.size(transactions) ? (
-          <div className='col-start-stretch'>
-            {f.map(new Array(3), (__, index) => (
-              <TransactionPlaceholder key={`placeholder-${index}`} />
-            ))}
-          </div>
-        ) : (
-          <div className='col-start-stretch gaps-v-1'>
-            {f.map(transactions, transaction => (
-              <Transaction key={transaction.id} transaction={transaction} />
-            ))}
-          </div>
-        )}
+    return pending || !f.size(transactions) ? (
+      <div className='col-start-stretch'>
+        {f.map(new Array(3), (__, index) => (
+          <TransactionPlaceholder key={`placeholder-${index}`} />
+        ))}
+      </div>
+    ) : (
+      <div className='col-start-stretch gaps-v-2'>
+        <div className='col-start-stretch'>
+          {f.map(transactions, transaction => (
+            <Transaction key={transaction.id} transaction={transaction} />
+          ))}
+        </div>
         <Paginator
           total={transactionsTotal}
           onPageChange={onPageChange}
@@ -1663,7 +1661,7 @@ class Paginator extends u.ViewComponent {
     props: {total},
     onPageChange,
   }) {
-    return (
+    return total <= u.DEFAULT_PAGE_SIZE ? null : (
       <Route
         render={({history}) => {
           const query = u.decodeQuery(history.location.search)
