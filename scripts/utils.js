@@ -3,9 +3,10 @@ import ReactDom from 'react-dom'
 
 import * as f from 'fpx'
 import * as e from 'emerge'
-import * as qs from 'query-string'
+import * as querystring from 'querystring'
 
 export const MOBILE_WIDTH_MAX = 980
+export const DEFAULT_PAGE_SIZE = 25
 
 /**
  * React-specific
@@ -263,7 +264,7 @@ export function storageWrite (path, value) {
 export const AVAILABLE_LANGS = ['en', 'ru']
 
 export const QUERY_LANG = f.intersection(
-  [qs.parse(window.location.search).lang],
+  [decodeQuery(window.location.search).lang],
   AVAILABLE_LANGS,
 )[0]
 
@@ -324,4 +325,25 @@ export function bgUrl(url) {
 
 function isPath (value) {
   return f.isList(value) && f.every(value, f.isKey)
+}
+
+export function decodeQuery(searchString) {
+  return querystring.decode((searchString || '').replace(/^[?]/, ''))
+}
+
+export function encodeQuery(query) {
+  return prepend('?', querystring.encode(f.omitBy(query, value => !value)))
+}
+
+export function prepend(char, value) {
+  f.validate(char, f.isString)
+  if (value == null || value === '') return ''
+  f.validate(value, f.isString)
+  return value[0] === char ? value : char + value
+}
+
+export function omitNil(dict) {
+  const out = {}
+  for (const key in dict) if (dict[key] != null) out[key] = dict[key]
+  return out
 }

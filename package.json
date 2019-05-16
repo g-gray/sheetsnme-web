@@ -33,7 +33,7 @@
   "dependencies": {
     "emerge": "^0.4.0",
     "fpx": "^0.7.0",
-    "query-string": "^6.5.0",
+    "querystring": "^0.2.0",
     "react": "^16.8.5",
     "react-dom": "^16.8.5",
     "react-redux": "^6.0.1",
