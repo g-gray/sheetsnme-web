@@ -3,6 +3,7 @@ import ReactDom from 'react-dom'
 
 import * as f from 'fpx'
 import * as e from 'emerge'
+import * as qs from 'query-string'
 
 export const MOBILE_WIDTH_MAX = 980
 
@@ -260,6 +261,12 @@ export function storageWrite (path, value) {
  */
 
 export const AVAILABLE_LANGS = ['en', 'ru']
+
+export const QUERY_LANG = f.intersection(
+  [qs.parse(window.location.search).lang],
+  AVAILABLE_LANGS,
+)[0]
+
 export const DEFAULT_LANG = f.intersection(
   window.navigator.languages.map(langPrefix),
   AVAILABLE_LANGS,

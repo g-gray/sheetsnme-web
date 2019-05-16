@@ -6,7 +6,7 @@ export const dom = (state = {
   dialogs: [],
   notifications: [],
   geometry: u.geometry(window.innerWidth),
-  lang: u.storageRead(['lang']) || u.DEFAULT_LANG,
+  lang: u.QUERY_LANG || u.storageRead(['lang']) || u.DEFAULT_LANG,
 }, action) => {
   switch (action.type) {
     case a.ADD_DIALOG:
