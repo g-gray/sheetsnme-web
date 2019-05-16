@@ -15,15 +15,16 @@ export const store = createStore(combineReducers(r), applyMiddleware(thunk))
 window.env = {store}
 
 class App extends u.ViewComponent {
-  constructor(props) {
-    super(props)
-    const contextMock = {lang: props.lang}
-    props.dispatch(a.init({
-      fetchUser        : u.xln(contextMock, t.FETCHING_USER),
-      fetchAccounts    : u.xln(contextMock, t.FETCHING_ACCOUNTS),
-      fetchCategories  : u.xln(contextMock, t.FETCHING_CATEGORIES),
-      fetchPayees      : u.xln(contextMock, t.FETCHING_PAYEES),
-      fetchTransactions: u.xln(contextMock, t.FETCHING_TRANSACTIONS),
+  constructor({dispatch, lang}) {
+    super(...arguments)
+
+    // TODO Think how to organize better
+    dispatch(a.init({
+      fetchUser        : u.xln({lang}, t.FETCHING_USER),
+      fetchAccounts    : u.xln({lang}, t.FETCHING_ACCOUNTS),
+      fetchCategories  : u.xln({lang}, t.FETCHING_CATEGORIES),
+      fetchPayees      : u.xln({lang}, t.FETCHING_PAYEES),
+      fetchTransactions: u.xln({lang}, t.FETCHING_TRANSACTIONS),
     }))
   }
 

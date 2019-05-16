@@ -121,10 +121,20 @@ export const fetchUser = message => dispatch => {
 
 
 export const fetchTransactions = message => dispatch => {
+  // TODO Weird solution. Rethink
+  const query = u.decodeQuery(window.location.search)
+
   return dispatch(trackRequest({
     message,
     requestName: 'getTransactions',
-    promise: n.authedJsonFetch('/api/transactions'),
+    promise: n.authedJsonFetch('/api/transactions', {
+      method: 'GET',
+      body: {
+        ...query,
+        offset: u.DEFAULT_PAGE_SIZE * ((query.page || 1) - 1),
+        limit: u.DEFAULT_PAGE_SIZE,
+      },
+    }),
   }))
     .then(transactions => dispatch({type: RECEIVE_TRANSACTIONS, transactions}))
 }

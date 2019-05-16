@@ -74,7 +74,7 @@ export const net = (state = {
       return {
         ...state,
         transactions: action.transactions,
-        transactionsById: f.keyBy(action.transactions, ({id}) => id),
+        transactionsById: f.keyBy(action.transactions.items, ({id}) => id),
       }
 
     case a.RECEIVE_CATEGORIES:

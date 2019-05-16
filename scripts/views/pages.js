@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
-import {NavLink, Link} from 'react-router-dom'
+import {NavLink, Link, Route} from 'react-router-dom'
+import ReactPaginate from 'react-paginate'
 
 import * as f from 'fpx'
 
@@ -236,7 +237,7 @@ const MobileMenu = connect()(_MobileMenu)
 class _Drawer extends u.ViewComponent {
   render({
     context,
-    props: {transactions},
+    props: {transactionsSize},
   }) {
     return (
       <aside className='col-start-stretch gaps-v-1 padding-v-1' style={{width: '16rem'}}>
@@ -248,7 +249,7 @@ class _Drawer extends u.ViewComponent {
             <s.BarChart className='font-large theme-drawer-icon' />
             <span>{u.xln(context, t.TRANSACTIONS)}</span>
             <span className='flex-1 text-right'>
-              {transactions.length || ''}
+              {transactionsSize}
             </span>
           </NavLink>
         </div>
@@ -282,7 +283,7 @@ class _Drawer extends u.ViewComponent {
 }
 
 const Drawer = connect(state => ({
-  transactions: state.net.transactions,
+  transactionsSize: f.size(state.net.transactions.items),
 }))(_Drawer)
 
 class Snackbar extends u.ViewComponent {
@@ -1608,24 +1609,95 @@ const TransactionOrigin = connect(state => ({
 }))(_TransactionOrigin)
 
 class _TransactionsList extends u.ViewComponent {
+  constructor({dispatch}) {
+    super(...arguments)
+    const {context} = this
+
+    this.onPageChange = () => {
+      dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS)))
+    }
+  }
+
   render({
-    props: {transactions, pending},
+    props: {transactions, transactionsTotal, pending},
+    onPageChange,
   }) {
-    return pending || !f.size(transactions) ? (
-      <div className='col-start-stretch'>
-        {f.map(new Array(3), (__, index) => (
-          <TransactionPlaceholder key={`placeholder-${index}`} />
-        ))}
-      </div>
-    ) : (
-      <div className='col-start-stretch'>
-        {f.map(transactions, transaction => (
-          <Transaction key={transaction.id} transaction={transaction} />
-        ))}
+    return (
+      <div className='gaps-v-1'>
+        {pending || !f.size(transactions) ? (
+          <div className='col-start-stretch'>
+            {f.map(new Array(3), (__, index) => (
+              <TransactionPlaceholder key={`placeholder-${index}`} />
+            ))}
+          </div>
+        ) : (
+          <div className='col-start-stretch gaps-v-1'>
+            {f.map(transactions, transaction => (
+              <Transaction key={transaction.id} transaction={transaction} />
+            ))}
+          </div>
+        )}
+        <Paginator
+          total={transactionsTotal}
+          onPageChange={onPageChange}
+        />
       </div>
     )
   }
 }
+
+class Paginator extends u.ViewComponent {
+  constructor() {
+    super(...arguments)
+
+    this.onPageChange = history => data => {
+      const query = u.decodeQuery(history.location.search)
+      history.push(`/${u.encodeQuery({...query, page: data.selected + 1})}`)
+
+      if (f.isFunction(this.props.onPageChange)) this.props.onPageChange(data, history)
+    }
+  }
+
+  render({
+    context,
+    props: {total},
+    onPageChange,
+  }) {
+    return (
+      <Route
+        render={({history}) => {
+          const query = u.decodeQuery(history.location.search)
+          const initialPage = query.page ? parseInt(query.page, 10) : 1
+          const pageCount = Math.ceil(total / u.DEFAULT_PAGE_SIZE)
+
+          return (
+            <ReactPaginate
+              previousLabel={u.xln(context, t.PREV)}
+              nextLabel={u.xln(context, t.NEXT)}
+              breakLabel='...'
+              breakClassName='break-me'
+              initialPage={initialPage - 1}
+              disableInitialCallback={true}
+              pageCount={pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={3}
+              onPageChange={onPageChange(history)}
+              containerClassName='row-center-center gaps-h-0x25'
+              previousClassName='block'
+              pageClassName='block'
+              nextClassName='block'
+              previousLinkClassName='btn-secondary'
+              pageLinkClassName='btn-primary'
+              nextLinkClassName='btn-secondary'
+            />
+          )
+        }}
+      />
+    )
+  }
+}
+
+
 
 class TransactionMeta extends u.ViewComponent {
   render({
@@ -1643,7 +1715,8 @@ class TransactionMeta extends u.ViewComponent {
 }
 
 const TransactionsList = connect(state => ({
-  transactions: state.net.transactions,
+  transactions: state.net.transactions.items,
+  transactionsTotal: state.net.transactions.total,
   pending: !f.isEmpty(state.net.pending),
 }))(_TransactionsList)
 

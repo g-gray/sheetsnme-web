@@ -78,3 +78,7 @@ export const PAYEE_DELETED         = {en: 'Payee deleted', ru: 'Плательщ
 export const TRANSACTION_DELETED   = {en: 'Transaction deleted', ru: 'Транзакция удалена'}
 
 export const WITHOUT_CATEGORY      = {en: 'Without category', ru: 'Без категории'}
+
+export const PREV      = {en: 'Prev', ru: 'Предыдущая'}
+export const NEXT      = {en: 'Next', ru: 'Следующая'}
+
