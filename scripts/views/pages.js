@@ -31,7 +31,7 @@ class PageLayout extends u.ViewComponent {
             style={style}
             children={children} />
         </div>
-        <div className='fix-b-l z-index-tooltip width-100p row-start-center padding-0x5'>
+        <div className='fix-b-l z-index-tooltip width-100p row-start-center margin-0x5'>
           <Notifications />
         </div>
         <m.GlobalDialog />
@@ -45,7 +45,7 @@ class _MobilePageLayout extends u.ViewComponent {
     props: {className: cls, style, children, action, dialogs},
   }) {
     return (
-      <div className='relative col-start-stretch stretch-to-viewport-v'>
+      <div className='relative col-start-stretch stretch-to-viewport-v padding-b-5'>
         <Navbar />
         <div
           className={`flex-1 ${cls || ''}`}
@@ -2067,7 +2067,7 @@ class ListPage extends u.ViewComponent {
 
     return (
       <PageLayout className='relative col-start-center padding-r-1x25'>
-        <div className='limit-content-width col-start-stretch gaps-v-1'>
+        <div className='limit-content-width col-start-stretch gaps-v-1 padding-b-2'>
           <div className='col-start-stretch padding-h-0x5' style={{marginTop: '-1.75rem'}}>
             {action}
           </div>
