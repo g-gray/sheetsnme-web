@@ -9,7 +9,7 @@ export class AppRouter extends u.ViewComponent {
     return (
       <Router>
         <Switch>
-          <Route path='/'           component={p.HomePage} exact />
+          <Route path='/'           component={p.TransactionsPage} exact />
           <Route path='/categories' component={p.CategoriesPage} />
           <Route path='/accounts'   component={p.AccountsPage} />
           <Route path='/payees'     component={p.PayeesPage} />

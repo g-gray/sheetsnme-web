@@ -13,6 +13,10 @@ import * as s from './svg'
 
 import * as t from './translations'
 
+/**
+ * Layouts
+ */
+
 class PageLayout extends u.ViewComponent {
   render({
     props: {className: cls, style, children},
@@ -65,6 +69,10 @@ const MobilePageLayout = connect(state => ({
 }))(_MobilePageLayout)
 
 
+
+/**
+ * Navigation
+ */
 
 class Logo extends u.ViewComponent {
   render() {
@@ -286,22 +294,11 @@ const Drawer = connect(state => ({
   transactionsTotal: state.net.transactions.total,
 }))(_Drawer)
 
-class Snackbar extends u.ViewComponent {
-  render({props: {children, action}}) {
-    return action ? (
-      <div className='row-start-center padding-l-1 padding-v-0x25 snackbar'>
-        <div className='col-start-stretch'>{children}</div>
-        <div className='row-start-center padding-h-0x5'>
-          {action}
-        </div>
-      </div>
-    ) : (
-      <div className='row-start-center padding-h-1 padding-v-0x75 snackbar'>
-        {children}
-      </div>
-    )
-  }
-}
+
+
+/**
+ * Notifications
+ */
 
 class _Notifications extends u.ViewComponent {
   componentWillUnmount() {
@@ -336,58 +333,128 @@ const Notifications = connect(state => ({
   notifications: state.dom.notifications,
 }))(_Notifications)
 
+class Snackbar extends u.ViewComponent {
+  render({props: {children, action}}) {
+    return action ? (
+      <div className='row-start-center padding-l-1 padding-v-0x25 snackbar'>
+        <div className='col-start-stretch'>{children}</div>
+        <div className='row-start-center padding-h-0x5'>
+          {action}
+        </div>
+      </div>
+    ) : (
+      <div className='row-start-center padding-h-1 padding-v-0x75 snackbar'>
+        {children}
+      </div>
+    )
+  }
+}
 
 
-class ListPage extends u.ViewComponent {
+
+/**
+ * Entities
+ */
+
+class EntityPlaceholder extends u.ViewComponent {
   render({
     context,
-    props: {action, children},
   }) {
-    if (u.isMobile(context)) {
-      return (
-        <MobilePageLayout action={action}>
-          <div className='col-start-stretch padding-v-0x5'>
+    const isMobile = u.isMobile(context)
+
+    return (
+      <div className='row-start-stretch gaps-h-1 padding-h-1'>
+        <div className='relative width-2x5 square'>
+          <div className='row-center-center abs-center'>
+            <div className='width-1x5 square circle decorate-placeholder' />
+          </div>
+        </div>
+        <div className='flex-1 col-start-stretch'>
+          <div className='flex-1 row-start-center padding-v-1'>
+            <Placeholder style={{width: '8em'}} />
+          </div>
+        </div>
+        {isMobile ? null :
+        <div className='row-center-center padding-h-0x25'>
+          <div className='row-center-center' style={{minHeight: '2.5rem'}}>
+            <s.Trash2 className='font-large fg-transparent' />
+          </div>
+        </div>}
+      </div>
+    )
+  }
+}
+
+class EntityItem extends u.ViewComponent {
+  constructor({onOpen}) {
+    super(...arguments)
+    this.actionsRef = React.createRef()
+
+    this.onClick = event => {
+      if (!onOpen) return
+      f.validate(onOpen, f.isFunction)
+
+      const actionsNode = u.findDomNode(this.actionsRef.current)
+      if (u.isAncestorOf(actionsNode, event.target)) return
+
+      onOpen()
+    }
+  }
+
+  render({
+    context,
+    props: {children, onDelete},
+    onClick, actionsRef,
+  }) {
+    const isMobile = u.isMobile(context)
+
+    return (
+      <m.FakeButton
+        type='div'
+        onClick={onClick}
+        className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-drawer-link-busy rounded trigger'>
+        <div className='relative width-2x5 square'>
+          <div className='row-center-center abs-center'>
+            <s.Tag className='font-large fg-primary' />
+          </div>
+        </div>
+        <div className='flex-1 col-start-stretch'>
+          <div className='flex-1 row-between-center padding-v-1'>
             {children}
           </div>
-        </MobilePageLayout>
-      )
-    }
-
-    return (
-      <PageLayout className='relative col-start-center padding-r-1x25'>
-        <div className='limit-content-width col-start-stretch gaps-v-1'>
-          <div className='col-start-stretch padding-h-0x5' style={{marginTop: '-1.75rem'}}>
-            {action}
-          </div>
-          {children}
         </div>
-      </PageLayout>
+        {isMobile ? null :
+        <div className='row-center-center padding-h-0x25' ref={actionsRef}>
+          <div className='row-center-center' style={{minHeight: '2.5rem'}}>
+            <m.FakeButton
+              className='row-center-center show-on-trigger-hover decorate-icon-button'
+              onClick={onDelete}>
+              <s.Trash2 className='font-large' />
+            </m.FakeButton>
+          </div>
+        </div>}
+      </m.FakeButton>
     )
   }
 }
 
-class _HomePage extends u.ViewComponent {
-  render({
-    context,
-    props: {dispatch},
-  }) {
-    const action = (
-      <Fab
-        onClick={() => dispatch(a.addDialog(FormDialog, {
-          form: TransactionForm,
-          title: u.xln(context, t.NEW_TRANSACTION),
-        }))} />
-    )
-
+class Placeholder extends u.ViewComponent {
+  render({props: {style, className: cls}}) {
     return (
-      <ListPage action={action}>
-        <TransactionsList />
-      </ListPage>
+      <span className={`inline-block ${cls || ''}`}>
+        <span
+          className='inline-block valign-middle decorate-placeholder rounded-50p'
+          style={{width: '3em', height: '1em', ...style}} />
+      </span>
     )
   }
 }
 
-export const HomePage = connect()(_HomePage)
+
+
+/**
+ * Categories
+ */
 
 class _CategoriesPage extends u.ViewComponent {
   render({
@@ -411,54 +478,6 @@ class _CategoriesPage extends u.ViewComponent {
 }
 
 export const CategoriesPage = connect()(_CategoriesPage)
-
-class _AccountsPage extends u.ViewComponent {
-  render({
-    context,
-    props: {dispatch},
-  }) {
-    const action = (
-      <Fab
-        onClick={() => dispatch(a.addDialog(FormDialog, {
-          form: AccountForm,
-          title: u.xln(context, t.NEW_ACCOUNT),
-        }))} />
-    )
-
-    return (
-      <ListPage action={action}>
-        <AccountsList />
-      </ListPage>
-    )
-  }
-}
-
-export const AccountsPage = connect()(_AccountsPage)
-
-class _PayeesPage extends u.ViewComponent {
-  render({
-    context,
-    props: {dispatch},
-  }) {
-    const action = (
-      <Fab
-        onClick={() => dispatch(a.addDialog(FormDialog, {
-          form: PayeeForm,
-          title: u.xln(context, t.NEW_PAYEE),
-        }))} />
-    )
-
-    return (
-      <ListPage action={action}>
-        <PayeesList />
-      </ListPage>
-    )
-  }
-}
-
-export const PayeesPage = connect()(_PayeesPage)
-
-
 
 class _CategoryForm extends u.ViewComponent {
   constructor({dispatch}) {
@@ -618,6 +637,33 @@ const CategoriesList = connect(state => ({
 }))(_CategoriesList)
 
 
+
+/**
+ * Accounts
+ */
+
+class _AccountsPage extends u.ViewComponent {
+  render({
+    context,
+    props: {dispatch},
+  }) {
+    const action = (
+      <Fab
+        onClick={() => dispatch(a.addDialog(FormDialog, {
+          form: AccountForm,
+          title: u.xln(context, t.NEW_ACCOUNT),
+        }))} />
+    )
+
+    return (
+      <ListPage action={action}>
+        <AccountsList />
+      </ListPage>
+    )
+  }
+}
+
+export const AccountsPage = connect()(_AccountsPage)
 
 class _AccountForm extends u.ViewComponent {
   constructor({dispatch}) {
@@ -781,6 +827,33 @@ const AccountsList = connect(state => ({
 
 
 
+/**
+ * Payees
+ */
+
+class _PayeesPage extends u.ViewComponent {
+  render({
+    context,
+    props: {dispatch},
+  }) {
+    const action = (
+      <Fab
+        onClick={() => dispatch(a.addDialog(FormDialog, {
+          form: PayeeForm,
+          title: u.xln(context, t.NEW_PAYEE),
+        }))} />
+    )
+
+    return (
+      <ListPage action={action}>
+        <PayeesList />
+      </ListPage>
+    )
+  }
+}
+
+export const PayeesPage = connect()(_PayeesPage)
+
 class _PayeeForm extends u.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
@@ -940,72 +1013,32 @@ const PayeesList = connect(state => ({
 
 
 
-class _FormDialog extends u.ViewComponent {
-  constructor({dispatch}) {
-    super(...arguments)
+/**
+ * Transactions
+ */
 
-    this.close = () => {
-      dispatch(a.removeDialog())
-
-      if (this.props.onClose) this.props.onClose()
-    }
-  }
-
+class _TransactionsPage extends u.ViewComponent {
   render({
     context,
-    props: {title, form: Form, formProps},
-    close,
+    props: {dispatch},
   }) {
-    if (u.isMobile(context)) {
-      return (
-        <m.Dialog onEscape={close}>
-          <m.DialogScrollable className='bg-surface'>
-            <div className='relative col-start-stretch'>
-              <div className='row-between-center gaps-h-1 padding-l-1x25 navbar-height'>
-                <h2 className='font-large weight-medium'>
-                  {title}
-                </h2>
-                <m.FakeButton className='row-center-center padding-1x25' onClick={close}>
-                  <s.X className='font-large' />
-                </m.FakeButton>
-              </div>
-              <hr className='hr' />
-              {!Form ? null :
-              <Form {...formProps} onSubmitSuccess={close} />}
-            </div>
-          </m.DialogScrollable>
-        </m.Dialog>
-      )
-    }
+    const action = (
+      <Fab
+        onClick={() => dispatch(a.addDialog(FormDialog, {
+          form: TransactionForm,
+          title: u.xln(context, t.NEW_TRANSACTION),
+        }))} />
+    )
 
     return (
-      <m.Dialog onEscape={close}>
-        <m.DialogOverlay className='bg-overlay' />
-        <m.DialogCentered onClick={close}>
-          <div
-            className='col-start-stretch rounded bg-surface shadow-dept-3'
-            style={{minWidth: '31rem'}}>
-            <div className='row-between-center gaps-h-1 padding-h-1x25 navbar-height'>
-              <h2 className='font-large weight-medium'>
-                {title}
-              </h2>
-              <m.FakeButton className='row-center-center' onClick={close}>
-                <s.X className='font-large' />
-              </m.FakeButton>
-            </div>
-            <hr className='hr' />
-            {!Form ? null :
-            <Form {...formProps} onSubmitSuccess={close} />}
-          </div>
-        </m.DialogCentered>
-      </m.Dialog>
+      <ListPage action={action}>
+        <TransactionsList />
+      </ListPage>
     )
   }
 }
 
-const FormDialog = connect()(_FormDialog)
-
-
+export const TransactionsPage = connect()(_TransactionsPage)
 
 const OUTCOME  = 'OUTCOME'
 const INCOME   = 'INCOME'
@@ -1343,100 +1376,6 @@ class TransactionPlaceholder extends u.ViewComponent {
   }
 }
 
-class EntityPlaceholder extends u.ViewComponent {
-  render({
-    context,
-  }) {
-    const isMobile = u.isMobile(context)
-
-    return (
-      <div className='row-start-stretch gaps-h-1 padding-h-1'>
-        <div className='relative width-2x5 square'>
-          <div className='row-center-center abs-center'>
-            <div className='width-1x5 square circle decorate-placeholder' />
-          </div>
-        </div>
-        <div className='flex-1 col-start-stretch'>
-          <div className='flex-1 row-start-center padding-v-1'>
-            <Placeholder style={{width: '8em'}} />
-          </div>
-        </div>
-        {isMobile ? null :
-        <div className='row-center-center padding-h-0x25'>
-          <div className='row-center-center' style={{minHeight: '2.5rem'}}>
-            <s.Trash2 className='font-large fg-transparent' />
-          </div>
-        </div>}
-      </div>
-    )
-  }
-}
-
-class EntityItem extends u.ViewComponent {
-  constructor({onOpen}) {
-    super(...arguments)
-    this.actionsRef = React.createRef()
-
-    this.onClick = event => {
-      if (!onOpen) return
-      f.validate(onOpen, f.isFunction)
-
-      const actionsNode = u.findDomNode(this.actionsRef.current)
-      if (u.isAncestorOf(actionsNode, event.target)) return
-
-      onOpen()
-    }
-  }
-
-  render({
-    context,
-    props: {children, onDelete},
-    onClick, actionsRef,
-  }) {
-    const isMobile = u.isMobile(context)
-
-    return (
-      <m.FakeButton
-        type='div'
-        onClick={onClick}
-        className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-drawer-link-busy rounded trigger'>
-        <div className='relative width-2x5 square'>
-          <div className='row-center-center abs-center'>
-            <s.Tag className='font-large fg-primary' />
-          </div>
-        </div>
-        <div className='flex-1 col-start-stretch'>
-          <div className='flex-1 row-between-center padding-v-1'>
-            {children}
-          </div>
-        </div>
-        {isMobile ? null :
-        <div className='row-center-center padding-h-0x25' ref={actionsRef}>
-          <div className='row-center-center' style={{minHeight: '2.5rem'}}>
-            <m.FakeButton
-              className='row-center-center show-on-trigger-hover decorate-icon-button'
-              onClick={onDelete}>
-              <s.Trash2 className='font-large' />
-            </m.FakeButton>
-          </div>
-        </div>}
-      </m.FakeButton>
-    )
-  }
-}
-
-class Placeholder extends u.ViewComponent {
-  render({props: {style, className: cls}}) {
-    return (
-      <span className={`inline-block ${cls || ''}`}>
-        <span
-          className='inline-block valign-middle decorate-placeholder rounded-50p'
-          style={{width: '3em', height: '1em', ...style}} />
-      </span>
-    )
-  }
-}
-
 class _Transaction extends u.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
@@ -1511,6 +1450,21 @@ class _Transaction extends u.ViewComponent {
 }
 
 const Transaction = connect()(_Transaction)
+
+class TransactionMeta extends u.ViewComponent {
+  render({
+    context,
+    props: {transaction},
+  }) {
+    const isMobile = u.isMobile(context)
+
+    return (
+      <span>
+        {transaction.date} {!isMobile && transaction.date && transaction.comment ? '·' : ''} {!isMobile && transaction.comment}
+      </span>
+    )
+  }
+}
 
 class TransactionIcon extends u.ViewComponent {
   render({
@@ -1644,86 +1598,17 @@ class _TransactionsList extends u.ViewComponent {
   }
 }
 
-class Paginator extends u.ViewComponent {
-  constructor() {
-    super(...arguments)
-
-    this.onPageChange = history => ({selected}) => {
-      const query = u.decodeQuery(history.location.search)
-      const page = selected + 1
-      history.push(`/${u.encodeQuery({...query, page})}`)
-
-      if (f.isFunction(this.props.onPageChange)) this.props.onPageChange(page, history)
-    }
-
-    this.hrefBulder = history => page => {
-      const query = u.decodeQuery(history.location.search)
-      return `/${u.encodeQuery({...query, page})}`
-    }
-  }
-
-  render({
-    props: {total},
-    onPageChange, hrefBulder,
-  }) {
-    return total <= u.DEFAULT_PAGE_SIZE ? null : (
-      <Route
-        render={({history}) => {
-          const query = u.decodeQuery(history.location.search)
-          const initialPage = query.page ? parseInt(query.page, 10) : 1
-          const pageCount = Math.ceil(total / u.DEFAULT_PAGE_SIZE)
-
-          return (
-            <ReactPaginate
-              pageCount={pageCount}
-              pageRangeDisplayed={3}
-              marginPagesDisplayed={2}
-              previousLabel={<s.ArrowLeft />}
-              nextLabel={<s.ArrowRight />}
-              breakLabel='...'
-              breakClassName='block padding-h-0x75'
-              breakLinkClassName='btn-secondary row-center-center'
-              onPageChange={onPageChange(history)}
-              initialPage={initialPage - 1}
-              disableInitialCallback={true}
-              containerClassName='row-center-center gaps-h-0x25'
-              pageClassName='block'
-              pageLinkClassName='btn-secondary row-center-center'
-              previousClassName='block'
-              previousLinkClassName='btn-secondary row-center-center'
-              nextClassName='block'
-              nextLinkClassName='btn-secondary row-center-center'
-              hrefBuilder={hrefBulder(history)}
-            />
-          )
-        }}
-      />
-    )
-  }
-}
-
-
-
-class TransactionMeta extends u.ViewComponent {
-  render({
-    context,
-    props: {transaction},
-  }) {
-    const isMobile = u.isMobile(context)
-
-    return (
-      <span>
-        {transaction.date} {!isMobile && transaction.date && transaction.comment ? '·' : ''} {!isMobile && transaction.comment}
-      </span>
-    )
-  }
-}
-
 const TransactionsList = connect(state => ({
   transactions: state.net.transactions.items,
   transactionsTotal: state.net.transactions.total,
   pending: !f.isEmpty(state.net.pending),
 }))(_TransactionsList)
+
+
+
+/**
+ * Forms
+ */
 
 class G7FormLine extends u.ViewComponent {
   render({
@@ -2038,62 +1923,76 @@ class Radio extends u.ViewComponent {
   }
 }
 
-class Fab extends u.ViewComponent {
-  render({props: {className: cls, ...props}}) {
-    return (
-      <m.FakeButton
-        className={`row-start-stretch width-3x5 ${cls || ''}`}
-        {...props}>
-        <span className='flex-1 relative circle square bg-accent shadow-dept-2'>
-          <s.Plus className='abs-center font-giant fg-on-accent' />
-        </span>
-      </m.FakeButton>
-    )
-  }
-}
 
-class _ActionsMenu extends u.ViewComponent {
-  constructor() {
+
+/**
+ * Dialogs
+ */
+
+class _FormDialog extends u.ViewComponent {
+  constructor({dispatch}) {
     super(...arguments)
 
-    this.state = {expanded: false}
-
     this.close = () => {
-      this.setState({expanded: false})
-    }
+      dispatch(a.removeDialog())
 
-    this.toggle = () => {
-      this.setState({expanded: !this.state.expanded})
+      if (this.props.onClose) this.props.onClose()
     }
   }
 
   render({
-    props: {children},
-    state: {expanded},
-    toggle, close,
+    context,
+    props: {title, form: Form, formProps},
+    close,
   }) {
-    return !children ? null : (
-      <div className='relative row-start-stretch'>
-        <m.FakeButton
-          onClick={toggle}
-          className='relative row-start-center decorate-drawer-link z-index-2'
-          aria-expanded={expanded}>
-          <s.MoreVertical className='font-large' />
-        </m.FakeButton>
-        {!expanded ? null :
-        <m.Closer root={this} close={close}>
-          <div
-            className='dropdown-position z-index-1'
-            onClick={close}>
-            <div className='dropdown dropdown-padding col-start-stretch' style={{minWidth: '11rem'}}>
-              {children}
+    if (u.isMobile(context)) {
+      return (
+        <m.Dialog onEscape={close}>
+          <m.DialogScrollable className='bg-surface'>
+            <div className='relative col-start-stretch'>
+              <div className='row-between-center gaps-h-1 padding-l-1x25 navbar-height'>
+                <h2 className='font-large weight-medium'>
+                  {title}
+                </h2>
+                <m.FakeButton className='row-center-center padding-1x25' onClick={close}>
+                  <s.X className='font-large' />
+                </m.FakeButton>
+              </div>
+              <hr className='hr' />
+              {!Form ? null :
+              <Form {...formProps} onSubmitSuccess={close} />}
             </div>
+          </m.DialogScrollable>
+        </m.Dialog>
+      )
+    }
+
+    return (
+      <m.Dialog onEscape={close}>
+        <m.DialogOverlay className='bg-overlay' />
+        <m.DialogCentered onClick={close}>
+          <div
+            className='col-start-stretch rounded bg-surface shadow-dept-3'
+            style={{minWidth: '31rem'}}>
+            <div className='row-between-center gaps-h-1 padding-h-1x25 navbar-height'>
+              <h2 className='font-large weight-medium'>
+                {title}
+              </h2>
+              <m.FakeButton className='row-center-center' onClick={close}>
+                <s.X className='font-large' />
+              </m.FakeButton>
+            </div>
+            <hr className='hr' />
+            {!Form ? null :
+            <Form {...formProps} onSubmitSuccess={close} />}
           </div>
-        </m.Closer>}
-      </div>
+        </m.DialogCentered>
+      </m.Dialog>
     )
   }
 }
+
+const FormDialog = connect()(_FormDialog)
 
 class _ConfirmDialog extends u.ViewComponent {
   constructor({dispatch}) {
@@ -2141,6 +2040,156 @@ class _ConfirmDialog extends u.ViewComponent {
 }
 
 const ConfirmDialog = connect()(_ConfirmDialog)
+
+
+
+/**
+ * Misc
+ */
+
+class ListPage extends u.ViewComponent {
+  render({
+    context,
+    props: {action, children},
+  }) {
+    if (u.isMobile(context)) {
+      return (
+        <MobilePageLayout action={action}>
+          <div className='col-start-stretch padding-v-0x5'>
+            {children}
+          </div>
+        </MobilePageLayout>
+      )
+    }
+
+    return (
+      <PageLayout className='relative col-start-center padding-r-1x25'>
+        <div className='limit-content-width col-start-stretch gaps-v-1'>
+          <div className='col-start-stretch padding-h-0x5' style={{marginTop: '-1.75rem'}}>
+            {action}
+          </div>
+          {children}
+        </div>
+      </PageLayout>
+    )
+  }
+}
+
+class Paginator extends u.ViewComponent {
+  constructor() {
+    super(...arguments)
+
+    this.onPageChange = history => ({selected}) => {
+      const query = u.decodeQuery(history.location.search)
+      const page = selected + 1
+      history.push(`/${u.encodeQuery({...query, page})}`)
+
+      if (f.isFunction(this.props.onPageChange)) this.props.onPageChange(page, history)
+    }
+
+    this.hrefBulder = history => page => {
+      const query = u.decodeQuery(history.location.search)
+      return `/${u.encodeQuery({...query, page})}`
+    }
+  }
+
+  render({
+    props: {total},
+    onPageChange, hrefBulder,
+  }) {
+    return total <= u.DEFAULT_PAGE_SIZE ? null : (
+      <Route
+        render={({history}) => {
+          const query = u.decodeQuery(history.location.search)
+          const initialPage = query.page ? parseInt(query.page, 10) : 1
+          const pageCount = Math.ceil(total / u.DEFAULT_PAGE_SIZE)
+
+          return (
+            <ReactPaginate
+              pageCount={pageCount}
+              pageRangeDisplayed={3}
+              marginPagesDisplayed={2}
+              previousLabel={<s.ArrowLeft />}
+              nextLabel={<s.ArrowRight />}
+              breakLabel='...'
+              breakClassName='block padding-h-0x75'
+              breakLinkClassName='btn-secondary row-center-center'
+              onPageChange={onPageChange(history)}
+              initialPage={initialPage - 1}
+              disableInitialCallback={true}
+              containerClassName='row-center-center gaps-h-0x25'
+              pageClassName='block'
+              pageLinkClassName='btn-secondary row-center-center'
+              previousClassName='block'
+              previousLinkClassName='btn-secondary row-center-center'
+              nextClassName='block'
+              nextLinkClassName='btn-secondary row-center-center'
+              hrefBuilder={hrefBulder(history)}
+            />
+          )
+        }}
+      />
+    )
+  }
+}
+
+class Fab extends u.ViewComponent {
+  render({props: {className: cls, ...props}}) {
+    return (
+      <m.FakeButton
+        className={`row-start-stretch width-3x5 ${cls || ''}`}
+        {...props}>
+        <span className='flex-1 relative circle square bg-accent shadow-dept-2'>
+          <s.Plus className='abs-center font-giant fg-on-accent' />
+        </span>
+      </m.FakeButton>
+    )
+  }
+}
+
+// TODO Unused. Candidate to delete
+class _ActionsMenu extends u.ViewComponent {
+  constructor() {
+    super(...arguments)
+
+    this.state = {expanded: false}
+
+    this.close = () => {
+      this.setState({expanded: false})
+    }
+
+    this.toggle = () => {
+      this.setState({expanded: !this.state.expanded})
+    }
+  }
+
+  render({
+    props: {children},
+    state: {expanded},
+    toggle, close,
+  }) {
+    return !children ? null : (
+      <div className='relative row-start-stretch'>
+        <m.FakeButton
+          onClick={toggle}
+          className='relative row-start-center decorate-drawer-link z-index-2'
+          aria-expanded={expanded}>
+          <s.MoreVertical className='font-large' />
+        </m.FakeButton>
+        {!expanded ? null :
+        <m.Closer root={this} close={close}>
+          <div
+            className='dropdown-position z-index-1'
+            onClick={close}>
+            <div className='dropdown dropdown-padding col-start-stretch' style={{minWidth: '11rem'}}>
+              {children}
+            </div>
+          </div>
+        </m.Closer>}
+      </div>
+    )
+  }
+}
 
 export class Page404 extends u.ViewComponent {
   render({context}) {
