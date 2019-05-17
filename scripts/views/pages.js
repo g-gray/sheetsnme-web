@@ -1648,17 +1648,23 @@ class Paginator extends u.ViewComponent {
   constructor() {
     super(...arguments)
 
-    this.onPageChange = history => data => {
+    this.onPageChange = history => ({selected}) => {
       const query = u.decodeQuery(history.location.search)
-      history.push(`/${u.encodeQuery({...query, page: data.selected + 1})}`)
+      const page = selected + 1
+      history.push(`/${u.encodeQuery({...query, page})}`)
 
-      if (f.isFunction(this.props.onPageChange)) this.props.onPageChange(data, history)
+      if (f.isFunction(this.props.onPageChange)) this.props.onPageChange(page, history)
+    }
+
+    this.hrefBulder = history => page => {
+      const query = u.decodeQuery(history.location.search)
+      return `/${u.encodeQuery({...query, page})}`
     }
   }
 
   render({
     props: {total},
-    onPageChange,
+    onPageChange, hrefBulder,
   }) {
     return total <= u.DEFAULT_PAGE_SIZE ? null : (
       <Route
@@ -1669,23 +1675,25 @@ class Paginator extends u.ViewComponent {
 
           return (
             <ReactPaginate
+              pageCount={pageCount}
+              pageRangeDisplayed={3}
+              marginPagesDisplayed={2}
               previousLabel={<s.ArrowLeft />}
               nextLabel={<s.ArrowRight />}
               breakLabel='...'
-              breakClassName='break-me'
+              breakClassName='block padding-h-0x75'
+              breakLinkClassName='btn-secondary row-center-center'
+              onPageChange={onPageChange(history)}
               initialPage={initialPage - 1}
               disableInitialCallback={true}
-              pageCount={pageCount}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={3}
-              onPageChange={onPageChange(history)}
               containerClassName='row-center-center gaps-h-0x25'
-              previousClassName='block'
               pageClassName='block'
-              nextClassName='block'
-              previousLinkClassName='btn-secondary row-center-center'
               pageLinkClassName='btn-secondary row-center-center'
+              previousClassName='block'
+              previousLinkClassName='btn-secondary row-center-center'
+              nextClassName='block'
               nextLinkClassName='btn-secondary row-center-center'
+              hrefBuilder={hrefBulder(history)}
             />
           )
         }}
