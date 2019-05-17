@@ -612,7 +612,7 @@ class _CategoriesList extends u.ViewComponent {
   }) {
     return pending || !f.size(categories) ? (
       <div className='col-start-stretch'>
-        {f.map(new Array(f.size(categories) || u.DEFAULT_PAGE_SIZE), (__, index) => (
+        {f.map(new Array(f.size(categories) || 3), (__, index) => (
           <EntityPlaceholder key={`placeholder-${index}`} />
         ))}
       </div>
@@ -798,7 +798,7 @@ class _AccountsList extends u.ViewComponent {
   }) {
     return pending || !f.size(accounts) ? (
       <div className='col-start-stretch'>
-        {f.map(new Array(f.size(accounts) || u.DEFAULT_PAGE_SIZE), (__, index) => (
+        {f.map(new Array(f.size(accounts) || 3), (__, index) => (
           <EntityPlaceholder key={`placeholder-${index}`} />
         ))}
       </div>
@@ -987,7 +987,7 @@ class _PayeesList extends u.ViewComponent {
   }) {
     return pending || !f.size(payees) ? (
       <div className='col-start-stretch'>
-        {f.map(new Array(f.size(payees) || u.DEFAULT_PAGE_SIZE), (__, index) => (
+        {f.map(new Array(f.size(payees) || 3), (__, index) => (
           <EntityPlaceholder key={`placeholder-${index}`} />
         ))}
       </div>
@@ -1576,23 +1576,26 @@ class _TransactionsList extends u.ViewComponent {
     props: {transactions, transactionsTotal, pending},
     onPageChange,
   }) {
-    return pending || !f.size(transactions) ? (
-      <div className='col-start-stretch'>
-        {f.map(new Array(f.size(transactions) || 3), (__, index) => (
-          <TransactionPlaceholder key={`placeholder-${index}`} />
-        ))}
-      </div>
-    ) : (
+    return (
       <div className='col-start-stretch gaps-v-2'>
-        <div className='col-start-stretch'>
-          {f.map(transactions, transaction => (
-            <Transaction key={transaction.id} transaction={transaction} />
-          ))}
-        </div>
+        {pending || !f.size(transactions) ? (
+          <div className='col-start-stretch'>
+            {f.map(new Array(f.size(transactions) || 3), (__, index) => (
+              <TransactionPlaceholder key={`placeholder-${index}`} />
+            ))}
+          </div>
+        ) : (
+          <div className='col-start-stretch'>
+            {f.map(transactions, transaction => (
+              <Transaction key={transaction.id} transaction={transaction} />
+            ))}
+          </div>
+        )}
+        {pending && !f.size(transactions) ? null :
         <Paginator
           total={transactionsTotal}
           onPageChange={onPageChange}
-        />
+        />}
       </div>
     )
   }
@@ -2097,7 +2100,7 @@ class Paginator extends u.ViewComponent {
     props: {total},
     onPageChange, hrefBulder,
   }) {
-    return total <= u.DEFAULT_PAGE_SIZE ? null : (
+    return (
       <Route
         render={({history}) => {
           const query = u.decodeQuery(history.location.search)
