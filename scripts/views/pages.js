@@ -612,7 +612,7 @@ class _CategoriesList extends u.ViewComponent {
   }) {
     return pending || !f.size(categories) ? (
       <div className='col-start-stretch'>
-        {f.map(new Array(3), (__, index) => (
+        {f.map(new Array(f.size(categories) || u.DEFAULT_PAGE_SIZE), (__, index) => (
           <EntityPlaceholder key={`placeholder-${index}`} />
         ))}
       </div>
@@ -798,7 +798,7 @@ class _AccountsList extends u.ViewComponent {
   }) {
     return pending || !f.size(accounts) ? (
       <div className='col-start-stretch'>
-        {f.map(new Array(3), (__, index) => (
+        {f.map(new Array(f.size(accounts) || u.DEFAULT_PAGE_SIZE), (__, index) => (
           <EntityPlaceholder key={`placeholder-${index}`} />
         ))}
       </div>
@@ -987,7 +987,7 @@ class _PayeesList extends u.ViewComponent {
   }) {
     return pending || !f.size(payees) ? (
       <div className='col-start-stretch'>
-        {f.map(new Array(3), (__, index) => (
+        {f.map(new Array(f.size(payees) || u.DEFAULT_PAGE_SIZE), (__, index) => (
           <EntityPlaceholder key={`placeholder-${index}`} />
         ))}
       </div>
@@ -1578,7 +1578,7 @@ class _TransactionsList extends u.ViewComponent {
   }) {
     return pending || !f.size(transactions) ? (
       <div className='col-start-stretch'>
-        {f.map(new Array(3), (__, index) => (
+        {f.map(new Array(f.size(transactions) || 3), (__, index) => (
           <TransactionPlaceholder key={`placeholder-${index}`} />
         ))}
       </div>
