@@ -106,7 +106,6 @@ export const init = messages => dispatch => {
       dispatch(fetchAccounts(messages.fetchAccounts)),
       dispatch(fetchPayees(messages.fetchPayees)),
     ]))
-    .then(() => dispatch(fetchTransactions(messages.fetchTransactions)))
 }
 
 

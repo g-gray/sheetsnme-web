@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
-import {NavLink, Link, Route} from 'react-router-dom'
+import {NavLink, Link, withRouter} from 'react-router-dom'
 import ReactPaginate from 'react-paginate'
 
 import * as f from 'fpx'
@@ -792,6 +792,27 @@ class _AccountsList extends u.ViewComponent {
     }
   }
 
+  componentDidMount() {
+    const {context, props} = this
+
+    this.unlisten = props.history.listen(nextLocation => {
+      const prevLocation = props.location
+      if (prevLocation.pathname !== nextLocation.pathname) return
+
+      props.dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS)))
+    })
+
+    /**
+     * TODO Reconsider it because componentDidMount is called whenever we change the mobile view to
+     * the laptop view and vice versa
+     */
+    props.dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS)))
+  }
+
+  componentWillUnmount() {
+    if (f.isFunction(this.unlisten)) this.unlisten()
+  }
+
   render({
     props: {accounts, pending},
     onOpen, onDelete,
@@ -820,10 +841,10 @@ class _AccountsList extends u.ViewComponent {
   }
 }
 
-const AccountsList = connect(state => ({
+const AccountsList = withRouter(connect(state => ({
   accounts: state.net.accounts,
   pending: !f.isEmpty(state.net.pending),
-}))(_AccountsList)
+}))(_AccountsList))
 
 
 
@@ -1563,18 +1584,29 @@ const TransactionOrigin = connect(state => ({
 }))(_TransactionOrigin)
 
 class _TransactionsList extends u.ViewComponent {
-  constructor({dispatch}) {
-    super(...arguments)
-    const {context} = this
+  componentDidMount() {
+    const {context, props} = this
 
-    this.onPageChange = () => {
-      dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS)))
-    }
+    this.unlisten = props.history.listen(nextLocation => {
+      const prevLocation = props.location
+      if (prevLocation.pathname !== nextLocation.pathname) return
+
+      props.dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS)))
+    })
+
+    /**
+     * TODO Reconsider it because componentDidMount is called whenever we change the mobile view to
+     *the laptop view and vice versa
+     */
+    props.dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS)))
+  }
+
+  componentWillUnmount() {
+    if (f.isFunction(this.unlisten)) this.unlisten()
   }
 
   render({
     props: {transactions, transactionsTotal, pending},
-    onPageChange,
   }) {
     return (
       <div className='col-start-stretch gaps-v-2'>
@@ -1594,18 +1626,17 @@ class _TransactionsList extends u.ViewComponent {
         {pending && !f.size(transactions) ? null :
         <Paginator
           total={transactionsTotal}
-          onPageChange={onPageChange}
         />}
       </div>
     )
   }
 }
 
-const TransactionsList = connect(state => ({
+const TransactionsList = withRouter(connect(state => ({
   transactions: state.net.transactions.items,
   transactionsTotal: state.net.transactions.total,
   pending: !f.isEmpty(state.net.pending),
-}))(_TransactionsList)
+}))(_TransactionsList))
 
 
 
@@ -2078,64 +2109,65 @@ class ListPage extends u.ViewComponent {
   }
 }
 
-class Paginator extends u.ViewComponent {
+class _Paginator extends u.ViewComponent {
   constructor() {
     super(...arguments)
 
-    this.onPageChange = history => ({selected}) => {
-      const query = u.decodeQuery(history.location.search)
+    const {props} = this
+    const {history, location} = props
+
+    const query = u.decodeQuery(location.search)
+    this.initialPage = parseInt(query.page, 10)
+      ? parseInt(query.page, 10)
+      : 1
+
+    this.onPageChange = location => ({selected}) => {
+      const query = u.decodeQuery(location.search)
       const page = selected + 1
       history.push(`/${u.encodeQuery({...query, page})}`)
 
-      if (f.isFunction(this.props.onPageChange)) this.props.onPageChange(page, history)
+      if (f.isFunction(this.props.onPageChange)) this.props.onPageChange(page)
     }
 
-    this.hrefBulder = history => page => {
-      const query = u.decodeQuery(history.location.search)
+    this.hrefBulder = location => page => {
+      const query = u.decodeQuery(location.search)
       return `/${u.encodeQuery({...query, page})}`
     }
   }
 
   render({
-    props: {total},
+    props: {total, location},
     onPageChange, hrefBulder,
   }) {
-    return (
-      <Route
-        render={({history}) => {
-          const query = u.decodeQuery(history.location.search)
-          const initialPage = query.page ? parseInt(query.page, 10) : 1
-          const pageCount = Math.ceil(total / u.DEFAULT_PAGE_SIZE)
+    const pageCount = Math.ceil(total / u.DEFAULT_PAGE_SIZE)
 
-          return (
-            <ReactPaginate
-              pageCount={pageCount}
-              pageRangeDisplayed={3}
-              marginPagesDisplayed={2}
-              previousLabel={<s.ArrowLeft />}
-              nextLabel={<s.ArrowRight />}
-              breakLabel='...'
-              breakClassName='block padding-h-0x75'
-              breakLinkClassName='btn-secondary row-center-center'
-              onPageChange={onPageChange(history)}
-              initialPage={initialPage - 1}
-              disableInitialCallback={true}
-              containerClassName='row-center-center gaps-h-0x25'
-              pageClassName='block'
-              pageLinkClassName='btn-secondary row-center-center'
-              previousClassName='block'
-              previousLinkClassName='btn-secondary row-center-center'
-              nextClassName='block'
-              nextLinkClassName='btn-secondary row-center-center'
-              hrefBuilder={hrefBulder(history)}
-            />
-          )
-        }}
+    return (
+      <ReactPaginate
+        pageCount={pageCount}
+        pageRangeDisplayed={3}
+        marginPagesDisplayed={2}
+        previousLabel={<s.ArrowLeft />}
+        nextLabel={<s.ArrowRight />}
+        breakLabel='...'
+        breakClassName='block padding-h-0x75'
+        breakLinkClassName='btn-secondary row-center-center'
+        onPageChange={onPageChange(location)}
+        initialPage={this.initialPage - 1}
+        disableInitialCallback={true}
+        containerClassName='row-center-center gaps-h-0x25'
+        pageClassName='block'
+        pageLinkClassName='btn-secondary row-center-center'
+        previousClassName='block'
+        previousLinkClassName='btn-secondary row-center-center'
+        nextClassName='block'
+        nextLinkClassName='btn-secondary row-center-center'
+        hrefBuilder={hrefBulder(location)}
       />
     )
   }
 }
 
+const Paginator = withRouter(_Paginator)
 class Fab extends u.ViewComponent {
   render({props: {className: cls, ...props}}) {
     return (

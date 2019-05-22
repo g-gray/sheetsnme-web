@@ -24,7 +24,6 @@ class App extends u.ViewComponent {
       fetchAccounts    : u.xln({lang}, t.FETCHING_ACCOUNTS),
       fetchCategories  : u.xln({lang}, t.FETCHING_CATEGORIES),
       fetchPayees      : u.xln({lang}, t.FETCHING_PAYEES),
-      fetchTransactions: u.xln({lang}, t.FETCHING_TRANSACTIONS),
     }))
   }
 
