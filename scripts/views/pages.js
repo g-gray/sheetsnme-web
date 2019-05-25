@@ -1589,10 +1589,8 @@ class _TransactionsList extends u.ViewComponent {
             ))}
           </div>
         )}
-        {pending && !f.size(transactions) ? null :
-        <Paginator
-          pageCount={pageCount}
-        />}
+        {!f.size(transactions) ? null :
+        <Paginator pageCount={pageCount} />}
       </div>
     )
   }
