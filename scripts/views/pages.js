@@ -2218,7 +2218,7 @@ class _Filters extends u.ViewComponent {
     onSubmit, onReset,
   }) {
     const isMobile = u.isMobile(context)
-    const noFilters = f.isEmpty(f.pickBy(formValues, v => v))
+    const noFilters = f.isEmpty(u.omitEmpty(formValues))
 
     return (
       <form className='col-start-stretch' onSubmit={onSubmit(location)} onReset={onReset(location)}>

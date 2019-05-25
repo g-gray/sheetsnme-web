@@ -311,21 +311,8 @@ export function nextLang(context) {
 
 
 /**
- * Misc
+ * Location
  */
-
-// Note: if the URL contains spaces or other non-URL characters, it must be
-// URL-encoded before calling this function. We can't encode them
-// indiscriminately, because that would wreck some valid URLs.
-export function bgUrl(url) {
-  if (url == null || url === '') return undefined
-  f.validate(url, f.isString)
-  return {backgroundImage: `url(${url})`}
-}
-
-function isPath (value) {
-  return f.isList(value) && f.every(value, f.isKey)
-}
 
 export function decodeQuery(searchString) {
   return querystring.decode((searchString || '').replace(/^[?]/, ''))
@@ -342,8 +329,31 @@ export function prepend(char, value) {
   return value[0] === char ? value : char + value
 }
 
-export function omitNil(dict) {
-  const out = {}
-  for (const key in dict) if (dict[key] != null) out[key] = dict[key]
-  return out
+
+
+/**
+ * Misc
+ */
+
+// Note: if the URL contains spaces or other non-URL characters, it must be
+// URL-encoded before calling this function. We can't encode them
+// indiscriminately, because that would wreck some valid URLs.
+export function bgUrl(url) {
+  if (url == null || url === '') return undefined
+  f.validate(url, f.isString)
+  return {backgroundImage: `url(${url})`}
+}
+
+function isPath (value) {
+  return f.isList(value) && f.every(value, f.isKey)
+}
+
+export function omitEmpty(dict) {
+  return f.omitBy(dict, value => {
+    return f.isArray(value) || f.isDict(value)
+      ? f.isEmpty(value)
+      : f.isString(value)
+      ? value
+      : value == null
+  })
 }
