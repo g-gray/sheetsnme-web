@@ -802,7 +802,7 @@ class _AccountsList extends u.ViewComponent {
   }
 
   componentWillUnmount() {
-    if (f.isFunction(this.unlisten)) this.unlisten()
+    this.unlisten()
   }
 
   render({
@@ -1594,7 +1594,7 @@ class _TransactionsList extends u.ViewComponent {
   }
 
   componentWillUnmount() {
-    if (f.isFunction(this.unlisten)) this.unlisten()
+    this.unlisten()
   }
 
   render({
