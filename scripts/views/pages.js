@@ -242,10 +242,9 @@ class _MobileMenu extends u.ViewComponent {
 
 const MobileMenu = connect()(_MobileMenu)
 
-class _Drawer extends u.ViewComponent {
+class Drawer extends u.ViewComponent {
   render({
     context,
-    props: {transactionsTotal},
   }) {
     return (
       <aside className='col-start-stretch gaps-v-1 padding-v-1' style={{width: '16rem'}}>
@@ -256,9 +255,6 @@ class _Drawer extends u.ViewComponent {
             className='drawer-link decorate-drawer-link'>
             <s.BarChart className='font-large theme-drawer-icon' />
             <span>{u.xln(context, t.TRANSACTIONS)}</span>
-            <span className='flex-1 text-right'>
-              {transactionsTotal}
-            </span>
           </NavLink>
         </div>
         <hr className='hr' />
@@ -289,10 +285,6 @@ class _Drawer extends u.ViewComponent {
     )
   }
 }
-
-const Drawer = connect(state => ({
-  transactionsTotal: state.net.transactions.total,
-}))(_Drawer)
 
 
 
