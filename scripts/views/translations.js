@@ -40,6 +40,8 @@ export const OK                    = {en: 'Ok', ru: 'Ок'}
 export const CANCEL                = {en: 'Cancel', ru: 'Отмена'}
 export const DELETE                = {en: 'Delete', ru: 'Удалить'}
 export const SUBMIT                = {en: 'Submit', ru: 'Подтвердить'}
+export const APPLY                 = {en: 'Apply', ru: 'Применить'}
+export const RESET                 = {en: 'Reset', ru: 'Сбросить'}
 
 export const FETCHING_USER         = {en: 'Fetching user', ru: 'Загрузка пользователя...'}
 export const FETCHING_ACCOUNTS     = {en: 'Fetching accounts', ru: 'Загрузка счетов...'}

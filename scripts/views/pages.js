@@ -1602,6 +1602,7 @@ class _TransactionsList extends u.ViewComponent {
   }) {
     return (
       <div className='col-start-stretch gaps-v-2'>
+        <Filters />
         {pending || !f.size(transactions) ? (
           <div className='col-start-stretch'>
             {f.map(new Array(f.size(transactions) || 3), (__, index) => (
@@ -2173,6 +2174,159 @@ class _Paginator extends u.ViewComponent {
 }
 
 const Paginator = withRouter(_Paginator)
+
+class _Filters extends u.ViewComponent {
+  constructor() {
+    super(...arguments)
+
+    const query = u.decodeQuery(this.props.location.search)
+    this.state = {
+      formValues: {
+        accountId : query.accountId,
+        categoryId: query.categoryId,
+        payeeId   : query.payeeId,
+        comment   : query.comment,
+      },
+    }
+
+    this.onSubmit = location => event => {
+      event.preventDefault()
+      const query = u.decodeQuery(location.search)
+      this.props.history.push(`/${u.encodeQuery({
+        ...query,
+        ...this.state.formValues,
+        page: undefined,
+      })}`)
+
+      if (f.isFunction(this.props.onSumbit)) this.props.onSumbit(this.state.formValues)
+    }
+
+    this.onReset = location => event => {
+      event.preventDefault()
+      const query = u.decodeQuery(location.search)
+      this.props.history.push(`/${u.encodeQuery({
+        ...query,
+        accountId : undefined,
+        categoryId: undefined,
+        payeeId   : undefined,
+        comment   : undefined,
+        page      : undefined,
+      })}`)
+
+      if (f.isFunction(this.props.onReset)) this.props.onReset({})
+    }
+  }
+
+  componentDidMount() {
+    this.unlisten = this.props.history.listen(nextLocation => {
+      const location = this.props.location
+
+      if (location.pathname !== nextLocation.pathname) return
+
+      const nextQuery = u.decodeQuery(nextLocation.search)
+
+      this.setState({
+        formValues: {
+          accountId : nextQuery.accountId,
+          categoryId: nextQuery.categoryId,
+          payeeId   : nextQuery.payeeId,
+          comment   : nextQuery.comment,
+        },
+      })
+    })
+  }
+
+  componentWillUnmount() {
+    this.unlisten()
+  }
+
+  render({
+    context,
+    props: {accounts, categories, payees, pending, location},
+    onSubmit, onReset,
+  }) {
+    const isMobile = u.isMobile(context)
+
+    return (
+      <form className='col-start-stretch' onSubmit={onSubmit(location)} onReset={onReset(location)}>
+        <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
+          <FormSelectElement
+            name='accountId'
+            label={u.xln(context, t.ACCOUNT)}
+            disabled={pending}
+            {...u.bindValue(this, ['formValues', 'accountId'])}>
+            <option value='' />
+            {f.map(accounts, ({id, title}) => (
+              <option value={id} key={`income-account-${id}`}>
+                {title}
+              </option>
+            ))}
+          </FormSelectElement>
+
+          <FormSelectElement
+            name='categoryId'
+            label={u.xln(context, t.CATEGORY)}
+            disabled={pending}
+            {...u.bindValue(this, ['formValues', 'categoryId'])}>
+            <option value='' />
+            {f.map(categories, ({id, title}) => (
+              <option value={id} key={`category-${id}`}>
+                {title}
+              </option>
+            ))}
+          </FormSelectElement>
+
+          <FormSelectElement
+            name='payeeId'
+            label={u.xln(context, t.PAYEE)}
+            disabled={pending}
+            {...u.bindValue(this, ['formValues', 'payeeId'])}>
+            <option value='' />
+            {f.map(payees, ({id, title}) => (
+              <option value={id} key={`payee-${id}`}>
+                {title}
+              </option>
+            ))}
+          </FormSelectElement>
+
+          <FormTextElement
+            name='comment'
+            label={u.xln(context, t.COMMENT)}
+            disabled={pending}
+            {...u.bindValue(this, ['formValues', 'comment'])} />
+        </div>
+        <G7FormLine>
+          <div className='flex-1' />
+          <div
+            className={`${isMobile
+              ? 'col-start-stretch padding-h-1x25 gaps-v-1'
+              : 'row-end-stretch gaps-h-1'}`}>
+            <button
+              type='reset'
+              className={`btn-secondary ${isMobile ? '' : 'btn-wide'}`}
+              disabled={pending}>
+              {u.xln(context, t.RESET)}
+            </button>
+            <button
+              type='submit'
+              className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
+              disabled={pending}>
+              {u.xln(context, t.APPLY)}
+            </button>
+          </div>
+        </G7FormLine>
+      </form>
+    )
+  }
+}
+
+const Filters = withRouter(connect(state => ({
+  categories: state.net.categories,
+  accounts: state.net.accounts,
+  payees: state.net.payees,
+  pending: !f.isEmpty(state.net.pending),
+}))(_Filters))
+
 class Fab extends u.ViewComponent {
   render({props: {className: cls, ...props}}) {
     return (
