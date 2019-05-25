@@ -23,7 +23,7 @@ export function authedHttpFetch(url, params) {
   return httpFetch({url, ...params})
     .catch(response => {
       if (response.status === 401) {
-        window.location = `/auth/login?redirectTo=${encodeURIComponent(window.location.href)}`
+        window.location = `/auth/login/${u.encodeQuery({redirectTo: window.location.href})}`
         return
       }
 
