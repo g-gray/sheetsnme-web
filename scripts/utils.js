@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 
 import * as f from 'fpx'
-import * as e from 'emerge'
+import * as emerge from 'emerge'
 import * as querystring from 'querystring'
 
 export const MOBILE_WIDTH_MAX = 980
@@ -46,7 +46,7 @@ export function bindValue(component, path, fun) {
 
   return {
     onUpdate: value => {
-      component.setState(e.putIn(component.state, path, f.isFunction(fun) ? fun(value) : value))
+      component.setState(emerge.putIn(component.state, path, f.isFunction(fun) ? fun(value) : value))
     },
     value: f.getIn(component.state, path) || '',
   }
@@ -58,7 +58,7 @@ export function bindChecked(component, path, componentValue) {
 
   return {
     onUpdate: value => {
-      component.setState(e.putIn(component.state, path, value))
+      component.setState(emerge.putIn(component.state, path, value))
     },
     value: componentValue,
     checked: f.getIn(component.state, path) === componentValue,
@@ -201,7 +201,7 @@ export function parseNum(value) {
  */
 
 export function jsonParams(params) {
-  return e.merge(params, {headers: jsonHeaders})
+  return emerge.merge(params, {headers: jsonHeaders})
 }
 
 const jsonHeaders = {
@@ -238,7 +238,7 @@ export function storageRead (path) {
   f.validate(path, isPath)
   try {
     if (!storage[STORAGE_KEY]) return undefined
-    return e.getIn(JSON.parse(storage[STORAGE_KEY]), path)
+    return emerge.getIn(JSON.parse(storage[STORAGE_KEY]), path)
   }
   catch (err) {
     console.warn('Failed to read from storage:', err)
@@ -249,7 +249,7 @@ export function storageRead (path) {
 export function storageWrite (path, value) {
   f.validate(path, isPath)
 
-  try {storage[STORAGE_KEY] = JSON.stringify(e.putIn(storageRead([]), path, value))}
+  try {storage[STORAGE_KEY] = JSON.stringify(emerge.putIn(storageRead([]), path, value))}
   catch (err) {
     console.warn('Failed to save to storage:', err)
   }

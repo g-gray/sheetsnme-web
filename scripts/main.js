@@ -1,18 +1,13 @@
 import React from 'react'
 import {render} from 'react-dom'
-import {createStore, combineReducers, applyMiddleware} from 'redux'
 import {Provider, connect} from 'react-redux'
-import thunk from 'redux-thunk'
 
-import * as r from './reducers'
+import * as e from './env'
 import * as a from './actions'
 import * as u from './utils'
 import * as t from './views/translations'
 
 import {AppRouter} from './views/routes'
-
-export const store = createStore(combineReducers(r), applyMiddleware(thunk))
-window.env = {store}
 
 class App extends u.ViewComponent {
   constructor({dispatch, lang}) {
@@ -44,7 +39,7 @@ const ConnectedApp = connect(state => ({
 }))(App)
 
 const elem = (
-  <Provider store={store}>
+  <Provider store={e.store}>
     <ConnectedApp />
   </Provider>
 )
@@ -55,6 +50,6 @@ render(elem, rootNode, initDom)
 
 function initDom() {
   window.addEventListener('resize', () => {
-    store.dispatch(a.resize(u.geometry(window.innerWidth)))
+    e.store.dispatch(a.resize(u.geometry(window.innerWidth)))
   })
 }

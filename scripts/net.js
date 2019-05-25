@@ -1,11 +1,12 @@
-import * as e from 'emerge'
+import * as emerge from 'emerge'
 import * as xhttp from 'xhttp'
+import * as e from './env'
 import * as u from './utils'
 
 export function authedJsonFetch(url, params) {
   // TODO Review this approach
-  const state = window.env.store.getState()
-  params = e.merge(params, {headers: u.langHeaders(state.dom.lang)})
+  const state = e.store.getState()
+  params = emerge.merge(params, {headers: u.langHeaders(state.dom.lang)})
 
   return authedHttpFetch(url, u.jsonParams(params))
     .then(({body}) => body)
