@@ -784,27 +784,6 @@ class _AccountsList extends u.ViewComponent {
     }
   }
 
-  componentDidMount() {
-    const {context, props} = this
-
-    this.unlisten = props.history.listen(nextLocation => {
-      const prevLocation = props.location
-      if (prevLocation.pathname !== nextLocation.pathname) return
-
-      props.dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS)))
-    })
-
-    /**
-     * TODO Reconsider it because componentDidMount is called whenever we change the mobile view to
-     * the laptop view and vice versa
-     */
-    props.dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS)))
-  }
-
-  componentWillUnmount() {
-    this.unlisten()
-  }
-
   render({
     props: {accounts, pending},
     onOpen, onDelete,
@@ -833,10 +812,10 @@ class _AccountsList extends u.ViewComponent {
   }
 }
 
-const AccountsList = withRouter(connect(state => ({
+const AccountsList = connect(state => ({
   accounts: state.net.accounts,
   pending: !f.isEmpty(state.net.pending),
-}))(_AccountsList))
+}))(_AccountsList)
 
 
 
@@ -1585,12 +1564,6 @@ class _TransactionsList extends u.ViewComponent {
 
       props.dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS)))
     })
-
-    /**
-     * TODO Reconsider it because componentDidMount is called whenever we change the mobile view to
-     *the laptop view and vice versa
-     */
-    props.dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS)))
   }
 
   componentWillUnmount() {
