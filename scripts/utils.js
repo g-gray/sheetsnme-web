@@ -48,7 +48,7 @@ export function bindValue(component, path, fun) {
     onUpdate: value => {
       component.setState(e.putIn(component.state, path, f.isFunction(fun) ? fun(value) : value))
     },
-    defaultValue: f.getIn(component.state, path),
+    value: f.getIn(component.state, path) || '',
   }
 }
 
@@ -61,7 +61,7 @@ export function bindChecked(component, path, componentValue) {
       component.setState(e.putIn(component.state, path, value))
     },
     value: componentValue,
-    defaultChecked: f.getIn(component.state, path) === componentValue,
+    checked: f.getIn(component.state, path) === componentValue,
   }
 }
 
