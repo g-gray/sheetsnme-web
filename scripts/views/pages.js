@@ -1598,7 +1598,7 @@ class _TransactionsList extends u.ViewComponent {
   }
 
   render({
-    props: {transactions, transactionsTotal, pending},
+    props: {transactions, pageCount, pending},
   }) {
     return (
       <div className='col-start-stretch gaps-v-2'>
@@ -1617,7 +1617,7 @@ class _TransactionsList extends u.ViewComponent {
         )}
         {pending && !f.size(transactions) ? null :
         <Paginator
-          total={transactionsTotal}
+          pageCount={pageCount}
         />}
       </div>
     )
@@ -1626,7 +1626,7 @@ class _TransactionsList extends u.ViewComponent {
 
 const TransactionsList = withRouter(connect(state => ({
   transactions: state.net.transactions.items,
-  transactionsTotal: state.net.transactions.total,
+  pageCount: Math.ceil(state.net.transactions.total / state.net.transactions.limit),
   pending: !f.isEmpty(state.net.pending),
 }))(_TransactionsList))
 
@@ -2105,18 +2105,13 @@ class _Paginator extends u.ViewComponent {
   constructor() {
     super(...arguments)
 
-    const {props} = this
-    const {history, location} = props
-
-    const query = u.decodeQuery(location.search)
-    this.initialPage = parseInt(query.page, 10)
-      ? parseInt(query.page, 10)
-      : 1
+    const query = u.decodeQuery(this.props.location.search)
+    this.state = {forcePage: parseInt(query.page, 10) || 1}
 
     this.onPageChange = location => ({selected}) => {
       const query = u.decodeQuery(location.search)
       const page = selected + 1
-      history.push(`/${u.encodeQuery({...query, page})}`)
+      this.props.history.push(`/${u.encodeQuery({...query, page})}`)
 
       if (f.isFunction(this.props.onPageChange)) this.props.onPageChange(page)
     }
@@ -2127,26 +2122,44 @@ class _Paginator extends u.ViewComponent {
     }
   }
 
+  componentDidMount() {
+    this.unlisten = this.props.history.listen(nextLocation => {
+      const location = this.props.location
+
+      if (location.pathname !== nextLocation.pathname) return
+
+      const nextQuery = u.decodeQuery(nextLocation.search)
+      this.setState({forcePage: parseInt(nextQuery.page, 10) || 1})
+    })
+  }
+
+  componentWillUnmount() {
+    this.unlisten()
+  }
+
   render({
-    props: {total, location},
+    context,
+    props: {pageCount, location}, state: {forcePage},
     onPageChange, hrefBulder,
   }) {
-    const pageCount = Math.ceil(total / u.DEFAULT_PAGE_SIZE)
+    const isMobile = u.isMobile(context)
 
     return (
       <ReactPaginate
         pageCount={pageCount}
-        pageRangeDisplayed={3}
-        marginPagesDisplayed={2}
+        pageRangeDisplayed={isMobile ? 2 : 3}
+        marginPagesDisplayed={isMobile ? 1 : 2}
         previousLabel={<s.ArrowLeft />}
         nextLabel={<s.ArrowRight />}
         breakLabel='...'
-        breakClassName='block padding-h-0x75'
+        breakClassName={`block ${isMobile ? '' : 'padding-h-0x75'}`}
         breakLinkClassName='btn-secondary row-center-center'
         onPageChange={onPageChange(location)}
-        initialPage={this.initialPage - 1}
+        forcePage={forcePage - 1}
         disableInitialCallback={true}
-        containerClassName='row-center-center gaps-h-0x25'
+        containerClassName={`${isMobile
+          ? 'col-start-stretch gaps-v-1 padding-h-1x25'
+          : 'row-center-center gaps-h-0x25'}`}
         pageClassName='block'
         pageLinkClassName='btn-secondary row-center-center'
         previousClassName='block'
