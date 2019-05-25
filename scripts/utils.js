@@ -130,7 +130,7 @@ export function stopPropagation(event) {
 }
 
 export function geometry (width) {
-  return {width, isMobile: width <= MOBILE_WIDTH_MAX}
+  return {isMobile: width <= MOBILE_WIDTH_MAX}
 }
 
 export function isMobile(context) {
