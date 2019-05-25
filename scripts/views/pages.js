@@ -2214,9 +2214,11 @@ class _Filters extends u.ViewComponent {
   render({
     context,
     props: {accounts, categories, payees, pending, location},
+    state: {formValues},
     onSubmit, onReset,
   }) {
     const isMobile = u.isMobile(context)
+    const noFilters = f.isEmpty(f.pickBy(formValues, v => v))
 
     return (
       <form className='col-start-stretch' onSubmit={onSubmit(location)} onReset={onReset(location)}>
@@ -2275,7 +2277,7 @@ class _Filters extends u.ViewComponent {
             <button
               type='reset'
               className={`btn-secondary ${isMobile ? '' : 'btn-wide'}`}
-              disabled={pending}>
+              disabled={pending || noFilters}>
               {u.xln(context, t.RESET)}
             </button>
             <button
