@@ -353,7 +353,9 @@ export function omitEmpty(dict) {
     return f.isArray(value) || f.isDict(value)
       ? f.isEmpty(value)
       : f.isString(value)
-      ? value
+      ? !value
+      : f.isDate(value)
+      ? !value
       : value == null
   })
 }

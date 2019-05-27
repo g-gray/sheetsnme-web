@@ -7,6 +7,8 @@ export const TRANSACTIONS          = {en: 'Transactions', ru: 'Транзакц�
 export const PAYEES                = {en: 'Payees', ru: 'Плательщики'}
 
 export const DATE                  = {en: 'Date', ru: 'Дата'}
+export const DATE_FROM             = {en: 'Date From', ru: 'Дата с'}
+export const DATE_TO               = {en: 'Date To', ru: 'Дата по'}
 export const TYPE                  = {en: 'Type', ru: 'Тип'}
 export const TITLE                 = {en: 'Title', ru: 'Название'}
 export const AMOUNT                = {en: 'Amount', ru: 'Сумма'}

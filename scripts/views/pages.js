@@ -2161,6 +2161,8 @@ class _Filters extends u.ViewComponent {
     const query = u.decodeQuery(this.props.location.search)
     this.state = {
       formValues: {
+        dateFrom  : u.toValidDate(query.dateFrom),
+        dateTo    : u.toValidDate(query.dateTo),
         accountId : query.accountId,
         categoryId: query.categoryId,
         payeeId   : query.payeeId,
@@ -2174,7 +2176,9 @@ class _Filters extends u.ViewComponent {
       this.props.history.push(`/${u.encodeQuery({
         ...query,
         ...this.state.formValues,
-        page: undefined,
+        dateFrom: u.formatDate(this.state.formValues.dateFrom),
+        dateTo  : u.formatDate(this.state.formValues.dateTo),
+        page    : undefined,
       })}`)
 
       if (f.isFunction(this.props.onSumbit)) this.props.onSumbit(this.state.formValues)
@@ -2185,6 +2189,8 @@ class _Filters extends u.ViewComponent {
       const query = u.decodeQuery(location.search)
       this.props.history.push(`/${u.encodeQuery({
         ...query,
+        dateFrom  : undefined,
+        dateTo    : undefined,
         accountId : undefined,
         categoryId: undefined,
         payeeId   : undefined,
@@ -2206,6 +2212,8 @@ class _Filters extends u.ViewComponent {
 
       this.setState({
         formValues: {
+          dateFrom  : nextQuery.dateFrom,
+          dateTo    : nextQuery.dateTo,
           accountId : nextQuery.accountId,
           categoryId: nextQuery.categoryId,
           payeeId   : nextQuery.payeeId,
@@ -2227,10 +2235,21 @@ class _Filters extends u.ViewComponent {
   }) {
     const isMobile = u.isMobile(context)
     const noFilters = f.isEmpty(u.omitEmpty(formValues))
-
     return (
       <form className='col-start-stretch' onSubmit={onSubmit(location)} onReset={onReset(location)}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
+          <FormDateElement
+            name='dateFrom'
+            label={u.xln(context, t.DATE_FROM)}
+            disabled={pending}
+            {...u.bindValue(this, ['formValues', 'dateFrom'])} />
+
+          <FormDateElement
+            name='dateTo'
+            label={u.xln(context, t.DATE_TO)}
+            disabled={pending}
+            {...u.bindValue(this, ['formValues', 'dateTo'])} />
+
           <FormSelectElement
             name='accountId'
             label={u.xln(context, t.ACCOUNT)}
