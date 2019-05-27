@@ -1697,7 +1697,25 @@ class FormTextElement extends u.ViewComponent {
 class FormDateElement extends u.ViewComponent {
   constructor() {
     super(...arguments)
-    const {props: {value, defaultValue, onUpdate}} = this
+    const {props: {onUpdate}} = this
+
+    this.state = {}
+
+    this.years  = f.reverse(f.range(1940, new Date().getFullYear() + 1))
+    this.months = [
+      {value: 0,  text: 'January'},
+      {value: 1,  text: 'February'},
+      {value: 2,  text: 'March'},
+      {value: 3,  text: 'April'},
+      {value: 4,  text: 'May'},
+      {value: 5,  text: 'June'},
+      {value: 6,  text: 'July'},
+      {value: 7,  text: 'August'},
+      {value: 8,  text: 'September'},
+      {value: 9,  text: 'October'},
+      {value: 10, text: 'November'},
+      {value: 11, text: 'December'},
+    ]
 
     this.onYearInput = ({target: {value: year}}) => {
       year = u.parseNum(year)
@@ -1745,41 +1763,31 @@ class FormDateElement extends u.ViewComponent {
     this.mayBeDay = (days, day) => {
       return f.includes(days, day) ? day : undefined
     }
+  }
 
-    const date = u.toValidDate(value || defaultValue)
-    const {year, month, day} = date
-      ? {year: date.getFullYear(), month: date.getMonth(), day: date.getDate()}
-      : {year: undefined, month: undefined, day: undefined}
+  static getDerivedStateFromProps(props, state) {
+    const {value, defaultValue} = props
 
-    const years  = f.reverse(f.range(1940, new Date().getFullYear() + 1))
-    const months = [
-      {value: 0,  text: 'January'},
-      {value: 1,  text: 'February'},
-      {value: 2,  text: 'March'},
-      {value: 3,  text: 'April'},
-      {value: 4,  text: 'May'},
-      {value: 5,  text: 'June'},
-      {value: 6,  text: 'July'},
-      {value: 7,  text: 'August'},
-      {value: 8,  text: 'September'},
-      {value: 9,  text: 'October'},
-      {value: 10, text: 'November'},
-      {value: 11, text: 'December'},
-    ]
-    const days = u.daysInMonthList(year, month)
+    if (value || defaultValue !== state.prevPropsValue) {
+      const date = u.toValidDate(value || defaultValue)
+      const {year, month, day} = date
+        ? {year: date.getFullYear(), month: date.getMonth(), day: date.getDate()}
+        : {year: undefined, month: undefined, day: undefined}
+      const days = u.daysInMonthList(year, month)
 
-    this.state = {years, months, days, day, month, year}
+      return {prevPropsValue: value || defaultValue, days, day, month, year}
+    }
+
+    return state
   }
 
   render({
     props,
     state,
-    onYearInput,
-    onMonthInput,
-    onDayInput,
+    years, months, onYearInput, onMonthInput, onDayInput,
   }) {
     const {label, readOnly, disabled} = props
-    const {years, months, days, year, month, day} = state
+    const {days, year, month, day} = state
 
     return (
       <G7FormLine>
@@ -1790,7 +1798,7 @@ class FormDateElement extends u.ViewComponent {
           <select
             className='flex-3 select-native'
             onChange={onYearInput}
-            value={year}
+            value={year == null ? '' : year}
             disabled={readOnly || disabled}>
             <option value=''>
               Year:
@@ -1805,7 +1813,7 @@ class FormDateElement extends u.ViewComponent {
           </select>
           <select
             className='flex-5 select-native'
-            value={month}
+            value={month == null ? '' : month}
             onChange={onMonthInput}
             disabled={readOnly || disabled}>
             <option value=''>
@@ -1821,7 +1829,7 @@ class FormDateElement extends u.ViewComponent {
           </select>
           <select
             className='flex-3 select-native'
-            value={day}
+            value={day == null ? '' : day}
             onChange={onDayInput}
             disabled={readOnly || disabled}>
             <option value=''>
