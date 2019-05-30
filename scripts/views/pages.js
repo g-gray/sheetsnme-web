@@ -11,7 +11,7 @@ import * as u from '../utils'
 import * as m from './misc'
 import * as s from './svg'
 
-import * as t from './translations'
+import * as t from '../translations'
 
 /**
  * Layouts

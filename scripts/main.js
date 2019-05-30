@@ -6,7 +6,7 @@ import {BrowserRouter as Router, withRouter} from 'react-router-dom'
 import * as e from './env'
 import * as a from './actions'
 import * as u from './utils'
-import * as t from './views/translations'
+import * as t from './translations'
 
 import {Routes} from './views/routes'
 
