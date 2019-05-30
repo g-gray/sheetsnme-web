@@ -1050,6 +1050,7 @@ class _TransactionForm extends u.ViewComponent {
       this.setState({errors: undefined})
 
       const {context, props, state} = this
+      const {location, onSubmitSuccess} = props
       const {formValues} = state
       const data = {...formValues, date: u.formatDate(formValues.date)}
 
@@ -1062,13 +1063,13 @@ class _TransactionForm extends u.ViewComponent {
           this.setState({errors})
           throw errors
         })
-        .then(() => {props.onSubmitSuccess()})
+        .then(() => {onSubmitSuccess()})
         .then(() => dispatch(a.notify({
           text: formValues.id
             ? u.xln(context, t.TRANSACTION_UPDATED)
             : u.xln(context, t.TRANSACTION_CREATED),
         })))
-        .then(() => dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS))))
+        .then(() => dispatch(a.fetchTransactions(location, u.xln(context, t.FETCHING_TRANSACTIONS))))
     }
 
     this.onDelete = event => {
@@ -1077,14 +1078,16 @@ class _TransactionForm extends u.ViewComponent {
       this.setState({errors: undefined})
 
       const {context, props, state} = this
+      const {location, onSubmitSuccess} = props
       const {formValues} = state
+
       dispatch(a.addDialog(ConfirmDialog, {
         question: u.xln(context, t.DELETE_TRANSACTION),
         onConfirm: () => {
           dispatch(a.deleteTransaction(formValues.id, u.xln(context, t.DELETING_TRANSACTION)))
-            .then(() => {props.onSubmitSuccess()})
+            .then(() => {onSubmitSuccess()})
             .then(() => dispatch(a.notify({text: u.xln(context, t.TRANSACTION_DELETED)})))
-            .then(() => dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS))))
+            .then(() => dispatch(a.fetchTransactions(location, u.xln(context, t.FETCHING_TRANSACTIONS))))
         },
       }))
     }
@@ -1326,12 +1329,12 @@ class _TransactionForm extends u.ViewComponent {
   }
 }
 
-const TransactionForm = connect(state => ({
+const TransactionForm = withRouter(connect(state => ({
   categories: state.net.categories,
   accounts: state.net.accounts,
   payees: state.net.payees,
   pending: !f.isEmpty(state.net.pending),
-}))(_TransactionForm)
+}))(_TransactionForm))
 
 class TransactionPlaceholder extends u.ViewComponent {
   render({
@@ -1387,12 +1390,15 @@ class _Transaction extends u.ViewComponent {
     }
 
     this.onDelete = transaction => () => {
+      const {props} = this
+      const {location} = props
+
       dispatch(a.addDialog(ConfirmDialog, {
         question: u.xln(context, t.DELETE_TRANSACTION),
         onConfirm: () => {
           dispatch(a.deleteTransaction(transaction.id, u.xln(context, t.DELETING_TRANSACTION)))
             .then(() => dispatch(a.notify({text: u.xln(context, t.TRANSACTION_DELETED)})))
-            .then(() => dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS))))
+            .then(() => dispatch(a.fetchTransactions(location, u.xln(context, t.FETCHING_TRANSACTIONS))))
         },
       }))
     }
@@ -1441,7 +1447,7 @@ class _Transaction extends u.ViewComponent {
   }
 }
 
-const Transaction = connect()(_Transaction)
+const Transaction = withRouter(connect()(_Transaction))
 
 class TransactionMeta extends u.ViewComponent {
   render({
@@ -1556,13 +1562,16 @@ const TransactionOrigin = connect(state => ({
 
 class _TransactionsList extends u.ViewComponent {
   componentDidMount() {
-    const {context, props} = this
+    this.unlisten = this.props.history.listen(nextLocation => {
+      const {context, props} = this
+      const {dispatch, location} = props
 
-    this.unlisten = props.history.listen(nextLocation => {
-      const prevLocation = props.location
-      if (prevLocation.pathname !== nextLocation.pathname) return
+      if (location.pathname !== nextLocation.pathname) return
 
-      props.dispatch(a.fetchTransactions(u.xln(context, t.FETCHING_TRANSACTIONS)))
+      dispatch(a.fetchTransactions(
+        location,
+        u.xln(context, t.FETCHING_TRANSACTIONS),
+      ))
     })
   }
 

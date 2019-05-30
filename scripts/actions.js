@@ -98,18 +98,6 @@ const requestEnd = name => ({
 
 
 
-export const init = messages => dispatch => {
-  return dispatch(fetchUser(messages.fetchUser))
-    // eslint-disable-next-line promise/no-native
-    .then(() => Promise.all([
-      dispatch(fetchCategories(messages.fetchCategories)),
-      dispatch(fetchAccounts(messages.fetchAccounts)),
-      dispatch(fetchPayees(messages.fetchPayees)),
-    ]))
-    .then(() => dispatch(fetchTransactions(messages.fetchTransactions)))
-}
-
-
 export const fetchUser = message => dispatch => {
   return dispatch(trackRequest({
     message,
@@ -120,9 +108,8 @@ export const fetchUser = message => dispatch => {
 }
 
 
-export const fetchTransactions = message => dispatch => {
-  // TODO Weird solution. Rethink
-  const query = u.decodeQuery(window.location.search)
+export const fetchTransactions = (location, message) => dispatch => {
+  const query = u.decodeQuery(location.search)
 
   return dispatch(trackRequest({
     message,
