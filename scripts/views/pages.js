@@ -2097,16 +2097,19 @@ class _Paginator extends u.ViewComponent {
     const query = u.decodeQuery(this.props.location.search)
     this.state = {forcePage: parseInt(query.page, 10) || 1}
 
-    this.onPageChange = location => ({selected}) => {
+    this.onPageChange = ({selected}) => {
+      const {props} = this
+      const {history, location, onPageChange} = props
+
       const query = u.decodeQuery(location.search)
       const page = selected + 1
-      this.props.history.push(`/${u.encodeQuery({...query, page})}`)
+      history.push(`/${u.encodeQuery({...query, page})}`)
 
-      if (f.isFunction(this.props.onPageChange)) this.props.onPageChange(page)
+      if (f.isFunction(onPageChange)) onPageChange(page)
     }
 
-    this.hrefBulder = location => page => {
-      const query = u.decodeQuery(location.search)
+    this.hrefBulder = page => {
+      const query = u.decodeQuery(this.props.location.search)
       return `/${u.encodeQuery({...query, page})}`
     }
   }
@@ -2114,7 +2117,6 @@ class _Paginator extends u.ViewComponent {
   componentDidMount() {
     this.unlisten = this.props.history.listen(nextLocation => {
       const location = this.props.location
-
       if (location.pathname !== nextLocation.pathname) return
 
       const nextQuery = u.decodeQuery(nextLocation.search)
@@ -2128,7 +2130,7 @@ class _Paginator extends u.ViewComponent {
 
   render({
     context,
-    props: {pageCount, location}, state: {forcePage},
+    props: {pageCount}, state: {forcePage},
     onPageChange, hrefBulder,
   }) {
     const isMobile = u.isMobile(context)
@@ -2143,7 +2145,7 @@ class _Paginator extends u.ViewComponent {
         breakLabel='...'
         breakClassName={`block ${isMobile ? '' : 'padding-h-0x75'}`}
         breakLinkClassName='btn-secondary row-center-center'
-        onPageChange={onPageChange(location)}
+        onPageChange={onPageChange}
         forcePage={forcePage - 1}
         disableInitialCallback={true}
         containerClassName={`${isMobile
@@ -2155,7 +2157,7 @@ class _Paginator extends u.ViewComponent {
         previousLinkClassName='btn-secondary row-center-center'
         nextClassName='block'
         nextLinkClassName='btn-secondary row-center-center'
-        hrefBuilder={hrefBulder(location)}
+        hrefBuilder={hrefBulder}
       />
     )
   }
@@ -2179,24 +2181,33 @@ class _Filters extends u.ViewComponent {
       },
     }
 
-    this.onSubmit = location => event => {
+    this.onSubmit = event => {
       event.preventDefault()
+
+      const {props, state} = this
+      const {history, location, onSumbit} = props
+      const {formValues} = state
+
       const query = u.decodeQuery(location.search)
-      this.props.history.push(`/${u.encodeQuery({
+      history.push(`/${u.encodeQuery({
         ...query,
-        ...this.state.formValues,
-        dateFrom: u.formatDate(this.state.formValues.dateFrom),
-        dateTo  : u.formatDate(this.state.formValues.dateTo),
+        ...formValues,
+        dateFrom: u.formatDate(formValues.dateFrom),
+        dateTo  : u.formatDate(formValues.dateTo),
         page    : undefined,
       })}`)
 
-      if (f.isFunction(this.props.onSumbit)) this.props.onSumbit(this.state.formValues)
+      if (f.isFunction(onSumbit)) onSumbit(this.state.formValues)
     }
 
-    this.onReset = location => event => {
+    this.onReset = event => {
       event.preventDefault()
+
+      const {props} = this
+      const {history, location, onReset} = props
+
       const query = u.decodeQuery(location.search)
-      this.props.history.push(`/${u.encodeQuery({
+      history.push(`/${u.encodeQuery({
         ...query,
         dateFrom  : undefined,
         dateTo    : undefined,
@@ -2207,14 +2218,13 @@ class _Filters extends u.ViewComponent {
         page      : undefined,
       })}`)
 
-      if (f.isFunction(this.props.onReset)) this.props.onReset({})
+      if (f.isFunction(onReset)) onReset({})
     }
   }
 
   componentDidMount() {
     this.unlisten = this.props.history.listen(nextLocation => {
       const location = this.props.location
-
       if (location.pathname !== nextLocation.pathname) return
 
       const nextQuery = u.decodeQuery(nextLocation.search)
@@ -2238,14 +2248,14 @@ class _Filters extends u.ViewComponent {
 
   render({
     context,
-    props: {accounts, categories, payees, pending, location},
+    props: {accounts, categories, payees, pending},
     state: {formValues},
     onSubmit, onReset,
   }) {
     const isMobile = u.isMobile(context)
     const noFilters = f.isEmpty(u.omitEmpty(formValues))
     return (
-      <form className='col-start-stretch' onSubmit={onSubmit(location)} onReset={onReset(location)}>
+      <form className='col-start-stretch' onSubmit={onSubmit} onReset={onReset}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormDateElement
             name='dateFrom'
