@@ -1549,12 +1549,17 @@ class _TransactionOrigin extends u.ViewComponent {
     props: {transaction, categoriesById, payeesById},
   }) {
     return (
-      <span className='flex-1 width-0 text-ellipsis'>
-        {payeesById[transaction.payeeId]
-          ? payeesById[transaction.payeeId].title
-          : categoriesById[transaction.categoryId]
-          ? categoriesById[transaction.categoryId].title
-          : u.xln(context, t.WITHOUT_CATEGORY)}
+      <span className='flex-1 width-0 text-ellipsis gaps-h-0x5'>
+        {!categoriesById[transaction.categoryId] ? null :
+        <span className='gaps-h-0x25'>
+          <s.Tag className='theme-drawer-icon' />
+          <span>{categoriesById[transaction.categoryId].title}</span>
+        </span>}
+        {!payeesById[transaction.payeeId] ? null :
+        <span className='gaps-h-0x25'>
+          <s.Users className='theme-drawer-icon' />
+          <span>{payeesById[transaction.payeeId].title}</span>
+        </span>}
       </span>
     )
   }
