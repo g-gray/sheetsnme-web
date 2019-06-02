@@ -1568,10 +1568,7 @@ class _TransactionsList extends u.ViewComponent {
 
       if (location.pathname !== nextLocation.pathname) return
 
-      dispatch(a.fetchTransactions(
-        location,
-        u.xln(context, t.FETCHING_TRANSACTIONS),
-      ))
+      dispatch(a.fetchTransactions(nextLocation, u.xln(context, t.FETCHING_TRANSACTIONS)))
     })
   }
 
