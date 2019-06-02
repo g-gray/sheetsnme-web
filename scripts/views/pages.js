@@ -1456,9 +1456,14 @@ class TransactionMeta extends u.ViewComponent {
   }) {
     const isMobile = u.isMobile(context)
 
-    return (
+    return isMobile ? (
+      <span className='col-start-start gaps-v-0x25'>
+        <span>{transaction.date}</span>
+        <span>{transaction.comment}</span>
+      </span>
+    ) : (
       <span>
-        {transaction.date} {!isMobile && transaction.date && transaction.comment ? '·' : ''} {!isMobile && transaction.comment}
+        {transaction.date} {transaction.comment ? '·' : ''} {transaction.comment}
       </span>
     )
   }
