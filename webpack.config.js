@@ -64,7 +64,7 @@ module.exports = {
         sourceMap: true,
         uglifyOptions: {
           mangle: {toplevel: true},
-          compress: {warnings: false},
+          warnings: false,
           output: {comments: false},
         },
       }),
