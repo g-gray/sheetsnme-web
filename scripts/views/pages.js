@@ -1719,18 +1719,18 @@ class FormDateElement extends u.ViewComponent {
 
     this.years  = f.reverse(f.range(1940, new Date().getFullYear() + 1))
     this.months = [
-      {value: 0,  text: 'January'},
-      {value: 1,  text: 'February'},
-      {value: 2,  text: 'March'},
-      {value: 3,  text: 'April'},
-      {value: 4,  text: 'May'},
-      {value: 5,  text: 'June'},
-      {value: 6,  text: 'July'},
-      {value: 7,  text: 'August'},
-      {value: 8,  text: 'September'},
-      {value: 9,  text: 'October'},
-      {value: 10, text: 'November'},
-      {value: 11, text: 'December'},
+      {value: 0,  key: 'January'},
+      {value: 1,  key: 'February'},
+      {value: 2,  key: 'March'},
+      {value: 3,  key: 'April'},
+      {value: 4,  key: 'May'},
+      {value: 5,  key: 'June'},
+      {value: 6,  key: 'July'},
+      {value: 7,  key: 'August'},
+      {value: 8,  key: 'September'},
+      {value: 9,  key: 'October'},
+      {value: 10, key: 'November'},
+      {value: 11, key: 'December'},
     ]
 
     this.onYearInput = ({target: {value: year}}) => {
@@ -1798,6 +1798,7 @@ class FormDateElement extends u.ViewComponent {
   }
 
   render({
+    context,
     props,
     state,
     years, months, onYearInput, onMonthInput, onDayInput,
@@ -1817,7 +1818,7 @@ class FormDateElement extends u.ViewComponent {
             value={year == null ? '' : year}
             disabled={readOnly || disabled}>
             <option value=''>
-              Year:
+              {u.xln(context, t.YEAR)}:
             </option>
             {f.map(years, year => (
               <option
@@ -1833,13 +1834,13 @@ class FormDateElement extends u.ViewComponent {
             onChange={onMonthInput}
             disabled={readOnly || disabled}>
             <option value=''>
-              Month:
+              {u.xln(context, t.MONTH)}:
             </option>
-            {f.map(months, ({value, text}) => (
+            {f.map(months, ({value, key}) => (
               <option
-                key={value}
+                key={key}
                 value={value}>
-                {text}
+                {u.xln(context, t[key.toUpperCase()])}
               </option>
             ))}
           </select>
@@ -1849,7 +1850,7 @@ class FormDateElement extends u.ViewComponent {
             onChange={onDayInput}
             disabled={readOnly || disabled}>
             <option value=''>
-              Day:
+              {u.xln(context, t.DAY)}:
             </option>
             {f.map(days, day => (
               <option

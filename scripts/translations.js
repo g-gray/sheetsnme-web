@@ -81,6 +81,22 @@ export const CATEGORY_DELETED      = {en: 'Category deleted', ru: 'Катего�
 export const PAYEE_DELETED         = {en: 'Payee deleted', ru: 'Плательщик удален'}
 export const TRANSACTION_DELETED   = {en: 'Transaction deleted', ru: 'Транзакция удалена'}
 
-export const PREV      = {en: 'Prev', ru: 'Предыдущая'}
-export const NEXT      = {en: 'Next', ru: 'Следующая'}
+export const PREV                  = {en: 'Prev', ru: 'Предыдущая'}
+export const NEXT                  = {en: 'Next', ru: 'Следующая'}
 
+export const YEAR                  = {en: 'Year', ru: 'Год'}
+export const MONTH                 = {en: 'Month', ru: 'Месяц'}
+export const DAY                   = {en: 'Day', ru: 'День'}
+
+export const JANUARY               = {en: 'January', ru: 'Январь'}
+export const FEBRUARY              = {en: 'February', ru: 'Февраль'}
+export const MARCH                 = {en: 'March', ru: 'Март'}
+export const APRIL                 = {en: 'April', ru: 'Апрель'}
+export const MAY                   = {en: 'May', ru: 'Май'}
+export const JUNE                  = {en: 'June', ru: 'Июнь'}
+export const JULY                  = {en: 'July', ru: 'Июль'}
+export const AUGUST                = {en: 'August', ru: 'Август'}
+export const SEPTEMBER             = {en: 'September', ru: 'Сентябрь'}
+export const OCTOBER               = {en: 'October', ru: 'Октября'}
+export const NOVEMBER              = {en: 'November', ru: 'Ноябрь'}
+export const DECEMBER              = {en: 'December', ru: 'Декабрь'}
