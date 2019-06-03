@@ -41,7 +41,7 @@
     "react-router-dom": "^5.0.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "stylebox": "^0.0.15",
+    "stylebox": "aristovpro/stylebox#69763b094e8d58c9611ec26baf667fed0e07c854",
     "xhttp": "^0.11.0"
   }
 }
