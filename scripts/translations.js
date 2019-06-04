@@ -83,6 +83,7 @@ export const TRANSACTION_DELETED   = {en: 'Transaction deleted', ru: 'Транз
 
 export const PREV                  = {en: 'Prev', ru: 'Предыдущая'}
 export const NEXT                  = {en: 'Next', ru: 'Следующая'}
+export const PAGE                  = {en: 'Page', ru: 'Страница'}
 
 export const YEAR                  = {en: 'Year', ru: 'Год'}
 export const MONTH                 = {en: 'Month', ru: 'Месяц'}

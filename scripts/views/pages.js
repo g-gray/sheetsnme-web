@@ -2166,6 +2166,7 @@ class _Paginator extends u.ViewComponent {
         nextClassName='block'
         nextLinkClassName='btn-secondary row-center-center'
         hrefBuilder={hrefBulder}
+        ariaLabelBuilder={page => `${u.xln(context, t.PAGE)} ${page}`}
       />
     )
   }
