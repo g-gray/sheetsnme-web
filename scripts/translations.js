@@ -5,6 +5,7 @@ export const ACCOUNTS              = {en: 'Accounts', ru: 'Счета'}
 export const CATEGORIES            = {en: 'Categories', ru: 'Категории'}
 export const TRANSACTIONS          = {en: 'Transactions', ru: 'Транзакции'}
 export const PAYEES                = {en: 'Payees', ru: 'Плательщики'}
+export const FILTERS               = {en: 'Filters', ru: 'Фильтры'}
 
 export const DATE                  = {en: 'Date', ru: 'Дата'}
 export const DATE_FROM             = {en: 'Date From', ru: 'Дата с'}

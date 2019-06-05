@@ -1545,7 +1545,6 @@ const TransactionAccount = connect(state => ({
 
 class _TransactionOrigin extends u.ViewComponent {
   render({
-    context,
     props: {transaction, categoriesById, payeesById},
   }) {
     return (
@@ -1591,20 +1590,22 @@ class _TransactionsList extends u.ViewComponent {
   }) {
     return (
       <div className='col-start-stretch gaps-v-2'>
-        <Filters />
-        {pending || !f.size(transactions) ? (
-          <div className='col-start-stretch'>
-            {f.map(new Array(f.size(transactions) || 3), (__, index) => (
-              <TransactionPlaceholder key={`placeholder-${index}`} />
-            ))}
-          </div>
-        ) : (
-          <div className='col-start-stretch'>
-            {f.map(transactions, transaction => (
-              <Transaction key={transaction.id} transaction={transaction} />
-            ))}
-          </div>
-        )}
+        <div className='col-start-stretch gaps-v-0x25'>
+          <FiltersControls />
+          {pending || !f.size(transactions) ? (
+            <div className='col-start-stretch'>
+              {f.map(new Array(f.size(transactions) || 3), (__, index) => (
+                <TransactionPlaceholder key={`placeholder-${index}`} />
+              ))}
+            </div>
+          ) : (
+            <div className='col-start-stretch'>
+              {f.map(transactions, transaction => (
+                <Transaction key={transaction.id} transaction={transaction} />
+              ))}
+            </div>
+          )}
+        </div>
         {!f.size(transactions) ? null :
         <Paginator pageCount={pageCount} />}
       </div>
@@ -2174,27 +2175,19 @@ class _Paginator extends u.ViewComponent {
 
 const Paginator = withRouter(_Paginator)
 
-class _Filters extends u.ViewComponent {
+class _FiltersForm extends u.ViewComponent {
   constructor() {
     super(...arguments)
 
-    const query = u.decodeQuery(this.props.location.search)
     this.state = {
-      formValues: {
-        dateFrom  : u.toValidDate(query.dateFrom),
-        dateTo    : u.toValidDate(query.dateTo),
-        accountId : query.accountId,
-        categoryId: query.categoryId,
-        payeeId   : query.payeeId,
-        comment   : query.comment,
-      },
+      formValues: getFilterValues(this.props.location),
     }
 
     this.onSubmit = event => {
       event.preventDefault()
 
       const {props, state} = this
-      const {history, location, onSumbit} = props
+      const {history, location, onSubmitSuccess} = props
       const {formValues} = state
 
       const query = u.decodeQuery(location.search)
@@ -2206,28 +2199,16 @@ class _Filters extends u.ViewComponent {
         page    : undefined,
       })}`)
 
-      if (f.isFunction(onSumbit)) onSumbit(this.state.formValues)
+      if (f.isFunction(onSubmitSuccess)) onSubmitSuccess(this.state.formValues)
     }
 
     this.onReset = event => {
       event.preventDefault()
 
       const {props} = this
-      const {history, location, onReset} = props
+      const {history, location} = props
 
-      const query = u.decodeQuery(location.search)
-      history.push(`/${u.encodeQuery({
-        ...query,
-        dateFrom  : undefined,
-        dateTo    : undefined,
-        accountId : undefined,
-        categoryId: undefined,
-        payeeId   : undefined,
-        comment   : undefined,
-        page      : undefined,
-      })}`)
-
-      if (f.isFunction(onReset)) onReset({})
+      resetFilters(history, location)
     }
   }
 
@@ -2236,17 +2217,8 @@ class _Filters extends u.ViewComponent {
       const location = this.props.location
       if (location.pathname !== nextLocation.pathname) return
 
-      const nextQuery = u.decodeQuery(nextLocation.search)
-
       this.setState({
-        formValues: {
-          dateFrom  : nextQuery.dateFrom,
-          dateTo    : nextQuery.dateTo,
-          accountId : nextQuery.accountId,
-          categoryId: nextQuery.categoryId,
-          payeeId   : nextQuery.payeeId,
-          comment   : nextQuery.comment,
-        },
+        formValues: getFilterValues(nextLocation),
       })
     })
   }
@@ -2323,37 +2295,102 @@ class _Filters extends u.ViewComponent {
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'comment'])} />
         </div>
-        <G7FormLine>
-          <div className='flex-1' />
-          <div
-            className={`${isMobile
-              ? 'col-start-stretch padding-h-1x25 gaps-v-1'
-              : 'row-end-stretch gaps-h-1'}`}>
+        <hr className='hr margin-h-1x25' />
+        <div className='row-between-stretch padding-v-1 padding-h-1x25'>
+          <div className='flex-1 row-start-stretch'>
             <button
               type='reset'
-              className={`btn-secondary ${isMobile ? '' : 'btn-wide'}`}
+              className='btn-transparent'
               disabled={pending || noFilters}>
               {u.xln(context, t.RESET)}
             </button>
-            <button
-              type='submit'
-              className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
-              disabled={pending}>
-              {u.xln(context, t.APPLY)}
-            </button>
           </div>
-        </G7FormLine>
+          <button
+            type='submit'
+            className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
+            disabled={pending}>
+            {u.xln(context, t.APPLY)}
+          </button>
+          <div className='flex-1' />
+        </div>
       </form>
     )
   }
 }
 
-const Filters = withRouter(connect(state => ({
+const FiltersForm = withRouter(connect(state => ({
   categories: state.net.categories,
   accounts: state.net.accounts,
   payees: state.net.payees,
   pending: !f.isEmpty(state.net.pending),
-}))(_Filters))
+}))(_FiltersForm))
+
+class _FiltersControls extends u.ViewComponent {
+  render({
+    context,
+    props: {transactions, pending, dispatch, history, location},
+  }) {
+    const isMobile = u.isMobile(context)
+
+    const noFilters = f.isEmpty(u.omitEmpty(getFilterValues(location)))
+
+    return (
+      <div className={`row-start-center padding-h-1 flex-wrap ${isMobile ? 'padding-t-0x5' : ''}`}>
+        <div className='row-start-center gaps-h-0x5'>
+          <m.FakeButton
+            className='decorate-link'
+            disabled={pending || !f.size(transactions)}
+            onClick={() => dispatch(a.addDialog(FormDialog, {
+              form: FiltersForm,
+              title: u.xln(context, t.FILTERS),
+            }))}>
+            {u.xln(context, t.FILTERS)}
+          </m.FakeButton>
+          {noFilters ? null :
+          <m.FakeButton
+            className='decorate-link row-center-center bg-primary rounded-50p'
+            style={{padding: '2px'}}
+            disabled={pending}
+            onClick={() => resetFilters(history, location)}>
+            <s.X className='fg-surface' />
+          </m.FakeButton>}
+        </div>
+      </div>
+    )
+  }
+}
+
+const FiltersControls = withRouter(connect(state => ({
+  transactions: state.net.transactions.items,
+  pending: !f.isEmpty(state.net.pending),
+}))(_FiltersControls))
+
+function getFilterValues(location) {
+  const query = u.decodeQuery(location.search)
+
+  return {
+    dateFrom  : u.toValidDate(query.dateFrom),
+    dateTo    : u.toValidDate(query.dateTo),
+    accountId : query.accountId,
+    categoryId: query.categoryId,
+    payeeId   : query.payeeId,
+    comment   : query.comment,
+  }
+}
+
+function resetFilters(history, location) {
+  const query = u.decodeQuery(location.search)
+  history.push(`/${u.encodeQuery({
+    ...query,
+    dateFrom  : undefined,
+    dateTo    : undefined,
+    accountId : undefined,
+    categoryId: undefined,
+    payeeId   : undefined,
+    comment   : undefined,
+    page      : undefined,
+  })}`)
+}
 
 class Fab extends u.ViewComponent {
   render({props: {className: cls, ...props}}) {
