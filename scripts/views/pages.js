@@ -1226,6 +1226,7 @@ class _TransactionForm extends u.ViewComponent {
           <Fragment>
             <FormTextElement
               type='number'
+              inputmode='numeric'
               step='0.01'
               name='outcomeAmount'
               label={u.xln(context, t.AMOUNT)}
@@ -1249,6 +1250,7 @@ class _TransactionForm extends u.ViewComponent {
           <Fragment>
             <FormTextElement
               type='number'
+              inputmode='numeric'
               step='0.01'
               name='incomeAmount'
               label={u.xln(context, t.AMOUNT)}
