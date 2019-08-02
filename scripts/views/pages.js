@@ -1520,13 +1520,13 @@ class TransactionAmount extends u.ViewComponent {
     return (
       <span className='wspace-nowrap'>
         { transaction.type === BORROW
-        ? <span className='fg-warning'>{`+${transaction.outcomeAmount}`}</span>
+        ? <span className='fg-success'>+{transaction.outcomeAmount}</span>
         : transaction.type === LOAN
-        ? <span className='fg-warning'>{`-${transaction.incomeAmount}`}</span>
+        ? <span className='fg-error'>-{transaction.incomeAmount}</span>
         : transaction.type === INCOME
-        ? <span className='fg-success'>{`+${transaction.incomeAmount}`}</span>
+        ? <span className='fg-success'>+{transaction.incomeAmount}</span>
         : transaction.type === OUTCOME
-        ? <span>{`-${transaction.outcomeAmount}`}</span>
+        ? <span className='fg-error'>-{transaction.outcomeAmount}</span>
         : <span>{transaction.outcomeAmount || transaction.incomeAmount}</span>}
       </span>
     )
