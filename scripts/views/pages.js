@@ -2114,14 +2114,14 @@ class _Paginator extends u.ViewComponent {
 
       const query = u.decodeQuery(location.search)
       const page = selected + 1
-      history.push(`/${u.encodeQuery({...query, page})}`)
+      history.push(`/transactions/${u.encodeQuery({...query, page})}`)
 
       if (f.isFunction(onPageChange)) onPageChange(page)
     }
 
     this.hrefBulder = page => {
       const query = u.decodeQuery(this.props.location.search)
-      return `/${u.encodeQuery({...query, page})}`
+      return `/transactions/${u.encodeQuery({...query, page})}`
     }
   }
 
@@ -2382,7 +2382,7 @@ function getFilterValues(location) {
 
 function resetFilters(history, location) {
   const query = u.decodeQuery(location.search)
-  history.push(`/${u.encodeQuery({
+  history.push(`/transactions/${u.encodeQuery({
     ...query,
     dateFrom  : undefined,
     dateTo    : undefined,
