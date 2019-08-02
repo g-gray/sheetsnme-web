@@ -1003,7 +1003,7 @@ class _PayeesList extends u.ViewComponent {
               { payee.debt > 0
               ? <span className='fg-success'>+{payee.debt}</span>
               : payee.debt < 0
-              ? <span className='fg-error'>-{payee.debt}</span>
+              ? <span className='fg-error'>{payee.debt}</span>
               : <span className='fg-on-surface-pale'>{payee.debt}</span>}
             </div>
           </EntityItem>
