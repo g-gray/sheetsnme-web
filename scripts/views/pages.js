@@ -805,7 +805,11 @@ class _AccountsList extends u.ViewComponent {
             onDelete={onDelete(account)}>
             <div className='flex-1 row-between-center gaps-h-1'>
               <span>{account.title}</span>
-              <span className='fg-on-surface-pale'>{account.balance}</span>
+              { account.balance > 0
+              ? <span className='fg-success'>+{account.balance}</span>
+              : account.balance < 0
+              ? <span className='fg-error'>{account.balance}</span>
+              : <span className='fg-on-surface-pale'>{account.balance}</span>}
             </div>
           </EntityItem>
         ))}
