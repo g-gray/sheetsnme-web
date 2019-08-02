@@ -993,7 +993,16 @@ class _PayeesList extends u.ViewComponent {
             icon={<s.Users className='font-large fg-primary' />}
             onOpen={onOpen(payee)}
             onDelete={onDelete(payee)}>
-            {payee.title}
+            <div className='flex-1 row-between-center gaps-h-1'>
+              <span>{payee.title}</span>
+              {payee.debt > 0 ? (
+                <span className='fg-success'>{payee.debt}</span>
+              ) : payee.debt < 0 ? (
+                <span className='fg-error'>{payee.debt}</span>
+              ) : (
+                <span className='fg-on-surface-pale'>{payee.debt}</span>
+              )}
+            </div>
           </EntityItem>
         ))}
       </div>
