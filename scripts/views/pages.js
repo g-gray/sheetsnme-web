@@ -105,10 +105,11 @@ class _Navbar extends u.ViewComponent {
       return (
         <header className='row-between-stretch bg-primary navbar-height shadow-dept-1'>
           <div className='row-start-center gaps-h-0x75 padding-h-1'>
-            <m.FakeButton className='row-center-center padding-0x5 circle decorate-dark-menu-item'>
+            <m.FakeButton
+              className='row-center-center padding-0x5 circle decorate-dark-menu-item'
+              onClick={open}>
               <s.Menu
-                style={{fontSize: '1.5rem'}}
-                onClick={open} />
+                style={{fontSize: '1.5rem'}} />
             </m.FakeButton>
           </div>
           <div className='row-start-stretch relative z-index-1'>
