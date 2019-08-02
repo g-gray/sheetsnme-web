@@ -995,13 +995,11 @@ class _PayeesList extends u.ViewComponent {
             onDelete={onDelete(payee)}>
             <div className='flex-1 row-between-center gaps-h-1'>
               <span>{payee.title}</span>
-              {payee.debt > 0 ? (
-                <span className='fg-success'>{payee.debt}</span>
-              ) : payee.debt < 0 ? (
-                <span className='fg-error'>{payee.debt}</span>
-              ) : (
-                <span className='fg-on-surface-pale'>{payee.debt}</span>
-              )}
+              { payee.debt > 0
+              ? <span className='fg-success'>+{payee.debt}</span>
+              : payee.debt < 0
+              ? <span className='fg-error'>-{payee.debt}</span>
+              : <span className='fg-on-surface-pale'>{payee.debt}</span>}
             </div>
           </EntityItem>
         ))}
