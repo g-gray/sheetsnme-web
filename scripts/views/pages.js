@@ -1587,21 +1587,6 @@ const TransactionOrigin = connect(state => ({
 }))(_TransactionOrigin)
 
 class _TransactionsList extends u.ViewComponent {
-  componentDidMount() {
-    this.unlisten = this.props.history.listen(nextLocation => {
-      const {context, props} = this
-      const {dispatch, location} = props
-
-      if (location.pathname !== nextLocation.pathname) return
-
-      dispatch(a.fetchTransactions(nextLocation, u.xln(context, t.FETCHING_TRANSACTIONS)))
-    })
-  }
-
-  componentWillUnmount() {
-    this.unlisten()
-  }
-
   render({
     props: {transactions, pageCount, pending},
   }) {
@@ -2208,7 +2193,7 @@ class _FiltersForm extends u.ViewComponent {
       const {formValues} = state
 
       const query = u.decodeQuery(location.search)
-      history.push(`/${u.encodeQuery({
+      history.push(`/transactions/${u.encodeQuery({
         ...query,
         ...formValues,
         dateFrom: u.formatDate(formValues.dateFrom),
