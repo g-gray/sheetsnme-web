@@ -395,7 +395,7 @@ class EntityItem extends u.ViewComponent {
 
   render({
     context,
-    props: {children, onDelete},
+    props: {children, icon, onDelete},
     onClick, actionsRef,
   }) {
     const isMobile = u.isMobile(context)
@@ -407,7 +407,7 @@ class EntityItem extends u.ViewComponent {
         className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-drawer-link-busy rounded trigger'>
         <div className='relative width-2x5 square'>
           <div className='row-center-center abs-center'>
-            <s.Tag className='font-large fg-primary' />
+            {icon}
           </div>
         </div>
         <div className='flex-1 col-start-stretch'>
@@ -613,6 +613,7 @@ class _CategoriesList extends u.ViewComponent {
         {f.map(categories, category => (
           <EntityItem
             key={category.id}
+            icon={<s.Tag className='font-large fg-primary' />}
             onOpen={onOpen(category)}
             onDelete={onDelete(category)}>
             {category.title}
@@ -799,6 +800,7 @@ class _AccountsList extends u.ViewComponent {
         {f.map(accounts, account => (
           <EntityItem
             key={account.id}
+            icon={<s.CreditCard className='font-large fg-primary' />}
             onOpen={onOpen(account)}
             onDelete={onDelete(account)}>
             <div className='flex-1 row-between-center gaps-h-1'>
@@ -988,6 +990,7 @@ class _PayeesList extends u.ViewComponent {
         {f.map(payees, payee => (
           <EntityItem
             key={payee.id}
+            icon={<s.Users className='font-large fg-primary' />}
             onOpen={onOpen(payee)}
             onDelete={onDelete(payee)}>
             {payee.title}
