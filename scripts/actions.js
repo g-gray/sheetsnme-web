@@ -9,10 +9,10 @@ export const ADD_NOTIFICATION       = 'ADD_NOTIFICATION'
 export const REMOVE_NOTIFICATION    = 'REMOVE_NOTIFICATION'
 
 export const RECEIVE_USER           = 'RECEIVE_USER'
-export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
 export const RECEIVE_CATEGORIES     = 'RECEIVE_CATEGORIES'
 export const RECEIVE_ACCOUNTS       = 'RECEIVE_ACCOUNTS'
 export const RECEIVE_PAYEES         = 'RECEIVE_PAYEES'
+export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
 
 export const REQUEST_START          = 'REQUEST_START'
 export const REQUEST_END            = 'REQUEST_END'
@@ -105,57 +105,6 @@ export const fetchUser = message => dispatch => {
     promise: n.authedJsonFetch('/api/user'),
   }))
     .then(user => dispatch({type: RECEIVE_USER, user}))
-}
-
-
-export const fetchTransactions = (location, message) => dispatch => {
-  const query = u.decodeQuery(location.search)
-
-  return dispatch(trackRequest({
-    message,
-    requestName: 'getTransactions',
-    promise: n.authedJsonFetch('/api/transactions', {
-      method: 'GET',
-      body: {
-        ...query,
-        offset: u.DEFAULT_PAGE_SIZE * ((query.page || 1) - 1),
-        limit: u.DEFAULT_PAGE_SIZE,
-      },
-    }),
-  }))
-    .then(transactions => dispatch({type: RECEIVE_TRANSACTIONS, transactions}))
-}
-
-export const createTransaction = (transaction, message) => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'postTransaction',
-    promise: n.authedJsonFetch('/api/transactions', {
-      method: 'POST',
-      body: transaction,
-    }),
-  }))
-}
-
-export const updateTransaction = (id, transaction, message) => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'postTransaction',
-    promise: n.authedJsonFetch(`/api/transactions/${id}`, {
-      method: 'POST',
-      body: transaction,
-    }),
-  }))
-}
-
-export const deleteTransaction = (id, message) => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'deleteTransaction',
-    promise: n.authedJsonFetch(`/api/transactions/${id}`, {
-      method: 'DELETE',
-    }),
-  }))
 }
 
 
@@ -279,6 +228,57 @@ export const deletePayee = (id, message) => dispatch => {
     message,
     requestName: 'deletePayee',
     promise: n.authedJsonFetch(`/api/payees/${id}`, {
+      method: 'DELETE',
+    }),
+  }))
+}
+
+
+export const fetchTransactions = (location, message) => dispatch => {
+  const query = u.decodeQuery(location.search)
+
+  return dispatch(trackRequest({
+    message,
+    requestName: 'getTransactions',
+    promise: n.authedJsonFetch('/api/transactions', {
+      method: 'GET',
+      body: {
+        ...query,
+        offset: u.DEFAULT_PAGE_SIZE * ((query.page || 1) - 1),
+        limit: u.DEFAULT_PAGE_SIZE,
+      },
+    }),
+  }))
+    .then(transactions => dispatch({type: RECEIVE_TRANSACTIONS, transactions}))
+}
+
+export const createTransaction = (transaction, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'postTransaction',
+    promise: n.authedJsonFetch('/api/transactions', {
+      method: 'POST',
+      body: transaction,
+    }),
+  }))
+}
+
+export const updateTransaction = (id, transaction, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'postTransaction',
+    promise: n.authedJsonFetch(`/api/transactions/${id}`, {
+      method: 'POST',
+      body: transaction,
+    }),
+  }))
+}
+
+export const deleteTransaction = (id, message) => dispatch => {
+  return dispatch(trackRequest({
+    message,
+    requestName: 'deleteTransaction',
+    promise: n.authedJsonFetch(`/api/transactions/${id}`, {
       method: 'DELETE',
     }),
   }))
