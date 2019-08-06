@@ -1614,12 +1614,28 @@ const TransactionOrigin = connect(state => ({
 
 class _TransactionsList extends u.ViewComponent {
   render({
-    props: {transactions, pageCount, pending},
+    context,
+    props: {outcomeAmount, incomeAmount, transactions, pageCount, pending},
   }) {
+    const isMobile = u.isMobile(context)
     return (
       <div className='col-start-stretch gaps-v-2'>
         <div className='col-start-stretch gaps-v-0x25'>
-          <FiltersControls />
+          <div className={`row-between-center ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}>
+            <FiltersControls />
+            {pending ? null :
+            <div className='gaps-h-0x5'>
+              <span className='gaps-h-0x5'>
+                <span className='fg-on-surface-pale'>{u.xln(context, t.OUTCOME)}:</span>
+                <span className='fg-error'>-{outcomeAmount}</span>
+              </span>
+              <span className='fg-on-surface-pale'>/</span>
+              <span className='gaps-h-0x5'>
+                <span className='fg-on-surface-pale'>{u.xln(context, t.INCOME)}:</span>
+                <span className='fg-success'>+{incomeAmount}</span>
+              </span>
+            </div>}
+          </div>
           {pending || !f.size(transactions) ? (
             <div className='col-start-stretch'>
               {f.map(new Array(f.size(transactions) || 3), (__, index) => (
@@ -1641,11 +1657,15 @@ class _TransactionsList extends u.ViewComponent {
   }
 }
 
-const TransactionsList = withRouter(connect(state => ({
-  transactions: state.net.transactions.items,
-  pageCount: Math.ceil(state.net.transactions.total / state.net.transactions.limit),
-  pending: !f.isEmpty(state.net.pending),
-}))(_TransactionsList))
+const TransactionsList = withRouter(connect(state => {
+  return {
+    outcomeAmount: state.net.transactions.outcomeAmount,
+    incomeAmount : state.net.transactions.incomeAmount,
+    transactions : state.net.transactions.items,
+    pageCount    : Math.ceil(state.net.transactions.total / state.net.transactions.limit),
+    pending      : !f.isEmpty(state.net.pending),
+  }
+})(_TransactionsList))
 
 
 

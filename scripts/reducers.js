@@ -53,7 +53,7 @@ export const dom = (state = {
 
 export const net = (state = {
   user: {},
-  transactions: [],
+  transactions: {},
   transactionsById: {},
   categories: [],
   categoriesById: {},
