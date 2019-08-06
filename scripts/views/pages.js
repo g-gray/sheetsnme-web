@@ -1034,10 +1034,15 @@ class _PayeesList extends u.ViewComponent {
   }
 }
 
-const PayeesList = connect(state => ({
-  payees: state.net.payees,
-  pending: !f.isEmpty(state.net.pending),
-}))(_PayeesList)
+const PayeesList = connect(state => {
+  const payees  = f.sortBy(state.net.payees, payee => !payee.debt ? Infinity : payee.debt)
+  const pending = !f.isEmpty(state.net.pending)
+
+  return {
+    payees,
+    pending,
+  }
+})(_PayeesList)
 
 
 
