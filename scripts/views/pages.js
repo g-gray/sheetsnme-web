@@ -2378,12 +2378,10 @@ class _FiltersControls extends u.ViewComponent {
     context,
     props: {transactions, pending, dispatch, history, location},
   }) {
-    const isMobile = u.isMobile(context)
-
     const noFilters = f.isEmpty(u.omitEmpty(getFilterValues(location)))
 
     return (
-      <div className={`row-start-center padding-h-1 flex-wrap ${isMobile ? 'padding-t-0x5' : ''}`}>
+      <div className='row-start-center padding-h-1 flex-wrap'>
         <div className='row-start-center gaps-h-0x5'>
           <m.FakeButton
             className='decorate-link'
