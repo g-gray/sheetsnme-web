@@ -102,3 +102,6 @@ export const SEPTEMBER             = {en: 'September', ru: 'Сентябрь'}
 export const OCTOBER               = {en: 'October', ru: 'Октября'}
 export const NOVEMBER              = {en: 'November', ru: 'Ноябрь'}
 export const DECEMBER              = {en: 'December', ru: 'Декабрь'}
+
+export const BALANCE               = {en: 'Balance', ru: 'Сальдо'}
+export const DEBT                  = {en: 'Debt', ru: 'Долг'}

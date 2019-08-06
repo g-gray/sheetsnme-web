@@ -787,33 +787,43 @@ class _AccountsList extends u.ViewComponent {
   }
 
   render({
+    context,
     props: {accounts, pending},
     onOpen, onDelete,
   }) {
-    return pending || !f.size(accounts) ? (
-      <div className='col-start-stretch'>
-        {f.map(new Array(f.size(accounts) || 3), (__, index) => (
-          <EntityPlaceholder key={`placeholder-${index}`} />
-        ))}
-      </div>
-    ) : (
-      <div className='col-start-stretch'>
-        {f.map(accounts, account => (
-          <EntityItem
-            key={account.id}
-            icon={<s.CreditCard className='font-large fg-primary' />}
-            onOpen={onOpen(account)}
-            onDelete={onDelete(account)}>
-            <div className='flex-1 row-between-center gaps-h-1'>
-              <span>{account.title}</span>
-              { account.balance > 0
-              ? <span className='fg-success'>+{account.balance}</span>
-              : account.balance < 0
-              ? <span className='fg-error'>{account.balance}</span>
-              : <span className='fg-on-surface-pale'>{account.balance}</span>}
+    const isMobile = u.isMobile(context)
+    return (
+      <div className='col-start-stretch gaps-v-2'>
+        <div className='col-start-stretch gaps-v-0x25'>
+          <div className={`row-end-center ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}>
+            <span className='fg-on-surface-pale'>{u.xln(context, t.BALANCE)}</span>
+          </div>
+          {pending || !f.size(accounts) ? (
+            <div className='col-start-stretch'>
+              {f.map(new Array(f.size(accounts) || 3), (__, index) => (
+                <EntityPlaceholder key={`placeholder-${index}`} />
+              ))}
             </div>
-          </EntityItem>
-        ))}
+          ) : (
+            <div className='col-start-stretch'>
+              {f.map(accounts, account => (
+                <EntityItem
+                  key={account.id}
+                  icon={<s.CreditCard className='font-large fg-primary' />}
+                  onOpen={onOpen(account)}
+                  onDelete={onDelete(account)}>
+                  <div className='flex-1 row-between-center gaps-h-1'>
+                    <span>{account.title}</span>
+                    { account.balance > 0
+                    ? <span className='fg-success'>+{account.balance}</span>
+                    : account.balance < 0
+                    ? <span className='fg-error'>{account.balance}</span>
+                    : <span className='fg-on-surface-pale'>{account.balance}</span>}
+                  </div>
+                </EntityItem>
+              ))}
+            </div>)}
+        </div>
       </div>
     )
   }
@@ -981,33 +991,44 @@ class _PayeesList extends u.ViewComponent {
   }
 
   render({
+    context,
     props: {payees, pending},
     onOpen, onDelete,
   }) {
-    return pending || !f.size(payees) ? (
-      <div className='col-start-stretch'>
-        {f.map(new Array(f.size(payees) || 3), (__, index) => (
-          <EntityPlaceholder key={`placeholder-${index}`} />
-        ))}
-      </div>
-    ) : (
-      <div className='col-start-stretch'>
-        {f.map(payees, payee => (
-          <EntityItem
-            key={payee.id}
-            icon={<s.Users className='font-large fg-primary' />}
-            onOpen={onOpen(payee)}
-            onDelete={onDelete(payee)}>
-            <div className='flex-1 row-between-center gaps-h-1'>
-              <span>{payee.title}</span>
-              { payee.debt > 0
-              ? <span className='fg-success'>+{payee.debt}</span>
-              : payee.debt < 0
-              ? <span className='fg-error'>{payee.debt}</span>
-              : <span className='fg-on-surface-pale'>{payee.debt}</span>}
+    const isMobile = u.isMobile(context)
+    return (
+      <div className='col-start-stretch gaps-v-2'>
+        <div className='col-start-stretch gaps-v-0x25'>
+          <div className={`row-end-center ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}>
+            <span className='fg-on-surface-pale'>{u.xln(context, t.DEBT)}</span>
+          </div>
+          {pending || !f.size(payees) ? (
+            <div className='col-start-stretch'>
+              {f.map(new Array(f.size(payees) || 3), (__, index) => (
+                <EntityPlaceholder key={`placeholder-${index}`} />
+              ))}
             </div>
-          </EntityItem>
-        ))}
+          ) : (
+            <div className='col-start-stretch'>
+              {f.map(payees, payee => (
+                <EntityItem
+                  key={payee.id}
+                  icon={<s.Users className='font-large fg-primary' />}
+                  onOpen={onOpen(payee)}
+                  onDelete={onDelete(payee)}>
+                  <div className='flex-1 row-between-center gaps-h-1'>
+                    <span>{payee.title}</span>
+                    { payee.debt > 0
+                    ? <span className='fg-success'>+{payee.debt}</span>
+                    : payee.debt < 0
+                    ? <span className='fg-error'>{payee.debt}</span>
+                    : <span className='fg-on-surface-pale'>{payee.debt}</span>}
+                  </div>
+                </EntityItem>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     )
   }
