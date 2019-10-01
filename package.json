@@ -3,6 +3,7 @@
     "start": "gulp",
     "build": "gulp build"
   },
+  "browserslist": ["> 1%", "IE >= 10", "iOS 7"],
   "devDependencies": {
     "@babel/core": "^7.6.2",
     "@babel/plugin-proposal-class-properties": "^7.5.5",

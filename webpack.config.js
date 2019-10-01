@@ -96,7 +96,6 @@ function babelOptions() {
   return {
     presets: [
       ['@babel/preset-env', {
-        targets: {browsers: ['> 1%']},
         // Keep ES modules for Webpack
         modules: false,
         // Don't generate useless garbage

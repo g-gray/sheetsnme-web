@@ -35,8 +35,6 @@ const BACKEND_HOST        = process.env.BACKEND_HOST
 const LOCAL_PORT          = process.env.LOCAL_PORT
 const LANG_HEADER_NAME    = process.env.LANG_HEADER_NAME
 
-const autoprefixerConfig = {browsers: ['> 1%', 'IE >= 10', 'iOS 7']}
-
 const cssCleanConfig = {
   keepSpecialComments: 0,
   aggressiveMerging: false,
@@ -147,7 +145,7 @@ function watchWithWebpack(config) {
 gulp.task('styles:build', () => (
   gulp.src(SRC_STYLE_ENTRY)
     .pipe($.sass())
-    .pipe($.autoprefixer(autoprefixerConfig))
+    .pipe($.autoprefixer())
     .pipe(!PROD ? new st.PassThrough({objectMode: true}) : $.cleanCss(cssCleanConfig))
     .pipe(gulp.dest(OUT_STYLE_DIR))
 ))
