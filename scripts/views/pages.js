@@ -1634,6 +1634,9 @@ class _TransactionsList extends u.ViewComponent {
                 <span className='fg-on-surface-pale'>{u.xln(context, t.INCOME)}:</span>
                 <span className='fg-success'>+{incomeAmount}</span>
               </span>
+              <span className='fg-on-surface-pale'>
+                ({u.xln(context, t.WITHOUT_DEBTS_AND_TRANSFERS)})
+              </span>
             </div>}
           </div>
           {pending || !f.size(transactions) ? (
