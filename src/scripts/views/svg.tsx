@@ -1,5 +1,3 @@
-/* eslint-disable jsx-quotes, react/self-closing-comp */
-
 import * as React from 'react'
 import * as u from '../utils'
 

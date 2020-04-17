@@ -26,7 +26,6 @@ class App extends u.ViewComponent {
     const context = {lang}
 
     dispatch(a.fetchUser(u.xln(context, t.FETCHING_USER)))
-      // eslint-disable-next-line promise/no-native
       .then(() => Promise.all([
         dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))),
         dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))),

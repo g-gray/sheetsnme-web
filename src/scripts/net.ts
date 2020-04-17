@@ -32,7 +32,6 @@ export function authedHttpFetch(url, params) {
 }
 
 function httpFetch(params) {
-  // eslint-disable-next-line promise/avoid-new, promise/no-native
   return new Promise((resolve, reject) => {
     xhttp.Xhttp(params, response => {
       if (response.ok) resolve(response)

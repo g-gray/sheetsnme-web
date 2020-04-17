@@ -1,14 +1,10 @@
 /*
 !/.env.properties.example
-!/.eslintrc
 !/.gitignore
 !/gulpfile.js
 !/package.json
 !/readme.md
-!/scripts
-!/styles
-!/images
-!/static*
-!/templates
+!/src
+!/tsconfig.json
 !/webpack.config.js
 !/yarn.lock

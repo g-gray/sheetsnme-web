@@ -23,8 +23,6 @@ export class ViewComponent extends React.Component {
   }
 }
 
-/* eslint-disable no-invalid-this */
-
 function renderWithArg() {
   // Minor convenience: pass self as argument.
   return this.constructor.prototype.render.call(this, this)

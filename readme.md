@@ -4,7 +4,7 @@ Frontend for sheetsn.me.
 
 ## Dependencies
 
-* Node, NPM, Yarn
+* Node, Yarn
 * `graphicsmagick` or `imagemagick`
 
 ## Development Setup

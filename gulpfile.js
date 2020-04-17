@@ -6,13 +6,18 @@ require('dotenv').config({path: '.env.properties'})
  * Dependencies
  */
 
-const $ = require('gulp-load-plugins')()
-const cp = require('child_process')
-const del = require('del')
+const $    = require('gulp-load-plugins')()
+const cp   = require('child_process')
+const del  = require('del')
 const gulp = require('gulp')
-const log = require('fancy-log')
-const st = require('stream')
-const {compileTemplate} = require('statil')
+const log  = require('fancy-log')
+const st   = require('stream')
+const pt   = require('path')
+
+const statil      = require('statil')
+const webpack     = require('webpack')
+const httpProxy   = require('http-proxy')
+const browserSync = require('browser-sync')
 
 /**
  * Globals
@@ -20,20 +25,21 @@ const {compileTemplate} = require('statil')
 
 const WEBPACK_CONFIG_PATH = './webpack.config.js'
 
-const SRC_STATIC_FILES = 'static/**/*'
-const SRC_TEMPLATE_FILES = 'templates/**/*'
-const SRC_STYLE_FILES = 'styles/**/*.scss'
-const SRC_STYLE_ENTRY = 'styles/main.scss'
-const SRC_IMAGES_RASTER = 'images/**/*.{jpg,png,gif}'
-// const SRC_IMAGES_VECTOR = 'images/**/*.svg'
-const OUT_ROOT_DIR = 'public'
-const OUT_STYLE_DIR = 'public/styles'
-const OUT_IMAGE_DIR = 'public/images'
+const SRC_DIR            = 'src'
+const SRC_STATIC_FILES   = pt.join(SRC_DIR, 'static/**/*')
+const SRC_TEMPLATE_FILES = pt.join(SRC_DIR, 'templates/**/*')
+const SRC_STYLE_FILES    = pt.join(SRC_DIR, 'styles/**/*.scss')
+const SRC_STYLE_ENTRY    = pt.join(SRC_DIR, 'styles/main.scss')
+const SRC_IMAGES_RASTER  = pt.join(SRC_DIR, 'images/**/*.{jpg,png,gif}')
+// const SRC_IMAGES_VECTOR  = pt.join(SRC_DIR, 'images/**/*.svg')
+const OUT_DIR       = 'public'
+const OUT_STYLE_DIR = pt.join(OUT_DIR, 'styles')
+const OUT_IMAGE_DIR = pt.join(OUT_DIR, 'images')
 
-const PROD                = process.env.NODE_ENV === 'production'
-const BACKEND_HOST        = process.env.BACKEND_HOST
-const LOCAL_PORT          = process.env.LOCAL_PORT
-const LANG_HEADER_NAME    = process.env.LANG_HEADER_NAME
+const PROD             = process.env.NODE_ENV === 'production'
+const BACKEND_HOST     = process.env.BACKEND_HOST
+const LOCAL_PORT       = process.env.LOCAL_PORT
+const LANG_HEADER_NAME = process.env.LANG_HEADER_NAME
 
 const cssCleanConfig = {
   keepSpecialComments: 0,
@@ -55,7 +61,7 @@ function rerequire(path) {
  */
 
 gulp.task('clear', () => (
-  del(`${OUT_ROOT_DIR}/*`).catch(console.error.bind(console))
+  del(`${OUT_DIR}/*`).catch(console.error.bind(console))
 ))
 
 /**
@@ -63,7 +69,7 @@ gulp.task('clear', () => (
  */
 
 gulp.task('static:copy', () => (
-  gulp.src(SRC_STATIC_FILES).pipe(gulp.dest(OUT_ROOT_DIR))
+  gulp.src(SRC_STATIC_FILES).pipe(gulp.dest(OUT_DIR))
 ))
 
 gulp.task('static:watch', () => {
@@ -82,7 +88,7 @@ gulp.task('templates:build', () => {
     .pipe(new st.Transform({
       objectMode: true,
       transform(file, __, done) {
-        const rendered = compileTemplate(String(file.contents))({
+        const rendered = statil.compileTemplate(String(file.contents))({
           PROD,
           BACKEND_HOST,
           COMMIT: commit,
@@ -92,7 +98,7 @@ gulp.task('templates:build', () => {
         done(undefined, file)
       },
     }))
-    .pipe(gulp.dest(OUT_ROOT_DIR))
+    .pipe(gulp.dest(OUT_DIR))
 })
 
 gulp.task('templates:watch', () => {
@@ -118,7 +124,7 @@ gulp.task('scripts:watch', () => {
 })
 
 function buildWithWebpack(config, done) {
-  require('webpack')(config, (err, stats) => {
+  webpack(config, (err, stats) => {
     if (err) {
       done(GulpErr(err))
     }
@@ -130,7 +136,7 @@ function buildWithWebpack(config, done) {
 }
 
 function watchWithWebpack(config) {
-  const compiler = require('webpack')(config)
+  const compiler = webpack(config)
   const watcher = compiler.watch({}, (err, stats) => {
     log('[webpack]', stats.toString(config.stats))
     if (err) log('[webpack]', err.message)
@@ -146,7 +152,9 @@ gulp.task('styles:build', () => (
   gulp.src(SRC_STYLE_ENTRY)
     .pipe($.sass())
     .pipe($.autoprefixer())
-    .pipe(!PROD ? new st.PassThrough({objectMode: true}) : $.cleanCss(cssCleanConfig))
+    .pipe(!PROD
+      ? new st.PassThrough({objectMode: true})
+      : $.cleanCss(cssCleanConfig))
     .pipe(gulp.dest(OUT_STYLE_DIR))
 ))
 
@@ -185,7 +193,7 @@ gulp.task('images:watch', () => {
  */
 
 gulp.task('server', () => {
-  const proxy = require('http-proxy').createProxyServer()
+  const proxy = httpProxy.createProxyServer()
 
   proxy.on('error', (err, req, res) => {
     if (err.code === 'ECONNRESET') return
@@ -195,16 +203,16 @@ gulp.task('server', () => {
     res.end(JSON.stringify(Object.assign({message: err.message}, err)))
   })
 
-  require('browser-sync').create().init({
+  browserSync.create().init({
     startPath: '/',
     port: LOCAL_PORT,
-    files: OUT_ROOT_DIR,
-    serveStatic: [OUT_ROOT_DIR],
+    files: OUT_DIR,
+    serveStatic: [OUT_DIR],
     serveStaticOptions: {
       extensions: ['html'],
     },
     server: {
-      baseDir: OUT_ROOT_DIR,
+      baseDir: OUT_DIR,
       middleware: [
         (req, res, next) => {
           const backend = BACKEND_HOST + '/'
