@@ -1,3 +1,5 @@
+/* eslint-disable jsx-quotes, react/self-closing-comp */
+
 import * as React from 'react'
 import * as u from '../utils'
 
@@ -43,7 +45,8 @@ export function svgProps({className: cls, ...props}) {
 }
 
 export class Logo extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...svgProps(props)} viewBox='0 0 24 24'>
         <path d="M14.6139844,15.6510938 C14.6139844,15.0534345 14.403049,14.59465 13.9811719,14.2747266 C13.5592948,13.9548031 12.7999274,13.6173065 11.7030469,13.2622266 C10.6061664,12.9071467 9.7378157,12.5573455 9.09796875,12.2128125 C7.35421003,11.2706203 6.48234375,10.0014924 6.48234375,8.40539062 C6.48234375,7.57569898 6.71613047,6.83566731 7.18371094,6.18527344 C7.6512914,5.53487956 8.32276906,5.02687683 9.19816406,4.66125 C10.0735591,4.29562317 11.0561664,4.1128125 12.1460156,4.1128125 C13.2428961,4.1128125 14.2202301,4.31144333 15.0780469,4.70871094 C15.9358637,5.10597855 16.6020679,5.66671513 17.0766797,6.3909375 C17.5512914,7.11515987 17.7885938,7.93780789 17.7885938,8.85890625 L14.6245313,8.85890625 C14.6245313,8.15577773 14.4030491,7.60910351 13.9600781,7.21886719 C13.5171072,6.82863086 12.8948478,6.63351562 12.0932813,6.63351562 C11.3198399,6.63351562 10.718674,6.79699055 10.2897656,7.12394531 C9.86085723,7.45090007 9.64640625,7.88155983 9.64640625,8.4159375 C9.64640625,8.91515875 9.89777092,9.33351394 10.4005078,9.67101562 C10.9032447,10.0085173 11.6432764,10.3249204 12.620625,10.6202344 C14.420634,11.1616433 15.731949,11.833121 16.5546094,12.6346875 C17.3772697,13.436254 17.7885938,14.4346815 17.7885938,15.63 C17.7885938,16.9589129 17.2858644,18.0012853 16.2803906,18.7571484 C15.2749168,19.5130116 13.9214148,19.8909375 12.2198437,19.8909375 C11.0385878,19.8909375 9.96281735,19.6747287 8.9925,19.2423047 C8.02218265,18.8098807 7.28215099,18.2175038 6.77238281,17.4651562 C6.26261464,16.7128087 6.00773438,15.8409425 6.00773438,14.8495312 L9.18234375,14.8495312 C9.18234375,16.544071 10.1948336,17.3913281 12.2198437,17.3913281 C12.9721913,17.3913281 13.5592948,17.2384 13.9811719,16.9325391 C14.403049,16.6266782 14.6139844,16.199534 14.6139844,15.6510938 Z" stroke="none" fill="currentColor" />
@@ -54,7 +57,8 @@ export class Logo extends u.ViewComponent {
 }
 
 export class Square extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
@@ -64,7 +68,8 @@ export class Square extends u.ViewComponent {
 }
 
 export class CheckSquare extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <polyline points="9 11 12 14 22 4" />
@@ -75,7 +80,8 @@ export class CheckSquare extends u.ViewComponent {
 }
 
 export class Check extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <polyline points="20 6 9 17 4 12" />
@@ -85,7 +91,8 @@ export class Check extends u.ViewComponent {
 }
 
 export class Star extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
@@ -95,7 +102,8 @@ export class Star extends u.ViewComponent {
 }
 
 export class MapPin extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -106,7 +114,8 @@ export class MapPin extends u.ViewComponent {
 }
 
 export class Clock extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <circle cx="12" cy="12" r="10" />
@@ -117,7 +126,8 @@ export class Clock extends u.ViewComponent {
 }
 
 export class ChevronDown extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <polyline points="6 9 12 15 18 9" />
@@ -127,7 +137,8 @@ export class ChevronDown extends u.ViewComponent {
 }
 
 export class ChevronRight extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <polyline points="9 18 15 12 9 6" />
@@ -137,7 +148,8 @@ export class ChevronRight extends u.ViewComponent {
 }
 
 export class ChevronLeft extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <polyline points="15 18 9 12 15 6" />
@@ -147,7 +159,8 @@ export class ChevronLeft extends u.ViewComponent {
 }
 
 export class ChevronsRight extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <polyline points="13 17 18 12 13 7" />
@@ -158,7 +171,8 @@ export class ChevronsRight extends u.ViewComponent {
 }
 
 export class CornerUpLeft extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <polyline points="9 14 4 9 9 4" />
@@ -169,7 +183,8 @@ export class CornerUpLeft extends u.ViewComponent {
 }
 
 export class Paperclip extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
@@ -179,7 +194,8 @@ export class Paperclip extends u.ViewComponent {
 }
 
 export class LogOut extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -191,7 +207,8 @@ export class LogOut extends u.ViewComponent {
 }
 
 export class LogIn extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
@@ -203,7 +220,8 @@ export class LogIn extends u.ViewComponent {
 }
 
 export class Female extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <circle cx="12" cy="8" r="6" />
@@ -215,7 +233,8 @@ export class Female extends u.ViewComponent {
 }
 
 export class Male extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <circle cx="10" cy="14" r="6" />
@@ -228,7 +247,8 @@ export class Male extends u.ViewComponent {
 }
 
 export class MaleFemale extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <circle cx="11" cy="11" r="5" />
@@ -243,7 +263,8 @@ export class MaleFemale extends u.ViewComponent {
 }
 
 export class Case extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <rect x="2" y="6" width="20" height="14" rx="2" ry="2" />
@@ -254,7 +275,8 @@ export class Case extends u.ViewComponent {
 }
 
 export class Mail extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -265,7 +287,8 @@ export class Mail extends u.ViewComponent {
 }
 
 export class Phone extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
@@ -275,7 +298,8 @@ export class Phone extends u.ViewComponent {
 }
 
 export class X extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <line x1="18" y1="6" x2="6" y2="18" />
@@ -286,7 +310,8 @@ export class X extends u.ViewComponent {
 }
 
 export class XCircle extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <circle cx="12" cy="12" r="10" />
@@ -298,7 +323,8 @@ export class XCircle extends u.ViewComponent {
 }
 
 export class Filter extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
@@ -308,7 +334,8 @@ export class Filter extends u.ViewComponent {
 }
 
 export class Upload extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -320,7 +347,8 @@ export class Upload extends u.ViewComponent {
 }
 
 export class Globe extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <circle cx="12" cy="12" r="10" />
@@ -332,7 +360,8 @@ export class Globe extends u.ViewComponent {
 }
 
 export class BarChart extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <line x1="18" y1="20" x2="18" y2="10" />
@@ -344,7 +373,8 @@ export class BarChart extends u.ViewComponent {
 }
 
 export class Eye extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
@@ -355,7 +385,8 @@ export class Eye extends u.ViewComponent {
 }
 
 export class Users extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -368,7 +399,8 @@ export class Users extends u.ViewComponent {
 }
 
 export class User extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -379,7 +411,8 @@ export class User extends u.ViewComponent {
 }
 
 export class UserPlus extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -392,7 +425,8 @@ export class UserPlus extends u.ViewComponent {
 }
 
 export class Settings extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <circle cx="12" cy="12" r="3" />
@@ -403,7 +437,8 @@ export class Settings extends u.ViewComponent {
 }
 
 export class Camera extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
@@ -414,7 +449,8 @@ export class Camera extends u.ViewComponent {
 }
 
 export class Heart extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -424,7 +460,8 @@ export class Heart extends u.ViewComponent {
 }
 
 export class PieChart extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
@@ -435,7 +472,8 @@ export class PieChart extends u.ViewComponent {
 }
 
 export class Hash extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <line x1="4" y1="9" x2="20" y2="9" />
@@ -448,7 +486,8 @@ export class Hash extends u.ViewComponent {
 }
 
 export class Search extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <circle cx="11" cy="11" r="8" />
@@ -459,7 +498,8 @@ export class Search extends u.ViewComponent {
 }
 
 export class Bell extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27 4a2 2 0 0 1-3.46 0" />
@@ -469,7 +509,8 @@ export class Bell extends u.ViewComponent {
 }
 
 export class Home extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -480,7 +521,8 @@ export class Home extends u.ViewComponent {
 }
 
 export class Cast extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6" />
@@ -491,7 +533,8 @@ export class Cast extends u.ViewComponent {
 }
 
 export class List extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <line x1="8" y1="6" x2="21" y2="6" />
@@ -506,7 +549,8 @@ export class List extends u.ViewComponent {
 }
 
 export class MessageSquare extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
@@ -516,7 +560,8 @@ export class MessageSquare extends u.ViewComponent {
 }
 
 export class MessageCircle extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
@@ -526,7 +571,8 @@ export class MessageCircle extends u.ViewComponent {
 }
 
 export class Share extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
@@ -538,7 +584,8 @@ export class Share extends u.ViewComponent {
 }
 
 export class MoreHorizontal extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <circle cx="12" cy="12" r="1" />
@@ -550,7 +597,8 @@ export class MoreHorizontal extends u.ViewComponent {
 }
 
 export class MoreVertical extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <circle cx="12" cy="12" r="1" />
@@ -562,7 +610,8 @@ export class MoreVertical extends u.ViewComponent {
 }
 
 export class Activity extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
@@ -572,7 +621,8 @@ export class Activity extends u.ViewComponent {
 }
 
 export class Aperture extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <circle cx="12" cy="12" r="10" />
@@ -588,7 +638,8 @@ export class Aperture extends u.ViewComponent {
 }
 
 export class Plus extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <line x1="12" y1="5" x2="12" y2="19" />
@@ -599,7 +650,8 @@ export class Plus extends u.ViewComponent {
 }
 
 export class Minus extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <line x1="5" y1="12" x2="19" y2="12" />
@@ -609,7 +661,8 @@ export class Minus extends u.ViewComponent {
 }
 
 export class Send extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <line x1="22" y1="2" x2="11" y2="13" />
@@ -620,7 +673,8 @@ export class Send extends u.ViewComponent {
 }
 
 export class Cog extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <circle cx="12" cy="12" r="3" />
@@ -631,7 +685,8 @@ export class Cog extends u.ViewComponent {
 }
 
 export class Layers extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <polygon points="12 2 2 7 12 12 22 7 12 2" />
@@ -643,7 +698,8 @@ export class Layers extends u.ViewComponent {
 }
 
 export class Info extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <circle cx="12" cy="12" r="10" />
@@ -655,7 +711,8 @@ export class Info extends u.ViewComponent {
 }
 
 export class BookOpen extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
@@ -666,7 +723,8 @@ export class BookOpen extends u.ViewComponent {
 }
 
 export class Menu extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <line x1="3" y1="12" x2="21" y2="12" />
@@ -678,7 +736,8 @@ export class Menu extends u.ViewComponent {
 }
 
 export class Edit extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34" />
@@ -689,7 +748,8 @@ export class Edit extends u.ViewComponent {
 }
 
 export class CreditCard extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
@@ -700,7 +760,8 @@ export class CreditCard extends u.ViewComponent {
 }
 
 export class Tag extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
@@ -711,7 +772,8 @@ export class Tag extends u.ViewComponent {
 }
 
 export class ArrowDown extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <line x1="12" y1="5" x2="12" y2="19" />
@@ -722,7 +784,8 @@ export class ArrowDown extends u.ViewComponent {
 }
 
 export class ArrowLeft extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <line x1="19" y1="12" x2="5" y2="12" />
@@ -733,7 +796,8 @@ export class ArrowLeft extends u.ViewComponent {
 }
 
 export class ArrowRight extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <line x1="5" y1="12" x2="19" y2="12" />
@@ -744,7 +808,8 @@ export class ArrowRight extends u.ViewComponent {
 }
 
 export class Trash extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <polyline points="3 6 5 6 21 6" />
@@ -755,7 +820,8 @@ export class Trash extends u.ViewComponent {
 }
 
 export class Trash2 extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <polyline points="3 6 5 6 21 6" />
@@ -768,7 +834,8 @@ export class Trash2 extends u.ViewComponent {
 }
 
 export class Repeat extends u.ViewComponent {
-  render({props}) {
+  render() {
+    const {props} = this
     return (
       <svg {...featherProps(props)}>
         <polyline points="17 1 21 5 17 9" />

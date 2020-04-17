@@ -11,7 +11,9 @@ import * as t from './translations'
 import {Routes} from './views/routes'
 
 class App extends u.ViewComponent {
-  render({props: {isMobile, lang}}) {
+  render() {
+    const {props: {isMobile, lang}} = this
+
     return (
       <u.Context.Provider value={{isMobile, lang}}>
         {/* Force components render when language was changed */}

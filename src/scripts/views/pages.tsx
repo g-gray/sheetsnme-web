@@ -18,9 +18,11 @@ import * as t from '../translations'
  */
 
 class PageLayout extends u.ViewComponent {
-  render({
-    props: {className: cls, style, children},
-  }) {
+  render() {
+    const {
+      props: {className: cls, style, children},
+    } = this
+
     return (
       <div className='relative col-start-stretch stretch-to-viewport-v'>
         <Navbar />
@@ -41,9 +43,11 @@ class PageLayout extends u.ViewComponent {
 }
 
 class _MobilePageLayout extends u.ViewComponent {
-  render({
-    props: {className: cls, style, children, action, dialogs},
-  }) {
+  render() {
+    const {
+      props: {className: cls, style, children, action, dialogs},
+    } = this
+
     return (
       <div className='relative col-start-stretch stretch-to-viewport-v padding-b-5'>
         <Navbar />
@@ -97,10 +101,12 @@ class _Navbar extends u.ViewComponent {
     }
   }
 
-  render({
-    context,
-    open, nextLang,
-  }) {
+  render() {
+    const {
+      context,
+      open, nextLang,
+    } = this
+
     if (u.isMobile(context)) {
       return (
         <header className='row-between-stretch bg-primary navbar-height shadow-dept-1'>
@@ -159,12 +165,14 @@ class _UserMenu extends u.ViewComponent {
     }
   }
 
-  render({
-    context,
-    props: {user},
-    state: {expanded},
-    close, toggle,
-  }) {
+  render() {
+    const {
+      context,
+      props: {user},
+      state: {expanded},
+      close, toggle,
+    } = this
+
     const {firstName, lastName, pictureUrl, email} = user
 
     return f.isEmpty(user) ? null : (
@@ -225,8 +233,10 @@ class _MobileMenu extends u.ViewComponent {
     }
   }
 
-  render({close}) {
-    return (
+  render() {
+    const {close} = this
+
+    return
       <m.Dialog onEscape={close}>
         <m.DialogScrollable className='row-start-stretch bg-overlay fade-in-fast' onClick={close}>
           <div className='relative col-start-stretch gaps-v-0x5 bg-surface slide-in-left-fast' onClick={close}>
@@ -244,9 +254,9 @@ class _MobileMenu extends u.ViewComponent {
 const MobileMenu = connect()(_MobileMenu)
 
 class Drawer extends u.ViewComponent {
-  render({
-    context,
-  }) {
+  render() {
+    const {context} = this
+
     return (
       <aside className='col-start-stretch gaps-v-1 padding-v-1' style={{width: '16rem'}}>
         <div className='col-start-stretch padding-h-0x5'>
@@ -298,7 +308,9 @@ class _Notifications extends u.ViewComponent {
     if (this.timeoutId) clearTimeout(this.timeoutId)
   }
 
-  render({props: {notifications, dispatch}}) {
+  render() {
+    const {props: {notifications, dispatch}} = this
+
     const notification = notifications[0]
     if (!notification) return null
 
@@ -327,7 +339,9 @@ const Notifications = connect(state => ({
 }))(_Notifications)
 
 class Snackbar extends u.ViewComponent {
-  render({props: {children, action}}) {
+  render() {
+    const {props: {children, action}} = this
+
     return action ? (
       <div className='row-start-center padding-l-1 padding-v-0x25 snackbar'>
         <div className='col-start-stretch'>{children}</div>
@@ -350,9 +364,9 @@ class Snackbar extends u.ViewComponent {
  */
 
 class EntityPlaceholder extends u.ViewComponent {
-  render({
-    context,
-  }) {
+  render() {
+    const {context} = this
+
     const isMobile = u.isMobile(context)
 
     return (
@@ -394,11 +408,13 @@ class EntityItem extends u.ViewComponent {
     }
   }
 
-  render({
-    context,
-    props: {children, icon, onDelete},
-    onClick, actionsRef,
-  }) {
+  render() {
+    const {
+      context,
+      props: {children, icon, onDelete},
+      onClick, actionsRef,
+    } = this
+
     const isMobile = u.isMobile(context)
 
     return (
@@ -432,7 +448,9 @@ class EntityItem extends u.ViewComponent {
 }
 
 class Placeholder extends u.ViewComponent {
-  render({props: {style, className: cls}}) {
+  render() {
+    const {props: {style, className: cls}} = this
+
     return (
       <span className={`inline-block ${cls || ''}`}>
         <span
@@ -450,10 +468,12 @@ class Placeholder extends u.ViewComponent {
  */
 
 class _CategoriesPage extends u.ViewComponent {
-  render({
-    context,
-    props: {dispatch},
-  }) {
+  render() {
+    const {
+      context,
+      props: {dispatch},
+    } = this
+
     const action = (
       <Fab
         onClick={() => dispatch(a.addDialog(FormDialog, {
@@ -524,12 +544,14 @@ class _CategoryForm extends u.ViewComponent {
     }
   }
 
-  render({
-    context,
-    state: {errors, formValues: {id}},
-    props: {pending},
-    onSubmit, onDelete,
-  }) {
+  render() {
+    const {
+      context,
+      state: {errors, formValues: {id}},
+      props: {pending},
+      onSubmit, onDelete,
+    } = this
+
     const isMobile = u.isMobile(context)
     const disabled = pending
 
@@ -599,10 +621,12 @@ class _CategoriesList extends u.ViewComponent {
     }
   }
 
-  render({
-    props: {categories, pending},
-    onOpen, onDelete,
-  }) {
+  render() {
+    const {
+      props: {categories, pending},
+      onOpen, onDelete,
+    } = this
+
     return pending || !f.size(categories) ? (
       <div className='col-start-stretch'>
         {f.map(new Array(f.size(categories) || 3), (__, index) => (
@@ -637,10 +661,12 @@ const CategoriesList = connect(state => ({
  */
 
 class _AccountsPage extends u.ViewComponent {
-  render({
-    context,
-    props: {dispatch},
-  }) {
+  render() {
+    const {
+      context,
+      props: {dispatch},
+    } = this
+
     const action = (
       <Fab
         onClick={() => dispatch(a.addDialog(FormDialog, {
@@ -711,12 +737,14 @@ class _AccountForm extends u.ViewComponent {
     }
   }
 
-  render({
-    context,
-    state: {errors, formValues: {id}},
-    props: {pending},
-    onSubmit, onDelete,
-  }) {
+  render() {
+    const {
+      context,
+      state: {errors, formValues: {id}},
+      props: {pending},
+      onSubmit, onDelete,
+    } = this
+
     const isMobile = u.isMobile(context)
     const disabled = pending
 
@@ -786,11 +814,13 @@ class _AccountsList extends u.ViewComponent {
     }
   }
 
-  render({
-    context,
-    props: {accounts, pending},
-    onOpen, onDelete,
-  }) {
+  render() {
+    const {
+      context,
+      props: {accounts, pending},
+      onOpen, onDelete,
+    } = this
+
     const isMobile = u.isMobile(context)
     return (
       <div className='col-start-stretch gaps-v-2'>
@@ -841,10 +871,12 @@ const AccountsList = connect(state => ({
  */
 
 class _PayeesPage extends u.ViewComponent {
-  render({
-    context,
-    props: {dispatch},
-  }) {
+  render() {
+    const {
+      context,
+      props: {dispatch},
+    } = this
+
     const action = (
       <Fab
         onClick={() => dispatch(a.addDialog(FormDialog, {
@@ -915,12 +947,14 @@ class _PayeeForm extends u.ViewComponent {
     }
   }
 
-  render({
-    context,
-    state: {errors, formValues: {id}},
-    props: {pending},
-    onSubmit, onDelete,
-  }) {
+  render() {
+    const {
+      context,
+      state: {errors, formValues: {id}},
+      props: {pending},
+      onSubmit, onDelete,
+    } = this
+
     const isMobile = u.isMobile(context)
     const disabled = pending
 
@@ -990,11 +1024,13 @@ class _PayeesList extends u.ViewComponent {
     }
   }
 
-  render({
-    context,
-    props: {payees, pending},
-    onOpen, onDelete,
-  }) {
+  render() {
+    const {
+      context,
+      props: {payees, pending},
+      onOpen, onDelete,
+    } = this
+
     const isMobile = u.isMobile(context)
     return (
       <div className='col-start-stretch gaps-v-2'>
@@ -1051,10 +1087,12 @@ const PayeesList = connect(state => {
  */
 
 class _TransactionsPage extends u.ViewComponent {
-  render({
-    context,
-    props: {dispatch},
-  }) {
+  render() {
+    const {
+      context,
+      props: {dispatch},
+    } = this
+
     const action = (
       <Fab
         onClick={() => dispatch(a.addDialog(FormDialog, {
@@ -1194,12 +1232,14 @@ class _TransactionForm extends u.ViewComponent {
     }
   }
 
-  render({
-    context,
-    state: {formValues: {type, id}, errors},
-    props: {categories, accounts, payees, pending},
-    onSubmit, onDelete, onTypeUpdated,
-  }) {
+  render() {
+    const {
+      context,
+      state: {formValues: {type, id}, errors},
+      props: {categories, accounts, payees, pending},
+      onSubmit, onDelete, onTypeUpdated,
+    } = this
+
     const isMobile = u.isMobile(context)
     const disabled = pending
 
@@ -1380,9 +1420,9 @@ const TransactionForm = withRouter(connect(state => ({
 }))(_TransactionForm))
 
 class TransactionPlaceholder extends u.ViewComponent {
-  render({
-    context,
-  }) {
+  render() {
+    const {context} = this
+
     const isMobile = u.isMobile(context)
 
     return (
@@ -1447,11 +1487,13 @@ class _Transaction extends u.ViewComponent {
     }
   }
 
-  render({
-    context,
-    props: {transaction},
-    onOpen, onDelete, actionsRef,
-  }) {
+  render() {
+    const {
+      context,
+      props: {transaction},
+      onOpen, onDelete, actionsRef,
+    } = this
+
     const isMobile = u.isMobile(context)
 
     return (
@@ -1493,10 +1535,12 @@ class _Transaction extends u.ViewComponent {
 const Transaction = withRouter(connect()(_Transaction))
 
 class TransactionMeta extends u.ViewComponent {
-  render({
-    context,
-    props: {transaction},
-  }) {
+  render() {
+    const {
+      context,
+      props: {transaction},
+    } = this
+
     const isMobile = u.isMobile(context)
 
     return isMobile ? (
@@ -1513,9 +1557,11 @@ class TransactionMeta extends u.ViewComponent {
 }
 
 class TransactionIcon extends u.ViewComponent {
-  render({
-    props: {transaction},
-  }) {
+  render() {
+    const {
+      props: {transaction},
+    } = this
+
     return (
       <div className='row-start-center'>
         {f.includes([OUTCOME, LOAN], transaction.type) ? (
@@ -1543,9 +1589,11 @@ class TransactionIcon extends u.ViewComponent {
 }
 
 class TransactionAmount extends u.ViewComponent {
-  render({
-    props: {transaction},
-  }) {
+  render() {
+    const {
+      props: {transaction},
+    } = this
+
     return (
       <span className='wspace-nowrap'>
         { transaction.type === BORROW
@@ -1563,9 +1611,11 @@ class TransactionAmount extends u.ViewComponent {
 }
 
 class _TransactionAccount extends u.ViewComponent {
-  render({
-    props: {transaction, accountsById},
-  }) {
+  render() {
+    const {
+      props: {transaction, accountsById},
+    } = this
+
     const outcomeAccount = accountsById[transaction.outcomeAccountId]
     const incomeAccount  = accountsById[transaction.incomeAccountId]
 
@@ -1587,9 +1637,11 @@ const TransactionAccount = connect(state => ({
 }))(_TransactionAccount)
 
 class _TransactionOrigin extends u.ViewComponent {
-  render({
-    props: {transaction, categoriesById, payeesById},
-  }) {
+  render() {
+    const {
+      props: {transaction, categoriesById, payeesById},
+    } = this
+
     return (
       <span className='flex-1 width-0 text-ellipsis gaps-h-0x5'>
         {!categoriesById[transaction.categoryId] ? null :
@@ -1613,10 +1665,12 @@ const TransactionOrigin = connect(state => ({
 }))(_TransactionOrigin)
 
 class _TransactionsList extends u.ViewComponent {
-  render({
-    context,
-    props: {outcomeAmount, incomeAmount, transactions, pageCount, pending},
-  }) {
+  render() {
+    const {
+      context,
+      props: {outcomeAmount, incomeAmount, transactions, pageCount, pending},
+    } = this
+
     const isMobile = u.isMobile(context)
     return (
       <div className='col-start-stretch gaps-v-2'>
@@ -1677,10 +1731,12 @@ const TransactionsList = withRouter(connect(state => {
  */
 
 class G7FormLine extends u.ViewComponent {
-  render({
-    context,
-    props: {children},
-  }) {
+  render() {
+    const {
+      context,
+      props: {children},
+    } = this
+
     if (u.isMobile(context)) {
       return (
         <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
@@ -1706,10 +1762,12 @@ class G7FormLine extends u.ViewComponent {
 }
 
 class FormLabel extends u.ViewComponent {
-  render({
-    context,
-    props: {children, className: cls, ...props},
-  }) {
+  render() {
+    const {
+      context,
+      props: {children, className: cls, ...props},
+    } = this
+
     if (u.isMobile(context)) {
       return (
         <label className={`row-start-center fg-on-surface-pale ${cls || ''}`} {...props}>
@@ -1737,10 +1795,12 @@ class FormTextElement extends u.ViewComponent {
     }
   }
 
-  render({
-    onChange,
-    props: {label, name, type, step, value, defaultValue, readOnly, disabled},
-  }) {
+  render() {
+    const {
+      onChange,
+      props: {label, name, type, step, value, defaultValue, readOnly, disabled},
+    } = this
+
     return (
       <G7FormLine>
         <FormLabel className='input-height' htmlFor={name}>
@@ -1849,12 +1909,14 @@ class FormDateElement extends u.ViewComponent {
     return state
   }
 
-  render({
-    context,
-    props,
-    state,
-    years, months, onYearInput, onMonthInput, onDayInput,
-  }) {
+  render() {
+    const {
+      context,
+      props,
+      state,
+      years, months, onYearInput, onMonthInput, onDayInput,
+    } = this
+
     const {label, readOnly, disabled} = props
     const {days, year, month, day} = state
 
@@ -1928,10 +1990,12 @@ class FormSelectElement extends u.ViewComponent {
     }
   }
 
-  render({
-    onChange,
-    props: {label, name, value, defaultValue, readOnly, disabled, children},
-  }) {
+  render() {
+    const {
+      onChange,
+      props: {label, name, value, defaultValue, readOnly, disabled, children},
+    }= this
+
     return (
       <G7FormLine>
         <FormLabel className='input-height' htmlFor={name}>
@@ -1954,7 +2018,9 @@ class FormSelectElement extends u.ViewComponent {
 }
 
 class FormErrors extends u.ViewComponent {
-  render({props: {errors}}) {
+  render() {
+    const {props: {errors}} = this
+
     return !errors ? null : (
       <div className='col-start-center padding-v-1 fg-accent font-midsmall'>
         {f.map(errors, ({text}, index) => (
@@ -1975,10 +2041,12 @@ class Radio extends u.ViewComponent {
     }
   }
 
-  render({
-    onChange,
-    props: {name, value, readOnly, disabled, checked, defaultChecked},
-  }) {
+  render() {
+    const {
+      onChange,
+      props: {name, value, readOnly, disabled, checked, defaultChecked},
+    } = this
+
     return (
       <label className='radio'>
         <input
@@ -2015,11 +2083,13 @@ class _FormDialog extends u.ViewComponent {
     }
   }
 
-  render({
-    context,
-    props: {title, form: Form, formProps},
-    close,
-  }) {
+  render() {
+    const {
+      context,
+      props: {title, form: Form, formProps},
+      close,
+    } = this
+
     if (u.isMobile(context)) {
       return (
         <m.Dialog onEscape={close}>
@@ -2084,11 +2154,13 @@ class _ConfirmDialog extends u.ViewComponent {
     }
   }
 
-  render({
-    context,
-    props: {question, cancelText, confirmText},
-    confirm, close,
-  }) {
+  render() {
+    const {
+      context,
+      props: {question, cancelText, confirmText},
+      confirm, close,
+    } = this
+
     return (
       <m.Dialog onEscape={close}>
         <m.DialogOverlay className='bg-overlay' />
@@ -2123,10 +2195,12 @@ const ConfirmDialog = connect()(_ConfirmDialog)
  */
 
 class ListPage extends u.ViewComponent {
-  render({
-    context,
-    props: {action, children},
-  }) {
+  render() {
+    const {
+      context,
+      props: {action, children},
+    } = this
+
     if (u.isMobile(context)) {
       return (
         <MobilePageLayout action={action}>
@@ -2188,11 +2262,13 @@ class _Paginator extends u.ViewComponent {
     this.unlisten()
   }
 
-  render({
-    context,
-    props: {pageCount}, state: {forcePage},
-    onPageChange, hrefBulder,
-  }) {
+  render() {
+    const {
+      context,
+      props: {pageCount}, state: {forcePage},
+      onPageChange, hrefBulder,
+    } = this
+
     const isMobile = u.isMobile(context)
 
     return (
@@ -2278,12 +2354,14 @@ class _FiltersForm extends u.ViewComponent {
     this.unlisten()
   }
 
-  render({
-    context,
-    props: {accounts, categories, payees, pending},
-    state: {formValues},
-    onSubmit, onReset,
-  }) {
+  render() {
+    const {
+      context,
+      props: {accounts, categories, payees, pending},
+      state: {formValues},
+      onSubmit, onReset,
+    } = this
+
     const isMobile = u.isMobile(context)
     const noFilters = f.isEmpty(u.omitEmpty(formValues))
     return (
@@ -2377,10 +2455,12 @@ const FiltersForm = withRouter(connect(state => ({
 }))(_FiltersForm))
 
 class _FiltersControls extends u.ViewComponent {
-  render({
-    context,
-    props: {transactions, pending, dispatch, history, location},
-  }) {
+  render() {
+    const {
+      context,
+      props: {transactions, pending, dispatch, history, location},
+    } = this
+
     const noFilters = f.isEmpty(u.omitEmpty(getFilterValues(location)))
 
     return (
@@ -2442,7 +2522,9 @@ function resetFilters(history, location) {
 }
 
 class Fab extends u.ViewComponent {
-  render({props: {className: cls, ...props}}) {
+  render() {
+    const {props: {className: cls, ...props}} = this
+
     return (
       <m.FakeButton
         className={`row-start-stretch width-3x5 ${cls || ''}`}
@@ -2471,11 +2553,13 @@ class _ActionsMenu extends u.ViewComponent {
     }
   }
 
-  render({
-    props: {children},
-    state: {expanded},
-    toggle, close,
-  }) {
+  render() {
+    const {
+      props: {children},
+      state: {expanded},
+      toggle, close,
+    } = this
+
     return !children ? null : (
       <div className='relative row-start-stretch'>
         <m.FakeButton
@@ -2500,7 +2584,9 @@ class _ActionsMenu extends u.ViewComponent {
 }
 
 export class Page404 extends u.ViewComponent {
-  render({context}) {
+  render() {
+    const {context} = this
+
     const content = (
       <Fragment>
         <div className='col-start-center gaps-v-0x5'>

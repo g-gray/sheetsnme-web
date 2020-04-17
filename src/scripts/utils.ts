@@ -14,19 +14,19 @@ export const DEFAULT_PAGE_SIZE = 25
 
 export const Context = React.createContext({})
 
-export class ViewComponent extends React.Component {
+export class ViewComponent<P = any, S = any> extends React.Component<P, S> {
   static contextType = Context
 
-  constructor(a, b, c) {
-    super(a, b, c)
-    this.render = renderWithArg
+  constructor(props: P, context?: any) {
+    super(props, context)
+    // this.render = renderWithArg
   }
 }
 
-function renderWithArg() {
-  // Minor convenience: pass self as argument.
-  return this.constructor.prototype.render.call(this, this)
-}
+// function renderWithArg() {
+//   // Minor convenience: pass self as argument.
+//   return this.constructor.prototype.render.call(this, this)
+// }
 
 export function findDomNode(element) {
   element = ReactDom.findDOMNode(element)

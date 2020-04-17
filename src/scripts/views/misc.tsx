@@ -35,7 +35,8 @@ export class Dialog extends u.ViewComponent {
     onDialogClose(this.props.dialogsNumber)
   }
 
-  render({props: {className: cls, children}}) {
+  render() {
+    const {props: {className: cls, children}} = this
     return (
       <div className={`dialog ${cls || ''}`}>
         {children}
@@ -45,13 +46,15 @@ export class Dialog extends u.ViewComponent {
 }
 
 export class DialogOverlay extends u.ViewComponent {
-  render({props: {className: cls, ...props}}) {
+  render() {
+    const {props: {className: cls, ...props}} = this
     return <div className={`dialog-overlay ${cls || ''}`} {...props} />
   }
 }
 
 export class DialogScrollable extends u.ViewComponent {
-  render({props: {onClick, className: cls, children}}) {
+  render() {
+    const {props: {onClick, className: cls, children}} = this
     // This combination of element nesting and properties appears to satisfy
     // the following requirements:
     //
@@ -108,10 +111,11 @@ export class FakeButton extends u.ViewComponent {
     this.onKeyPress = simulateEnterOnKeyPress.bind(undefined, this)
   }
 
-  render({
-    onKeyPress,
-    props: {type = 'span', onClick, disabled, ...props},
-  }) {
+  render() {
+    const {
+      onKeyPress,
+      props: {type = 'span', onClick, disabled, ...props},
+    } = this
     return React.createElement(type, {
       role: 'button',
       tabIndex: disabled ? undefined : '0',
@@ -129,7 +133,8 @@ function simulateEnterOnKeyPress(view, event) {
 }
 
 export class CircleUserPic extends u.ViewComponent {
-  render({props: {url, size, ...props}}) {
+  render() {
+    const {props: {url, size, ...props}} = this
     const bgUrl = url || '/images/no-avatar-square.png'
 
     if (!size) {
@@ -189,7 +194,8 @@ export class Closer extends u.ViewComponent {
     if (this.unClick) this.unClick()
   }
 
-  render({props: {children}}) {
+  render() {
+    const {props: {children}} = this
     return children
   }
 }
