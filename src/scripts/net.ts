@@ -41,7 +41,7 @@ export function httpFetch(params: t.XHttpParams): Promise<t.XHttpResponse> {
       resolve: (response: t.XHttpResponse) => void,
       reject: (reject: t.XHttpResponse) => void
     ) => {
-      xhttp.request(params, (response: t.XHttpResponse) => {
+      xhttp.Xhttp(params, (response: t.XHttpResponse) => {
         if (response.ok) resolve(response)
         else reject(response)
     })
