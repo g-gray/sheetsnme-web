@@ -4,7 +4,7 @@
 !/gulpfile.js
 !/package.json
 !/readme.md
-!/src
 !/tsconfig.json
 !/webpack.config.js
 !/yarn.lock
+!/src
