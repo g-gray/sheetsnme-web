@@ -1,8 +1,11 @@
+import * as t from '../types'
+
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {NavLink, Link, withRouter} from 'react-router-dom'
 import ReactPaginate from 'react-paginate'
 
+// @ts-ignore
 import * as f from 'fpx'
 
 import * as a from '../actions'
@@ -786,26 +789,39 @@ const AccountForm = connect(state => ({
   pending: !f.isEmpty(state.net.pending),
 }))(_AccountForm)
 
-class _AccountsList extends u.ViewComponent {
-  constructor({dispatch}) {
-    super(...arguments)
+type AccountsListStateProps = {
+  accounts: t.AccountListRes,
+  pending: boolean,
+}
 
-    const {context} = this
+type AccountsListProps = AccountsListStateProps
 
-    this.onOpen = account => () => {
+class _AccountsList extends u.ViewComponent<AccountsListProps> {
+  constructor(props: AccountsListProps) {
+    super(props)
+  }
+
+  onOpen(account: t.AccountRes) {
+    const {props: {dispatch}, context} = this
+
+    return () => {
       dispatch(a.addDialog(FormDialog, {
         form: AccountForm,
         formProps: {account},
         title: u.xln(context, t.EDIT_ACCOUNT),
       }))
     }
+  }
 
-    this.onDelete = account => () => {
+  onDelete(account: t.AccountRes) {
+    const {props: {dispatch}, context} = this
+
+    return () => {
       dispatch(a.addDialog(ConfirmDialog, {
         question: u.xln(context, t.DELETE_ACCOUNT),
         onConfirm: () => {
           dispatch(a.deleteAccount(account.id, u.xln(context, t.DELETING_ACCOUNT)))
-            .then(() => dispatch(a.addNotification({text: u.xln(context, t.ACCOUNT_DELETED)})))
+            .then(() => dispatch(a.addNotification(u.xln(context, t.ACCOUNT_DELETED))))
             .then(() => dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))))
         },
       }))
@@ -834,7 +850,7 @@ class _AccountsList extends u.ViewComponent {
             </div>
           ) : (
             <div className='col-start-stretch'>
-              {f.map(accounts, account => (
+              {f.map(accounts, (account: t.AccountRes) => (
                 <EntityItem
                   key={account.id}
                   icon={<s.CreditCard className='font-large fg-primary' />}
@@ -857,7 +873,7 @@ class _AccountsList extends u.ViewComponent {
   }
 }
 
-const AccountsList = connect(state => ({
+const AccountsList = connect<AccountsListStateProps, {}, {}, t.AppState>((state: t.AppState) => ({
   accounts: state.net.accounts,
   pending: !f.isEmpty(state.net.pending),
 }))(_AccountsList)
