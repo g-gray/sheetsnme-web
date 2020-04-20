@@ -516,11 +516,10 @@ class _CategoryForm extends u.ViewComponent {
           throw errors
         })
         .then(() => {props.onSubmitSuccess()})
-        .then(() => dispatch(a.notify({
-          text: formValues.id
-            ? u.xln(context, t.CATEGORY_UPDATED)
-            : u.xln(context, t.CATEGORY_CREATED),
-        })))
+        .then(() => dispatch(a.addNotification(formValues.id
+          ? u.xln(context, t.CATEGORY_UPDATED)
+          : u.xln(context, t.CATEGORY_CREATED)
+        )))
         .then(() => dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))))
     }
 
@@ -537,7 +536,7 @@ class _CategoryForm extends u.ViewComponent {
         onConfirm: () => {
           dispatch(a.deleteCategory(formValues.id, u.xln(context, t.DELETING_CATEGORY)))
             .then(() => {props.onSubmitSuccess()})
-            .then(() => dispatch(a.notify({text: u.xln(context, t.CATEGORY_DELETED)})))
+            .then(() => dispatch(a.addNotification(u.xln(context, t.CATEGORY_DELETED))))
             .then(() => dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))))
         },
       }))
@@ -614,7 +613,7 @@ class _CategoriesList extends u.ViewComponent {
         question: u.xln(context, t.DELETE_CATEGORY),
         onConfirm: () => {
           dispatch(a.deleteCategory(category.id, u.xln(context, t.DELETING_CATEGORY)))
-            .then(() => dispatch(a.notify({text: u.xln(context, t.CATEGORY_DELETED)})))
+            .then(() => dispatch(a.addNotification(u.xln(context, t.CATEGORY_DELETED))))
             .then(() => dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))))
         },
       }))
@@ -709,11 +708,10 @@ class _AccountForm extends u.ViewComponent {
           throw errors
         })
         .then(() => {props.onSubmitSuccess()})
-        .then(() => dispatch(a.notify({
-          text: formValues.id
-            ? u.xln(context, t.ACCOUNT_UPDATED)
-            : u.xln(context, t.ACCOUNT_CREATED),
-        })))
+        .then(() => dispatch(a.addNotification(formValues.id
+          ? u.xln(context, t.ACCOUNT_UPDATED)
+          : u.xln(context, t.ACCOUNT_CREATED)
+        )))
         .then(() => dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))))
     }
 
@@ -730,7 +728,7 @@ class _AccountForm extends u.ViewComponent {
         onConfirm: () => {
           dispatch(a.deleteAccount(formValues.id, u.xln(context, t.DELETING_ACCOUNT)))
             .then(() => {props.onSubmitSuccess()})
-            .then(() => dispatch(a.notify({text: u.xln(context, t.ACCOUNT_DELETED)})))
+            .then(() => dispatch(a.addNotification(u.xln(context, t.ACCOUNT_DELETED))))
             .then(() => dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))))
         },
       }))
@@ -807,7 +805,7 @@ class _AccountsList extends u.ViewComponent {
         question: u.xln(context, t.DELETE_ACCOUNT),
         onConfirm: () => {
           dispatch(a.deleteAccount(account.id, u.xln(context, t.DELETING_ACCOUNT)))
-            .then(() => dispatch(a.notify({text: u.xln(context, t.ACCOUNT_DELETED)})))
+            .then(() => dispatch(a.addNotification({text: u.xln(context, t.ACCOUNT_DELETED)})))
             .then(() => dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))))
         },
       }))
@@ -919,11 +917,10 @@ class _PayeeForm extends u.ViewComponent {
           throw errors
         })
         .then(() => {props.onSubmitSuccess()})
-        .then(() => dispatch(a.notify({
-          text: formValues.id
-            ? u.xln(context, t.PAYEE_UPDATED)
-            : u.xln(context, t.PAYEE_CREATED),
-        })))
+        .then(() => dispatch(a.addNotification(formValues.id
+          ? u.xln(context, t.PAYEE_UPDATED)
+          : u.xln(context, t.PAYEE_CREATED)
+        )))
         .then(() => dispatch(a.fetchPayees(u.xln(context, t.FETCHING_PAYEES))))
     }
 
@@ -940,7 +937,7 @@ class _PayeeForm extends u.ViewComponent {
         onConfirm: () => {
           dispatch(a.deletePayee(formValues.id, u.xln(context, t.DELETING_PAYEE)))
             .then(() => {props.onSubmitSuccess()})
-            .then(() => dispatch(a.notify({text: u.xln(context, t.PAYEE_DELETED)})))
+            .then(() => dispatch(a.addNotification(u.xln(context, t.PAYEE_DELETED))))
             .then(() => dispatch(a.fetchPayees(u.xln(context, t.FETCHING_PAYEES))))
         },
       }))
@@ -1017,7 +1014,7 @@ class _PayeesList extends u.ViewComponent {
         question: u.xln(context, t.DELETE_PAYEE),
         onConfirm: () => {
           dispatch(a.deletePayee(payee.id, u.xln(context, t.DELETING_PAYEE)))
-            .then(() => dispatch(a.notify({text: u.xln(context, t.PAYEE_DELETED)})))
+            .then(() => dispatch(a.addNotification(u.xln(context, t.PAYEE_DELETED))))
             .then(() => dispatch(a.fetchPayees(u.xln(context, t.FETCHING_PAYEES))))
         },
       }))
@@ -1143,11 +1140,10 @@ class _TransactionForm extends u.ViewComponent {
           throw errors
         })
         .then(() => {onSubmitSuccess()})
-        .then(() => dispatch(a.notify({
-          text: formValues.id
+        .then(() => dispatch(a.addNotification(formValues.id
             ? u.xln(context, t.TRANSACTION_UPDATED)
-            : u.xln(context, t.TRANSACTION_CREATED),
-        })))
+            : u.xln(context, t.TRANSACTION_CREATED)
+        )))
         .then(() => dispatch(a.fetchTransactions(location, u.xln(context, t.FETCHING_TRANSACTIONS))))
     }
 
@@ -1165,7 +1161,7 @@ class _TransactionForm extends u.ViewComponent {
         onConfirm: () => {
           dispatch(a.deleteTransaction(formValues.id, u.xln(context, t.DELETING_TRANSACTION)))
             .then(() => {onSubmitSuccess()})
-            .then(() => dispatch(a.notify({text: u.xln(context, t.TRANSACTION_DELETED)})))
+            .then(() => dispatch(a.addNotification(u.xln(context, t.TRANSACTION_DELETED))))
             .then(() => dispatch(a.fetchTransactions(location, u.xln(context, t.FETCHING_TRANSACTIONS))))
         },
       }))
@@ -1480,7 +1476,7 @@ class _Transaction extends u.ViewComponent {
         question: u.xln(context, t.DELETE_TRANSACTION),
         onConfirm: () => {
           dispatch(a.deleteTransaction(transaction.id, u.xln(context, t.DELETING_TRANSACTION)))
-            .then(() => dispatch(a.notify({text: u.xln(context, t.TRANSACTION_DELETED)})))
+            .then(() => dispatch(a.addNotification(u.xln(context, t.TRANSACTION_DELETED))))
             .then(() => dispatch(a.fetchTransactions(location, u.xln(context, t.FETCHING_TRANSACTIONS))))
         },
       }))

@@ -1,12 +1,11 @@
+import * as t from './types'
+
 import * as u from './utils'
 import * as n from './net'
 
 export const RESIZE                 = 'RESIZE'
 export const ADD_DIALOG             = 'ADD_DIALOG'
 export const REMOVE_DIALOG          = 'REMOVE_DIALOG'
-
-export const ADD_NOTIFICATION       = 'ADD_NOTIFICATION'
-export const REMOVE_NOTIFICATION    = 'REMOVE_NOTIFICATION'
 
 export const RECEIVE_USER           = 'RECEIVE_USER'
 export const RECEIVE_CATEGORIES     = 'RECEIVE_CATEGORIES'
@@ -20,6 +19,8 @@ export const REQUEST_END            = 'REQUEST_END'
 export const NEXT_LANG              = 'NEXT_LANG'
 
 
+
+export type DomActions = AddNotification | RemoveNotification
 
 export const resize = geometry => ({
   type: RESIZE,
@@ -40,23 +41,48 @@ export const removeDialog = () => ({
 
 
 
-export const notify = notification => ({
+
+/**
+ * Notifications
+ */
+
+export const ADD_NOTIFICATION = 'ADD_NOTIFICATION'
+
+export interface AddNotification extends t.AppAction {
+  type: typeof ADD_NOTIFICATION,
+  payload: {
+    text: string,
+    timeout?: number,
+    time: number,
+  },
+}
+
+export const addNotification = (text: string, timeout?: number): AddNotification => ({
   type: ADD_NOTIFICATION,
-  notification: createNotification(notification),
-})
-
-export const removeNotification = time => ({
-  type: REMOVE_NOTIFICATION,
-  time,
-})
-
-function createNotification({timeout = 4000, ...props}) {
-  return {
+  payload: {
+    text,
     timeout,
     time: new Date().getTime(),
-    ...props,
-  }
+  },
+})
+
+
+export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION'
+
+export interface RemoveNotification extends t.AppAction {
+  type: typeof REMOVE_NOTIFICATION,
+  payload: {
+    time: number,
+  },
 }
+
+export const removeNotification = (time: number): RemoveNotification => ({
+  type: REMOVE_NOTIFICATION,
+  payload: {
+    time,
+  }
+})
+
 
 
 export const nextLang = lang => dispatch => {
@@ -66,34 +92,65 @@ export const nextLang = lang => dispatch => {
     lang,
   })
 }
+export type NetAction = RequestStartAction | RequestEndAction
 
+/**
+ * Request tracking
+ */
 
+function trackRequest<P>(opts: {message: string, requestName: string, promise: Promise<any>}): t.AppThunk<Promise<P>> {
+  return (dispatch: t.AppDispatch): Promise<P> => {
+    const {message, requestName, promise} = opts
 
-const trackRequest = ({message, requestName, promise}) => dispatch => {
-  const {notification: {time}} = dispatch(notify({text: message, timeout: 0}))
-  dispatch(requestStart({[requestName]: true}))
+    const action = dispatch(addNotification(message, 0))
+    const {time} = action.payload
 
-  return promise
-    .then(response => {
-      dispatch(requestEnd(requestName))
-      if (time) dispatch(removeNotification(time))
-      return response
-    })
-    .catch(response => {
-      dispatch(requestEnd(requestName))
-      if (time) dispatch(removeNotification(time))
-      throw response
-    })
+    dispatch(requestStart(requestName))
+
+    return promise
+      .then((response: any) => {
+        dispatch(requestEnd(requestName))
+        if (time) {
+          dispatch(removeNotification(time))
+        }
+        return response
+      })
+      .catch((response: any) => {
+        dispatch(requestEnd(requestName))
+        if (time) {
+          dispatch(removeNotification(time))
+        }
+        throw response
+      })
+    }
 }
 
-const requestStart = request => ({
+export interface RequestStartAction extends t.AppAction {
+  type: typeof REQUEST_START,
+  payload: {
+    requestName: string,
+  },
+}
+
+const requestStart = (requestName: string): RequestStartAction => ({
   type: REQUEST_START,
-  request,
+  payload: {
+    requestName,
+  },
 })
 
-const requestEnd = name => ({
+export interface RequestEndAction extends t.AppAction {
+  type: typeof REQUEST_END,
+  payload: {
+    requestName: string,
+  },
+}
+
+const requestEnd = (requestName: string): RequestEndAction => ({
   type: REQUEST_END,
-  name,
+  payload: {
+    requestName,
+  },
 })
 
 
