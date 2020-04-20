@@ -102,12 +102,14 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
         categoriesById: f.keyBy(action.categories, ({id}) => id),
       }
 
-    case a.RECEIVE_ACCOUNTS:
+    case a.RECEIVE_ACCOUNTS: {
+      const accounts: t.AccountListRes = action.payload.accounts
       return {
         ...state,
-        accounts: action.accounts,
-        accountsById: f.keyBy(action.accounts, ({id}) => id),
+        accounts,
+        accountsById: f.keyBy(accounts, (account: t.AccountRes) => account.id),
       }
+    }
 
     case a.RECEIVE_PAYEES:
       return {

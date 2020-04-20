@@ -1,7 +1,11 @@
+import * as t from './types'
+
 import React from 'react'
 import ReactDom from 'react-dom'
 
+// @ts-ignore
 import * as f from 'fpx'
+// @ts-ignore
 import * as emerge from 'emerge'
 import * as querystring from 'querystring'
 
@@ -12,12 +16,13 @@ export const DEFAULT_PAGE_SIZE = 25
  * React-specific
  */
 
-export const Context = React.createContext({})
+export const Context: React.Context<t.AppContext> = React.createContext<t.AppContext>({})
 
 export class ViewComponent<P = any, S = any> extends React.Component<P, S> {
-  static contextType = Context
+  static contextType: React.Context<t.AppContext> = Context
+  // static contextType<t.AppContext> = Context
 
-  constructor(props: P, context?: any) {
+  constructor(props: P, context?: t.AppContext) {
     super(props, context)
     // this.render = renderWithArg
   }
@@ -198,7 +203,7 @@ export function parseNum(value) {
  * Net
  */
 
-export function jsonParams(params) {
+export function jsonParams(params: void | t.JsonParams): t.XHttpParams {
   return emerge.merge(params, {headers: jsonHeaders})
 }
 

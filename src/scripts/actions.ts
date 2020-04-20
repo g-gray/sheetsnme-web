@@ -9,7 +9,6 @@ export const REMOVE_DIALOG          = 'REMOVE_DIALOG'
 
 export const RECEIVE_USER           = 'RECEIVE_USER'
 export const RECEIVE_CATEGORIES     = 'RECEIVE_CATEGORIES'
-export const RECEIVE_ACCOUNTS       = 'RECEIVE_ACCOUNTS'
 export const RECEIVE_PAYEES         = 'RECEIVE_PAYEES'
 export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
 
@@ -41,6 +40,13 @@ export const removeDialog = () => ({
 
 
 
+export const nextLang = lang => dispatch => {
+  u.storageWrite(['lang'], lang)
+  dispatch({
+    type: NEXT_LANG,
+    lang,
+  })
+}
 
 /**
  * Notifications
@@ -85,21 +91,14 @@ export const removeNotification = (time: number): RemoveNotification => ({
 
 
 
-export const nextLang = lang => dispatch => {
-  u.storageWrite(['lang'], lang)
-  dispatch({
-    type: NEXT_LANG,
-    lang,
-  })
-}
-export type NetAction = RequestStartAction | RequestEndAction
+export type NetAction = RequestStartAction | RequestEndAction | ReceiveAccounts
 
 /**
  * Request tracking
  */
 
-function trackRequest<P>(opts: {message: string, requestName: string, promise: Promise<any>}): t.AppThunk<Promise<P>> {
-  return (dispatch: t.AppDispatch): Promise<P> => {
+function trackRequest<P>(opts: {message: string, requestName: string, promise: Promise<P>}): t.AppThunk<Promise<P>> {
+  return (dispatch): Promise<P> => {
     const {message, requestName, promise} = opts
 
     const action = dispatch(addNotification(message, 0))
@@ -206,46 +205,81 @@ export const deleteCategory = (id, message) => dispatch => {
   }))
 }
 
+export const RECEIVE_ACCOUNTS = 'RECEIVE_ACCOUNTS'
 
-export const fetchAccounts  = message => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'getAccounts',
-    promise: n.authedJsonFetch('/api/accounts'),
-  }))
-    .then(accounts => dispatch({type: RECEIVE_ACCOUNTS, accounts}))
+export interface ReceiveAccounts extends t.AppAction {
+  type: typeof RECEIVE_ACCOUNTS,
+  payload: {
+    accounts: t.AccountListRes,
+  },
 }
 
-export const createAccount = (account, message) => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'postAccount',
-    promise: n.authedJsonFetch('/api/accounts', {
-      method: 'POST',
-      body: account,
-    }),
-  }))
+export function receiveAccounts(accounts: t.AccountListRes): ReceiveAccounts {
+  return {
+    type: RECEIVE_ACCOUNTS,
+    payload: {
+      accounts,
+    },
+  }
 }
 
-export const updateAccount = (id, account, message) => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'postAccount',
-    promise: n.authedJsonFetch(`/api/accounts/${id}`, {
-      method: 'POST',
-      body: account,
-    }),
-  }))
+export function fetchAccounts(message: string): t.AppThunk<Promise<ReceiveAccounts>> {
+  return (dispatch) => {
+    return dispatch(trackRequest<t.AccountListRes>({
+      message,
+      requestName: 'getAccounts',
+      promise: n.authedJsonFetch<t.AccountListRes>('/api/accounts'),
+    }))
+      .then(accounts => dispatch(receiveAccounts(accounts)))
+  }
 }
 
-export const deleteAccount = (id, message) => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'deleteAccount',
-    promise: n.authedJsonFetch(`/api/accounts/${id}`, {
-      method: 'DELETE',
-    }),
-  }))
+export function createAccount(
+  account: t.AccountReq,
+  message: string
+): t.AppThunk<Promise<t.AccountRes>> {
+  return (dispatch) => {
+    return dispatch(trackRequest<t.AccountRes>({
+      message,
+      requestName: 'postAccount',
+      promise: n.authedJsonFetch<t.AccountRes>('/api/accounts', {
+        method: 'POST',
+        body: account,
+      }),
+    }))
+  }
+}
+
+export function updateAccount(
+  id: string,
+  account: t.AccountReq,
+  message: string
+): t.AppThunk<Promise<t.AccountRes>> {
+  return (dispatch) => {
+    return dispatch(trackRequest<t.AccountRes>({
+      message,
+      requestName: 'postAccount',
+      promise: n.authedJsonFetch<t.AccountRes>(`/api/accounts/${id}`, {
+        method: 'POST',
+        body: account,
+      }),
+    }))
+  }
+}
+
+export function deleteAccount (
+  id: string,
+  message: string
+): t.AppThunk<Promise<t.AccountRes>>{
+  return (dispatch) => {
+    return dispatch(trackRequest<t.AccountRes>({
+      message,
+      requestName: 'deleteAccount',
+      promise: n.authedJsonFetch<t.AccountRes>(`/api/accounts/${id}`, {
+        method: 'DELETE',
+      }),
+    }))
+  }
 }
 
 

@@ -1,7 +1,14 @@
 import {Action, Dispatch} from 'redux'
-import {ThunkAction} from 'redux-thunk'
+import {ThunkAction, ThunkDispatch} from 'redux-thunk'
 
-export type AppState = DomState & NetState
+export type AppContext = {} | {
+  lang: LANG,
+}
+
+export type AppState = {
+  dom: DomState,
+  net: NetState,
+}
 
 
 
@@ -13,7 +20,7 @@ export type DomState = {
   dialogs: [],
   notifications: NotificationList,
   geometry: {},
-  lang: string,
+  lang: LANG,
 }
 
 export type Notification = {
@@ -23,6 +30,12 @@ export type Notification = {
 }
 
 export type NotificationList = Notification[]
+
+export enum LANG {
+  en = 'en',
+  ru = 'ru',
+}
+
 
 
 
@@ -56,8 +69,73 @@ export type AppThunk<R = void> = ThunkAction<
   AppAction
 >
 
+export type AppThunkDispatch = ThunkDispatch<
+  AppState,
+  unknown,
+  AppAction
+>
+
 export interface AppDispatch extends Dispatch<AppAction> {}
 
 export interface AppAction extends Action<string> {
   payload: any,
+}
+
+/**
+ * XHttp
+ */
+
+export type JsonParams = {
+  method? : string,
+  headers?: {[key: string]: string},
+  timeout?: number,
+  body?   : any,
+}
+
+export type XHttpParams = {
+  url     : string,
+  method? : string,
+  headers?: {[key: string]: string},
+  timeout?: number,
+  body?   : any,
+}
+
+export type XHttpResponse = {
+  ok        : boolean,
+  status    : string,
+  statusText: string,
+  reason    : string,
+  headers   : {[key: string]: string},
+  body      : any,
+  params    : XHttpParams,
+}
+
+
+
+/**
+ * Accounts
+ */
+
+export type AccountReq = {
+  id?          : string,
+  title        : string,
+  currencyCode?: string,
+  balance?     : number,
+  createdAt?   : string,
+  updatedAt?   : string,
+}
+
+export type AccountRes = {
+  id          : string,
+  title       : string,
+  currencyCode: string,
+  balance     : number,
+  createdAt   : string,
+  updatedAt   : string,
+}
+
+export type AccountListRes = AccountRes[]
+
+export type AccountsById = {
+  [key: string]: AccountRes,
 }
