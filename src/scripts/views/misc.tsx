@@ -23,7 +23,7 @@ export class Dialog extends u.ViewComponent {
   componentDidMount() {
     const {props: {onEscape}} = this
     this.unsub = u.addEvent(window, 'keydown', event => {
-      if (u.eventKeyName(event) === 'Escape' && f.isFunction(onEscape)) {
+      if (u.eventKeyCode(event) === u.KEY_NAMES_US.ESCAPE && f.isFunction(onEscape)) {
         onEscape(event)
       }
     })
@@ -129,7 +129,7 @@ export class FakeButton extends u.ViewComponent {
 
 function simulateEnterOnKeyPress(view, event) {
   const {props: {onClick}} = view
-  if (u.eventKeyName(event) === 'Enter' && onClick) onClick(event)
+  if (u.eventKeyCode(event) === u.KEY_NAMES_US.ENTER && onClick) onClick(event)
 }
 
 export class CircleUserPic extends u.ViewComponent {
@@ -174,7 +174,7 @@ export class Closer extends u.ViewComponent {
     }
 
     this.onKeyDown = event => {
-      if (u.eventKeyName(event) === 'Escape') maybeClose(event)
+      if (u.eventKeyCode(event) === u.KEY_NAMES_US.ESCAPE) maybeClose(event)
     }
 
     this.onClick = event => {

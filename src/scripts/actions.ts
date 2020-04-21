@@ -3,7 +3,6 @@ import * as t from './types'
 import * as u from './utils'
 import * as n from './net'
 
-export const RESIZE                 = 'RESIZE'
 export const ADD_DIALOG             = 'ADD_DIALOG'
 export const REMOVE_DIALOG          = 'REMOVE_DIALOG'
 
@@ -19,12 +18,25 @@ export const NEXT_LANG              = 'NEXT_LANG'
 
 
 
-export type DomActions = AddNotification | RemoveNotification
+export type DomActions = AddNotification | RemoveNotification | Resize
 
-export const resize = geometry => ({
-  type: RESIZE,
-  geometry,
-})
+export const RESIZE = 'RESIZE'
+
+export interface Resize extends t.AppAction {
+  type: typeof RESIZE,
+  payload: {
+    width: number,
+  },
+}
+
+export function resize(width: number): Resize {
+  return {
+    type: RESIZE,
+    payload: {
+      width,
+    }
+  }
+}
 
 
 

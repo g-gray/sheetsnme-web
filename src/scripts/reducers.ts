@@ -9,7 +9,7 @@ import * as u from './utils'
 const defaultDomState: t.DomState = {
   dialogs: [],
   notifications: [],
-  geometry: u.geometry(window.innerWidth),
+  geometry: geometry(window.innerWidth),
   lang: u.QUERY_LANG || u.storageRead(['lang']) || u.DEFAULT_LANG,
 }
 
@@ -58,7 +58,7 @@ export const dom = (state = defaultDomState, action: a.DomActions) => {
     case a.RESIZE:
       return {
         ...state,
-        geometry: action.geometry,
+        geometry: geometry(action.payload.width),
       }
 
     case a.NEXT_LANG:
@@ -70,6 +70,12 @@ export const dom = (state = defaultDomState, action: a.DomActions) => {
     default:
       return state
   }
+}
+
+export const MOBILE_WIDTH_MAX: number = 980
+
+export function geometry(width: number): t.Geometry {
+  return {isMobile: width <= MOBILE_WIDTH_MAX}
 }
 
 

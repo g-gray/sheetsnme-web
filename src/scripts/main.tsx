@@ -10,7 +10,7 @@ import * as t from './translations'
 
 import {Routes} from './views/routes'
 
-class App extends u.ViewComponent {
+class _App extends u.ViewComponent {
   render() {
     const {props: {isMobile, lang}} = this
 
@@ -62,15 +62,15 @@ class App extends u.ViewComponent {
   }
 }
 
-const ConnectedApp = withRouter(connect(state => ({
+const App = withRouter(connect(state => ({
   isMobile: state.dom.geometry.isMobile,
   lang: state.dom.lang,
-}))(App))
+}))(_App))
 
 const elem = (
   <Provider store={e.store}>
     <Router>
-      <ConnectedApp />
+      <App />
     </Router>
   </Provider>
 )
@@ -81,6 +81,6 @@ render(elem, rootNode, initDom)
 
 function initDom() {
   window.addEventListener('resize', () => {
-    e.store.dispatch(a.resize(u.geometry(window.innerWidth)))
+    e.store.dispatch(a.resize(window.innerWidth))
   })
 }

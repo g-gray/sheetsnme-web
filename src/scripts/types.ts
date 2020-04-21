@@ -1,7 +1,27 @@
 import {Action, Dispatch} from 'redux'
 import {ThunkAction, ThunkDispatch} from 'redux-thunk'
+import {ParsedUrlQuery, ParsedUrlQueryInput} from 'querystring'
 
-export type AppContext = {} | {
+/**
+ * Env
+ */
+
+export type Vars = {
+
+}
+
+declare global {
+  interface Window {
+    VARS: {
+      PROD            : boolean,
+      COMMIT          : string,
+      LANG_HEADER_NAME: string,
+    }
+  }
+}
+
+export type AppContext = {
+  isMobile: boolean,
   lang: LANG,
 }
 
@@ -19,7 +39,7 @@ export type AppState = {
 export type DomState = {
   dialogs: [],
   notifications: NotificationList,
-  geometry: {},
+  geometry: Geometry,
   lang: LANG,
 }
 
@@ -29,6 +49,10 @@ export type Notification = {
   time: number,
 }
 
+export type Geometry = {
+  isMobile: boolean,
+}
+
 export type NotificationList = Notification[]
 
 export enum LANG {
@@ -36,6 +60,19 @@ export enum LANG {
   ru = 'ru',
 }
 
+export type Translation = string | ((...args: any[]) => string)
+
+export type Translations = {
+  [key in LANG]: Translation
+}
+
+export type BgUrl = {
+  backgroundImage: string,
+}
+
+export type Dict = {
+  [key: string]: any,
+}
 
 
 
@@ -81,6 +118,16 @@ export interface AppAction extends Action<string> {
   payload: any,
 }
 
+
+
+/**
+ * Querystring
+ */
+
+export type DecodedQuery = ParsedUrlQuery
+export type DecodedQueryInput = ParsedUrlQueryInput
+
+
 /**
  * XHttp
  */
@@ -109,6 +156,26 @@ export type XHttpResponse = {
   body      : any,
   params    : XHttpParams,
 }
+
+
+
+/**
+ * Utils
+ */
+
+export type Path = (string | number)[]
+
+export type BindValue = {
+  onUpdate: (value: any) => void,
+  value: any,
+}
+
+export type BindChecked = {
+  onUpdate: (value: any) => void,
+  value: any,
+  checked: boolean,
+}
+
 
 
 
