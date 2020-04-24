@@ -15,9 +15,9 @@ import * as e from '../env'
 
 export class ViewComponent<P = any, S = any> extends React.Component<P, S> {
   static contextType: React.Context<t.AppContext> = e.Context
-  // static contextType<t.AppContext> = Context
+  declare context: React.ContextType<typeof e.Context>
 
-  constructor(props: P, context?: t.AppContext) {
+  constructor(props: Readonly<P>, context?: t.AppContext) {
     super(props, context)
     // this.render = renderWithArg
   }
