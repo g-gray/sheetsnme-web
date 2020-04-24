@@ -64,7 +64,7 @@ export const dom = (state = defaultDomState, action: a.DomActions) => {
     case a.NEXT_LANG:
       return {
         ...state,
-        lang: action.lang,
+        lang: action.payload.lang,
       }
 
     default:

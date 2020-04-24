@@ -306,7 +306,7 @@ function langPrefix(langCode: string): string {
 export function xln(
   context: t.AppContext,
   translations: t.Translations,
-  args?: any[]
+  ...args: any[]
 ): string {
   f.validate(context, f.isObject)
 

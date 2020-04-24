@@ -14,11 +14,14 @@ export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
 export const REQUEST_START          = 'REQUEST_START'
 export const REQUEST_END            = 'REQUEST_END'
 
-export const NEXT_LANG              = 'NEXT_LANG'
+
+export type DomActions =
+  AddNotification |
+  RemoveNotification |
+  Resize |
+  NextLang
 
 
-
-export type DomActions = AddNotification | RemoveNotification | Resize
 
 export const RESIZE = 'RESIZE'
 
@@ -52,12 +55,25 @@ export const removeDialog = () => ({
 
 
 
-export const nextLang = lang => dispatch => {
-  u.storageWrite(['lang'], lang)
-  dispatch({
-    type: NEXT_LANG,
-    lang,
-  })
+export const NEXT_LANG = 'NEXT_LANG'
+
+export interface NextLang extends t.AppAction {
+  type: typeof NEXT_LANG,
+  payload: {
+    lang: t.LANG,
+  },
+}
+
+export function nextLang(lang: t.LANG): t.AppThunk<NextLang> {
+  return (dispatch) => {
+    u.storageWrite(['lang'], lang)
+    return dispatch({
+      type: NEXT_LANG,
+      payload: {
+        lang,
+      },
+    })
+  }
 }
 
 /**
