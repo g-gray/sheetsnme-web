@@ -153,19 +153,25 @@ class _Navbar extends m.ViewComponent {
 
 const Navbar = connect()(_Navbar)
 
-class _UserMenu extends m.ViewComponent {
-  constructor() {
-    super(...arguments)
+type UserMenuStateProps = {
+  user: t.UserRes,
+}
 
-    this.state = {expanded: false}
+type UserMenuProps = UserMenuStateProps
 
-    this.close = () => {
-      this.setState({expanded: false})
-    }
+type UserMenuState = {
+  expanded: boolean,
+}
 
-    this.toggle = () => {
-      this.setState({expanded: !this.state.expanded})
-    }
+class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
+  state = {expanded: false}
+
+  close = () => {
+    this.setState({expanded: false})
+  }
+
+  toggle = () => {
+    this.setState({expanded: !this.state.expanded})
   }
 
   render() {
@@ -223,7 +229,7 @@ class _UserMenu extends m.ViewComponent {
   }
 }
 
-const UserMenu = connect(state => ({
+const UserMenu = connect<UserMenuProps, {}, {}, t.AppState>(state => ({
   user: state.net.user,
 }))(_UserMenu)
 

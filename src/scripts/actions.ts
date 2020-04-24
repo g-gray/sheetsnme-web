@@ -3,7 +3,6 @@ import * as t from './types'
 import * as u from './utils'
 import * as n from './net'
 
-export const RECEIVE_USER           = 'RECEIVE_USER'
 export const RECEIVE_CATEGORIES     = 'RECEIVE_CATEGORIES'
 export const RECEIVE_PAYEES         = 'RECEIVE_PAYEES'
 export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
@@ -138,7 +137,11 @@ export const removeNotification = (time: number): RemoveNotification => ({
 
 
 
-export type NetAction = RequestStartAction | RequestEndAction | ReceiveAccounts
+export type NetAction =
+  RequestStartAction |
+  RequestEndAction |
+  ReceiveAccounts |
+  ReceiveUser
 
 /**
  * Request tracking
@@ -207,13 +210,33 @@ const requestEnd = (requestName: string): RequestEndAction => ({
 
 
 
-export const fetchUser = message => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'getUser',
-    promise: n.authedJsonFetch('/api/user'),
-  }))
-    .then(user => dispatch({type: RECEIVE_USER, user}))
+export const RECEIVE_USER = 'RECEIVE_USER'
+
+interface ReceiveUser extends t.AppAction {
+  type: typeof RECEIVE_USER,
+  payload: {
+    user: t.UserRes,
+  },
+}
+
+export function receiveUser(user: t.UserRes): ReceiveUser {
+  return {
+    type: RECEIVE_USER,
+    payload: {
+      user,
+    },
+  }
+}
+
+export function fetchUser(message: string): t.AppThunk<Promise<ReceiveUser>> {
+  return (dispatch) => {
+    return dispatch(trackRequest<t.UserRes>({
+      message,
+      requestName: 'getUser',
+      promise: n.authedJsonFetch('/api/user'),
+    }))
+      .then(user => dispatch(receiveUser(user)))
+  }
 }
 
 

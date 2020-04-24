@@ -111,11 +111,13 @@ const defaultNetState: t.NetState = {
 
 export const net = (state = defaultNetState, action: a.NetAction) => {
   switch (action.type) {
-    case a.RECEIVE_USER:
+    case a.RECEIVE_USER: {
+      const {user} = action.payload
       return {
         ...state,
-        user: action.user,
+        user,
       }
+    }
 
     case a.RECEIVE_CATEGORIES:
       return {

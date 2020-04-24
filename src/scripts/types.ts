@@ -88,7 +88,7 @@ export type Dict = {
  */
 
 export type NetState = {
-  user: {},
+  user: UserRes,
   transactions: {},
   transactionsById: {},
   categories: [],
@@ -185,9 +185,29 @@ export type BindChecked = {
 
 
 
+/**
+ * User
+ */
+
+export type UserRes = {
+  id           : string,
+  pictureUrl   : string,
+  email        : string,
+  firstName    : string,
+  lastName     : string,
+  spreadsheets : SpreadsheetRes[],
+  createdAt    : Date,
+  updatedAt    : Date,
+}
+
+export type SpreadsheetRes = {
+  id: string,
+}
+
+
 
 /**
- * Accounts
+ * Account
  */
 
 export type AccountReq = {
