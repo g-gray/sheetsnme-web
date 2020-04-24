@@ -21,7 +21,7 @@ export type DomActions =
 
 export const RESIZE = 'RESIZE'
 
-export interface Resize extends t.AppAction {
+interface Resize extends t.AppAction {
   type: typeof RESIZE,
   payload: {
     width: number,
@@ -40,7 +40,7 @@ export function resize(width: number): Resize {
 
 export const ADD_DIALOG = 'ADD_DIALOG'
 
-export interface AddDialog<P = any> extends t.AppAction {
+interface AddDialog<P = any> extends t.AppAction {
   type: typeof ADD_DIALOG,
   payload: {
     dialog: t.Dialog<P>,
@@ -61,7 +61,7 @@ export function addDialog<P>(dialog: t.Dialog<P>, dialogProps?: P): AddDialog<P>
 
 export const REMOVE_DIALOG = 'REMOVE_DIALOG'
 
-export interface RemoveDialog extends t.AppAction {
+interface RemoveDialog extends t.AppAction {
   type: typeof REMOVE_DIALOG,
 }
 
@@ -75,7 +75,7 @@ export function removeDialog(): RemoveDialog {
 
 export const NEXT_LANG = 'NEXT_LANG'
 
-export interface NextLang extends t.AppAction {
+interface NextLang extends t.AppAction {
   type: typeof NEXT_LANG,
   payload: {
     lang: t.LANG,
@@ -100,7 +100,7 @@ export function nextLang(lang: t.LANG): t.AppThunk<NextLang> {
 
 export const ADD_NOTIFICATION = 'ADD_NOTIFICATION'
 
-export interface AddNotification extends t.AppAction {
+interface AddNotification extends t.AppAction {
   type: typeof ADD_NOTIFICATION,
   payload: {
     text: string,
@@ -121,7 +121,7 @@ export const addNotification = (text: string, timeout?: number): AddNotification
 
 export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION'
 
-export interface RemoveNotification extends t.AppAction {
+interface RemoveNotification extends t.AppAction {
   type: typeof REMOVE_NOTIFICATION,
   payload: {
     time: number,
@@ -177,7 +177,7 @@ function trackRequest<P>(opts: {message: string, requestName: string, promise: P
 
 export const REQUEST_START = 'REQUEST_START'
 
-export interface RequestStartAction extends t.AppAction {
+interface RequestStartAction extends t.AppAction {
   type: typeof REQUEST_START,
   payload: {
     requestName: string,
@@ -194,7 +194,7 @@ const requestStart = (requestName: string): RequestStartAction => ({
 
 export const REQUEST_END = 'REQUEST_END'
 
-export interface RequestEndAction extends t.AppAction {
+interface RequestEndAction extends t.AppAction {
   type: typeof REQUEST_END,
   payload: {
     requestName: string,
@@ -283,7 +283,7 @@ export const deleteCategory = (id, message) => dispatch => {
 
 export const RECEIVE_ACCOUNTS = 'RECEIVE_ACCOUNTS'
 
-export interface ReceiveAccounts extends t.AppAction {
+interface ReceiveAccounts extends t.AppAction {
   type: typeof RECEIVE_ACCOUNTS,
   payload: {
     accounts: t.AccountListRes,
