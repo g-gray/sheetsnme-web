@@ -803,11 +803,7 @@ type AccountListStateProps = {
 type AccountListProps = AccountListStateProps
 
 class _AccountList extends m.ViewComponent<AccountListProps> {
-  constructor(props: AccountListProps) {
-    super(props)
-  }
-
-  onOpen(account: t.AccountRes) {
+  onOpen = (account: t.AccountRes) => {
     const {props: {dispatch}, context} = this
 
     return () => {
@@ -819,7 +815,7 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
     }
   }
 
-  onDelete(account: t.AccountRes) {
+  onDelete = (account: t.AccountRes) => {
     const {props: {dispatch}, context} = this
 
     return () => {
