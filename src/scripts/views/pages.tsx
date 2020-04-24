@@ -685,7 +685,7 @@ class _AccountsPage extends m.ViewComponent {
 
     return (
       <ListPage action={action}>
-        <AccountsList />
+        <AccountList />
       </ListPage>
     )
   }
@@ -795,15 +795,15 @@ const AccountForm = connect(state => ({
   pending: !f.isEmpty(state.net.pending),
 }))(_AccountForm)
 
-type AccountsListStateProps = {
+type AccountListStateProps = {
   accounts: t.AccountListRes,
   pending: boolean,
 }
 
-type AccountsListProps = AccountsListStateProps
+type AccountListProps = AccountListStateProps
 
-class _AccountsList extends m.ViewComponent<AccountsListProps> {
-  constructor(props: AccountsListProps) {
+class _AccountList extends m.ViewComponent<AccountListProps> {
+  constructor(props: AccountListProps) {
     super(props)
   }
 
@@ -879,10 +879,10 @@ class _AccountsList extends m.ViewComponent<AccountsListProps> {
   }
 }
 
-const AccountsList = connect<AccountsListStateProps, {}, {}, t.AppState>((state: t.AppState) => ({
+const AccountList = connect<AccountListStateProps, {}, {}, t.AppState>((state: t.AppState) => ({
   accounts: state.net.accounts,
   pending: !f.isEmpty(state.net.pending),
-}))(_AccountsList)
+}))(_AccountList)
 
 
 
