@@ -14,7 +14,7 @@ import * as u from '../utils'
 import * as m from './misc'
 import * as s from './svg'
 
-import * as t from '../translations'
+import * as i18n from '../i18n'
 
 /**
  * Layouts
@@ -100,7 +100,7 @@ class _Navbar extends u.ViewComponent {
     }
 
     this.nextLang = () => {
-      dispatch(a.nextLang(u.nextLang(context)))
+      dispatch(a.nextLang(i18n.nextLang(context)))
     }
   }
 
@@ -125,7 +125,7 @@ class _Navbar extends u.ViewComponent {
             <m.FakeButton
               onClick={nextLang}
               className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
-              {u.xln(context, t.LANG)}
+              {i18n.xln(context, i18n.LANG)}
             </m.FakeButton>
             <UserMenu />
           </div>
@@ -142,7 +142,7 @@ class _Navbar extends u.ViewComponent {
           <m.FakeButton
             onClick={nextLang}
             className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
-            {u.xln(context, t.LANG)}
+            {i18n.xln(context, i18n.LANG)}
           </m.FakeButton>
           <UserMenu />
         </div>
@@ -210,7 +210,7 @@ class _UserMenu extends u.ViewComponent {
                   </div>
                   <div className='row-start-center'>
                     <a href='/auth/logout' className='btn-secondary'>
-                      {u.xln(context, t.LOGOUT)}
+                      {i18n.xln(context, i18n.LOGOUT)}
                     </a>
                   </div>
                 </div>
@@ -268,7 +268,7 @@ class Drawer extends u.ViewComponent {
             exact
             className='drawer-link decorate-drawer-link'>
             <s.BarChart className='font-large theme-drawer-icon' />
-            <span>{u.xln(context, t.TRANSACTIONS)}</span>
+            <span>{i18n.xln(context, i18n.TRANSACTIONS)}</span>
           </NavLink>
         </div>
         <hr className='hr' />
@@ -278,21 +278,21 @@ class Drawer extends u.ViewComponent {
             exact
             className='drawer-link decorate-drawer-link'>
             <s.Tag className='font-large theme-drawer-icon' />
-            <span>{u.xln(context, t.CATEGORIES)}</span>
+            <span>{i18n.xln(context, i18n.CATEGORIES)}</span>
           </NavLink>
           <NavLink
             to='/accounts'
             exact
             className='drawer-link decorate-drawer-link'>
             <s.CreditCard className='font-large theme-drawer-icon' />
-            <span>{u.xln(context, t.ACCOUNTS)}</span>
+            <span>{i18n.xln(context, i18n.ACCOUNTS)}</span>
           </NavLink>
           <NavLink
             to='/payees'
             exact
             className='drawer-link decorate-drawer-link'>
             <s.Users className='font-large theme-drawer-icon' />
-            <span>{u.xln(context, t.PAYEES)}</span>
+            <span>{i18n.xln(context, i18n.PAYEES)}</span>
           </NavLink>
         </div>
       </aside>
@@ -481,7 +481,7 @@ class _CategoriesPage extends u.ViewComponent {
       <Fab
         onClick={() => dispatch(a.addDialog(FormDialog, {
           form: CategoryForm,
-          title: u.xln(context, t.NEW_CATEGORY),
+          title: i18n.xln(context, i18n.NEW_CATEGORY),
         }))} />
     )
 
@@ -510,8 +510,8 @@ class _CategoryForm extends u.ViewComponent {
       const {formValues} = state
 
       const promise = formValues.id
-        ? dispatch(a.updateCategory(formValues.id, formValues, u.xln(context, t.UPDATING_CATEGORY)))
-        : dispatch(a.createCategory(formValues, u.xln(context, t.CREATING_CATEGORY)))
+        ? dispatch(a.updateCategory(formValues.id, formValues, i18n.xln(context, i18n.UPDATING_CATEGORY)))
+        : dispatch(a.createCategory(formValues, i18n.xln(context, i18n.CREATING_CATEGORY)))
 
       promise
         .catch(errors => {
@@ -520,10 +520,10 @@ class _CategoryForm extends u.ViewComponent {
         })
         .then(() => {props.onSubmitSuccess()})
         .then(() => dispatch(a.addNotification(formValues.id
-          ? u.xln(context, t.CATEGORY_UPDATED)
-          : u.xln(context, t.CATEGORY_CREATED)
+          ? i18n.xln(context, i18n.CATEGORY_UPDATED)
+          : i18n.xln(context, i18n.CATEGORY_CREATED)
         )))
-        .then(() => dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))))
+        .then(() => dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))))
     }
 
     this.onDelete = event => {
@@ -535,12 +535,12 @@ class _CategoryForm extends u.ViewComponent {
       const {formValues} = state
 
       dispatch(a.addDialog(ConfirmDialog, {
-        question: u.xln(context, t.DELETE_CATEGORY),
+        question: i18n.xln(context, i18n.DELETE_CATEGORY),
         onConfirm: () => {
-          dispatch(a.deleteCategory(formValues.id, u.xln(context, t.DELETING_CATEGORY)))
+          dispatch(a.deleteCategory(formValues.id, i18n.xln(context, i18n.DELETING_CATEGORY)))
             .then(() => {props.onSubmitSuccess()})
-            .then(() => dispatch(a.addNotification(u.xln(context, t.CATEGORY_DELETED))))
-            .then(() => dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))))
+            .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.CATEGORY_DELETED))))
+            .then(() => dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))))
         },
       }))
     }
@@ -562,7 +562,7 @@ class _CategoryForm extends u.ViewComponent {
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormTextElement
             name='title'
-            label={u.xln(context, t.TITLE)}
+            label={i18n.xln(context, i18n.TITLE)}
             disabled={disabled}
             {...u.bindValue(this, ['formValues', 'title'])} />
         </div>
@@ -574,14 +574,14 @@ class _CategoryForm extends u.ViewComponent {
               className='btn-transparent'
               onClick={onDelete}
               disabled={disabled}>
-              {u.xln(context, t.DELETE)}
+              {i18n.xln(context, i18n.DELETE)}
             </m.FakeButton>}
           </div>
           <button
             type='submit'
             className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
             disabled={disabled}>
-            {u.xln(context, t.SUBMIT)}
+            {i18n.xln(context, i18n.SUBMIT)}
           </button>
           <div className='flex-1' />
         </div>
@@ -607,17 +607,17 @@ class _CategoriesList extends u.ViewComponent {
       dispatch(a.addDialog(FormDialog, {
         form: CategoryForm,
         formProps: {category},
-        title: u.xln(context, t.EDIT_CATEGORY),
+        title: i18n.xln(context, i18n.EDIT_CATEGORY),
       }))
     }
 
     this.onDelete = category => () => {
       dispatch(a.addDialog(ConfirmDialog, {
-        question: u.xln(context, t.DELETE_CATEGORY),
+        question: i18n.xln(context, i18n.DELETE_CATEGORY),
         onConfirm: () => {
-          dispatch(a.deleteCategory(category.id, u.xln(context, t.DELETING_CATEGORY)))
-            .then(() => dispatch(a.addNotification(u.xln(context, t.CATEGORY_DELETED))))
-            .then(() => dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))))
+          dispatch(a.deleteCategory(category.id, i18n.xln(context, i18n.DELETING_CATEGORY)))
+            .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.CATEGORY_DELETED))))
+            .then(() => dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))))
         },
       }))
     }
@@ -673,7 +673,7 @@ class _AccountsPage extends u.ViewComponent {
       <Fab
         onClick={() => dispatch(a.addDialog(FormDialog, {
           form: AccountForm,
-          title: u.xln(context, t.NEW_ACCOUNT),
+          title: i18n.xln(context, i18n.NEW_ACCOUNT),
         }))} />
     )
 
@@ -702,8 +702,8 @@ class _AccountForm extends u.ViewComponent {
       const {formValues} = state
 
       const promise = formValues.id
-        ? dispatch(a.updateAccount(formValues.id, formValues, u.xln(context, t.UPDATING_ACCOUNT)))
-        : dispatch(a.createAccount(formValues, u.xln(context, t.CREATING_ACCOUNT)))
+        ? dispatch(a.updateAccount(formValues.id, formValues, i18n.xln(context, i18n.UPDATING_ACCOUNT)))
+        : dispatch(a.createAccount(formValues, i18n.xln(context, i18n.CREATING_ACCOUNT)))
 
       promise
         .catch(errors => {
@@ -712,10 +712,10 @@ class _AccountForm extends u.ViewComponent {
         })
         .then(() => {props.onSubmitSuccess()})
         .then(() => dispatch(a.addNotification(formValues.id
-          ? u.xln(context, t.ACCOUNT_UPDATED)
-          : u.xln(context, t.ACCOUNT_CREATED)
+          ? i18n.xln(context, i18n.ACCOUNT_UPDATED)
+          : i18n.xln(context, i18n.ACCOUNT_CREATED)
         )))
-        .then(() => dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))))
+        .then(() => dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
     }
 
     this.onDelete = event => {
@@ -727,12 +727,12 @@ class _AccountForm extends u.ViewComponent {
       const {formValues} = state
 
       dispatch(a.addDialog(ConfirmDialog, {
-        question: u.xln(context, t.DELETE_ACCOUNT),
+        question: i18n.xln(context, i18n.DELETE_ACCOUNT),
         onConfirm: () => {
-          dispatch(a.deleteAccount(formValues.id, u.xln(context, t.DELETING_ACCOUNT)))
+          dispatch(a.deleteAccount(formValues.id, i18n.xln(context, i18n.DELETING_ACCOUNT)))
             .then(() => {props.onSubmitSuccess()})
-            .then(() => dispatch(a.addNotification(u.xln(context, t.ACCOUNT_DELETED))))
-            .then(() => dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))))
+            .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.ACCOUNT_DELETED))))
+            .then(() => dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
         },
       }))
     }
@@ -766,14 +766,14 @@ class _AccountForm extends u.ViewComponent {
               className='btn-transparent'
               onClick={onDelete}
               disabled={disabled}>
-              {u.xln(context, t.DELETE)}
+              {i18n.xln(context, i18n.DELETE)}
             </m.FakeButton>}
           </div>
           <button
             type='submit'
             className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
             disabled={disabled}>
-            {u.xln(context, t.SUBMIT)}
+            {i18n.xln(context, i18n.SUBMIT)}
           </button>
           <div className='flex-1' />
         </div>
@@ -808,7 +808,7 @@ class _AccountsList extends u.ViewComponent<AccountsListProps> {
       dispatch(a.addDialog(FormDialog, {
         form: AccountForm,
         formProps: {account},
-        title: u.xln(context, t.EDIT_ACCOUNT),
+        title: i18n.xln(context, i18n.EDIT_ACCOUNT),
       }))
     }
   }
@@ -818,11 +818,11 @@ class _AccountsList extends u.ViewComponent<AccountsListProps> {
 
     return () => {
       dispatch(a.addDialog(ConfirmDialog, {
-        question: u.xln(context, t.DELETE_ACCOUNT),
+        question: i18n.xln(context, i18n.DELETE_ACCOUNT),
         onConfirm: () => {
-          dispatch(a.deleteAccount(account.id, u.xln(context, t.DELETING_ACCOUNT)))
-            .then(() => dispatch(a.addNotification(u.xln(context, t.ACCOUNT_DELETED))))
-            .then(() => dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))))
+          dispatch(a.deleteAccount(account.id, i18n.xln(context, i18n.DELETING_ACCOUNT)))
+            .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.ACCOUNT_DELETED))))
+            .then(() => dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
         },
       }))
     }
@@ -840,7 +840,7 @@ class _AccountsList extends u.ViewComponent<AccountsListProps> {
       <div className='col-start-stretch gaps-v-2'>
         <div className='col-start-stretch gaps-v-0x25'>
           <div className={`row-end-center ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}>
-            <span className='fg-on-surface-pale'>{u.xln(context, t.BALANCE)}</span>
+            <span className='fg-on-surface-pale'>{i18n.xln(context, i18n.BALANCE)}</span>
           </div>
           {pending || !f.size(accounts) ? (
             <div className='col-start-stretch'>
@@ -895,7 +895,7 @@ class _PayeesPage extends u.ViewComponent {
       <Fab
         onClick={() => dispatch(a.addDialog(FormDialog, {
           form: PayeeForm,
-          title: u.xln(context, t.NEW_PAYEE),
+          title: i18n.xln(context, i18n.NEW_PAYEE),
         }))} />
     )
 
@@ -924,8 +924,8 @@ class _PayeeForm extends u.ViewComponent {
       const {formValues} = state
 
       const promise = formValues.id
-        ? dispatch(a.updatePayee(formValues.id, formValues, u.xln(context, t.UPDATING_PAYEE)))
-        : dispatch(a.createPayee(formValues, u.xln(context, t.CREATING_PAYEE)))
+        ? dispatch(a.updatePayee(formValues.id, formValues, i18n.xln(context, i18n.UPDATING_PAYEE)))
+        : dispatch(a.createPayee(formValues, i18n.xln(context, i18n.CREATING_PAYEE)))
 
       promise
         .catch(errors => {
@@ -934,10 +934,10 @@ class _PayeeForm extends u.ViewComponent {
         })
         .then(() => {props.onSubmitSuccess()})
         .then(() => dispatch(a.addNotification(formValues.id
-          ? u.xln(context, t.PAYEE_UPDATED)
-          : u.xln(context, t.PAYEE_CREATED)
+          ? i18n.xln(context, i18n.PAYEE_UPDATED)
+          : i18n.xln(context, i18n.PAYEE_CREATED)
         )))
-        .then(() => dispatch(a.fetchPayees(u.xln(context, t.FETCHING_PAYEES))))
+        .then(() => dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))))
     }
 
     this.onDelete = event => {
@@ -949,12 +949,12 @@ class _PayeeForm extends u.ViewComponent {
       const {formValues} = state
 
       dispatch(a.addDialog(ConfirmDialog, {
-        question: u.xln(context, t.DELETE_PAYEE),
+        question: i18n.xln(context, i18n.DELETE_PAYEE),
         onConfirm: () => {
-          dispatch(a.deletePayee(formValues.id, u.xln(context, t.DELETING_PAYEE)))
+          dispatch(a.deletePayee(formValues.id, i18n.xln(context, i18n.DELETING_PAYEE)))
             .then(() => {props.onSubmitSuccess()})
-            .then(() => dispatch(a.addNotification(u.xln(context, t.PAYEE_DELETED))))
-            .then(() => dispatch(a.fetchPayees(u.xln(context, t.FETCHING_PAYEES))))
+            .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.PAYEE_DELETED))))
+            .then(() => dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))))
         },
       }))
     }
@@ -988,14 +988,14 @@ class _PayeeForm extends u.ViewComponent {
               className='btn-transparent'
               onClick={onDelete}
               disabled={disabled}>
-              {u.xln(context, t.DELETE)}
+              {i18n.xln(context, i18n.DELETE)}
             </m.FakeButton>}
           </div>
           <button
             type='submit'
             className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
             disabled={disabled}>
-            {u.xln(context, t.SUBMIT)}
+            {i18n.xln(context, i18n.SUBMIT)}
           </button>
           <div className='flex-1' />
         </div>
@@ -1021,17 +1021,17 @@ class _PayeesList extends u.ViewComponent {
       dispatch(a.addDialog(FormDialog, {
         form: PayeeForm,
         formProps: {payee},
-        title: u.xln(context, t.EDIT_PAYEE),
+        title: i18n.xln(context, i18n.EDIT_PAYEE),
       }))
     }
 
     this.onDelete = payee => () => {
       dispatch(a.addDialog(ConfirmDialog, {
-        question: u.xln(context, t.DELETE_PAYEE),
+        question: i18n.xln(context, i18n.DELETE_PAYEE),
         onConfirm: () => {
-          dispatch(a.deletePayee(payee.id, u.xln(context, t.DELETING_PAYEE)))
-            .then(() => dispatch(a.addNotification(u.xln(context, t.PAYEE_DELETED))))
-            .then(() => dispatch(a.fetchPayees(u.xln(context, t.FETCHING_PAYEES))))
+          dispatch(a.deletePayee(payee.id, i18n.xln(context, i18n.DELETING_PAYEE)))
+            .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.PAYEE_DELETED))))
+            .then(() => dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))))
         },
       }))
     }
@@ -1049,7 +1049,7 @@ class _PayeesList extends u.ViewComponent {
       <div className='col-start-stretch gaps-v-2'>
         <div className='col-start-stretch gaps-v-0x25'>
           <div className={`row-end-center ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}>
-            <span className='fg-on-surface-pale'>{u.xln(context, t.DEBT)}</span>
+            <span className='fg-on-surface-pale'>{i18n.xln(context, i18n.DEBT)}</span>
           </div>
           {pending || !f.size(payees) ? (
             <div className='col-start-stretch'>
@@ -1110,7 +1110,7 @@ class _TransactionsPage extends u.ViewComponent {
       <Fab
         onClick={() => dispatch(a.addDialog(FormDialog, {
           form: TransactionForm,
-          title: u.xln(context, t.NEW_TRANSACTION),
+          title: i18n.xln(context, i18n.NEW_TRANSACTION),
         }))} />
     )
 
@@ -1147,8 +1147,8 @@ class _TransactionForm extends u.ViewComponent {
       const data = {...formValues, date: u.formatDate(formValues.date)}
 
       const promise = formValues.id
-        ? dispatch(a.updateTransaction(formValues.id, data, u.xln(context, t.UPDATING_TRANSACTION)))
-        : dispatch(a.createTransaction(data, u.xln(context, t.CREATING_TRANSACTION)))
+        ? dispatch(a.updateTransaction(formValues.id, data, i18n.xln(context, i18n.UPDATING_TRANSACTION)))
+        : dispatch(a.createTransaction(data, i18n.xln(context, i18n.CREATING_TRANSACTION)))
 
       promise
         .catch(errors => {
@@ -1157,10 +1157,10 @@ class _TransactionForm extends u.ViewComponent {
         })
         .then(() => {onSubmitSuccess()})
         .then(() => dispatch(a.addNotification(formValues.id
-            ? u.xln(context, t.TRANSACTION_UPDATED)
-            : u.xln(context, t.TRANSACTION_CREATED)
+            ? i18n.xln(context, i18n.TRANSACTION_UPDATED)
+            : i18n.xln(context, i18n.TRANSACTION_CREATED)
         )))
-        .then(() => dispatch(a.fetchTransactions(location, u.xln(context, t.FETCHING_TRANSACTIONS))))
+        .then(() => dispatch(a.fetchTransactions(location, i18n.xln(context, i18n.FETCHING_TRANSACTIONS))))
     }
 
     this.onDelete = event => {
@@ -1173,12 +1173,12 @@ class _TransactionForm extends u.ViewComponent {
       const {formValues} = state
 
       dispatch(a.addDialog(ConfirmDialog, {
-        question: u.xln(context, t.DELETE_TRANSACTION),
+        question: i18n.xln(context, i18n.DELETE_TRANSACTION),
         onConfirm: () => {
-          dispatch(a.deleteTransaction(formValues.id, u.xln(context, t.DELETING_TRANSACTION)))
+          dispatch(a.deleteTransaction(formValues.id, i18n.xln(context, i18n.DELETING_TRANSACTION)))
             .then(() => {onSubmitSuccess()})
-            .then(() => dispatch(a.addNotification(u.xln(context, t.TRANSACTION_DELETED))))
-            .then(() => dispatch(a.fetchTransactions(location, u.xln(context, t.FETCHING_TRANSACTIONS))))
+            .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.TRANSACTION_DELETED))))
+            .then(() => dispatch(a.fetchTransactions(location, i18n.xln(context, i18n.FETCHING_TRANSACTIONS))))
         },
       }))
     }
@@ -1260,7 +1260,7 @@ class _TransactionForm extends u.ViewComponent {
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormDateElement
             name='date'
-            label={u.xln(context, t.DATE)}
+            label={i18n.xln(context, i18n.DATE)}
             disabled={disabled}
             {...u.bindValue(this, ['formValues', 'date'])} />
           <G7FormLine>
@@ -1275,7 +1275,7 @@ class _TransactionForm extends u.ViewComponent {
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], OUTCOME)}
                     onUpdate={onTypeUpdated} />
-                  <span>{u.xln(context, t.OUTCOME)}</span>
+                  <span>{i18n.xln(context, i18n.OUTCOME)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
                   <Radio
@@ -1283,7 +1283,7 @@ class _TransactionForm extends u.ViewComponent {
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], INCOME)}
                     onUpdate={onTypeUpdated} />
-                  <span>{u.xln(context, t.INCOME)}</span>
+                  <span>{i18n.xln(context, i18n.INCOME)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
                   <Radio
@@ -1291,7 +1291,7 @@ class _TransactionForm extends u.ViewComponent {
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], TRANSFER)}
                     onUpdate={onTypeUpdated} />
-                  <span>{u.xln(context, t.TRANSFER)}</span>
+                  <span>{i18n.xln(context, i18n.TRANSFER)}</span>
                 </label>
               </div>
               <div className={isMobile ? 'col-start-stretch gaps-v-0x5' : 'row-start-center gaps-h-1'}>
@@ -1301,7 +1301,7 @@ class _TransactionForm extends u.ViewComponent {
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], LOAN)}
                     onUpdate={onTypeUpdated} />
-                  <span>{u.xln(context, t.I_LOANED)}</span>
+                  <span>{i18n.xln(context, i18n.I_LOANED)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
                   <Radio
@@ -1309,7 +1309,7 @@ class _TransactionForm extends u.ViewComponent {
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], BORROW)}
                     onUpdate={onTypeUpdated} />
-                  <span>{u.xln(context, t.I_BORROWED)}</span>
+                  <span>{i18n.xln(context, i18n.I_BORROWED)}</span>
                 </label>
               </div>
             </div>
@@ -1322,12 +1322,12 @@ class _TransactionForm extends u.ViewComponent {
               inputmode='numeric'
               step='0.01'
               name='outcomeAmount'
-              label={u.xln(context, t.AMOUNT)}
+              label={i18n.xln(context, i18n.AMOUNT)}
               disabled={disabled}
               {...u.bindValue(this, ['formValues', 'outcomeAmount'], u.parseNum)} />
             <FormSelectElement
               name='outcomeAccountId'
-              label={u.xln(context, t.ACCOUNT)}
+              label={i18n.xln(context, i18n.ACCOUNT)}
               disabled={disabled}
               {...u.bindValue(this, ['formValues', 'outcomeAccountId'])}>
               <option value='' />
@@ -1346,12 +1346,12 @@ class _TransactionForm extends u.ViewComponent {
               inputmode='numeric'
               step='0.01'
               name='incomeAmount'
-              label={u.xln(context, t.AMOUNT)}
+              label={i18n.xln(context, i18n.AMOUNT)}
               disabled={disabled}
               {...u.bindValue(this, ['formValues', 'incomeAmount'], u.parseNum)} />
             <FormSelectElement
               name='incomeAccountId'
-              label={u.xln(context, t.ACCOUNT)}
+              label={i18n.xln(context, i18n.ACCOUNT)}
               disabled={disabled}
               {...u.bindValue(this, ['formValues', 'incomeAccountId'])}>
               <option value='' />
@@ -1366,7 +1366,7 @@ class _TransactionForm extends u.ViewComponent {
           {!f.includes([OUTCOME, INCOME], type) ? null :
           <FormSelectElement
             name='categoryId'
-            label={u.xln(context, t.CATEGORY)}
+            label={i18n.xln(context, i18n.CATEGORY)}
             disabled={disabled}
             {...u.bindValue(this, ['formValues', 'categoryId'])}>
             <option value='' />
@@ -1380,7 +1380,7 @@ class _TransactionForm extends u.ViewComponent {
           {!f.includes([OUTCOME, INCOME, LOAN, BORROW], type) ? null :
           <FormSelectElement
             name='payeeId'
-            label={u.xln(context, t.PAYEE)}
+            label={i18n.xln(context, i18n.PAYEE)}
             disabled={disabled}
             {...u.bindValue(this, ['formValues', 'payeeId'])}>
             <option value='' />
@@ -1393,7 +1393,7 @@ class _TransactionForm extends u.ViewComponent {
 
           <FormTextElement
             name='comment'
-            label={u.xln(context, t.COMMENT)}
+            label={i18n.xln(context, i18n.COMMENT)}
             disabled={disabled}
             {...u.bindValue(this, ['formValues', 'comment'])} />
         </div>
@@ -1405,14 +1405,14 @@ class _TransactionForm extends u.ViewComponent {
               className='btn-transparent'
               onClick={onDelete}
               disabled={disabled}>
-              {u.xln(context, t.DELETE)}
+              {i18n.xln(context, i18n.DELETE)}
             </m.FakeButton>}
           </div>
           <button
             type='submit'
             className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
             disabled={disabled}>
-            {u.xln(context, t.SUBMIT)}
+            {i18n.xln(context, i18n.SUBMIT)}
           </button>
           <div className='flex-1' />
         </div>
@@ -1480,7 +1480,7 @@ class _Transaction extends u.ViewComponent {
       dispatch(a.addDialog(FormDialog, {
         form: TransactionForm,
         formProps: {transaction},
-        title: u.xln(context, t.EDIT_TRANSACTION),
+        title: i18n.xln(context, i18n.EDIT_TRANSACTION),
       }))
     }
 
@@ -1489,11 +1489,11 @@ class _Transaction extends u.ViewComponent {
       const {location} = props
 
       dispatch(a.addDialog(ConfirmDialog, {
-        question: u.xln(context, t.DELETE_TRANSACTION),
+        question: i18n.xln(context, i18n.DELETE_TRANSACTION),
         onConfirm: () => {
-          dispatch(a.deleteTransaction(transaction.id, u.xln(context, t.DELETING_TRANSACTION)))
-            .then(() => dispatch(a.addNotification(u.xln(context, t.TRANSACTION_DELETED))))
-            .then(() => dispatch(a.fetchTransactions(location, u.xln(context, t.FETCHING_TRANSACTIONS))))
+          dispatch(a.deleteTransaction(transaction.id, i18n.xln(context, i18n.DELETING_TRANSACTION)))
+            .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.TRANSACTION_DELETED))))
+            .then(() => dispatch(a.fetchTransactions(location, i18n.xln(context, i18n.FETCHING_TRANSACTIONS))))
         },
       }))
     }
@@ -1692,16 +1692,16 @@ class _TransactionsList extends u.ViewComponent {
             {pending ? null :
             <div className='gaps-h-0x5'>
               <span className='gaps-h-0x5'>
-                <span className='fg-on-surface-pale'>{u.xln(context, t.OUTCOME)}:</span>
+                <span className='fg-on-surface-pale'>{i18n.xln(context, i18n.OUTCOME)}:</span>
                 <span className='fg-error'>-{outcomeAmount}</span>
               </span>
               <span className='fg-on-surface-pale'>/</span>
               <span className='gaps-h-0x5'>
-                <span className='fg-on-surface-pale'>{u.xln(context, t.INCOME)}:</span>
+                <span className='fg-on-surface-pale'>{i18n.xln(context, i18n.INCOME)}:</span>
                 <span className='fg-success'>+{incomeAmount}</span>
               </span>
               <span className='fg-on-surface-pale'>
-                ({u.xln(context, t.WITHOUT_DEBTS_AND_TRANSFERS)})
+                ({i18n.xln(context, i18n.WITHOUT_DEBTS_AND_TRANSFERS)})
               </span>
             </div>}
           </div>
@@ -1944,7 +1944,7 @@ class FormDateElement extends u.ViewComponent {
             value={year == null ? '' : year}
             disabled={readOnly || disabled}>
             <option value=''>
-              {u.xln(context, t.YEAR)}:
+              {i18n.xln(context, i18n.YEAR)}:
             </option>
             {f.map(years, year => (
               <option
@@ -1960,13 +1960,13 @@ class FormDateElement extends u.ViewComponent {
             onChange={onMonthInput}
             disabled={readOnly || disabled}>
             <option value=''>
-              {u.xln(context, t.MONTH)}:
+              {i18n.xln(context, i18n.MONTH)}:
             </option>
             {f.map(months, ({value, key}) => (
               <option
                 key={key}
                 value={value}>
-                {u.xln(context, t[key.toUpperCase()])}
+                {i18n.xln(context, i18n[key.toUpperCase()])}
               </option>
             ))}
           </select>
@@ -1976,7 +1976,7 @@ class FormDateElement extends u.ViewComponent {
             onChange={onDayInput}
             disabled={readOnly || disabled}>
             <option value=''>
-              {u.xln(context, t.DAY)}:
+              {i18n.xln(context, i18n.DAY)}:
             </option>
             {f.map(days, day => (
               <option
@@ -2185,10 +2185,10 @@ class _ConfirmDialog extends u.ViewComponent {
             </p>
             <div className='row-center-center gaps-h-1'>
               <m.FakeButton className='btn-secondary' onClick={close}>
-                {cancelText || u.xln(context, t.CANCEL)}
+                {cancelText || i18n.xln(context, i18n.CANCEL)}
               </m.FakeButton>
               <m.FakeButton className='btn-primary' onClick={confirm}>
-                {confirmText || u.xln(context, t.OK)}
+                {confirmText || i18n.xln(context, i18n.OK)}
               </m.FakeButton>
             </div>
           </div>
@@ -2306,7 +2306,7 @@ class _Paginator extends u.ViewComponent {
         nextClassName='block'
         nextLinkClassName='btn-secondary row-center-center'
         hrefBuilder={hrefBulder}
-        ariaLabelBuilder={page => `${u.xln(context, t.PAGE)} ${page}`}
+        ariaLabelBuilder={page => `${i18n.xln(context, i18n.PAGE)} ${page}`}
       />
     )
   }
@@ -2381,19 +2381,19 @@ class _FiltersForm extends u.ViewComponent {
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
           <FormDateElement
             name='dateFrom'
-            label={u.xln(context, t.DATE_FROM)}
+            label={i18n.xln(context, i18n.DATE_FROM)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'dateFrom'])} />
 
           <FormDateElement
             name='dateTo'
-            label={u.xln(context, t.DATE_TO)}
+            label={i18n.xln(context, i18n.DATE_TO)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'dateTo'])} />
 
           <FormSelectElement
             name='accountId'
-            label={u.xln(context, t.ACCOUNT)}
+            label={i18n.xln(context, i18n.ACCOUNT)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'accountId'])}>
             <option value='' />
@@ -2406,7 +2406,7 @@ class _FiltersForm extends u.ViewComponent {
 
           <FormSelectElement
             name='categoryId'
-            label={u.xln(context, t.CATEGORY)}
+            label={i18n.xln(context, i18n.CATEGORY)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'categoryId'])}>
             <option value='' />
@@ -2419,7 +2419,7 @@ class _FiltersForm extends u.ViewComponent {
 
           <FormSelectElement
             name='payeeId'
-            label={u.xln(context, t.PAYEE)}
+            label={i18n.xln(context, i18n.PAYEE)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'payeeId'])}>
             <option value='' />
@@ -2432,7 +2432,7 @@ class _FiltersForm extends u.ViewComponent {
 
           <FormTextElement
             name='comment'
-            label={u.xln(context, t.COMMENT)}
+            label={i18n.xln(context, i18n.COMMENT)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'comment'])} />
         </div>
@@ -2443,14 +2443,14 @@ class _FiltersForm extends u.ViewComponent {
               type='reset'
               className='btn-transparent'
               disabled={pending || noFilters}>
-              {u.xln(context, t.RESET)}
+              {i18n.xln(context, i18n.RESET)}
             </button>
           </div>
           <button
             type='submit'
             className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
             disabled={pending}>
-            {u.xln(context, t.APPLY)}
+            {i18n.xln(context, i18n.APPLY)}
           </button>
           <div className='flex-1' />
         </div>
@@ -2483,9 +2483,9 @@ class _FiltersControls extends u.ViewComponent {
             disabled={pending || !f.size(transactions)}
             onClick={() => dispatch(a.addDialog(FormDialog, {
               form: FiltersForm,
-              title: u.xln(context, t.FILTERS),
+              title: i18n.xln(context, i18n.FILTERS),
             }))}>
-            {u.xln(context, t.FILTERS)}
+            {i18n.xln(context, i18n.FILTERS)}
           </m.FakeButton>
           {noFilters ? null :
           <m.FakeButton

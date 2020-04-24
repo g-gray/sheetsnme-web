@@ -6,7 +6,7 @@ import {BrowserRouter as Router, withRouter} from 'react-router-dom'
 import * as e from './env'
 import * as a from './actions'
 import * as u from './utils'
-import * as t from './translations'
+import * as i18n from './i18n'
 
 import {Routes} from './views/routes'
 
@@ -24,35 +24,35 @@ class _App extends u.ViewComponent {
 
   componentDidMount() {
     const {props} = this
-    const {dispatch, location, lang} = props
-    const context = {lang}
+    const {dispatch, location, isMobile, lang} = props
+    const context = {isMobile, lang}
 
-    dispatch(a.fetchUser(u.xln(context, t.FETCHING_USER)))
+    dispatch(a.fetchUser(i18n.xln(context, i18n.FETCHING_USER)))
       .then(() => Promise.all([
-        dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES))),
-        dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS))),
-        dispatch(a.fetchPayees(u.xln(context, t.FETCHING_PAYEES))),
+        dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))),
+        dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))),
+        dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))),
       ]))
-      .then(() => dispatch(a.fetchTransactions(location, u.xln(context, t.FETCHING_TRANSACTIONS))))
+      .then(() => dispatch(a.fetchTransactions(location, i18n.xln(context, i18n.FETCHING_TRANSACTIONS))))
 
     this.unlisten = this.props.history.listen(nextLocation => {
       if (new RegExp(`^/transactions`, 'g').test(nextLocation.pathname)) {
-        dispatch(a.fetchTransactions(nextLocation, u.xln(context, t.FETCHING_TRANSACTIONS)))
+        dispatch(a.fetchTransactions(nextLocation, i18n.xln(context, i18n.FETCHING_TRANSACTIONS)))
         return
       }
 
       if (new RegExp(`^/categories`, 'g').test(nextLocation.pathname)) {
-        dispatch(a.fetchCategories(u.xln(context, t.FETCHING_CATEGORIES)))
+        dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES)))
         return
       }
 
       if (new RegExp(`^/accounts`, 'g').test(nextLocation.pathname)) {
-        dispatch(a.fetchAccounts(u.xln(context, t.FETCHING_ACCOUNTS)))
+        dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS)))
         return
       }
 
       if (new RegExp(`^/payees`, 'g').test(nextLocation.pathname)) {
-        dispatch(a.fetchPayees(u.xln(context, t.FETCHING_PAYEES)))
+        dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES)))
       }
     })
   }
