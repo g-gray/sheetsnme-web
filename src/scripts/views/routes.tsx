@@ -3,8 +3,9 @@ import {Switch, Route, Redirect} from 'react-router-dom'
 
 import * as u from '../utils'
 import * as p from './pages'
+import * as m from './misc'
 
-export class Routes extends u.ViewComponent {
+export class Routes extends m.ViewComponent {
   render() {
     return (
       <Switch>

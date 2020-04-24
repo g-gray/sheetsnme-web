@@ -1,8 +1,34 @@
+import * as t from '../types'
+
 import React from 'react'
 import {connect} from 'react-redux'
 
+// @ts-ignore
 import * as f from 'fpx'
+
 import * as u from '../utils'
+import * as e from '../env'
+
+/**
+ * React-specific
+ */
+
+export class ViewComponent<P = any, S = any> extends React.Component<P, S> {
+  static contextType: React.Context<t.AppContext> = e.Context
+  // static contextType<t.AppContext> = Context
+
+  constructor(props: P, context?: t.AppContext) {
+    super(props, context)
+    // this.render = renderWithArg
+  }
+}
+
+// function renderWithArg() {
+//   // Minor convenience: pass self as argument.
+//   return this.constructor.prototype.render.call(this, this)
+// }
+
+
 
 /**
  * Dialog
@@ -19,7 +45,7 @@ export const GlobalDialog = connect(state => ({
   ))
 })
 
-export class Dialog extends u.ViewComponent {
+export class Dialog extends ViewComponent {
   componentDidMount() {
     const {props: {onEscape}} = this
     this.unsub = u.addEvent(window, 'keydown', event => {
@@ -45,14 +71,14 @@ export class Dialog extends u.ViewComponent {
   }
 }
 
-export class DialogOverlay extends u.ViewComponent {
+export class DialogOverlay extends ViewComponent {
   render() {
     const {props: {className: cls, ...props}} = this
     return <div className={`dialog-overlay ${cls || ''}`} {...props} />
   }
 }
 
-export class DialogScrollable extends u.ViewComponent {
+export class DialogScrollable extends ViewComponent {
   render() {
     const {props: {onClick, className: cls, children}} = this
     // This combination of element nesting and properties appears to satisfy
@@ -73,7 +99,7 @@ export class DialogScrollable extends u.ViewComponent {
   }
 }
 
-export class DialogCentered extends u.ViewComponent {
+export class DialogCentered extends ViewComponent {
   render () {
     const {children, ...props} = this.props
     return (
@@ -105,7 +131,7 @@ Usable for layouts unsupported by the native button element, such as a flex
 container. Doesn't work for submit buttons. Supports focus and keyboard
 activation. Should be the last resort; try <Button /> first.
 */
-export class FakeButton extends u.ViewComponent {
+export class FakeButton extends ViewComponent {
   constructor() {
     super(...arguments)
     this.onKeyPress = simulateEnterOnKeyPress.bind(undefined, this)
@@ -132,7 +158,7 @@ function simulateEnterOnKeyPress(view, event) {
   if (u.eventKeyCode(event) === u.KEY_NAMES_US.ENTER && onClick) onClick(event)
 }
 
-export class CircleUserPic extends u.ViewComponent {
+export class CircleUserPic extends ViewComponent {
   render() {
     const {props: {url, size, ...props}} = this
     const bgUrl = url || '/images/no-avatar-square.png'
@@ -164,7 +190,7 @@ a popup. Usage:
     ... content ...
   </Closer>
 */
-export class Closer extends u.ViewComponent {
+export class Closer extends ViewComponent {
   constructor() {
     super(...arguments)
 

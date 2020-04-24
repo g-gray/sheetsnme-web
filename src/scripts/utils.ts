@@ -11,27 +11,6 @@ import * as querystring from 'querystring'
 
 export const DEFAULT_PAGE_SIZE = 25
 
-/**
- * React-specific
- */
-
-export const Context: React.Context<t.AppContext> = React.createContext<t.AppContext>({})
-
-export class ViewComponent<P = any, S = any> extends React.Component<P, S> {
-  static contextType: React.Context<t.AppContext> = Context
-  // static contextType<t.AppContext> = Context
-
-  constructor(props: P, context?: t.AppContext) {
-    super(props, context)
-    // this.render = renderWithArg
-  }
-}
-
-// function renderWithArg() {
-//   // Minor convenience: pass self as argument.
-//   return this.constructor.prototype.render.call(this, this)
-// }
-
 export function findDomNode(instance: React.Component | Element): Element | Text | null {
   const element: Element | Text | null = ReactDom.findDOMNode(instance)
   if (element != null) f.validate(element, isElement)

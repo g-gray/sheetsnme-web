@@ -6,11 +6,13 @@ import * as f from 'fpx'
 import * as a from './actions'
 import * as u from './utils'
 
+import * as i18n from './i18n'
+
 const defaultDomState: t.DomState = {
   dialogs: [],
   notifications: [],
   geometry: geometry(window.innerWidth),
-  lang: u.QUERY_LANG || u.storageRead(['lang']) || u.DEFAULT_LANG,
+  lang: i18n.QUERY_LANG || u.storageRead(['lang']) || i18n.DEFAULT_LANG,
 }
 
 export const dom = (state = defaultDomState, action: a.DomActions) => {

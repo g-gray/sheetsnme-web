@@ -5,20 +5,20 @@ import {BrowserRouter as Router, withRouter} from 'react-router-dom'
 
 import * as e from './env'
 import * as a from './actions'
-import * as u from './utils'
 import * as i18n from './i18n'
 
+import * as m from './views/misc'
 import {Routes} from './views/routes'
 
-class _App extends u.ViewComponent {
+class _App extends m.ViewComponent {
   render() {
     const {props: {isMobile, lang}} = this
 
     return (
-      <u.Context.Provider value={{isMobile, lang}}>
+      <e.Context.Provider value={{isMobile, lang}}>
         {/* Force components render when language was changed */}
         <Routes key={lang} />
-      </u.Context.Provider>
+      </e.Context.Provider>
     )
   }
 

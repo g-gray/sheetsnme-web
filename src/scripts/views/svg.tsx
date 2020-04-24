@@ -1,7 +1,7 @@
 /* eslint-disable jsx-quotes, react/self-closing-comp */
 
 import * as React from 'react'
-import * as u from '../utils'
+import * as m from './misc'
 
 /*
 Source and credit: https://feathericons.com
@@ -44,7 +44,7 @@ export function svgProps({className: cls, ...props}) {
   }
 }
 
-export class Logo extends u.ViewComponent {
+export class Logo extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -56,7 +56,7 @@ export class Logo extends u.ViewComponent {
   }
 }
 
-export class Square extends u.ViewComponent {
+export class Square extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -67,7 +67,7 @@ export class Square extends u.ViewComponent {
   }
 }
 
-export class CheckSquare extends u.ViewComponent {
+export class CheckSquare extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -79,7 +79,7 @@ export class CheckSquare extends u.ViewComponent {
   }
 }
 
-export class Check extends u.ViewComponent {
+export class Check extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -90,7 +90,7 @@ export class Check extends u.ViewComponent {
   }
 }
 
-export class Star extends u.ViewComponent {
+export class Star extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -101,7 +101,7 @@ export class Star extends u.ViewComponent {
   }
 }
 
-export class MapPin extends u.ViewComponent {
+export class MapPin extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -113,7 +113,7 @@ export class MapPin extends u.ViewComponent {
   }
 }
 
-export class Clock extends u.ViewComponent {
+export class Clock extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -125,7 +125,7 @@ export class Clock extends u.ViewComponent {
   }
 }
 
-export class ChevronDown extends u.ViewComponent {
+export class ChevronDown extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -136,7 +136,7 @@ export class ChevronDown extends u.ViewComponent {
   }
 }
 
-export class ChevronRight extends u.ViewComponent {
+export class ChevronRight extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -147,7 +147,7 @@ export class ChevronRight extends u.ViewComponent {
   }
 }
 
-export class ChevronLeft extends u.ViewComponent {
+export class ChevronLeft extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -158,7 +158,7 @@ export class ChevronLeft extends u.ViewComponent {
   }
 }
 
-export class ChevronsRight extends u.ViewComponent {
+export class ChevronsRight extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -170,7 +170,7 @@ export class ChevronsRight extends u.ViewComponent {
   }
 }
 
-export class CornerUpLeft extends u.ViewComponent {
+export class CornerUpLeft extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -182,7 +182,7 @@ export class CornerUpLeft extends u.ViewComponent {
   }
 }
 
-export class Paperclip extends u.ViewComponent {
+export class Paperclip extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -193,7 +193,7 @@ export class Paperclip extends u.ViewComponent {
   }
 }
 
-export class LogOut extends u.ViewComponent {
+export class LogOut extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -206,7 +206,7 @@ export class LogOut extends u.ViewComponent {
   }
 }
 
-export class LogIn extends u.ViewComponent {
+export class LogIn extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -219,7 +219,7 @@ export class LogIn extends u.ViewComponent {
   }
 }
 
-export class Female extends u.ViewComponent {
+export class Female extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -232,7 +232,7 @@ export class Female extends u.ViewComponent {
   }
 }
 
-export class Male extends u.ViewComponent {
+export class Male extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -246,7 +246,7 @@ export class Male extends u.ViewComponent {
   }
 }
 
-export class MaleFemale extends u.ViewComponent {
+export class MaleFemale extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -262,7 +262,7 @@ export class MaleFemale extends u.ViewComponent {
   }
 }
 
-export class Case extends u.ViewComponent {
+export class Case extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -274,7 +274,7 @@ export class Case extends u.ViewComponent {
   }
 }
 
-export class Mail extends u.ViewComponent {
+export class Mail extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -286,7 +286,7 @@ export class Mail extends u.ViewComponent {
   }
 }
 
-export class Phone extends u.ViewComponent {
+export class Phone extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -297,7 +297,7 @@ export class Phone extends u.ViewComponent {
   }
 }
 
-export class X extends u.ViewComponent {
+export class X extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -309,7 +309,7 @@ export class X extends u.ViewComponent {
   }
 }
 
-export class XCircle extends u.ViewComponent {
+export class XCircle extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -322,7 +322,7 @@ export class XCircle extends u.ViewComponent {
   }
 }
 
-export class Filter extends u.ViewComponent {
+export class Filter extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -333,7 +333,7 @@ export class Filter extends u.ViewComponent {
   }
 }
 
-export class Upload extends u.ViewComponent {
+export class Upload extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -346,7 +346,7 @@ export class Upload extends u.ViewComponent {
   }
 }
 
-export class Globe extends u.ViewComponent {
+export class Globe extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -359,7 +359,7 @@ export class Globe extends u.ViewComponent {
   }
 }
 
-export class BarChart extends u.ViewComponent {
+export class BarChart extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -372,7 +372,7 @@ export class BarChart extends u.ViewComponent {
   }
 }
 
-export class Eye extends u.ViewComponent {
+export class Eye extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -384,7 +384,7 @@ export class Eye extends u.ViewComponent {
   }
 }
 
-export class Users extends u.ViewComponent {
+export class Users extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -398,7 +398,7 @@ export class Users extends u.ViewComponent {
   }
 }
 
-export class User extends u.ViewComponent {
+export class User extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -410,7 +410,7 @@ export class User extends u.ViewComponent {
   }
 }
 
-export class UserPlus extends u.ViewComponent {
+export class UserPlus extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -424,7 +424,7 @@ export class UserPlus extends u.ViewComponent {
   }
 }
 
-export class Settings extends u.ViewComponent {
+export class Settings extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -436,7 +436,7 @@ export class Settings extends u.ViewComponent {
   }
 }
 
-export class Camera extends u.ViewComponent {
+export class Camera extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -448,7 +448,7 @@ export class Camera extends u.ViewComponent {
   }
 }
 
-export class Heart extends u.ViewComponent {
+export class Heart extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -459,7 +459,7 @@ export class Heart extends u.ViewComponent {
   }
 }
 
-export class PieChart extends u.ViewComponent {
+export class PieChart extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -471,7 +471,7 @@ export class PieChart extends u.ViewComponent {
   }
 }
 
-export class Hash extends u.ViewComponent {
+export class Hash extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -485,7 +485,7 @@ export class Hash extends u.ViewComponent {
   }
 }
 
-export class Search extends u.ViewComponent {
+export class Search extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -497,7 +497,7 @@ export class Search extends u.ViewComponent {
   }
 }
 
-export class Bell extends u.ViewComponent {
+export class Bell extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -508,7 +508,7 @@ export class Bell extends u.ViewComponent {
   }
 }
 
-export class Home extends u.ViewComponent {
+export class Home extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -520,7 +520,7 @@ export class Home extends u.ViewComponent {
   }
 }
 
-export class Cast extends u.ViewComponent {
+export class Cast extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -532,7 +532,7 @@ export class Cast extends u.ViewComponent {
   }
 }
 
-export class List extends u.ViewComponent {
+export class List extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -548,7 +548,7 @@ export class List extends u.ViewComponent {
   }
 }
 
-export class MessageSquare extends u.ViewComponent {
+export class MessageSquare extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -559,7 +559,7 @@ export class MessageSquare extends u.ViewComponent {
   }
 }
 
-export class MessageCircle extends u.ViewComponent {
+export class MessageCircle extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -570,7 +570,7 @@ export class MessageCircle extends u.ViewComponent {
   }
 }
 
-export class Share extends u.ViewComponent {
+export class Share extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -583,7 +583,7 @@ export class Share extends u.ViewComponent {
   }
 }
 
-export class MoreHorizontal extends u.ViewComponent {
+export class MoreHorizontal extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -596,7 +596,7 @@ export class MoreHorizontal extends u.ViewComponent {
   }
 }
 
-export class MoreVertical extends u.ViewComponent {
+export class MoreVertical extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -609,7 +609,7 @@ export class MoreVertical extends u.ViewComponent {
   }
 }
 
-export class Activity extends u.ViewComponent {
+export class Activity extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -620,7 +620,7 @@ export class Activity extends u.ViewComponent {
   }
 }
 
-export class Aperture extends u.ViewComponent {
+export class Aperture extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -637,7 +637,7 @@ export class Aperture extends u.ViewComponent {
   }
 }
 
-export class Plus extends u.ViewComponent {
+export class Plus extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -649,7 +649,7 @@ export class Plus extends u.ViewComponent {
   }
 }
 
-export class Minus extends u.ViewComponent {
+export class Minus extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -660,7 +660,7 @@ export class Minus extends u.ViewComponent {
   }
 }
 
-export class Send extends u.ViewComponent {
+export class Send extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -672,7 +672,7 @@ export class Send extends u.ViewComponent {
   }
 }
 
-export class Cog extends u.ViewComponent {
+export class Cog extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -684,7 +684,7 @@ export class Cog extends u.ViewComponent {
   }
 }
 
-export class Layers extends u.ViewComponent {
+export class Layers extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -697,7 +697,7 @@ export class Layers extends u.ViewComponent {
   }
 }
 
-export class Info extends u.ViewComponent {
+export class Info extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -710,7 +710,7 @@ export class Info extends u.ViewComponent {
   }
 }
 
-export class BookOpen extends u.ViewComponent {
+export class BookOpen extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -722,7 +722,7 @@ export class BookOpen extends u.ViewComponent {
   }
 }
 
-export class Menu extends u.ViewComponent {
+export class Menu extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -735,7 +735,7 @@ export class Menu extends u.ViewComponent {
   }
 }
 
-export class Edit extends u.ViewComponent {
+export class Edit extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -747,7 +747,7 @@ export class Edit extends u.ViewComponent {
   }
 }
 
-export class CreditCard extends u.ViewComponent {
+export class CreditCard extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -759,7 +759,7 @@ export class CreditCard extends u.ViewComponent {
   }
 }
 
-export class Tag extends u.ViewComponent {
+export class Tag extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -771,7 +771,7 @@ export class Tag extends u.ViewComponent {
   }
 }
 
-export class ArrowDown extends u.ViewComponent {
+export class ArrowDown extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -783,7 +783,7 @@ export class ArrowDown extends u.ViewComponent {
   }
 }
 
-export class ArrowLeft extends u.ViewComponent {
+export class ArrowLeft extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -795,7 +795,7 @@ export class ArrowLeft extends u.ViewComponent {
   }
 }
 
-export class ArrowRight extends u.ViewComponent {
+export class ArrowRight extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -807,7 +807,7 @@ export class ArrowRight extends u.ViewComponent {
   }
 }
 
-export class Trash extends u.ViewComponent {
+export class Trash extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -819,7 +819,7 @@ export class Trash extends u.ViewComponent {
   }
 }
 
-export class Trash2 extends u.ViewComponent {
+export class Trash2 extends m.ViewComponent {
   render() {
     const {props} = this
     return (
@@ -833,7 +833,7 @@ export class Trash2 extends u.ViewComponent {
   }
 }
 
-export class Repeat extends u.ViewComponent {
+export class Repeat extends m.ViewComponent {
   render() {
     const {props} = this
     return (

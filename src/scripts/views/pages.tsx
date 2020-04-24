@@ -20,7 +20,7 @@ import * as i18n from '../i18n'
  * Layouts
  */
 
-class PageLayout extends u.ViewComponent {
+class PageLayout extends m.ViewComponent {
   render() {
     const {
       props: {className: cls, style, children},
@@ -45,7 +45,7 @@ class PageLayout extends u.ViewComponent {
   }
 }
 
-class _MobilePageLayout extends u.ViewComponent {
+class _MobilePageLayout extends m.ViewComponent {
   render() {
     const {
       props: {className: cls, style, children, action, dialogs},
@@ -81,7 +81,7 @@ const MobilePageLayout = connect(state => ({
  * Navigation
  */
 
-class Logo extends u.ViewComponent {
+class Logo extends m.ViewComponent {
   render() {
     return (
       <s.Logo className='fg-surface' style={{width: '2rem', height: '2rem'}} />
@@ -89,7 +89,7 @@ class Logo extends u.ViewComponent {
   }
 }
 
-class _Navbar extends u.ViewComponent {
+class _Navbar extends m.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
 
@@ -153,7 +153,7 @@ class _Navbar extends u.ViewComponent {
 
 const Navbar = connect()(_Navbar)
 
-class _UserMenu extends u.ViewComponent {
+class _UserMenu extends m.ViewComponent {
   constructor() {
     super(...arguments)
 
@@ -227,7 +227,7 @@ const UserMenu = connect(state => ({
   user: state.net.user,
 }))(_UserMenu)
 
-class _MobileMenu extends u.ViewComponent {
+class _MobileMenu extends m.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
 
@@ -256,7 +256,7 @@ class _MobileMenu extends u.ViewComponent {
 
 const MobileMenu = connect()(_MobileMenu)
 
-class Drawer extends u.ViewComponent {
+class Drawer extends m.ViewComponent {
   render() {
     const {context} = this
 
@@ -306,7 +306,7 @@ class Drawer extends u.ViewComponent {
  * Notifications
  */
 
-class _Notifications extends u.ViewComponent {
+class _Notifications extends m.ViewComponent {
   componentWillUnmount() {
     if (this.timeoutId) clearTimeout(this.timeoutId)
   }
@@ -341,7 +341,7 @@ const Notifications = connect(state => ({
   notifications: state.dom.notifications,
 }))(_Notifications)
 
-class Snackbar extends u.ViewComponent {
+class Snackbar extends m.ViewComponent {
   render() {
     const {props: {children, action}} = this
 
@@ -366,7 +366,7 @@ class Snackbar extends u.ViewComponent {
  * Entities
  */
 
-class EntityPlaceholder extends u.ViewComponent {
+class EntityPlaceholder extends m.ViewComponent {
   render() {
     const {context} = this
 
@@ -395,7 +395,7 @@ class EntityPlaceholder extends u.ViewComponent {
   }
 }
 
-class EntityItem extends u.ViewComponent {
+class EntityItem extends m.ViewComponent {
   constructor({onOpen}) {
     super(...arguments)
     this.actionsRef = React.createRef()
@@ -450,7 +450,7 @@ class EntityItem extends u.ViewComponent {
   }
 }
 
-class Placeholder extends u.ViewComponent {
+class Placeholder extends m.ViewComponent {
   render() {
     const {props: {style, className: cls}} = this
 
@@ -470,7 +470,7 @@ class Placeholder extends u.ViewComponent {
  * Categories
  */
 
-class _CategoriesPage extends u.ViewComponent {
+class _CategoriesPage extends m.ViewComponent {
   render() {
     const {
       context,
@@ -495,7 +495,7 @@ class _CategoriesPage extends u.ViewComponent {
 
 export const CategoriesPage = connect()(_CategoriesPage)
 
-class _CategoryForm extends u.ViewComponent {
+class _CategoryForm extends m.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
 
@@ -597,7 +597,7 @@ const CategoryForm = connect(state => ({
   pending: !f.isEmpty(state.net.pending),
 }))(_CategoryForm)
 
-class _CategoriesList extends u.ViewComponent {
+class _CategoriesList extends m.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
 
@@ -662,7 +662,7 @@ const CategoriesList = connect(state => ({
  * Accounts
  */
 
-class _AccountsPage extends u.ViewComponent {
+class _AccountsPage extends m.ViewComponent {
   render() {
     const {
       context,
@@ -687,7 +687,7 @@ class _AccountsPage extends u.ViewComponent {
 
 export const AccountsPage = connect()(_AccountsPage)
 
-class _AccountForm extends u.ViewComponent {
+class _AccountForm extends m.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
 
@@ -796,7 +796,7 @@ type AccountsListStateProps = {
 
 type AccountsListProps = AccountsListStateProps
 
-class _AccountsList extends u.ViewComponent<AccountsListProps> {
+class _AccountsList extends m.ViewComponent<AccountsListProps> {
   constructor(props: AccountsListProps) {
     super(props)
   }
@@ -884,7 +884,7 @@ const AccountsList = connect<AccountsListStateProps, {}, {}, t.AppState>((state:
  * Payees
  */
 
-class _PayeesPage extends u.ViewComponent {
+class _PayeesPage extends m.ViewComponent {
   render() {
     const {
       context,
@@ -909,7 +909,7 @@ class _PayeesPage extends u.ViewComponent {
 
 export const PayeesPage = connect()(_PayeesPage)
 
-class _PayeeForm extends u.ViewComponent {
+class _PayeeForm extends m.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
 
@@ -1011,7 +1011,7 @@ const PayeeForm = connect(state => ({
   pending: !f.isEmpty(state.net.pending),
 }))(_PayeeForm)
 
-class _PayeesList extends u.ViewComponent {
+class _PayeesList extends m.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
 
@@ -1099,7 +1099,7 @@ const PayeesList = connect(state => {
  * Transactions
  */
 
-class _TransactionsPage extends u.ViewComponent {
+class _TransactionsPage extends m.ViewComponent {
   render() {
     const {
       context,
@@ -1130,7 +1130,7 @@ const TRANSFER = 'TRANSFER'
 const LOAN     = 'LOAN'
 const BORROW   = 'BORROW'
 
-class _TransactionForm extends u.ViewComponent {
+class _TransactionForm extends m.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
 
@@ -1431,7 +1431,7 @@ const TransactionForm = withRouter(connect(state => ({
   pending: !f.isEmpty(state.net.pending),
 }))(_TransactionForm))
 
-class TransactionPlaceholder extends u.ViewComponent {
+class TransactionPlaceholder extends m.ViewComponent {
   render() {
     const {context} = this
 
@@ -1466,7 +1466,7 @@ class TransactionPlaceholder extends u.ViewComponent {
   }
 }
 
-class _Transaction extends u.ViewComponent {
+class _Transaction extends m.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
     this.actionsRef = React.createRef()
@@ -1546,7 +1546,7 @@ class _Transaction extends u.ViewComponent {
 
 const Transaction = withRouter(connect()(_Transaction))
 
-class TransactionMeta extends u.ViewComponent {
+class TransactionMeta extends m.ViewComponent {
   render() {
     const {
       context,
@@ -1568,7 +1568,7 @@ class TransactionMeta extends u.ViewComponent {
   }
 }
 
-class TransactionIcon extends u.ViewComponent {
+class TransactionIcon extends m.ViewComponent {
   render() {
     const {
       props: {transaction},
@@ -1600,7 +1600,7 @@ class TransactionIcon extends u.ViewComponent {
   }
 }
 
-class TransactionAmount extends u.ViewComponent {
+class TransactionAmount extends m.ViewComponent {
   render() {
     const {
       props: {transaction},
@@ -1622,7 +1622,7 @@ class TransactionAmount extends u.ViewComponent {
   }
 }
 
-class _TransactionAccount extends u.ViewComponent {
+class _TransactionAccount extends m.ViewComponent {
   render() {
     const {
       props: {transaction, accountsById},
@@ -1648,7 +1648,7 @@ const TransactionAccount = connect(state => ({
   accountsById: state.net.accountsById,
 }))(_TransactionAccount)
 
-class _TransactionOrigin extends u.ViewComponent {
+class _TransactionOrigin extends m.ViewComponent {
   render() {
     const {
       props: {transaction, categoriesById, payeesById},
@@ -1676,7 +1676,7 @@ const TransactionOrigin = connect(state => ({
   payeesById: state.net.payeesById,
 }))(_TransactionOrigin)
 
-class _TransactionsList extends u.ViewComponent {
+class _TransactionsList extends m.ViewComponent {
   render() {
     const {
       context,
@@ -1742,7 +1742,7 @@ const TransactionsList = withRouter(connect(state => {
  * Forms
  */
 
-class G7FormLine extends u.ViewComponent {
+class G7FormLine extends m.ViewComponent {
   render() {
     const {
       context,
@@ -1773,7 +1773,7 @@ class G7FormLine extends u.ViewComponent {
   }
 }
 
-class FormLabel extends u.ViewComponent {
+class FormLabel extends m.ViewComponent {
   render() {
     const {
       context,
@@ -1796,7 +1796,7 @@ class FormLabel extends u.ViewComponent {
   }
 }
 
-class FormTextElement extends u.ViewComponent {
+class FormTextElement extends m.ViewComponent {
   constructor({onUpdate}) {
     super(...arguments)
 
@@ -1834,7 +1834,7 @@ class FormTextElement extends u.ViewComponent {
   }
 }
 
-class FormDateElement extends u.ViewComponent {
+class FormDateElement extends m.ViewComponent {
   constructor() {
     super(...arguments)
     const {props: {onUpdate}} = this
@@ -1992,7 +1992,7 @@ class FormDateElement extends u.ViewComponent {
   }
 }
 
-class FormSelectElement extends u.ViewComponent {
+class FormSelectElement extends m.ViewComponent {
   constructor({onUpdate}) {
     super(...arguments)
     this.onChange = ({target: {value}}) => {
@@ -2029,7 +2029,7 @@ class FormSelectElement extends u.ViewComponent {
   }
 }
 
-class FormErrors extends u.ViewComponent {
+class FormErrors extends m.ViewComponent {
   render() {
     const {props: {errors}} = this
 
@@ -2043,7 +2043,7 @@ class FormErrors extends u.ViewComponent {
   }
 }
 
-class Radio extends u.ViewComponent {
+class Radio extends m.ViewComponent {
   constructor({onUpdate}) {
     super(...arguments)
     this.onChange = ({target: {value}}) => {
@@ -2084,7 +2084,7 @@ class Radio extends u.ViewComponent {
  * Dialogs
  */
 
-class _FormDialog extends u.ViewComponent {
+class _FormDialog extends m.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
 
@@ -2151,7 +2151,7 @@ class _FormDialog extends u.ViewComponent {
 
 const FormDialog = connect()(_FormDialog)
 
-class _ConfirmDialog extends u.ViewComponent {
+class _ConfirmDialog extends m.ViewComponent {
   constructor({dispatch}) {
     super(...arguments)
 
@@ -2206,7 +2206,7 @@ const ConfirmDialog = connect()(_ConfirmDialog)
  * Misc
  */
 
-class ListPage extends u.ViewComponent {
+class ListPage extends m.ViewComponent {
   render() {
     const {
       context,
@@ -2236,7 +2236,7 @@ class ListPage extends u.ViewComponent {
   }
 }
 
-class _Paginator extends u.ViewComponent {
+class _Paginator extends m.ViewComponent {
   constructor() {
     super(...arguments)
 
@@ -2314,7 +2314,7 @@ class _Paginator extends u.ViewComponent {
 
 const Paginator = withRouter(_Paginator)
 
-class _FiltersForm extends u.ViewComponent {
+class _FiltersForm extends m.ViewComponent {
   constructor() {
     super(...arguments)
 
@@ -2466,7 +2466,7 @@ const FiltersForm = withRouter(connect(state => ({
   pending: !f.isEmpty(state.net.pending),
 }))(_FiltersForm))
 
-class _FiltersControls extends u.ViewComponent {
+class _FiltersControls extends m.ViewComponent {
   render() {
     const {
       context,
@@ -2533,7 +2533,7 @@ function resetFilters(history, location) {
   })}`)
 }
 
-class Fab extends u.ViewComponent {
+class Fab extends m.ViewComponent {
   render() {
     const {props: {className: cls, ...props}} = this
 
@@ -2550,7 +2550,7 @@ class Fab extends u.ViewComponent {
 }
 
 // TODO Unused. Candidate to delete
-class _ActionsMenu extends u.ViewComponent {
+class _ActionsMenu extends m.ViewComponent {
   constructor() {
     super(...arguments)
 
@@ -2595,7 +2595,7 @@ class _ActionsMenu extends u.ViewComponent {
   }
 }
 
-export class Page404 extends u.ViewComponent {
+export class Page404 extends m.ViewComponent {
   render() {
     const {context} = this
 
