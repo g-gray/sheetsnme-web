@@ -11,8 +11,6 @@ export const RECEIVE_CATEGORIES     = 'RECEIVE_CATEGORIES'
 export const RECEIVE_PAYEES         = 'RECEIVE_PAYEES'
 export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
 
-export const REQUEST_START          = 'REQUEST_START'
-export const REQUEST_END            = 'REQUEST_END'
 
 
 export type DomActions =
@@ -152,6 +150,9 @@ function trackRequest<P>(opts: {message: string, requestName: string, promise: P
     }
 }
 
+
+export const REQUEST_START = 'REQUEST_START'
+
 export interface RequestStartAction extends t.AppAction {
   type: typeof REQUEST_START,
   payload: {
@@ -165,6 +166,9 @@ const requestStart = (requestName: string): RequestStartAction => ({
     requestName,
   },
 })
+
+
+export const REQUEST_END = 'REQUEST_END'
 
 export interface RequestEndAction extends t.AppAction {
   type: typeof REQUEST_END,
