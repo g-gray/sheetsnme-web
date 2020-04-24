@@ -37,11 +37,18 @@ export type AppState = {
  */
 
 export type DomState = {
-  dialogs: [],
+  dialogs: DialogList,
   notifications: NotificationList,
   geometry: Geometry,
   lang: LANG,
 }
+
+export type Dialog<P> = {
+  dialog: React.Component<P>,
+  dialogProps?: P,
+}
+
+export type DialogList = Dialog<any>[]
 
 export type Notification = {
   text: string,
@@ -49,11 +56,11 @@ export type Notification = {
   time: number,
 }
 
+export type NotificationList = Notification[]
+
 export type Geometry = {
   isMobile: boolean,
 }
-
-export type NotificationList = Notification[]
 
 export enum LANG {
   en = 'en',
@@ -115,7 +122,7 @@ export type AppThunkDispatch = ThunkDispatch<
 export interface AppDispatch extends Dispatch<AppAction> {}
 
 export interface AppAction extends Action<string> {
-  payload: any,
+  payload?: any,
 }
 
 

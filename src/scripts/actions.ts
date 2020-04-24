@@ -3,9 +3,6 @@ import * as t from './types'
 import * as u from './utils'
 import * as n from './net'
 
-export const ADD_DIALOG             = 'ADD_DIALOG'
-export const REMOVE_DIALOG          = 'REMOVE_DIALOG'
-
 export const RECEIVE_USER           = 'RECEIVE_USER'
 export const RECEIVE_CATEGORIES     = 'RECEIVE_CATEGORIES'
 export const RECEIVE_PAYEES         = 'RECEIVE_PAYEES'
@@ -17,7 +14,9 @@ export type DomActions =
   AddNotification |
   RemoveNotification |
   Resize |
-  NextLang
+  NextLang |
+  AddDialog |
+  RemoveDialog
 
 
 
@@ -40,16 +39,38 @@ export function resize(width: number): Resize {
 }
 
 
+export const ADD_DIALOG = 'ADD_DIALOG'
 
-export const addDialog = (dialog, props) => ({
-  type: ADD_DIALOG,
-  dialog,
-  props,
-})
+export interface AddDialog<P = any> extends t.AppAction {
+  type: typeof ADD_DIALOG,
+  payload: {
+    dialog: t.Dialog<P>,
+    dialogProps?: P,
+  },
+}
 
-export const removeDialog = () => ({
-  type: REMOVE_DIALOG,
-})
+export function addDialog<P>(dialog: t.Dialog<P>, dialogProps?: P): AddDialog<P> {
+  return {
+    type: ADD_DIALOG,
+    payload: {
+      dialog,
+      dialogProps,
+    },
+  }
+}
+
+
+export const REMOVE_DIALOG = 'REMOVE_DIALOG'
+
+export interface RemoveDialog extends t.AppAction {
+  type: typeof REMOVE_DIALOG,
+}
+
+export function removeDialog(): RemoveDialog {
+  return {
+    type: REMOVE_DIALOG,
+  }
+}
 
 
 

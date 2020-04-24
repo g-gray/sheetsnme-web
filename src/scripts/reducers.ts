@@ -1,7 +1,7 @@
 import * as t from './types'
 
 // @ts-ignore
-import * as f from 'fpx'
+import * as fpx from 'fpx'
 
 import * as a from './actions'
 import * as u from './utils'
@@ -17,19 +17,24 @@ const defaultDomState: t.DomState = {
 
 export const dom = (state = defaultDomState, action: a.DomActions) => {
   switch (action.type) {
-    case a.ADD_DIALOG:
+    case a.ADD_DIALOG: {
+      const {dialog, dialogProps} = action.payload
       return {
         ...state,
-        dialogs: f.append(state.dialogs, {
-          dialog: action.dialog,
-          dialogProps: action.props,
+        dialogs: fpx.append(state.dialogs, {
+          dialog,
+          dialogProps,
         }),
       }
-    case a.REMOVE_DIALOG:
+    }
+
+    case a.REMOVE_DIALOG: {
       return {
         ...state,
-        dialogs: f.init(state.dialogs),
+        dialogs: fpx.init(state.dialogs),
       }
+    }
+
 
     case a.ADD_NOTIFICATION: {
       const {text, timeout, time} = action.payload
@@ -45,29 +50,38 @@ export const dom = (state = defaultDomState, action: a.DomActions) => {
         ],
       }
     }
+
     case a.REMOVE_NOTIFICATION: {
+      const {time} = action.payload
       return {
         ...state,
-        notifications: f.filter(
+        notifications: fpx.filter(
           state.notifications,
           (notification: t.Notification) => {
-            return notification.time !== action.payload.time
+            return notification.time !== time
           }
         ),
       }
     }
 
-    case a.RESIZE:
-      return {
-        ...state,
-        geometry: geometry(action.payload.width),
-      }
 
-    case a.NEXT_LANG:
+    case a.RESIZE: {
+      const {width} = action.payload
       return {
         ...state,
-        lang: action.payload.lang,
+        geometry: geometry(width),
       }
+    }
+
+
+    case a.NEXT_LANG: {
+      const {lang} = action.payload
+      return {
+        ...state,
+        lang,
+      }
+    }
+
 
     default:
       return state
@@ -107,7 +121,7 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
       return {
         ...state,
         categories: action.categories,
-        categoriesById: f.keyBy(action.categories, ({id}) => id),
+        categoriesById: fpx.keyBy(action.categories, ({id}) => id),
       }
 
     case a.RECEIVE_ACCOUNTS: {
@@ -115,7 +129,7 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
       return {
         ...state,
         accounts,
-        accountsById: f.keyBy(accounts, (account: t.AccountRes) => account.id),
+        accountsById: fpx.keyBy(accounts, (account: t.AccountRes) => account.id),
       }
     }
 
@@ -123,14 +137,14 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
       return {
         ...state,
         payees: action.payees,
-        payeesById: f.keyBy(action.payees, ({id}) => id),
+        payeesById: fpx.keyBy(action.payees, ({id}) => id),
       }
 
     case a.RECEIVE_TRANSACTIONS:
       return {
         ...state,
         transactions: action.transactions,
-        transactionsById: f.keyBy(action.transactions.items, ({id}) => id),
+        transactionsById: fpx.keyBy(action.transactions.items, ({id}) => id),
       }
 
     case a.REQUEST_START:
@@ -144,7 +158,7 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
     case a.REQUEST_END:
       return {
         ...state,
-        pending: f.omitBy(
+        pending: fpx.omitBy(
           state.pending,
           (__: boolean, requestName: string) => {
             return requestName === action.payload.requestName
