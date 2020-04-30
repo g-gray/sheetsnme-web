@@ -668,7 +668,15 @@ const CategoriesList = connect(state => ({
  * Accounts
  */
 
-class _AccountsPage extends m.ViewComponent {
+type AccountPageStateProps = {}
+
+type AccountPageOwnProps = {}
+
+type AccountPageProps = AccountPageStateProps & AccountPageOwnProps
+
+type AccountPageState = {}
+
+class _AccountsPage extends m.ViewComponent<AccountPageProps, AccountPageState> {
   render() {
     const {
       context,
@@ -691,7 +699,7 @@ class _AccountsPage extends m.ViewComponent {
   }
 }
 
-export const AccountsPage = connect()(_AccountsPage)
+export const AccountsPage = connect<AccountPageProps, {}, AccountPageOwnProps, t.AppState>()(_AccountsPage)
 
 
 type AccountFormStateProps = {
