@@ -693,55 +693,77 @@ class _AccountsPage extends m.ViewComponent {
 
 export const AccountsPage = connect()(_AccountsPage)
 
-class _AccountForm extends m.ViewComponent {
-  constructor({dispatch}) {
-    super(...arguments)
 
-    this.state = {formValues: this.props.account || {}}
+type AccountFormStateProps = {
+  pending: boolean,
+}
 
-    this.onSubmit = event => {
-      u.preventDefault(event)
+type AccountFormOwnProps = {
+  account: t.AccountRes,
+}
 
-      this.setState({errors: undefined})
+type AccountFormProps = AccountFormStateProps & AccountFormOwnProps
 
-      const {context, props, state} = this
-      const {formValues} = state
+type AccountFormState = {
+  formValues: t.AccountReq,
+  errors: void | t.ValidationError[],
+}
 
-      const promise = formValues.id
-        ? dispatch(a.updateAccount(formValues.id, formValues, i18n.xln(context, i18n.UPDATING_ACCOUNT)))
-        : dispatch(a.createAccount(formValues, i18n.xln(context, i18n.CREATING_ACCOUNT)))
+class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
+  readonly state = {
+    formValues: this.props.account,
+    errors: undefined,
+  }
 
-      promise
-        .catch(errors => {
-          this.setState({errors})
-          throw errors
-        })
-        .then(() => {props.onSubmitSuccess()})
-        .then(() => dispatch(a.addNotification(formValues.id
-          ? i18n.xln(context, i18n.ACCOUNT_UPDATED)
-          : i18n.xln(context, i18n.ACCOUNT_CREATED)
-        )))
-        .then(() => dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
-    }
+  onSubmit = (event: t.RFormEvent) => {
+    u.preventDefault(event)
 
-    this.onDelete = event => {
-      u.preventDefault(event)
+    const {props: {dispatch}, state, context} = this
+    const {formValues} = state
 
-      this.setState({errors: undefined})
+    this.setState({errors: undefined})
 
-      const {context, props, state} = this
-      const {formValues} = state
+    const promise = formValues.id
+      ? dispatch(a.updateAccount(
+        formValues.id,
+        formValues,
+        i18n.xln(context, i18n.UPDATING_ACCOUNT))
+      )
+      : dispatch(a.createAccount(
+        formValues,
+        i18n.xln(context, i18n.CREATING_ACCOUNT))
+      )
 
-      dispatch(a.addDialog(ConfirmDialog, {
-        question: i18n.xln(context, i18n.DELETE_ACCOUNT),
-        onConfirm: () => {
-          dispatch(a.deleteAccount(formValues.id, i18n.xln(context, i18n.DELETING_ACCOUNT)))
-            .then(() => {props.onSubmitSuccess()})
-            .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.ACCOUNT_DELETED))))
-            .then(() => dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
-        },
-      }))
-    }
+    promise
+      .catch(errors => {
+        this.setState({errors})
+        throw errors
+      })
+      .then(() => {props.onSubmitSuccess()})
+      .then(() => dispatch(a.addNotification(formValues.id
+        ? i18n.xln(context, i18n.ACCOUNT_UPDATED)
+        : i18n.xln(context, i18n.ACCOUNT_CREATED)
+      )))
+      .then(() => dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
+  }
+
+  onDelete = (event: t.RFormEvent) => {
+    u.preventDefault(event)
+
+    const {props: {dispatch}, state, context} = this
+    const {formValues} = state
+
+    this.setState({errors: undefined})
+
+    dispatch(a.addDialog(ConfirmDialog, {
+      question: i18n.xln(context, i18n.DELETE_ACCOUNT),
+      onConfirm: () => {
+        dispatch(a.deleteAccount(formValues.id, i18n.xln(context, i18n.DELETING_ACCOUNT)))
+          .then(() => {props.onSubmitSuccess()})
+          .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.ACCOUNT_DELETED))))
+          .then(() => dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
+      },
+    }))
   }
 
   render() {
@@ -791,16 +813,19 @@ class _AccountForm extends m.ViewComponent {
   }
 }
 
-const AccountForm = connect(state => ({
+const AccountForm = connect<AccountFormStateProps, {}, AccountFormOwnProps, t.AppState>((state) => ({
   pending: !f.isEmpty(state.net.pending),
 }))(_AccountForm)
+
 
 type AccountListStateProps = {
   accounts: t.AccountListRes,
   pending: boolean,
 }
 
-type AccountListProps = AccountListStateProps
+type AccountListOwnProps = {}
+
+type AccountListProps = AccountListStateProps & AccountListOwnProps
 
 class _AccountList extends m.ViewComponent<AccountListProps> {
   onOpen = (account: t.AccountRes) => {
@@ -868,14 +893,15 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
                   </div>
                 </EntityItem>
               ))}
-            </div>)}
+            </div>
+          )}
         </div>
       </div>
     )
   }
 }
 
-const AccountList = connect<AccountListStateProps, {}, {}, t.AppState>((state: t.AppState) => ({
+const AccountList = connect<AccountListStateProps, {}, AccountListOwnProps, t.AppState>((state) => ({
   accounts: state.net.accounts,
   pending: !f.isEmpty(state.net.pending),
 }))(_AccountList)

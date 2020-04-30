@@ -1,3 +1,4 @@
+import React from 'react'
 import {Action, Dispatch} from 'redux'
 import {ThunkAction, ThunkDispatch} from 'redux-thunk'
 import {ParsedUrlQuery, ParsedUrlQueryInput} from 'querystring'
@@ -5,10 +6,6 @@ import {ParsedUrlQuery, ParsedUrlQueryInput} from 'querystring'
 /**
  * Env
  */
-
-export type Vars = {
-
-}
 
 declare global {
   interface Window {
@@ -29,6 +26,9 @@ export type AppState = {
   dom: DomState,
   net: NetState,
 }
+
+export type RFormEvent = React.FormEvent
+
 
 
 
@@ -232,4 +232,14 @@ export type AccountListRes = AccountRes[]
 
 export type AccountsById = {
   [key: string]: AccountRes,
+}
+
+
+
+/**
+ * Errors
+ */
+
+export type ValidationError = {
+  text: string,
 }
