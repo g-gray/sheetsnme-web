@@ -3,7 +3,6 @@ import * as t from './types'
 import * as u from './utils'
 import * as n from './net'
 
-export const RECEIVE_CATEGORIES     = 'RECEIVE_CATEGORIES'
 export const RECEIVE_PAYEES         = 'RECEIVE_PAYEES'
 export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
 
@@ -18,6 +17,10 @@ export type DomActions =
   RemoveDialog
 
 
+
+/**
+ * Resize
+ */
 
 export const RESIZE = 'RESIZE'
 
@@ -37,6 +40,11 @@ export function resize(width: number): Resize {
   }
 }
 
+
+
+/**
+ * Dialogs
+ */
 
 export const ADD_DIALOG = 'ADD_DIALOG'
 
@@ -73,6 +81,10 @@ export function removeDialog(): RemoveDialog {
 
 
 
+/**
+ * i18n
+ */
+
 export const NEXT_LANG = 'NEXT_LANG'
 
 interface NextLang extends t.AppAction {
@@ -93,6 +105,8 @@ export function nextLang(lang: t.LANG): t.AppThunk<NextLang> {
     })
   }
 }
+
+
 
 /**
  * Notifications
@@ -141,7 +155,10 @@ export type NetAction =
   RequestStartAction |
   RequestEndAction |
   ReceiveAccounts |
+  ReceiveCategories |
   ReceiveUser
+
+
 
 /**
  * Request tracking
@@ -210,6 +227,10 @@ const requestEnd = (requestName: string): RequestEndAction => ({
 
 
 
+/**
+ * User
+ */
+
 export const RECEIVE_USER = 'RECEIVE_USER'
 
 interface ReceiveUser extends t.AppAction {
@@ -240,46 +261,93 @@ export function fetchUser(message: string): t.AppThunk<Promise<ReceiveUser>> {
 }
 
 
-export const fetchCategories  = message => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'getCategories',
-    promise: n.authedJsonFetch('/api/categories'),
-  }))
-    .then(categories => dispatch({type: RECEIVE_CATEGORIES, categories}))
+
+/**
+ * Categories
+ */
+
+export const RECEIVE_CATEGORIES = 'RECEIVE_CATEGORIES'
+
+interface ReceiveCategories extends t.AppAction {
+  type: typeof RECEIVE_CATEGORIES,
+  payload: {
+    categories: t.CategoryListRes,
+  },
 }
 
-export const createCategory = (category, message) => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'postCategory',
-    promise: n.authedJsonFetch('/api/categories', {
-      method: 'POST',
-      body: category,
-    }),
-  }))
+export function receiveCategories(categories: t.CategoryListRes): ReceiveCategories {
+  return {
+    type: RECEIVE_CATEGORIES,
+    payload: {
+      categories,
+    },
+  }
 }
 
-export const updateCategory = (id, category, message) => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'postCategory',
-    promise: n.authedJsonFetch(`/api/categories/${id}`, {
-      method: 'POST',
-      body: category,
-    }),
-  }))
+export function fetchCategories(message: string): t.AppThunk<Promise<ReceiveCategories>> {
+  return (dispatch) => {
+    return dispatch(trackRequest({
+      message,
+      requestName: 'getCategories',
+      promise: n.authedJsonFetch<t.CategoryListRes>('/api/categories'),
+    }))
+      .then(categories => dispatch(receiveCategories(categories)))
+  }
 }
 
-export const deleteCategory = (id, message) => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'deleteCategory',
-    promise: n.authedJsonFetch(`/api/categories/${id}`, {
-      method: 'DELETE',
-    }),
-  }))
+export function createCategory(
+  category: t.CategoryReq,
+  message: string
+): t.AppThunk<Promise<t.CategoryRes>> {
+  return (dispatch) => {
+    return dispatch(trackRequest({
+      message,
+      requestName: 'postCategory',
+      promise: n.authedJsonFetch<t.CategoryRes>('/api/categories', {
+        method: 'POST',
+        body: category,
+      }),
+    }))
+  }
 }
+
+export function updateCategory(
+  id: string,
+  category: t.CategoryReq,
+  message: string,
+): t.AppThunk<Promise<t.CategoryRes>> {
+  return (dispatch) => {
+    return dispatch(trackRequest({
+      message,
+      requestName: 'postCategory',
+      promise: n.authedJsonFetch<t.CategoryRes>(`/api/categories/${id}`, {
+        method: 'POST',
+        body: category,
+      }),
+    }))
+  }
+}
+
+export function deleteCategory(
+  id: string,
+  message: string
+): t.AppThunk<Promise<t.CategoryRes>> {
+  return (dispatch) => {
+    return dispatch(trackRequest({
+      message,
+      requestName: 'deleteCategory',
+      promise: n.authedJsonFetch<t.CategoryRes>(`/api/categories/${id}`, {
+        method: 'DELETE',
+      }),
+    }))
+  }
+}
+
+
+
+/**
+ * Accounts
+ */
 
 export const RECEIVE_ACCOUNTS = 'RECEIVE_ACCOUNTS'
 
@@ -359,6 +427,11 @@ export function deleteAccount (
 }
 
 
+
+/**
+ * Payees
+ */
+
 export const fetchPayees  = message => dispatch => {
   return dispatch(trackRequest({
     message,
@@ -400,6 +473,11 @@ export const deletePayee = (id, message) => dispatch => {
   }))
 }
 
+
+
+/**
+ * Transactions
+ */
 
 export const fetchTransactions = (location, message) => dispatch => {
   const query = u.decodeQuery(location.search)

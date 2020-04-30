@@ -119,12 +119,14 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
       }
     }
 
-    case a.RECEIVE_CATEGORIES:
+    case a.RECEIVE_CATEGORIES: {
+      const {categories} = action.payload
       return {
         ...state,
-        categories: action.categories,
-        categoriesById: fpx.keyBy(action.categories, ({id}) => id),
+        categories,
+        categoriesById: fpx.keyBy(categories, (category: t.CategoryRes) => category.id),
       }
+    }
 
     case a.RECEIVE_ACCOUNTS: {
       const accounts: t.AccountListRes = action.payload.accounts

@@ -91,8 +91,8 @@ export type NetState = {
   user: UserRes,
   transactions: {},
   transactionsById: {},
-  categories: [],
-  categoriesById: {},
+  categories: CategoryListRes,
+  categoriesById: CategoriesById,
   accounts: AccountListRes,
   accountsById: AccountsById,
   payees: [],
@@ -232,6 +232,36 @@ export type AccountListRes = AccountRes[]
 
 export type AccountsById = {
   [key: string]: AccountRes,
+}
+
+
+
+/**
+ * Category
+ */
+
+export type CategoryReq = {
+  id?          : string,
+  title        : string,
+  currencyCode?: string,
+  balance?     : number,
+  createdAt?   : string,
+  updatedAt?   : string,
+}
+
+export type CategoryRes = {
+  id          : string,
+  title       : string,
+  currencyCode: string,
+  balance     : number,
+  createdAt   : string,
+  updatedAt   : string,
+}
+
+export type CategoryListRes = CategoryRes[]
+
+export type CategoriesById = {
+  [key: string]: CategoryRes,
 }
 
 
