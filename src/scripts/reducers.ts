@@ -146,12 +146,17 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
       }
     }
 
-    case a.RECEIVE_TRANSACTIONS:
+    case a.RECEIVE_TRANSACTIONS: {
+      const {transactions} = action.payload
       return {
         ...state,
-        transactions: action.transactions,
-        transactionsById: fpx.keyBy(action.transactions.items, ({id}) => id),
+        transactions,
+        transactionsById: fpx.keyBy(
+          transactions.items,
+          (transaction: t.TransactionRes) => transaction.id
+        ),
       }
+    }
 
     case a.REQUEST_START:
       return {

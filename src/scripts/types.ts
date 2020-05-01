@@ -2,6 +2,7 @@ import React from 'react'
 import {Action, Dispatch} from 'redux'
 import {ThunkAction, ThunkDispatch} from 'redux-thunk'
 import {ParsedUrlQuery, ParsedUrlQueryInput} from 'querystring'
+import {Location} from 'history'
 
 /**
  * Env
@@ -124,6 +125,8 @@ export interface AppDispatch extends Dispatch<AppAction> {}
 export interface AppAction extends Action<string> {
   payload?: any,
 }
+
+export type RLocation = Location
 
 
 
@@ -290,6 +293,77 @@ export type PayeeListRes = PayeeWithDebtRes[]
 
 export type PayeesById = {
   [key: string]: PayeeWithDebtRes,
+}
+
+
+
+/**
+ * Transaction
+ */
+
+export type TransactionReq = {
+  id?              : string,
+  type             : TRANSACTION_TYPE,
+  date             : string,
+  categoryId?      : string,
+  payeeId?         : string,
+  comment?         : string,
+  outcomeAccountId?: string,
+  outcomeAmount?   : number,
+  incomeAccountId? : string,
+  incomeAmount?    : number,
+  createdAt?       : string,
+  updatedAt?       : string,
+}
+
+export type TransactionRes = {
+  id              : string,
+  type            : TRANSACTION_TYPE,
+  date            : string,
+  categoryId      : string,
+  payeeId         : string,
+  comment         : string,
+  outcomeAccountId: string,
+  outcomeAmount   : number,
+  incomeAccountId : string,
+  incomeAmount    : number,
+  createdAt       : string,
+  updatedAt       : string,
+}
+
+export enum TRANSACTION_TYPE {
+  OUTCOME  = 'OUTCOME',
+  INCOME   = 'INCOME',
+  TRANSFER = 'TRANSFER',
+  LOAN     = 'LOAN',
+  BORROW   = 'BORROW',
+}
+
+export type TransactionListRes = {
+  limit: number,
+  offset: number,
+  total: number,
+  items: TransactionRes[],
+  outcomeAmount: number,
+  incomeAmount: number,
+}
+
+export type TransactionsById = {
+  [key: string]: TransactionRes,
+}
+
+export type TransactionsFilter = {
+  id?        : string,
+  dateFrom?  : string,
+  dateTo?    : string,
+  categoryId?: string,
+  payeeId?   : string,
+  comment?   : string,
+  accountId? : string,
+  amountFrom?: string,
+  amountTo?  : string,
+  limit?     : string,
+  offset?    : string,
 }
 
 

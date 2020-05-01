@@ -9,7 +9,7 @@ import * as f from 'fpx'
 import * as emerge from 'emerge'
 import * as querystring from 'querystring'
 
-export const DEFAULT_PAGE_SIZE = 25
+export const DEFAULT_PAGE_SIZE: number = 25
 
 export function findDomNode(instance: React.Component | Element): Element | Text | null {
   const element: Element | Text | null = ReactDom.findDOMNode(instance)
