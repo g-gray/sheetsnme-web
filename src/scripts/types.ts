@@ -214,7 +214,6 @@ export type AccountReq = {
   id?          : string,
   title        : string,
   currencyCode?: string,
-  balance?     : number,
   createdAt?   : string,
   updatedAt?   : string,
 }
@@ -223,15 +222,18 @@ export type AccountRes = {
   id          : string,
   title       : string,
   currencyCode: string,
-  balance     : number,
   createdAt   : string,
   updatedAt   : string,
 }
 
-export type AccountListRes = AccountRes[]
+export type AccountWithBalanceRes = AccountRes & {
+  balance: number,
+}
+
+export type AccountListRes = AccountWithBalanceRes[]
 
 export type AccountsById = {
-  [key: string]: AccountRes,
+  [key: string]: AccountWithBalanceRes,
 }
 
 
@@ -243,8 +245,6 @@ export type AccountsById = {
 export type CategoryReq = {
   id?          : string,
   title        : string,
-  currencyCode?: string,
-  balance?     : number,
   createdAt?   : string,
   updatedAt?   : string,
 }
@@ -252,8 +252,6 @@ export type CategoryReq = {
 export type CategoryRes = {
   id          : string,
   title       : string,
-  currencyCode: string,
-  balance     : number,
   createdAt   : string,
   updatedAt   : string,
 }
@@ -262,6 +260,36 @@ export type CategoryListRes = CategoryRes[]
 
 export type CategoriesById = {
   [key: string]: CategoryRes,
+}
+
+
+
+/**
+ * Payee
+ */
+
+export type PayeeReq = {
+  id?          : string,
+  title        : string,
+  createdAt?   : string,
+  updatedAt?   : string,
+}
+
+export type PayeeRes = {
+  id          : string,
+  title       : string,
+  createdAt   : string,
+  updatedAt   : string,
+}
+
+export type PayeeWithDebtRes = PayeeRes & {
+  debt: number,
+}
+
+export type PayeeListRes = PayeeWithDebtRes[]
+
+export type PayeesById = {
+  [key: string]: PayeeWithDebtRes,
 }
 
 

@@ -129,7 +129,7 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
     }
 
     case a.RECEIVE_ACCOUNTS: {
-      const accounts: t.AccountListRes = action.payload.accounts
+      const {accounts} = action.payload
       return {
         ...state,
         accounts,
@@ -137,12 +137,14 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
       }
     }
 
-    case a.RECEIVE_PAYEES:
+    case a.RECEIVE_PAYEES: {
+      const {payees} = action.payload
       return {
         ...state,
-        payees: action.payees,
-        payeesById: fpx.keyBy(action.payees, ({id}) => id),
+        payees,
+        payeesById: fpx.keyBy(payees, (payee: t.PayeeRes) => payee.id),
       }
+    }
 
     case a.RECEIVE_TRANSACTIONS:
       return {

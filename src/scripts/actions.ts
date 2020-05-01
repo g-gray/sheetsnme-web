@@ -3,7 +3,6 @@ import * as t from './types'
 import * as u from './utils'
 import * as n from './net'
 
-export const RECEIVE_PAYEES         = 'RECEIVE_PAYEES'
 export const RECEIVE_TRANSACTIONS   = 'RECEIVE_TRANSACTIONS'
 
 
@@ -154,9 +153,10 @@ export const removeNotification = (time: number): RemoveNotification => ({
 export type NetAction =
   RequestStartAction |
   RequestEndAction |
+  ReceiveUser |
   ReceiveAccounts |
   ReceiveCategories |
-  ReceiveUser
+  ReceivePayees
 
 
 
@@ -164,7 +164,9 @@ export type NetAction =
  * Request tracking
  */
 
-function trackRequest<P>(opts: {message: string, requestName: string, promise: Promise<P>}): t.AppThunk<Promise<P>> {
+function trackRequest<P>(
+  opts: {message: string, requestName: string, promise: Promise<P>}
+): t.AppThunk<Promise<P>> {
   return (dispatch): Promise<P> => {
     const {message, requestName, promise} = opts
 
@@ -249,14 +251,17 @@ export function receiveUser(user: t.UserRes): ReceiveUser {
   }
 }
 
-export function fetchUser(message: string): t.AppThunk<Promise<ReceiveUser>> {
+export function fetchUser(message: string): t.AppThunk<Promise<t.UserRes>> {
   return (dispatch) => {
     return dispatch(trackRequest<t.UserRes>({
       message,
       requestName: 'getUser',
       promise: n.authedJsonFetch('/api/user'),
     }))
-      .then(user => dispatch(receiveUser(user)))
+      .then((user) => {
+        dispatch(receiveUser(user))
+        return user
+      })
   }
 }
 
@@ -284,14 +289,19 @@ export function receiveCategories(categories: t.CategoryListRes): ReceiveCategor
   }
 }
 
-export function fetchCategories(message: string): t.AppThunk<Promise<ReceiveCategories>> {
+export function fetchCategories(
+  message: string
+): t.AppThunk<Promise<t.CategoryListRes>> {
   return (dispatch) => {
     return dispatch(trackRequest({
       message,
       requestName: 'getCategories',
       promise: n.authedJsonFetch<t.CategoryListRes>('/api/categories'),
     }))
-      .then(categories => dispatch(receiveCategories(categories)))
+      .then((categories) => {
+        dispatch(receiveCategories(categories))
+        return categories
+      })
   }
 }
 
@@ -367,14 +377,19 @@ export function receiveAccounts(accounts: t.AccountListRes): ReceiveAccounts {
   }
 }
 
-export function fetchAccounts(message: string): t.AppThunk<Promise<ReceiveAccounts>> {
+export function fetchAccounts(
+  message: string
+): t.AppThunk<Promise<t.AccountListRes>> {
   return (dispatch) => {
     return dispatch(trackRequest<t.AccountListRes>({
       message,
       requestName: 'getAccounts',
       promise: n.authedJsonFetch<t.AccountListRes>('/api/accounts'),
     }))
-      .then(accounts => dispatch(receiveAccounts(accounts)))
+      .then((accounts) => {
+        dispatch(receiveAccounts(accounts))
+        return accounts
+      })
   }
 }
 
@@ -432,45 +447,86 @@ export function deleteAccount (
  * Payees
  */
 
-export const fetchPayees  = message => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'getPayees',
-    promise: n.authedJsonFetch('/api/payees'),
-  }))
-    .then(payees => dispatch({type: RECEIVE_PAYEES, payees}))
+export const RECEIVE_PAYEES = 'RECEIVE_PAYEES'
+
+interface ReceivePayees extends t.AppAction {
+  type: typeof RECEIVE_PAYEES,
+  payload: {
+    payees: t.PayeeListRes,
+  },
 }
 
-export const createPayee = (payee, message) => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'postPayee',
-    promise: n.authedJsonFetch('/api/payees', {
-      method: 'POST',
-      body: payee,
-    }),
-  }))
+export function receivePayees(payees: t.PayeeListRes): ReceivePayees {
+  return {
+    type: RECEIVE_PAYEES,
+    payload: {
+      payees,
+    },
+  }
 }
 
-export const updatePayee = (id, payee, message) => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'postPayee',
-    promise: n.authedJsonFetch(`/api/payees/${id}`, {
-      method: 'POST',
-      body: payee,
-    }),
-  }))
+export function fetchPayees(
+  message: string
+): t.AppThunk<Promise<t.PayeeListRes>> {
+  return (dispatch) => {
+    return dispatch(trackRequest({
+      message,
+      requestName: 'getPayees',
+      promise: n.authedJsonFetch<t.PayeeListRes>('/api/payees'),
+    }))
+      .then((payees) => {
+        dispatch(receivePayees(payees))
+        return payees
+      })
+  }
 }
 
-export const deletePayee = (id, message) => dispatch => {
-  return dispatch(trackRequest({
-    message,
-    requestName: 'deletePayee',
-    promise: n.authedJsonFetch(`/api/payees/${id}`, {
-      method: 'DELETE',
-    }),
-  }))
+export function createPayee(
+  payee: t.PayeeReq,
+  message: string
+): t.AppThunk<Promise<t.PayeeRes>> {
+  return (dispatch) => {
+    return dispatch(trackRequest({
+      message,
+      requestName: 'postPayee',
+      promise: n.authedJsonFetch<t.PayeeRes>('/api/payees', {
+        method: 'POST',
+        body: payee,
+      }),
+    }))
+  }
+}
+
+export function updatePayee(
+  id: string,
+  payee: t.PayeeReq,
+  message: string
+): t.AppThunk<Promise<t.PayeeRes>> {
+  return (dispatch) => {
+    return dispatch(trackRequest({
+      message,
+      requestName: 'postPayee',
+      promise: n.authedJsonFetch<t.PayeeRes>(`/api/payees/${id}`, {
+        method: 'POST',
+        body: payee,
+      }),
+    }))
+  }
+}
+
+export function deletePayee(
+  id: string,
+  message: string
+): t.AppThunk<Promise<t.PayeeRes>> {
+  return (dispatch) => {
+    return dispatch(trackRequest({
+      message,
+      requestName: 'deletePayee',
+      promise: n.authedJsonFetch<t.PayeeRes>(`/api/payees/${id}`, {
+        method: 'DELETE',
+      }),
+    }))
+  }
 }
 
 
