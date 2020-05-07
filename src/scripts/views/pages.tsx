@@ -15,6 +15,7 @@ import * as m from './misc'
 import * as s from './svg'
 import * as d from '../dialogs'
 import * as n from '../notifications'
+import * as g from '../geometry'
 
 import * as i18n from '../i18n'
 
@@ -112,7 +113,7 @@ class _Navbar extends m.ViewComponent {
       open, nextLang,
     } = this
 
-    if (u.isMobile(context)) {
+    if (g.isMobile(context)) {
       return (
         <header className='row-between-stretch bg-primary navbar-height shadow-dept-1'>
           <div className='row-start-center gaps-h-0x75 padding-h-1'>
@@ -318,7 +319,7 @@ class EntityPlaceholder extends m.ViewComponent {
   render() {
     const {context} = this
 
-    const isMobile = u.isMobile(context)
+    const isMobile = g.isMobile(context)
 
     return (
       <div className='row-start-stretch gaps-h-1 padding-h-1'>
@@ -366,7 +367,7 @@ class EntityItem extends m.ViewComponent {
       onClick, actionsRef,
     } = this
 
-    const isMobile = u.isMobile(context)
+    const isMobile = g.isMobile(context)
 
     return (
       <m.FakeButton
@@ -502,7 +503,7 @@ class _CategoryForm extends m.ViewComponent {
       onSubmit, onDelete,
     } = this
 
-    const isMobile = u.isMobile(context)
+    const isMobile = g.isMobile(context)
     const disabled = pending
 
     return (
@@ -724,7 +725,7 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
       onSubmit, onDelete,
     } = this
 
-    const isMobile = u.isMobile(context)
+    const isMobile = g.isMobile(context)
     const disabled = pending
 
     return (
@@ -812,7 +813,7 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
       onOpen, onDelete,
     } = this
 
-    const isMobile = u.isMobile(context)
+    const isMobile = g.isMobile(context)
     return (
       <div className='col-start-stretch gaps-v-2'>
         <div className='col-start-stretch gaps-v-0x25'>
@@ -946,7 +947,7 @@ class _PayeeForm extends m.ViewComponent {
       onSubmit, onDelete,
     } = this
 
-    const isMobile = u.isMobile(context)
+    const isMobile = g.isMobile(context)
     const disabled = pending
 
     return (
@@ -1022,7 +1023,7 @@ class _PayeesList extends m.ViewComponent {
       onOpen, onDelete,
     } = this
 
-    const isMobile = u.isMobile(context)
+    const isMobile = g.isMobile(context)
     return (
       <div className='col-start-stretch gaps-v-2'>
         <div className='col-start-stretch gaps-v-0x25'>
@@ -1230,7 +1231,7 @@ class _TransactionForm extends m.ViewComponent {
       onSubmit, onDelete, onTypeUpdated,
     } = this
 
-    const isMobile = u.isMobile(context)
+    const isMobile = g.isMobile(context)
     const disabled = pending
 
     return (
@@ -1413,7 +1414,7 @@ class TransactionPlaceholder extends m.ViewComponent {
   render() {
     const {context} = this
 
-    const isMobile = u.isMobile(context)
+    const isMobile = g.isMobile(context)
 
     return (
       <div className='row-start-center gaps-h-1 padding-h-1 list-item'>
@@ -1484,7 +1485,7 @@ class _Transaction extends m.ViewComponent {
       onOpen, onDelete, actionsRef,
     } = this
 
-    const isMobile = u.isMobile(context)
+    const isMobile = g.isMobile(context)
 
     return (
       <m.FakeButton
@@ -1531,7 +1532,7 @@ class TransactionMeta extends m.ViewComponent {
       props: {transaction},
     } = this
 
-    const isMobile = u.isMobile(context)
+    const isMobile = g.isMobile(context)
 
     return isMobile ? (
       <span className='col-start-start gaps-v-0x25'>
@@ -1661,7 +1662,7 @@ class _TransactionsList extends m.ViewComponent {
       props: {outcomeAmount, incomeAmount, transactions, pageCount, pending},
     } = this
 
-    const isMobile = u.isMobile(context)
+    const isMobile = g.isMobile(context)
     return (
       <div className='col-start-stretch gaps-v-2'>
         <div className='col-start-stretch gaps-v-0x25'>
@@ -1727,7 +1728,7 @@ class G7FormLine extends m.ViewComponent {
       props: {children},
     } = this
 
-    if (u.isMobile(context)) {
+    if (g.isMobile(context)) {
       return (
         <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
           {children}
@@ -1758,7 +1759,7 @@ class FormLabel extends m.ViewComponent {
       props: {children, className: cls, ...props},
     } = this
 
-    if (u.isMobile(context)) {
+    if (g.isMobile(context)) {
       return (
         <label className={`row-start-center fg-on-surface-pale ${cls || ''}`} {...props}>
           {children}:
@@ -2080,7 +2081,7 @@ class _FormDialog extends m.ViewComponent {
       close,
     } = this
 
-    if (u.isMobile(context)) {
+    if (g.isMobile(context)) {
       return (
         <d.Dialog onEscape={close}>
           <d.DialogScrollable className='bg-surface'>
@@ -2191,7 +2192,7 @@ class ListPage extends m.ViewComponent {
       props: {action, children},
     } = this
 
-    if (u.isMobile(context)) {
+    if (g.isMobile(context)) {
       return (
         <MobilePageLayout action={action}>
           <div className='col-start-stretch padding-v-0x5'>
@@ -2259,7 +2260,7 @@ class _Paginator extends m.ViewComponent {
       onPageChange, hrefBulder,
     } = this
 
-    const isMobile = u.isMobile(context)
+    const isMobile = g.isMobile(context)
 
     return (
       <ReactPaginate
@@ -2352,7 +2353,7 @@ class _FiltersForm extends m.ViewComponent {
       onSubmit, onReset,
     } = this
 
-    const isMobile = u.isMobile(context)
+    const isMobile = g.isMobile(context)
     const noFilters = f.isEmpty(u.omitEmpty(formValues))
     return (
       <form className='col-start-stretch' onSubmit={onSubmit} onReset={onReset}>
@@ -2589,7 +2590,7 @@ export class Page404 extends m.ViewComponent {
       </Fragment>
     )
 
-    if (u.isMobile(context)) {
+    if (g.isMobile(context)) {
       return (
         <MobilePageLayout>
           <div className='col-start-stretch gaps-v-1 padding-v-3'>

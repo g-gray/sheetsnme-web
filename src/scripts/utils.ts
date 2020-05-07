@@ -135,10 +135,6 @@ export function stopPropagation(event: Event): void {
 
 
 
-export function isMobile(context: t.AppContext): boolean {
-  return context.isMobile
-}
-
 // Measures the CURRENT width of the body scrollbar. Returns ZERO if the body
 // doesn't currently have a scrollbar. This relies on the fact that in our CSS,
 // we always set `overflow-y: scroll` for the body, which allows to avoid layout

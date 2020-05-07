@@ -4,6 +4,9 @@ import {ThunkAction, ThunkDispatch} from 'redux-thunk'
 import {ParsedUrlQuery, ParsedUrlQueryInput} from 'querystring'
 import {Location} from 'history'
 
+import * as gt from './geometry/types'
+export * from './geometry/types'
+
 import * as i18nt from './i18n/types'
 export * from './i18n/types'
 
@@ -48,14 +51,10 @@ export type RMouseEvent = React.MouseEvent
  */
 
 export type DomState = {
-  dialogs: dt.DialogsState,
-  notifications: nt.NotificationsState,
-  geometry: Geometry,
+  geometry: gt.GeometryState,
   i18n: i18nt.i18nState,
-}
-
-export type Geometry = {
-  isMobile: boolean,
+  notifications: nt.NotificationsState,
+  dialogs: dt.DialogsState,
 }
 
 export type BgUrl = {

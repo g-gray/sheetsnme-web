@@ -3,6 +3,9 @@ import * as t from './types'
 import * as u from './utils'
 import * as n from './net'
 
+export * from './geometry/actions'
+import * as ga from './geometry/actions'
+
 export * from './i18n/actions'
 import * as i18na from './i18n/actions'
 
@@ -12,35 +15,12 @@ import * as na from './notifications/actions'
 export * from './dialogs/actions'
 import * as da from './dialogs/actions'
 
+
 export type DomActions =
+  ga.GeometryActions |
+  i18na.I18nActions |
   na.NotificationActions |
-  Resize |
-  da.DialogActions |
-  i18na.I18nActions
-
-
-
-/**
- * Resize
- */
-
-export const RESIZE = 'RESIZE'
-
-interface Resize extends t.AppAction {
-  type: typeof RESIZE,
-  payload: {
-    width: number,
-  },
-}
-
-export function resize(width: number): Resize {
-  return {
-    type: RESIZE,
-    payload: {
-      width,
-    }
-  }
-}
+  da.DialogActions
 
 
 

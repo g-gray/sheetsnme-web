@@ -5,27 +5,33 @@ import * as fpx from 'fpx'
 
 import * as a from './actions'
 
+import * as gr from './geometry/reducers'
 import * as i18nr from './i18n/reducers'
 import * as nr from './notifications/reducers'
 import * as dr from './dialogs/reducers'
 
 const defaultDomState: t.DomState = {
-  dialogs: dr.defaultState,
-  notifications: nr.defaultState,
-  geometry: geometry(window.innerWidth),
+  geometry: gr.defaultState,
   i18n: i18nr.defaultState,
+  notifications: nr.defaultState,
+  dialogs: dr.defaultState,
 }
 
 export const dom = (state = defaultDomState, action: a.DomActions) => {
   switch (action.type) {
-    case a.ADD_DIALOG:
-    case a.REMOVE_DIALOG: {
+    case a.RESIZE: {
       return {
         ...state,
-        dialogs: dr.dialogs(state.dialogs, action)
+        geometry: gr.geometry(state.geometry, action)
       }
     }
 
+    case a.NEXT_LANG: {
+      return {
+        ...state,
+        i18n: i18nr.i18n(state.i18n, action)
+      }
+    }
 
     case a.ADD_NOTIFICATION:
     case a.REMOVE_NOTIFICATION: {
@@ -35,33 +41,17 @@ export const dom = (state = defaultDomState, action: a.DomActions) => {
       }
     }
 
-
-    case a.RESIZE: {
-      const {width} = action.payload
+    case a.ADD_DIALOG:
+    case a.REMOVE_DIALOG: {
       return {
         ...state,
-        geometry: geometry(width),
+        dialogs: dr.dialogs(state.dialogs, action)
       }
     }
-
-
-    case a.NEXT_LANG: {
-      return {
-        ...state,
-        i18n: i18nr.i18n(state.i18n, action)
-      }
-    }
-
 
     default:
       return state
   }
-}
-
-export const MOBILE_WIDTH_MAX: number = 980
-
-export function geometry(width: number): t.Geometry {
-  return {isMobile: width <= MOBILE_WIDTH_MAX}
 }
 
 
