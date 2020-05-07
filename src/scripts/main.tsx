@@ -64,7 +64,7 @@ class _App extends m.ViewComponent {
 
 const App = withRouter(connect(state => ({
   isMobile: state.dom.geometry.isMobile,
-  lang: state.dom.lang,
+  lang: state.dom.i18n.lang,
 }))(_App))
 
 const elem = (

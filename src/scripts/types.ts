@@ -4,6 +4,9 @@ import {ThunkAction, ThunkDispatch} from 'redux-thunk'
 import {ParsedUrlQuery, ParsedUrlQueryInput} from 'querystring'
 import {Location} from 'history'
 
+import * as i18n from './i18n/types'
+export * from './i18n/types'
+
 /**
  * Env
  */
@@ -20,7 +23,7 @@ declare global {
 
 export type AppContext = {
   isMobile: boolean,
-  lang: LANG,
+  lang: i18n.LANG,
 }
 
 export type AppState = {
@@ -41,7 +44,7 @@ export type DomState = {
   dialogs: DialogList,
   notifications: NotificationList,
   geometry: Geometry,
-  lang: LANG,
+  i18n: i18n.i18nState,
 }
 
 export type Dialog<P> = {
@@ -61,17 +64,6 @@ export type NotificationList = Notification[]
 
 export type Geometry = {
   isMobile: boolean,
-}
-
-export enum LANG {
-  en = 'en',
-  ru = 'ru',
-}
-
-export type Translation = string | ((...args: any[]) => string)
-
-export type Translations = {
-  [key in LANG]: Translation
 }
 
 export type BgUrl = {

@@ -11,7 +11,7 @@ import * as u from './utils'
 export function authedJsonFetch<P>(url: string, params?: t.JsonParams): Promise<P> {
   // TODO Review this approach
   const state: t.AppState = e.store.getState()
-  params = emerge.merge(params, {headers: u.langHeaders(state.dom.lang)})
+  params = emerge.merge(params, {headers: u.langHeaders(state.dom.i18n.lang)})
 
   return authedHttpFetch(url, u.jsonParams(params))
     .then(({body}) => body)

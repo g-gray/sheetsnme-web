@@ -100,7 +100,7 @@ class _Navbar extends m.ViewComponent {
     }
 
     this.nextLang = () => {
-      dispatch(a.nextLang(i18n.nextLang(context)))
+      dispatch(a.nextLang())
     }
   }
 

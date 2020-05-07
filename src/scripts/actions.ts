@@ -3,13 +3,16 @@ import * as t from './types'
 import * as u from './utils'
 import * as n from './net'
 
+export * from './i18n/actions'
+import * as i18n from './i18n/actions'
+
 export type DomActions =
   AddNotification |
   RemoveNotification |
   Resize |
-  NextLang |
   AddDialog |
-  RemoveDialog
+  RemoveDialog |
+  i18n.NextLang
 
 
 
@@ -71,33 +74,6 @@ interface RemoveDialog extends t.AppAction {
 export function removeDialog(): RemoveDialog {
   return {
     type: REMOVE_DIALOG,
-  }
-}
-
-
-
-/**
- * i18n
- */
-
-export const NEXT_LANG = 'NEXT_LANG'
-
-interface NextLang extends t.AppAction {
-  type: typeof NEXT_LANG,
-  payload: {
-    lang: t.LANG,
-  },
-}
-
-export function nextLang(lang: t.LANG): t.AppThunk<NextLang> {
-  return (dispatch) => {
-    u.storageWrite(['lang'], lang)
-    return dispatch({
-      type: NEXT_LANG,
-      payload: {
-        lang,
-      },
-    })
   }
 }
 
