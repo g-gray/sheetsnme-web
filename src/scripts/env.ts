@@ -4,11 +4,21 @@ import React from 'react'
 import {createStore, combineReducers, applyMiddleware} from 'redux'
 import thunk from 'redux-thunk'
 
-import {dom, net} from './reducers'
+import {geometry} from './geometry/reducers'
+import {i18n} from './i18n/reducers'
+import {notifications} from './notifications/reducers'
+import {dialogs} from './dialogs/reducers'
+
+import {net} from './reducers'
 
 export const store = createStore(
   combineReducers({
-    dom,
+    dom: combineReducers({
+      geometry,
+      i18n,
+      notifications,
+      dialogs,
+    }),
     net,
   }),
   applyMiddleware(thunk)
