@@ -24,6 +24,10 @@ export const DEFAULT_LANG: t.LANG = fpx.intersection(
   AVAILABLE_LANGS,
 )[0] || AVAILABLE_LANGS[0]
 
+function langPrefix(langCode: string): string {
+  return langCode.split('-')[0]
+}
+
 
 
 export const defaultState: t.i18nState = {
@@ -51,10 +55,6 @@ export const i18n = (state = defaultState, action: a.I18nActions) => {
 }
 
 
-
-function langPrefix(langCode: string): string {
-  return langCode.split('-')[0]
-}
 
 function selectNextLang(currentLang: t.LANG): t.LANG {
   const currentIndex = AVAILABLE_LANGS.indexOf(currentLang)

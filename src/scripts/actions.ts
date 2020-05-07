@@ -6,13 +6,15 @@ import * as n from './net'
 export * from './i18n/actions'
 import * as i18n from './i18n/actions'
 
+export * from './notifications/actions'
+import * as na from './notifications/actions'
+
 export type DomActions =
-  AddNotification |
-  RemoveNotification |
+  na.NotificationActions |
   Resize |
   AddDialog |
   RemoveDialog |
-  i18n.NextLang
+  i18n.I18nActions
 
 
 
@@ -79,49 +81,6 @@ export function removeDialog(): RemoveDialog {
 
 
 
-/**
- * Notifications
- */
-
-export const ADD_NOTIFICATION = 'ADD_NOTIFICATION'
-
-interface AddNotification extends t.AppAction {
-  type: typeof ADD_NOTIFICATION,
-  payload: {
-    text: string,
-    timeout?: number,
-    time: number,
-  },
-}
-
-export const addNotification = (text: string, timeout?: number): AddNotification => ({
-  type: ADD_NOTIFICATION,
-  payload: {
-    text,
-    timeout,
-    time: new Date().getTime(),
-  },
-})
-
-
-export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION'
-
-interface RemoveNotification extends t.AppAction {
-  type: typeof REMOVE_NOTIFICATION,
-  payload: {
-    time: number,
-  },
-}
-
-export const removeNotification = (time: number): RemoveNotification => ({
-  type: REMOVE_NOTIFICATION,
-  payload: {
-    time,
-  }
-})
-
-
-
 export type NetAction =
   RequestStartAction |
   RequestEndAction |
@@ -143,7 +102,7 @@ function trackRequest<P>(
   return (dispatch): Promise<P> => {
     const {message, requestName, promise} = opts
 
-    const action = dispatch(addNotification(message, 0))
+    const action = dispatch(na.addNotification(message, 0))
     const {time} = action.payload
 
     dispatch(requestStart(requestName))
@@ -152,14 +111,14 @@ function trackRequest<P>(
       .then((response: any) => {
         dispatch(requestEnd(requestName))
         if (time) {
-          dispatch(removeNotification(time))
+          dispatch(na.removeNotification(time))
         }
         return response
       })
       .catch((response: any) => {
         dispatch(requestEnd(requestName))
         if (time) {
-          dispatch(removeNotification(time))
+          dispatch(na.removeNotification(time))
         }
         throw response
       })

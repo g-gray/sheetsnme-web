@@ -13,6 +13,7 @@ import * as u from '../utils'
 
 import * as m from './misc'
 import * as s from './svg'
+import * as n from '../notifications'
 
 import * as i18n from '../i18n'
 
@@ -37,7 +38,7 @@ class PageLayout extends m.ViewComponent {
             children={children} />
         </div>
         <div className='fix-b-l z-index-tooltip width-100p row-start-center margin-0x5'>
-          <Notifications />
+          <n.Notifications />
         </div>
         <m.GlobalDialog />
       </div>
@@ -59,7 +60,7 @@ class _MobilePageLayout extends m.ViewComponent {
           style={style}
           children={children} />
         <div className='fix-b-l z-index-tooltip width-100p col-start-stretch gaps-v-0x5 padding-0x5'>
-          <Notifications />
+          <n.Notifications />
           {!action || f.size(dialogs) ? null :
           <div className='row-end-center padding-0x5'>
             {action}
@@ -302,66 +303,6 @@ class Drawer extends m.ViewComponent {
           </NavLink>
         </div>
       </aside>
-    )
-  }
-}
-
-
-
-/**
- * Notifications
- */
-
-class _Notifications extends m.ViewComponent {
-  componentWillUnmount() {
-    if (this.timeoutId) clearTimeout(this.timeoutId)
-  }
-
-  render() {
-    const {props: {notifications, dispatch}} = this
-
-    const notification = notifications[0]
-    if (!notification) return null
-
-    if (notification.timeout) {
-      this.timeoutId = setTimeout(() => {
-        dispatch(a.removeNotification(notification.time))
-      }, notification.timeout)
-    }
-
-    return (
-      <Snackbar>
-        <div>
-          {notification.messages
-            ? f.map(notification.messages, ({text}, index) => (
-              <p key={`notification-${index}`}>{text}</p>
-            ))
-            : notification.text}
-        </div>
-      </Snackbar>
-    )
-  }
-}
-
-const Notifications = connect(state => ({
-  notifications: state.dom.notifications,
-}))(_Notifications)
-
-class Snackbar extends m.ViewComponent {
-  render() {
-    const {props: {children, action}} = this
-
-    return action ? (
-      <div className='row-start-center padding-l-1 padding-v-0x25 snackbar'>
-        <div className='col-start-stretch'>{children}</div>
-        <div className='row-start-center padding-h-0x5'>
-          {action}
-        </div>
-      </div>
-    ) : (
-      <div className='row-start-center padding-h-1 padding-v-0x75 snackbar'>
-        {children}
-      </div>
     )
   }
 }

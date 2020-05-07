@@ -6,10 +6,11 @@ import * as fpx from 'fpx'
 import * as a from './actions'
 
 import * as i18n from './i18n/reducers'
+import * as notifications from './notifications/reducers'
 
 const defaultDomState: t.DomState = {
   dialogs: [],
-  notifications: [],
+  notifications: notifications.defaultState,
   geometry: geometry(window.innerWidth),
   i18n: i18n.defaultState,
 }
@@ -35,31 +36,11 @@ export const dom = (state = defaultDomState, action: a.DomActions) => {
     }
 
 
-    case a.ADD_NOTIFICATION: {
-      const {text, timeout, time} = action.payload
-      return {
-        ...state,
-        notifications: [
-          ...state.notifications,
-          {
-            text,
-            timeout,
-            time,
-          }
-        ],
-      }
-    }
-
+    case a.ADD_NOTIFICATION:
     case a.REMOVE_NOTIFICATION: {
-      const {time} = action.payload
       return {
         ...state,
-        notifications: fpx.filter(
-          state.notifications,
-          (notification: t.Notification) => {
-            return notification.time !== time
-          }
-        ),
+        notifications: notifications.notifications(state.notifications, action)
       }
     }
 

@@ -7,6 +7,9 @@ import {Location} from 'history'
 import * as i18n from './i18n/types'
 export * from './i18n/types'
 
+import * as notification from './notifications/types'
+export * from './notifications/types'
+
 /**
  * Env
  */
@@ -42,7 +45,7 @@ export type RFormEvent = React.FormEvent
 
 export type DomState = {
   dialogs: DialogList,
-  notifications: NotificationList,
+  notifications: notification.NotificationList,
   geometry: Geometry,
   i18n: i18n.i18nState,
 }
@@ -53,14 +56,6 @@ export type Dialog<P> = {
 }
 
 export type DialogList = Dialog<any>[]
-
-export type Notification = {
-  text: string,
-  timeout?: number,
-  time: number,
-}
-
-export type NotificationList = Notification[]
 
 export type Geometry = {
   isMobile: boolean,
