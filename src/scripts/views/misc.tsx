@@ -1,10 +1,6 @@
 import * as t from '../types'
 
 import React from 'react'
-import {connect} from 'react-redux'
-
-// @ts-ignore
-import * as f from 'fpx'
 
 import * as u from '../utils'
 import * as e from '../env'
@@ -29,102 +25,6 @@ export class ViewComponent<P = any, S = any> extends React.Component<P, S> {
 // }
 
 
-
-/**
- * Dialog
- */
-
-export const GlobalDialog = connect(state => ({
-  dialogs: state.dom.dialogs,
-}))(({dialogs}) => {
-  return f.map(dialogs, ({dialog: Dialog, dialogProps}, index) => (
-    <Dialog
-      key={`dialog-${index}`}
-      dialogsNumber={f.size(dialogs)}
-      {...dialogProps} />
-  ))
-})
-
-export class Dialog extends ViewComponent {
-  componentDidMount() {
-    const {props: {onEscape}} = this
-    this.unsub = u.addEvent(window, 'keydown', event => {
-      if (u.eventKeyCode(event) === u.KEY_NAMES_US.ESCAPE && f.isFunction(onEscape)) {
-        onEscape(event)
-      }
-    })
-    onDialogOpen(this.props.dialogsNumber)
-  }
-
-  componentWillUnmount() {
-    if (this.unsub) this.unsub()
-    onDialogClose(this.props.dialogsNumber)
-  }
-
-  render() {
-    const {props: {className: cls, children}} = this
-    return (
-      <div className={`dialog ${cls || ''}`}>
-        {children}
-      </div>
-    )
-  }
-}
-
-export class DialogOverlay extends ViewComponent {
-  render() {
-    const {props: {className: cls, ...props}} = this
-    return <div className={`dialog-overlay ${cls || ''}`} {...props} />
-  }
-}
-
-export class DialogScrollable extends ViewComponent {
-  render() {
-    const {props: {onClick, className: cls, children}} = this
-    // This combination of element nesting and properties appears to satisfy
-    // the following requirements:
-    //
-    //   * the background affects the dead zone (the area between the children
-    //     and the scrollbar), without overshadowing other parts
-    //   * the inner div catches clicks from exactly the dead zone, nothing else
-    //   * scrolling works even when hovering the dead zone
-    //
-    // When making changes, make sure to test all the edge cases.
-    return (
-      <div className={`dialog-scrollable ${cls || ''}`}>
-        <div className='abs-fit' onClick={onClick} />
-        {children}
-      </div>
-    )
-  }
-}
-
-export class DialogCentered extends ViewComponent {
-  render () {
-    const {children, ...props} = this.props
-    return (
-      <DialogScrollable {...props}>
-        <div className='dialog-center'>
-          {React.cloneElement(<div className='relative'>{children}</div>, {onClick: u.stopPropagation})}
-        </div>
-      </DialogScrollable>
-    )
-  }
-}
-
-function onDialogOpen(dialogsNumber) {
-  if (dialogsNumber > 0) {
-    document.body.style.marginRight = `${u.getGlobalScrollbarWidth()}px`
-    document.body.classList.add('overflow-x-scroll')
-  }
-}
-
-function onDialogClose(dialogsNumber) {
-  if (!dialogsNumber) {
-    document.body.style.marginRight = null
-    document.body.classList.remove('overflow-x-scroll')
-  }
-}
 
 /*
 Usable for layouts unsupported by the native button element, such as a flex

@@ -108,7 +108,7 @@ export function eventKeyCode({keyCode}: KeyboardEvent): number {
 export function addEvent(
   target: EventTarget,
   name: string,
-  fun: EventListenerOrEventListenerObject,
+  fun: EventListener,
   useCapture: boolean = false
 ): () => void {
   f.validate(fun, f.isFunction)

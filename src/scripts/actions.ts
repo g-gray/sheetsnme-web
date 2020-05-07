@@ -4,17 +4,19 @@ import * as u from './utils'
 import * as n from './net'
 
 export * from './i18n/actions'
-import * as i18n from './i18n/actions'
+import * as i18na from './i18n/actions'
 
 export * from './notifications/actions'
 import * as na from './notifications/actions'
 
+export * from './dialogs/actions'
+import * as da from './dialogs/actions'
+
 export type DomActions =
   na.NotificationActions |
   Resize |
-  AddDialog |
-  RemoveDialog |
-  i18n.I18nActions
+  da.DialogActions |
+  i18na.I18nActions
 
 
 
@@ -37,45 +39,6 @@ export function resize(width: number): Resize {
     payload: {
       width,
     }
-  }
-}
-
-
-
-/**
- * Dialogs
- */
-
-export const ADD_DIALOG = 'ADD_DIALOG'
-
-interface AddDialog<P = any> extends t.AppAction {
-  type: typeof ADD_DIALOG,
-  payload: {
-    dialog: t.Dialog<P>,
-    dialogProps?: P,
-  },
-}
-
-export function addDialog<P>(dialog: t.Dialog<P>, dialogProps?: P): AddDialog<P> {
-  return {
-    type: ADD_DIALOG,
-    payload: {
-      dialog,
-      dialogProps,
-    },
-  }
-}
-
-
-export const REMOVE_DIALOG = 'REMOVE_DIALOG'
-
-interface RemoveDialog extends t.AppAction {
-  type: typeof REMOVE_DIALOG,
-}
-
-export function removeDialog(): RemoveDialog {
-  return {
-    type: REMOVE_DIALOG,
   }
 }
 

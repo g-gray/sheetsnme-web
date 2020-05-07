@@ -4,11 +4,14 @@ import {ThunkAction, ThunkDispatch} from 'redux-thunk'
 import {ParsedUrlQuery, ParsedUrlQueryInput} from 'querystring'
 import {Location} from 'history'
 
-import * as i18n from './i18n/types'
+import * as i18nt from './i18n/types'
 export * from './i18n/types'
 
-import * as notification from './notifications/types'
+import * as nt from './notifications/types'
 export * from './notifications/types'
+
+import * as dt from './dialogs/types'
+export * from './dialogs/types'
 
 /**
  * Env
@@ -26,7 +29,7 @@ declare global {
 
 export type AppContext = {
   isMobile: boolean,
-  lang: i18n.LANG,
+  lang: i18nt.LANG,
 }
 
 export type AppState = {
@@ -35,6 +38,7 @@ export type AppState = {
 }
 
 export type RFormEvent = React.FormEvent
+export type RMouseEvent = React.MouseEvent
 
 
 
@@ -44,18 +48,11 @@ export type RFormEvent = React.FormEvent
  */
 
 export type DomState = {
-  dialogs: DialogList,
-  notifications: notification.NotificationList,
+  dialogs: dt.DialogsState,
+  notifications: nt.NotificationsState,
   geometry: Geometry,
-  i18n: i18n.i18nState,
+  i18n: i18nt.i18nState,
 }
-
-export type Dialog<P> = {
-  dialog: React.Component<P>,
-  dialogProps?: P,
-}
-
-export type DialogList = Dialog<any>[]
 
 export type Geometry = {
   isMobile: boolean,

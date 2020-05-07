@@ -13,6 +13,7 @@ import * as u from '../utils'
 
 import * as m from './misc'
 import * as s from './svg'
+import * as d from '../dialogs'
 import * as n from '../notifications'
 
 import * as i18n from '../i18n'
@@ -40,7 +41,7 @@ class PageLayout extends m.ViewComponent {
         <div className='fix-b-l z-index-tooltip width-100p row-start-center margin-0x5'>
           <n.Notifications />
         </div>
-        <m.GlobalDialog />
+        <d.GlobalDialog />
       </div>
     )
   }
@@ -66,7 +67,7 @@ class _MobilePageLayout extends m.ViewComponent {
             {action}
           </div>}
         </div>
-        <m.GlobalDialog />
+        <d.GlobalDialog />
       </div>
     )
   }
@@ -230,7 +231,7 @@ class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
   }
 }
 
-const UserMenu = connect<UserMenuProps, {}, {}, t.AppState>(state => ({
+const UserMenu = connect<UserMenuStateProps, {}, {}, t.AppState>(state => ({
   user: state.net.user,
 }))(_UserMenu)
 
@@ -246,17 +247,17 @@ class _MobileMenu extends m.ViewComponent {
   render() {
     const {close} = this
 
-    return
-      <m.Dialog onEscape={close}>
-        <m.DialogScrollable className='row-start-stretch bg-overlay fade-in-fast' onClick={close}>
+    return (
+      <d.Dialog onEscape={close}>
+        <d.DialogScrollable className='row-start-stretch bg-overlay fade-in-fast' onClick={close}>
           <div className='relative col-start-stretch gaps-v-0x5 bg-surface slide-in-left-fast' onClick={close}>
             <div className='row-start-center padding-h-1 bg-primary navbar-height shadow-dept-1'>
               <Logo />
             </div>
             <Drawer />
           </div>
-        </m.DialogScrollable>
-      </m.Dialog>
+        </d.DialogScrollable>
+      </d.Dialog>
     )
   }
 }
@@ -2081,8 +2082,8 @@ class _FormDialog extends m.ViewComponent {
 
     if (u.isMobile(context)) {
       return (
-        <m.Dialog onEscape={close}>
-          <m.DialogScrollable className='bg-surface'>
+        <d.Dialog onEscape={close}>
+          <d.DialogScrollable className='bg-surface'>
             <div className='relative col-start-stretch'>
               <div className='row-between-center gaps-h-1 padding-l-1x25 navbar-height'>
                 <h2 className='font-large weight-medium'>
@@ -2096,15 +2097,15 @@ class _FormDialog extends m.ViewComponent {
               {!Form ? null :
               <Form {...formProps} onSubmitSuccess={close} />}
             </div>
-          </m.DialogScrollable>
-        </m.Dialog>
+          </d.DialogScrollable>
+        </d.Dialog>
       )
     }
 
     return (
-      <m.Dialog onEscape={close}>
-        <m.DialogOverlay className='bg-overlay' />
-        <m.DialogCentered onClick={close}>
+      <d.Dialog onEscape={close}>
+        <d.DialogOverlay className='bg-overlay' />
+        <d.DialogCentered onClick={close}>
           <div
             className='col-start-stretch rounded bg-surface shadow-dept-3'
             style={{minWidth: '31rem'}}>
@@ -2120,8 +2121,8 @@ class _FormDialog extends m.ViewComponent {
             {!Form ? null :
             <Form {...formProps} onSubmitSuccess={close} />}
           </div>
-        </m.DialogCentered>
-      </m.Dialog>
+        </d.DialogCentered>
+      </d.Dialog>
     )
   }
 }
@@ -2151,9 +2152,9 @@ class _ConfirmDialog extends m.ViewComponent {
     } = this
 
     return (
-      <m.Dialog onEscape={close}>
-        <m.DialogOverlay className='bg-overlay' />
-        <m.DialogCentered onClick={close}>
+      <d.Dialog onEscape={close}>
+        <d.DialogOverlay className='bg-overlay' />
+        <d.DialogCentered onClick={close}>
           <div
             className='col-start-stretch gaps-v-1 padding-v-1 rounded bg-surface shadow-dept-3'
             style={{minWidth: '11rem'}}>
@@ -2169,8 +2170,8 @@ class _ConfirmDialog extends m.ViewComponent {
               </m.FakeButton>
             </div>
           </div>
-        </m.DialogCentered>
-      </m.Dialog>
+        </d.DialogCentered>
+      </d.Dialog>
     )
   }
 }

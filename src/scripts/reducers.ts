@@ -5,33 +5,24 @@ import * as fpx from 'fpx'
 
 import * as a from './actions'
 
-import * as i18n from './i18n/reducers'
-import * as notifications from './notifications/reducers'
+import * as i18nr from './i18n/reducers'
+import * as nr from './notifications/reducers'
+import * as dr from './dialogs/reducers'
 
 const defaultDomState: t.DomState = {
-  dialogs: [],
-  notifications: notifications.defaultState,
+  dialogs: dr.defaultState,
+  notifications: nr.defaultState,
   geometry: geometry(window.innerWidth),
-  i18n: i18n.defaultState,
+  i18n: i18nr.defaultState,
 }
 
 export const dom = (state = defaultDomState, action: a.DomActions) => {
   switch (action.type) {
-    case a.ADD_DIALOG: {
-      const {dialog, dialogProps} = action.payload
-      return {
-        ...state,
-        dialogs: fpx.append(state.dialogs, {
-          dialog,
-          dialogProps,
-        }),
-      }
-    }
-
+    case a.ADD_DIALOG:
     case a.REMOVE_DIALOG: {
       return {
         ...state,
-        dialogs: fpx.init(state.dialogs),
+        dialogs: dr.dialogs(state.dialogs, action)
       }
     }
 
@@ -40,7 +31,7 @@ export const dom = (state = defaultDomState, action: a.DomActions) => {
     case a.REMOVE_NOTIFICATION: {
       return {
         ...state,
-        notifications: notifications.notifications(state.notifications, action)
+        notifications: nr.notifications(state.notifications, action)
       }
     }
 
@@ -57,7 +48,7 @@ export const dom = (state = defaultDomState, action: a.DomActions) => {
     case a.NEXT_LANG: {
       return {
         ...state,
-        i18n: i18n.i18n(state.i18n, action)
+        i18n: i18nr.i18n(state.i18n, action)
       }
     }
 
