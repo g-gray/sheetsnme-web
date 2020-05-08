@@ -16,6 +16,8 @@ export * from './notifications/types'
 import * as dt from './dialogs/types'
 export * from './dialogs/types'
 
+import * as pt from './pending/types'
+export * from './pending/types'
 /**
  * Env
  */
@@ -81,11 +83,7 @@ export type NetState = {
   accountsById: AccountsById,
   payees: [],
   payeesById: {},
-  pending: Pending,
-}
-
-export type Pending = {
-  [key: string]: boolean,
+  pending: pt.Pending,
 }
 
 

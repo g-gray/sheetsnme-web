@@ -15,6 +15,8 @@ import * as na from './notifications/actions'
 export * from './dialogs/actions'
 import * as da from './dialogs/actions'
 
+export * from './pending/actions'
+import * as pa from './pending/actions'
 
 export type DomActions =
   ga.GeometryActions |
@@ -25,82 +27,12 @@ export type DomActions =
 
 
 export type NetAction =
-  RequestStartAction |
-  RequestEndAction |
+  pa.PendingActions |
   ReceiveUser |
   ReceiveAccounts |
   ReceiveCategories |
   ReceiveTransactions |
   ReceivePayees
-
-
-
-/**
- * Request tracking
- */
-
-function trackRequest<P>(
-  opts: {message: string, requestName: string, promise: Promise<P>}
-): t.AppThunk<Promise<P>> {
-  return (dispatch): Promise<P> => {
-    const {message, requestName, promise} = opts
-
-    const action = dispatch(na.addNotification(message, 0))
-    const {time} = action.payload
-
-    dispatch(requestStart(requestName))
-
-    return promise
-      .then((response: any) => {
-        dispatch(requestEnd(requestName))
-        if (time) {
-          dispatch(na.removeNotification(time))
-        }
-        return response
-      })
-      .catch((response: any) => {
-        dispatch(requestEnd(requestName))
-        if (time) {
-          dispatch(na.removeNotification(time))
-        }
-        throw response
-      })
-    }
-}
-
-
-export const REQUEST_START = 'REQUEST_START'
-
-interface RequestStartAction extends t.AppAction {
-  type: typeof REQUEST_START,
-  payload: {
-    requestName: string,
-  },
-}
-
-const requestStart = (requestName: string): RequestStartAction => ({
-  type: REQUEST_START,
-  payload: {
-    requestName,
-  },
-})
-
-
-export const REQUEST_END = 'REQUEST_END'
-
-interface RequestEndAction extends t.AppAction {
-  type: typeof REQUEST_END,
-  payload: {
-    requestName: string,
-  },
-}
-
-const requestEnd = (requestName: string): RequestEndAction => ({
-  type: REQUEST_END,
-  payload: {
-    requestName,
-  },
-})
 
 
 
@@ -128,7 +60,7 @@ export function receiveUser(user: t.UserRes): ReceiveUser {
 
 export function fetchUser(message: string): t.AppThunk<Promise<t.UserRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest<t.UserRes>({
+    return dispatch(pa.trackRequest<t.UserRes>({
       message,
       requestName: 'getUser',
       promise: n.authedJsonFetch('/api/user'),
@@ -168,7 +100,7 @@ export function fetchCategories(
   message: string
 ): t.AppThunk<Promise<t.CategoryListRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'getCategories',
       promise: n.authedJsonFetch<t.CategoryListRes>('/api/categories'),
@@ -185,7 +117,7 @@ export function createCategory(
   message: string
 ): t.AppThunk<Promise<t.CategoryRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'postCategory',
       promise: n.authedJsonFetch<t.CategoryRes>('/api/categories', {
@@ -202,7 +134,7 @@ export function updateCategory(
   message: string,
 ): t.AppThunk<Promise<t.CategoryRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'postCategory',
       promise: n.authedJsonFetch<t.CategoryRes>(`/api/categories/${id}`, {
@@ -218,7 +150,7 @@ export function deleteCategory(
   message: string
 ): t.AppThunk<Promise<t.CategoryRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'deleteCategory',
       promise: n.authedJsonFetch<t.CategoryRes>(`/api/categories/${id}`, {
@@ -256,7 +188,7 @@ export function fetchAccounts(
   message: string
 ): t.AppThunk<Promise<t.AccountListRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest<t.AccountListRes>({
+    return dispatch(pa.trackRequest<t.AccountListRes>({
       message,
       requestName: 'getAccounts',
       promise: n.authedJsonFetch<t.AccountListRes>('/api/accounts'),
@@ -273,7 +205,7 @@ export function createAccount(
   message: string
 ): t.AppThunk<Promise<t.AccountRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest<t.AccountRes>({
+    return dispatch(pa.trackRequest<t.AccountRes>({
       message,
       requestName: 'postAccount',
       promise: n.authedJsonFetch<t.AccountRes>('/api/accounts', {
@@ -290,7 +222,7 @@ export function updateAccount(
   message: string
 ): t.AppThunk<Promise<t.AccountRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest<t.AccountRes>({
+    return dispatch(pa.trackRequest<t.AccountRes>({
       message,
       requestName: 'postAccount',
       promise: n.authedJsonFetch<t.AccountRes>(`/api/accounts/${id}`, {
@@ -306,7 +238,7 @@ export function deleteAccount (
   message: string
 ): t.AppThunk<Promise<t.AccountRes>>{
   return (dispatch) => {
-    return dispatch(trackRequest<t.AccountRes>({
+    return dispatch(pa.trackRequest<t.AccountRes>({
       message,
       requestName: 'deleteAccount',
       promise: n.authedJsonFetch<t.AccountRes>(`/api/accounts/${id}`, {
@@ -344,7 +276,7 @@ export function fetchPayees(
   message: string
 ): t.AppThunk<Promise<t.PayeeListRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'getPayees',
       promise: n.authedJsonFetch<t.PayeeListRes>('/api/payees'),
@@ -361,7 +293,7 @@ export function createPayee(
   message: string
 ): t.AppThunk<Promise<t.PayeeRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'postPayee',
       promise: n.authedJsonFetch<t.PayeeRes>('/api/payees', {
@@ -378,7 +310,7 @@ export function updatePayee(
   message: string
 ): t.AppThunk<Promise<t.PayeeRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'postPayee',
       promise: n.authedJsonFetch<t.PayeeRes>(`/api/payees/${id}`, {
@@ -394,7 +326,7 @@ export function deletePayee(
   message: string
 ): t.AppThunk<Promise<t.PayeeRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'deletePayee',
       promise: n.authedJsonFetch<t.PayeeRes>(`/api/payees/${id}`, {
@@ -446,7 +378,7 @@ export function fetchTransactions(
       limit,
     }
 
-    return dispatch(trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'getTransactions',
       promise: n.authedJsonFetch<t.TransactionListRes>('/api/transactions', {
@@ -466,7 +398,7 @@ export function createTransaction(
   message: string
 ): t.AppThunk<Promise<t.TransactionRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'postTransaction',
       promise: n.authedJsonFetch<t.TransactionRes>('/api/transactions', {
@@ -483,7 +415,7 @@ export function updateTransaction(
   message: string
 ): t.AppThunk<Promise<t.TransactionRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'postTransaction',
       promise: n.authedJsonFetch<t.TransactionRes>(`/api/transactions/${id}`, {
@@ -499,7 +431,7 @@ export function deleteTransaction(
   message:string
 ): t.AppThunk<Promise<t.TransactionRes>> {
   return (dispatch) => {
-    return dispatch(trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'deleteTransaction',
       promise: n.authedJsonFetch<t.TransactionRes>(`/api/transactions/${id}`, {

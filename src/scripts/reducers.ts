@@ -5,6 +5,7 @@ import * as fpx from 'fpx'
 
 import * as a from './actions'
 
+import * as pr from './pending/reducers'
 
 const defaultNetState: t.NetState = {
   user: {},
@@ -16,7 +17,7 @@ const defaultNetState: t.NetState = {
   accountsById: {},
   payees: [],
   payeesById: {},
-  pending: {},
+  pending: pr.defaultState,
 }
 
 export const net = (state = defaultNetState, action: a.NetAction) => {
@@ -69,23 +70,12 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
     }
 
     case a.REQUEST_START:
+    case a.REQUEST_END: {
       return {
         ...state,
-        pending: {
-          ...state.pending,
-          [action.payload.requestName]: true,
-        },
+        pending: pr.pending(state.pending, action),
       }
-    case a.REQUEST_END:
-      return {
-        ...state,
-        pending: fpx.omitBy(
-          state.pending,
-          (__: boolean, requestName: string) => {
-            return requestName === action.payload.requestName
-          }
-        ),
-      }
+    }
 
     default:
       return state
