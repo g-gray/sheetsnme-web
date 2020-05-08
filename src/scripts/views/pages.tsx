@@ -6,13 +6,14 @@ import {NavLink, Link, withRouter} from 'react-router-dom'
 import ReactPaginate from 'react-paginate'
 
 // @ts-ignore
-import * as f from 'fpx'
+import * as fpx from 'fpx'
 
 import * as a from '../actions'
 import * as u from '../utils'
 
 import * as m from './misc'
 import * as s from './svg'
+import * as f from './forms'
 import * as d from '../dialogs'
 import * as n from '../notifications'
 import * as g from '../geometry'
@@ -63,7 +64,7 @@ class _MobilePageLayout extends m.ViewComponent {
           children={children} />
         <div className='fix-b-l z-index-tooltip width-100p col-start-stretch gaps-v-0x5 padding-0x5'>
           <n.Notifications />
-          {!action || f.size(dialogs) ? null :
+          {!action || fpx.size(dialogs) ? null :
           <div className='row-end-center padding-0x5'>
             {action}
           </div>}
@@ -187,7 +188,7 @@ class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
 
     const {firstName, lastName, pictureUrl, email} = user
 
-    return f.isEmpty(user) ? null : (
+    return fpx.isEmpty(user) ? null : (
       <div className='relative row-start-stretch'>
         <m.FakeButton
           onClick={toggle}
@@ -351,7 +352,7 @@ class EntityItem extends m.ViewComponent {
 
     this.onClick = event => {
       if (!onOpen) return
-      f.validate(onOpen, f.isFunction)
+      fpx.validate(onOpen, fpx.isFunction)
 
       const actionsNode = u.findDomNode(this.actionsRef.current)
       if (u.isAncestorOf(actionsNode, event.target)) return
@@ -509,7 +510,7 @@ class _CategoryForm extends m.ViewComponent {
     return (
       <form className='col-start-stretch' onSubmit={onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
-          <FormTextElement
+          <f.FormTextElement
             name='title'
             label={i18n.xln(context, i18n.TITLE)}
             disabled={disabled}
@@ -536,14 +537,14 @@ class _CategoryForm extends m.ViewComponent {
         </div>
         {!errors ? null :
         <hr className='hr margin-h-1x25' />}
-        <FormErrors errors={errors} />
+        <f.FormErrors errors={errors} />
       </form>
     )
   }
 }
 
 const CategoryForm = connect(state => ({
-  pending: !f.isEmpty(state.net.pending),
+  pending: !fpx.isEmpty(state.net.pending),
 }))(_CategoryForm)
 
 class _CategoriesList extends m.ViewComponent {
@@ -578,15 +579,15 @@ class _CategoriesList extends m.ViewComponent {
       onOpen, onDelete,
     } = this
 
-    return pending || !f.size(categories) ? (
+    return pending || !fpx.size(categories) ? (
       <div className='col-start-stretch'>
-        {f.map(new Array(f.size(categories) || 3), (__, index) => (
+        {fpx.map(new Array(fpx.size(categories) || 3), (__, index) => (
           <EntityPlaceholder key={`placeholder-${index}`} />
         ))}
       </div>
     ) : (
       <div className='col-start-stretch'>
-        {f.map(categories, category => (
+        {fpx.map(categories, category => (
           <EntityItem
             key={category.id}
             icon={<s.Tag className='font-large fg-primary' />}
@@ -602,7 +603,7 @@ class _CategoriesList extends m.ViewComponent {
 
 const CategoriesList = connect(state => ({
   categories: state.net.categories,
-  pending: !f.isEmpty(state.net.pending),
+  pending: !fpx.isEmpty(state.net.pending),
 }))(_CategoriesList)
 
 
@@ -731,7 +732,7 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
     return (
       <form className='col-start-stretch' onSubmit={onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
-          <FormTextElement
+          <f.FormTextElement
             name='title'
             label='Name'
             disabled={disabled}
@@ -758,14 +759,14 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
         </div>
         {!errors ? null :
         <hr className='hr margin-h-1x25' />}
-        <FormErrors errors={errors} />
+        <f.FormErrors errors={errors} />
       </form>
     )
   }
 }
 
 const AccountForm = connect<AccountFormStateProps, {}, AccountFormOwnProps, t.AppState>((state) => ({
-  pending: !f.isEmpty(state.net.pending),
+  pending: !fpx.isEmpty(state.net.pending),
 }))(_AccountForm)
 
 
@@ -820,15 +821,15 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
           <div className={`row-end-center ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}>
             <span className='fg-on-surface-pale'>{i18n.xln(context, i18n.BALANCE)}</span>
           </div>
-          {pending || !f.size(accounts) ? (
+          {pending || !fpx.size(accounts) ? (
             <div className='col-start-stretch'>
-              {f.map(new Array(f.size(accounts) || 3), (__, index) => (
+              {fpx.map(new Array(fpx.size(accounts) || 3), (__, index) => (
                 <EntityPlaceholder key={`placeholder-${index}`} />
               ))}
             </div>
           ) : (
             <div className='col-start-stretch'>
-              {f.map(accounts, (account: t.AccountRes) => (
+              {fpx.map(accounts, (account: t.AccountRes) => (
                 <EntityItem
                   key={account.id}
                   icon={<s.CreditCard className='font-large fg-primary' />}
@@ -854,7 +855,7 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
 
 const AccountList = connect<AccountListStateProps, {}, AccountListOwnProps, t.AppState>((state) => ({
   accounts: state.net.accounts,
-  pending: !f.isEmpty(state.net.pending),
+  pending: !fpx.isEmpty(state.net.pending),
 }))(_AccountList)
 
 
@@ -953,7 +954,7 @@ class _PayeeForm extends m.ViewComponent {
     return (
       <form className='col-start-stretch' onSubmit={onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
-          <FormTextElement
+          <f.FormTextElement
             name='title'
             label='Name'
             disabled={disabled}
@@ -980,14 +981,14 @@ class _PayeeForm extends m.ViewComponent {
         </div>
         {!errors ? null :
         <hr className='hr margin-h-1x25' />}
-        <FormErrors errors={errors} />
+        <f.FormErrors errors={errors} />
       </form>
     )
   }
 }
 
 const PayeeForm = connect(state => ({
-  pending: !f.isEmpty(state.net.pending),
+  pending: !fpx.isEmpty(state.net.pending),
 }))(_PayeeForm)
 
 class _PayeesList extends m.ViewComponent {
@@ -1030,15 +1031,15 @@ class _PayeesList extends m.ViewComponent {
           <div className={`row-end-center ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}>
             <span className='fg-on-surface-pale'>{i18n.xln(context, i18n.DEBT)}</span>
           </div>
-          {pending || !f.size(payees) ? (
+          {pending || !fpx.size(payees) ? (
             <div className='col-start-stretch'>
-              {f.map(new Array(f.size(payees) || 3), (__, index) => (
+              {fpx.map(new Array(fpx.size(payees) || 3), (__, index) => (
                 <EntityPlaceholder key={`placeholder-${index}`} />
               ))}
             </div>
           ) : (
             <div className='col-start-stretch'>
-              {f.map(payees, payee => (
+              {fpx.map(payees, payee => (
                 <EntityItem
                   key={payee.id}
                   icon={<s.Users className='font-large fg-primary' />}
@@ -1063,8 +1064,8 @@ class _PayeesList extends m.ViewComponent {
 }
 
 const PayeesList = connect(state => {
-  const payees  = f.sortBy(state.net.payees, payee => !payee.debt ? Infinity : payee.debt)
-  const pending = !f.isEmpty(state.net.pending)
+  const payees  = fpx.sortBy(state.net.payees, payee => !payee.debt ? Infinity : payee.debt)
+  const pending = !fpx.isEmpty(state.net.pending)
 
   return {
     payees,
@@ -1166,7 +1167,7 @@ class _TransactionForm extends m.ViewComponent {
       const {formValues} = this.state
       const {type, outcomeAccountId, outcomeAmount, incomeAccountId, incomeAmount} = formValues
 
-      if (f.includes([OUTCOME, LOAN], type) && f.includes([INCOME, BORROW], value)) {
+      if (fpx.includes([OUTCOME, LOAN], type) && fpx.includes([INCOME, BORROW], value)) {
         this.setState({
           formValues: {
             ...formValues,
@@ -1180,7 +1181,7 @@ class _TransactionForm extends m.ViewComponent {
         return
       }
 
-      if (f.includes([INCOME, BORROW], type) && f.includes([OUTCOME, LOAN], value)) {
+      if (fpx.includes([INCOME, BORROW], type) && fpx.includes([OUTCOME, LOAN], value)) {
         this.setState({
           formValues: {
             ...formValues,
@@ -1194,7 +1195,7 @@ class _TransactionForm extends m.ViewComponent {
         return
       }
 
-      if (f.includes([OUTCOME, LOAN], type) && value === TRANSFER) {
+      if (fpx.includes([OUTCOME, LOAN], type) && value === TRANSFER) {
         this.setState({
           formValues: {
             ...formValues,
@@ -1205,7 +1206,7 @@ class _TransactionForm extends m.ViewComponent {
         return
       }
 
-      if (f.includes([INCOME, BORROW], type) && value === TRANSFER) {
+      if (fpx.includes([INCOME, BORROW], type) && value === TRANSFER) {
         this.setState({
           formValues: {
             ...formValues,
@@ -1237,19 +1238,19 @@ class _TransactionForm extends m.ViewComponent {
     return (
       <form className='col-start-stretch' onSubmit={onSubmit}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
-          <FormDateElement
+          <f.FormDateElement
             name='date'
             label={i18n.xln(context, i18n.DATE)}
             disabled={disabled}
             {...u.bindValue(this, ['formValues', 'date'])} />
-          <G7FormLine>
-            <FormLabel>
+          <f.G7FormLine>
+            <f.FormLabel>
               Type
-            </FormLabel>
+            </f.FormLabel>
             <div className='col-start-stretch gaps-v-0x5'>
               <div className={isMobile ? 'col-start-stretch gaps-v-0x5' : 'row-start-center gaps-h-1'}>
                 <label className='row-start-center gaps-h-0x5'>
-                  <Radio
+                  <f.Radio
                     name='type'
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], OUTCOME)}
@@ -1257,7 +1258,7 @@ class _TransactionForm extends m.ViewComponent {
                   <span>{i18n.xln(context, i18n.OUTCOME)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
-                  <Radio
+                  <f.Radio
                     name='type'
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], INCOME)}
@@ -1265,7 +1266,7 @@ class _TransactionForm extends m.ViewComponent {
                   <span>{i18n.xln(context, i18n.INCOME)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
-                  <Radio
+                  <f.Radio
                     name='type'
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], TRANSFER)}
@@ -1275,7 +1276,7 @@ class _TransactionForm extends m.ViewComponent {
               </div>
               <div className={isMobile ? 'col-start-stretch gaps-v-0x5' : 'row-start-center gaps-h-1'}>
                 <label className='row-start-center gaps-h-0x5'>
-                  <Radio
+                  <f.Radio
                     name='type'
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], LOAN)}
@@ -1283,7 +1284,7 @@ class _TransactionForm extends m.ViewComponent {
                   <span>{i18n.xln(context, i18n.I_LOANED)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
-                  <Radio
+                  <f.Radio
                     name='type'
                     disabled={disabled}
                     {...u.bindChecked(this, ['formValues', 'type'], BORROW)}
@@ -1292,85 +1293,83 @@ class _TransactionForm extends m.ViewComponent {
                 </label>
               </div>
             </div>
-          </G7FormLine>
+          </f.G7FormLine>
 
-          {!f.includes([OUTCOME, LOAN, TRANSFER], type) ? null :
+          {!fpx.includes([OUTCOME, LOAN, TRANSFER], type) ? null :
           <Fragment>
-            <FormTextElement
+            <f.FormTextElement
               type='number'
-              inputmode='numeric'
               step='0.01'
               name='outcomeAmount'
               label={i18n.xln(context, i18n.AMOUNT)}
               disabled={disabled}
               {...u.bindValue(this, ['formValues', 'outcomeAmount'], u.parseNum)} />
-            <FormSelectElement
+            <f.FormSelectElement
               name='outcomeAccountId'
               label={i18n.xln(context, i18n.ACCOUNT)}
               disabled={disabled}
               {...u.bindValue(this, ['formValues', 'outcomeAccountId'])}>
               <option value='' />
-              {f.map(accounts, ({id, title}) => (
+              {fpx.map(accounts, ({id, title}) => (
                 <option value={id} key={`outcome-account-${id}`}>
                   {title}
                 </option>
               ))}
-            </FormSelectElement>
+            </f.FormSelectElement>
           </Fragment>}
 
-          {!f.includes([INCOME, BORROW, TRANSFER], type) ? null :
+          {!fpx.includes([INCOME, BORROW, TRANSFER], type) ? null :
           <Fragment>
-            <FormTextElement
+            <f.FormTextElement
               type='number'
-              inputmode='numeric'
               step='0.01'
               name='incomeAmount'
               label={i18n.xln(context, i18n.AMOUNT)}
               disabled={disabled}
               {...u.bindValue(this, ['formValues', 'incomeAmount'], u.parseNum)} />
-            <FormSelectElement
+            <f.FormSelectElement
               name='incomeAccountId'
               label={i18n.xln(context, i18n.ACCOUNT)}
               disabled={disabled}
               {...u.bindValue(this, ['formValues', 'incomeAccountId'])}>
               <option value='' />
-              {f.map(accounts, ({id, title}) => (
+              {fpx.map(accounts, ({id, title}) => (
                 <option value={id} key={`income-account-${id}`}>
                   {title}
                 </option>
               ))}
-            </FormSelectElement>
+            </f.FormSelectElement>
           </Fragment>}
 
-          {!f.includes([OUTCOME, INCOME], type) ? null :
-          <FormSelectElement
+          {!fpx.includes([OUTCOME, INCOME], type) ? null :
+          <f.FormSelectElement
             name='categoryId'
             label={i18n.xln(context, i18n.CATEGORY)}
             disabled={disabled}
             {...u.bindValue(this, ['formValues', 'categoryId'])}>
             <option value='' />
-            {f.map(categories, ({id, title}) => (
+            {fpx.map(categories, ({id, title}) => (
               <option value={id} key={`category-${id}`}>
                 {title}
               </option>
             ))}
-          </FormSelectElement>}
+          </f.FormSelectElement>}
 
-          {!f.includes([OUTCOME, INCOME, LOAN, BORROW], type) ? null :
-          <FormSelectElement
+          {!fpx.includes([OUTCOME, INCOME, LOAN, BORROW], type) ? null :
+          <f.FormSelectElement
             name='payeeId'
             label={i18n.xln(context, i18n.PAYEE)}
             disabled={disabled}
             {...u.bindValue(this, ['formValues', 'payeeId'])}>
             <option value='' />
-            {f.map(payees, ({id, title}) => (
+            {fpx.map(payees, ({id, title}) => (
               <option value={id} key={`payee-${id}`}>
                 {title}
               </option>
             ))}
-          </FormSelectElement>}
+          </f.FormSelectElement>}
 
-          <FormTextElement
+          <f.FormTextElement
             name='comment'
             label={i18n.xln(context, i18n.COMMENT)}
             disabled={disabled}
@@ -1397,7 +1396,7 @@ class _TransactionForm extends m.ViewComponent {
         </div>
         {!errors ? null :
         <hr className='hr margin-h-1x25' />}
-        <FormErrors errors={errors} />
+        <f.FormErrors errors={errors} />
       </form>
     )
   }
@@ -1407,7 +1406,7 @@ const TransactionForm = withRouter(connect(state => ({
   categories: state.net.categories,
   accounts: state.net.accounts,
   payees: state.net.payees,
-  pending: !f.isEmpty(state.net.pending),
+  pending: !fpx.isEmpty(state.net.pending),
 }))(_TransactionForm))
 
 class TransactionPlaceholder extends m.ViewComponent {
@@ -1555,13 +1554,13 @@ class TransactionIcon extends m.ViewComponent {
 
     return (
       <div className='row-start-center'>
-        {f.includes([OUTCOME, LOAN], transaction.type) ? (
+        {fpx.includes([OUTCOME, LOAN], transaction.type) ? (
         <div className='relative width-2x5 square circle bg-primary'>
           <div className='row-center-center abs-center fg-on-primary font-large'>
             <s.Minus />
           </div>
         </div>
-        ) : f.includes([INCOME, BORROW], transaction.type) ? (
+        ) : fpx.includes([INCOME, BORROW], transaction.type) ? (
         <div className='relative width-2x5 square circle bg-primary'>
           <div className='row-center-center abs-center fg-on-primary font-large'>
             <s.Plus />
@@ -1684,21 +1683,21 @@ class _TransactionsList extends m.ViewComponent {
               </span>
             </div>}
           </div>
-          {pending || !f.size(transactions) ? (
+          {pending || !fpx.size(transactions) ? (
             <div className='col-start-stretch'>
-              {f.map(new Array(f.size(transactions) || 3), (__, index) => (
+              {fpx.map(new Array(fpx.size(transactions) || 3), (__, index) => (
                 <TransactionPlaceholder key={`placeholder-${index}`} />
               ))}
             </div>
           ) : (
             <div className='col-start-stretch'>
-              {f.map(transactions, transaction => (
+              {fpx.map(transactions, transaction => (
                 <Transaction key={transaction.id} transaction={transaction} />
               ))}
             </div>
           )}
         </div>
-        {!f.size(transactions) ? null :
+        {!fpx.size(transactions) ? null :
         <Paginator pageCount={pageCount} />}
       </div>
     )
@@ -1711,366 +1710,30 @@ const TransactionsList = withRouter(connect(state => {
     incomeAmount : state.net.transactions.incomeAmount,
     transactions : state.net.transactions.items,
     pageCount    : Math.ceil(state.net.transactions.total / state.net.transactions.limit),
-    pending      : !f.isEmpty(state.net.pending),
+    pending      : !fpx.isEmpty(state.net.pending),
   }
 })(_TransactionsList))
 
 
 
-/**
- * Forms
- */
-
-class G7FormLine extends m.ViewComponent {
-  render() {
-    const {
-      context,
-      props: {children},
-    } = this
-
-    if (g.isMobile(context)) {
-      return (
-        <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
-          {children}
-        </div>
-      )
-    }
-
-    return (
-      <div className='grid7 row-start-start form-element-spacing'>
-        <div className='grid7-2 col-start-stretch padding-l-1x25 text-right'>
-          {f.get(children, 0)}
-        </div>
-        <div className='grid7-4 col-start-stretch'>
-          {f.get(children, 1)}
-        </div>
-        <div className='flex-1 col-start-start padding-r-1x25'>
-          {f.get(children, 2)}
-        </div>
-      </div>
-    )
-  }
+type FormDialogOwnProps = {
+  onClose: void | ((event: KeyboardEvent) => void),
+  title: string,
+  form: React.ComponentType<P>,
+  formProps: P,
 }
 
-class FormLabel extends m.ViewComponent {
-  render() {
-    const {
-      context,
-      props: {children, className: cls, ...props},
-    } = this
+type FormDialogStateProps = {}
 
-    if (g.isMobile(context)) {
-      return (
-        <label className={`row-start-center fg-on-surface-pale ${cls || ''}`} {...props}>
-          {children}:
-        </label>
-      )
-    }
+type FormDialogProps = FormDialogOwnProps & FormDialogStateProps
 
-    return (
-      <label className={`row-end-center fg-on-surface-pale ${cls || ''}`} {...props}>
-        {children}:
-      </label>
-    )
-  }
-}
+class _FormDialog extends m.ViewComponent<FormDialogProps> {
+  close = (event) => {
+    const {dispatch, onClose} = this.props
+    dispatch(a.removeDialog())
 
-class FormTextElement extends m.ViewComponent {
-  constructor({onUpdate}) {
-    super(...arguments)
-
-    this.onChange = ({target: {value}}) => {
-      if (!onUpdate) return
-      f.validate(onUpdate, f.isFunction)
-      onUpdate(value)
-    }
-  }
-
-  render() {
-    const {
-      onChange,
-      props: {label, name, type, step, value, defaultValue, readOnly, disabled},
-    } = this
-
-    return (
-      <G7FormLine>
-        <FormLabel className='input-height' htmlFor={name}>
-          {label}
-        </FormLabel>
-        <input
-          id={name}
-          name={name}
-          type={type || 'text'}
-          step={step}
-          className='input'
-          value={value}
-          defaultValue={defaultValue}
-          onChange={onChange}
-          readOnly={readOnly}
-          disabled={disabled} />
-      </G7FormLine>
-    )
-  }
-}
-
-class FormDateElement extends m.ViewComponent {
-  constructor() {
-    super(...arguments)
-    const {props: {onUpdate}} = this
-
-    this.state = {}
-
-    this.years  = f.reverse(f.range(1940, new Date().getFullYear() + 1))
-    this.months = [
-      {value: 0,  key: 'January'},
-      {value: 1,  key: 'February'},
-      {value: 2,  key: 'March'},
-      {value: 3,  key: 'April'},
-      {value: 4,  key: 'May'},
-      {value: 5,  key: 'June'},
-      {value: 6,  key: 'July'},
-      {value: 7,  key: 'August'},
-      {value: 8,  key: 'September'},
-      {value: 9,  key: 'October'},
-      {value: 10, key: 'November'},
-      {value: 11, key: 'December'},
-    ]
-
-    this.onYearInput = ({target: {value: year}}) => {
-      year = u.parseNum(year)
-      const month = this.mayBeMonth(year, this.state.month)
-      const days  = u.daysInMonthList(year, month)
-      const day   = this.mayBeDay(days, this.state.day)
-      this.setState({year, month, day, days})
-      this.onDateInput(year, month, day)
-    }
-
-    this.onMonthInput = ({target: {value: month}}) => {
-      month = u.parseNum(month)
-      const year = this.state.year
-      const days = u.daysInMonthList(year, month)
-      const day  = this.mayBeDay(days, this.state.day)
-      this.setState({month, day, days})
-      this.onDateInput(year, month, day)
-    }
-
-    this.onDayInput = ({target: {value: day}}) => {
-      day = u.parseNum(day)
-      const {year, month} = this.state
-      this.setState({day})
-      this.onDateInput(year, month, day)
-    }
-
-    this.onDateInput = (year, month, day) => {
-      if (!onUpdate) return
-      f.validate(onUpdate, f.isFunction)
-
-      if (year != null && month != null && day != null) {
-        const date = u.addBrowserOffset(new Date(year, month, day))
-        onUpdate(date)
-      }
-      else {
-        onUpdate(undefined)
-        console.warn('Entered date is invalid')
-      }
-    }
-
-    this.mayBeMonth = (year, month) => {
-      return year == null ? undefined : month
-    }
-
-    this.mayBeDay = (days, day) => {
-      return f.includes(days, day) ? day : undefined
-    }
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    const {value, defaultValue} = props
-
-    if (value || defaultValue !== state.prevPropsValue) {
-      const date = u.toValidDate(value || defaultValue)
-      const {year, month, day} = date
-        ? {year: date.getFullYear(), month: date.getMonth(), day: date.getDate()}
-        : {year: undefined, month: undefined, day: undefined}
-      const days = u.daysInMonthList(year, month)
-
-      return {prevPropsValue: value || defaultValue, days, day, month, year}
-    }
-
-    return state
-  }
-
-  render() {
-    const {
-      context,
-      props,
-      state,
-      years, months, onYearInput, onMonthInput, onDayInput,
-    } = this
-
-    const {label, readOnly, disabled} = props
-    const {days, year, month, day} = state
-
-    return (
-      <G7FormLine>
-        <FormLabel className='input-height'>
-          {label}
-        </FormLabel>
-        <div className='row-start-stretch gaps-h-0x5'>
-          <select
-            className='flex-3 select-native'
-            onChange={onYearInput}
-            value={year == null ? '' : year}
-            disabled={readOnly || disabled}>
-            <option value=''>
-              {i18n.xln(context, i18n.YEAR)}:
-            </option>
-            {f.map(years, year => (
-              <option
-                key={year}
-                value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-          <select
-            className='flex-5 select-native'
-            value={month == null ? '' : month}
-            onChange={onMonthInput}
-            disabled={readOnly || disabled}>
-            <option value=''>
-              {i18n.xln(context, i18n.MONTH)}:
-            </option>
-            {f.map(months, ({value, key}) => (
-              <option
-                key={key}
-                value={value}>
-                {i18n.xln(context, i18n[key.toUpperCase()])}
-              </option>
-            ))}
-          </select>
-          <select
-            className='flex-3 select-native'
-            value={day == null ? '' : day}
-            onChange={onDayInput}
-            disabled={readOnly || disabled}>
-            <option value=''>
-              {i18n.xln(context, i18n.DAY)}:
-            </option>
-            {f.map(days, day => (
-              <option
-                key={day}
-                value={day}>
-                {day}
-              </option>
-            ))}
-          </select>
-        </div>
-      </G7FormLine>
-    )
-  }
-}
-
-class FormSelectElement extends m.ViewComponent {
-  constructor({onUpdate}) {
-    super(...arguments)
-    this.onChange = ({target: {value}}) => {
-      if (!onUpdate) return
-      f.validate(onUpdate, f.isFunction)
-      onUpdate(value)
-    }
-  }
-
-  render() {
-    const {
-      onChange,
-      props: {label, name, value, defaultValue, readOnly, disabled, children},
-    }= this
-
-    return (
-      <G7FormLine>
-        <FormLabel className='input-height' htmlFor={name}>
-          {label}
-        </FormLabel>
-        <select
-          id={`${name}_${value}`}
-          name={name}
-          className='select-native'
-          value={value}
-          defaultValue={defaultValue}
-          onChange={onChange}
-          readOnly={readOnly}
-          disabled={disabled}>
-          {children}
-        </select>
-      </G7FormLine>
-    )
-  }
-}
-
-class FormErrors extends m.ViewComponent {
-  render() {
-    const {props: {errors}} = this
-
-    return !errors ? null : (
-      <div className='col-start-center padding-v-1 fg-accent font-midsmall'>
-        {f.map(errors, ({text}, index) => (
-          <p key={`error-${index}`}>{text}</p>
-        ))}
-      </div>
-    )
-  }
-}
-
-class Radio extends m.ViewComponent {
-  constructor({onUpdate}) {
-    super(...arguments)
-    this.onChange = ({target: {value}}) => {
-      if (!onUpdate) return
-      f.validate(onUpdate, f.isFunction)
-      onUpdate(value)
-    }
-  }
-
-  render() {
-    const {
-      onChange,
-      props: {name, value, readOnly, disabled, checked, defaultChecked},
-    } = this
-
-    return (
-      <label className='radio'>
-        <input
-          id={`${name}_${value}`}
-          name={name}
-          value={value}
-          type='radio'
-          className='radio-input'
-          onChange={onChange}
-          checked={checked}
-          defaultChecked={defaultChecked}
-          readOnly={readOnly}
-          disabled={disabled} />
-        <span className='radio-decorator' />
-      </label>
-    )
-  }
-}
-
-
-
-/**
- * Dialogs
- */
-
-class _FormDialog extends m.ViewComponent {
-  constructor({dispatch}) {
-    super(...arguments)
-
-    this.close = () => {
-      dispatch(a.removeDialog())
-
-      if (this.props.onClose) this.props.onClose()
+    if (onClose) {
+      onClose(event)
     }
   }
 
@@ -2128,7 +1791,7 @@ class _FormDialog extends m.ViewComponent {
   }
 }
 
-const FormDialog = connect()(_FormDialog)
+const FormDialog = connect<FormDialogStateProps, {}, FormDialogOwnProps, t.AppState>()(_FormDialog)
 
 class _ConfirmDialog extends m.ViewComponent {
   constructor({dispatch}) {
@@ -2230,7 +1893,7 @@ class _Paginator extends m.ViewComponent {
       const page = selected + 1
       history.push(`/transactions/${u.encodeQuery({...query, page})}`)
 
-      if (f.isFunction(onPageChange)) onPageChange(page)
+      if (fpx.isFunction(onPageChange)) onPageChange(page)
     }
 
     this.hrefBulder = page => {
@@ -2317,7 +1980,7 @@ class _FiltersForm extends m.ViewComponent {
         page    : undefined,
       })}`)
 
-      if (f.isFunction(onSubmitSuccess)) onSubmitSuccess(this.state.formValues)
+      if (fpx.isFunction(onSubmitSuccess)) onSubmitSuccess(this.state.formValues)
     }
 
     this.onReset = event => {
@@ -2354,62 +2017,62 @@ class _FiltersForm extends m.ViewComponent {
     } = this
 
     const isMobile = g.isMobile(context)
-    const noFilters = f.isEmpty(u.omitEmpty(formValues))
+    const noFilters = fpx.isEmpty(u.omitEmpty(formValues))
     return (
       <form className='col-start-stretch' onSubmit={onSubmit} onReset={onReset}>
         <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
-          <FormDateElement
+          <f.FormDateElement
             name='dateFrom'
             label={i18n.xln(context, i18n.DATE_FROM)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'dateFrom'])} />
 
-          <FormDateElement
+          <f.FormDateElement
             name='dateTo'
             label={i18n.xln(context, i18n.DATE_TO)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'dateTo'])} />
 
-          <FormSelectElement
+          <f.FormSelectElement
             name='accountId'
             label={i18n.xln(context, i18n.ACCOUNT)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'accountId'])}>
             <option value='' />
-            {f.map(accounts, ({id, title}) => (
+            {fpx.map(accounts, ({id, title}) => (
               <option value={id} key={`income-account-${id}`}>
                 {title}
               </option>
             ))}
-          </FormSelectElement>
+          </f.FormSelectElement>
 
-          <FormSelectElement
+          <f.FormSelectElement
             name='categoryId'
             label={i18n.xln(context, i18n.CATEGORY)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'categoryId'])}>
             <option value='' />
-            {f.map(categories, ({id, title}) => (
+            {fpx.map(categories, ({id, title}) => (
               <option value={id} key={`category-${id}`}>
                 {title}
               </option>
             ))}
-          </FormSelectElement>
+          </f.FormSelectElement>
 
-          <FormSelectElement
+          <f.FormSelectElement
             name='payeeId'
             label={i18n.xln(context, i18n.PAYEE)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'payeeId'])}>
             <option value='' />
-            {f.map(payees, ({id, title}) => (
+            {fpx.map(payees, ({id, title}) => (
               <option value={id} key={`payee-${id}`}>
                 {title}
               </option>
             ))}
-          </FormSelectElement>
+          </f.FormSelectElement>
 
-          <FormTextElement
+          <f.FormTextElement
             name='comment'
             label={i18n.xln(context, i18n.COMMENT)}
             disabled={pending}
@@ -2442,7 +2105,7 @@ const FiltersForm = withRouter(connect(state => ({
   categories: state.net.categories,
   accounts: state.net.accounts,
   payees: state.net.payees,
-  pending: !f.isEmpty(state.net.pending),
+  pending: !fpx.isEmpty(state.net.pending),
 }))(_FiltersForm))
 
 class _FiltersControls extends m.ViewComponent {
@@ -2452,14 +2115,14 @@ class _FiltersControls extends m.ViewComponent {
       props: {transactions, pending, dispatch, history, location},
     } = this
 
-    const noFilters = f.isEmpty(u.omitEmpty(getFilterValues(location)))
+    const noFilters = fpx.isEmpty(u.omitEmpty(getFilterValues(location)))
 
     return (
       <div className='row-start-center padding-h-1 flex-wrap'>
         <div className='row-start-center gaps-h-0x5'>
           <m.FakeButton
             className='decorate-link'
-            disabled={pending || !f.size(transactions)}
+            disabled={pending || !fpx.size(transactions)}
             onClick={() => dispatch(a.addDialog(FormDialog, {
               form: FiltersForm,
               title: i18n.xln(context, i18n.FILTERS),
@@ -2482,7 +2145,7 @@ class _FiltersControls extends m.ViewComponent {
 
 const FiltersControls = withRouter(connect(state => ({
   transactions: state.net.transactions.items,
-  pending: !f.isEmpty(state.net.pending),
+  pending: !fpx.isEmpty(state.net.pending),
 }))(_FiltersControls))
 
 function getFilterValues(location) {

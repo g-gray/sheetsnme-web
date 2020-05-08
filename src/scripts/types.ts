@@ -44,6 +44,7 @@ export type AppState = {
 
 export type RFormEvent = React.FormEvent
 export type RMouseEvent = React.MouseEvent
+export type RChangeEvent = React.ChangeEvent
 
 
 

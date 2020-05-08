@@ -4,7 +4,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 
 // @ts-ignore
-import * as f from 'fpx'
+import * as fpx from 'fpx'
 // @ts-ignore
 import * as emerge from 'emerge'
 import * as querystring from 'querystring'
@@ -13,12 +13,12 @@ export const DEFAULT_PAGE_SIZE: number = 25
 
 export function findDomNode(instance: React.Component | Element): Element | Text | null {
   const element: Element | Text | null = ReactDom.findDOMNode(instance)
-  if (element != null) f.validate(element, isElement)
+  if (element != null) fpx.validate(element, isElement)
   return element
 }
 
 function isComponent(value: any): boolean {
-  return f.isInstance(value, React.Component)
+  return fpx.isInstance(value, React.Component)
 }
 
 
@@ -28,8 +28,8 @@ export function bindValue(
   path: t.Path,
   fun?: (value: any) => any
 ): t.BindValue {
-  f.validate(component, isComponent)
-  f.validate(path, isPath)
+  fpx.validate(component, isComponent)
+  fpx.validate(path, isPath)
 
   return {
     onUpdate: (value: any): void => {
@@ -39,7 +39,7 @@ export function bindValue(
         typeof fun === 'function' ? fun(value) : value
       ))
     },
-    value: f.getIn(component.state, path) || '',
+    value: fpx.getIn(component.state, path) || '',
   }
 }
 
@@ -48,15 +48,15 @@ export function bindChecked(
   path: t.Path,
   value: any,
 ): t.BindChecked {
-  f.validate(component, isComponent)
-  f.validate(path, isPath)
+  fpx.validate(component, isComponent)
+  fpx.validate(path, isPath)
 
   return {
     onUpdate: (value: any): void => {
       component.setState(emerge.putIn(component.state, path, value))
     },
     value,
-    checked: f.getIn(component.state, path) === value,
+    checked: fpx.getIn(component.state, path) === value,
   }
 }
 
@@ -67,11 +67,11 @@ export function bindChecked(
  */
 
 export function isNode(value: any): boolean {
-  return f.isInstance(value, Node)
+  return fpx.isInstance(value, Node)
 }
 
 export function isElement(value: any): boolean {
-  return f.isInstance(value, Element)
+  return fpx.isInstance(value, Element)
 }
 
 export function isAncestorOf(maybeAncestor: any, maybeDescendant: any): boolean {
@@ -111,8 +111,8 @@ export function addEvent(
   fun: EventListener,
   useCapture: boolean = false
 ): () => void {
-  f.validate(fun, f.isFunction)
-  f.validate(useCapture, f.isBoolean)
+  fpx.validate(fun, fpx.isFunction)
+  fpx.validate(useCapture, fpx.isBoolean)
 
   target.addEventListener(name, fun, useCapture)
 
@@ -153,7 +153,7 @@ export function toValidDate(value: any): void | Date {
   // Gotcha: `new Date(null)` ≡ `new Date(0)`
   if (value == null) return undefined
   const date = new Date(value)
-  return f.isValidDate(date) ? date : undefined
+  return fpx.isValidDate(date) ? date : undefined
 }
 
 export function dateIsoString(value: any): string {
@@ -174,24 +174,27 @@ export function addBrowserOffset(value: any): void | Date {
 }
 
 export function daysInMonth(year: number, month: number): number {
-  f.validate(year, f.isNatural)
-  f.validate(month, isMonthNumber)
+  fpx.validate(year, fpx.isNatural)
+  fpx.validate(month, isMonthNumber)
   return new Date(year, month + 1, 0).getDate()
 }
 
 function isMonthNumber(month: number): boolean {
-  return f.isNatural(month) && month >= 0 && month <= 11
+  return fpx.isNatural(month) && month >= 0 && month <= 11
 }
 
-export function daysInMonthList(year: number, month: number): number[] {
+export function daysInMonthList(
+  year: void | number,
+  month: void | number
+): number[] {
   return year != null && month != null
-    ? f.range(1, daysInMonth(year, month) + 1)
-    : f.range(1, 32)
+    ? fpx.range(1, daysInMonth(year, month) + 1)
+    : fpx.range(1, 32)
 }
 
 export function parseNum(value: any): void | number {
-  if (f.isString(value)) value = parseFloat(value)
-  if (f.isFinite(value)) return value
+  if (fpx.isString(value)) value = parseFloat(value)
+  if (fpx.isFinite(value)) return value
   return undefined
 }
 
@@ -236,7 +239,7 @@ function initStorage(): void | Storage {
 }
 
 export function storageRead(path: t.Path): any {
-  f.validate(path, isPath)
+  fpx.validate(path, isPath)
   try {
     if (!storage[STORAGE_KEY]) return undefined
     return emerge.getIn(JSON.parse(storage[STORAGE_KEY]), path)
@@ -248,7 +251,7 @@ export function storageRead(path: t.Path): any {
 }
 
 export function storageWrite(path: t.Path, value: any): void {
-  f.validate(path, isPath)
+  fpx.validate(path, isPath)
 
   try {storage[STORAGE_KEY] = JSON.stringify(emerge.putIn(storageRead([]), path, value))}
   catch (err) {
@@ -267,16 +270,16 @@ export function decodeQuery(searchString: string): t.DecodedQuery {
 }
 
 export function encodeQuery(query: t.DecodedQueryInput): string {
-  return prepend('?', querystring.encode(f.omitBy(
+  return prepend('?', querystring.encode(fpx.omitBy(
     query,
     (value: any): boolean => !value
   )))
 }
 
 export function prepend(char: string, value: void | string): string {
-  f.validate(char, f.isString)
+  fpx.validate(char, fpx.isString)
   if (value == null || value === '') return ''
-  f.validate(value, f.isString)
+  fpx.validate(value, fpx.isString)
   return value[0] === char ? value : char + value
 }
 
@@ -291,22 +294,26 @@ export function prepend(char: string, value: void | string): string {
 // indiscriminately, because that would wreck some valid URLs.
 export function bgUrl(url: string): void | t.BgUrl {
   if (url == null || url === '') return undefined
-  f.validate(url, f.isString)
+  fpx.validate(url, fpx.isString)
   return {backgroundImage: `url(${url})`}
 }
 
 function isPath (value: any): boolean {
-  return f.isList(value) && f.every(value, f.isKey)
+  return fpx.isList(value) && fpx.every(value, fpx.isKey)
 }
 
 export function omitEmpty(value: void | t.Dict): t.Dict {
-  return f.omitBy(value, (v: any) => {
-    return f.isArray(v) || f.isDict(v)
-      ? f.isEmpty(v)
-      : f.isString(v)
+  return fpx.omitBy(value, (v: any) => {
+    return fpx.isArray(v) || fpx.isDict(v)
+      ? fpx.isEmpty(v)
+      : fpx.isString(v)
       ? !v
-      : f.isDate(v)
+      : fpx.isDate(v)
       ? !v
       : v == null
   })
+}
+
+export function keyById(list: any) {
+  return fpx.keyBy(list, (item: any) => item.id)
 }
