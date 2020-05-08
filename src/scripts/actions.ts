@@ -18,6 +18,9 @@ import * as da from './dialogs/actions'
 export * from './pending/actions'
 import * as pa from './pending/actions'
 
+export * from './categories/actions'
+import * as ca from './categories/actions'
+
 export type DomActions =
   ga.GeometryActions |
   i18na.I18nActions |
@@ -30,7 +33,7 @@ export type NetAction =
   pa.PendingActions |
   ReceiveUser |
   ReceiveAccounts |
-  ReceiveCategories |
+  ca.CategoryActions |
   ReceiveTransactions |
   ReceivePayees
 
@@ -69,94 +72,6 @@ export function fetchUser(message: string): t.AppThunk<Promise<t.UserRes>> {
         dispatch(receiveUser(user))
         return user
       })
-  }
-}
-
-
-
-/**
- * Categories
- */
-
-export const RECEIVE_CATEGORIES = 'RECEIVE_CATEGORIES'
-
-interface ReceiveCategories extends t.AppAction {
-  type: typeof RECEIVE_CATEGORIES,
-  payload: {
-    categories: t.CategoryListRes,
-  },
-}
-
-export function receiveCategories(categories: t.CategoryListRes): ReceiveCategories {
-  return {
-    type: RECEIVE_CATEGORIES,
-    payload: {
-      categories,
-    },
-  }
-}
-
-export function fetchCategories(
-  message: string
-): t.AppThunk<Promise<t.CategoryListRes>> {
-  return (dispatch) => {
-    return dispatch(pa.trackRequest({
-      message,
-      requestName: 'getCategories',
-      promise: n.authedJsonFetch<t.CategoryListRes>('/api/categories'),
-    }))
-      .then((categories) => {
-        dispatch(receiveCategories(categories))
-        return categories
-      })
-  }
-}
-
-export function createCategory(
-  category: t.CategoryReq,
-  message: string
-): t.AppThunk<Promise<t.CategoryRes>> {
-  return (dispatch) => {
-    return dispatch(pa.trackRequest({
-      message,
-      requestName: 'postCategory',
-      promise: n.authedJsonFetch<t.CategoryRes>('/api/categories', {
-        method: 'POST',
-        body: category,
-      }),
-    }))
-  }
-}
-
-export function updateCategory(
-  id: string,
-  category: t.CategoryReq,
-  message: string,
-): t.AppThunk<Promise<t.CategoryRes>> {
-  return (dispatch) => {
-    return dispatch(pa.trackRequest({
-      message,
-      requestName: 'postCategory',
-      promise: n.authedJsonFetch<t.CategoryRes>(`/api/categories/${id}`, {
-        method: 'POST',
-        body: category,
-      }),
-    }))
-  }
-}
-
-export function deleteCategory(
-  id: string,
-  message: string
-): t.AppThunk<Promise<t.CategoryRes>> {
-  return (dispatch) => {
-    return dispatch(pa.trackRequest({
-      message,
-      requestName: 'deleteCategory',
-      promise: n.authedJsonFetch<t.CategoryRes>(`/api/categories/${id}`, {
-        method: 'DELETE',
-      }),
-    }))
   }
 }
 

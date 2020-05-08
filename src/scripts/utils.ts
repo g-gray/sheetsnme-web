@@ -11,8 +11,8 @@ import * as querystring from 'querystring'
 
 export const DEFAULT_PAGE_SIZE: number = 25
 
-export function findDomNode(instance: React.Component | Element): Element | Text | null {
-  const element: Element | Text | null = ReactDom.findDOMNode(instance)
+export function findDomNode(instance: React.ReactInstance | null | undefined): Element | Text | null {
+  const element = ReactDom.findDOMNode(instance)
   if (element != null) fpx.validate(element, isElement)
   return element
 }
@@ -121,13 +121,13 @@ export function addEvent(
   }
 }
 
-export function preventDefault(event: Event): void {
+export function preventDefault(event: t.RFormEvent): void {
   if (event && event.preventDefault) {
     event.preventDefault()
   }
 }
 
-export function stopPropagation(event: Event): void {
+export function stopPropagation(event: t.RFormEvent): void {
   if (event && event.stopPropagation) {
     event.stopPropagation()
   }

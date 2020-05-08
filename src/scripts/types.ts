@@ -18,6 +18,10 @@ export * from './dialogs/types'
 
 import * as pt from './pending/types'
 export * from './pending/types'
+
+import * as ct from './categories/types'
+export * from './categories/types'
+
 /**
  * Env
  */
@@ -42,10 +46,14 @@ export type AppState = {
   net: NetState,
 }
 
+export type RFormEventHandler = React.FormEventHandler
+export type RMouseEventHandler = React.MouseEventHandler
+
 export type RFormEvent = React.FormEvent
 export type RMouseEvent = React.MouseEvent
 export type RChangeEvent = React.ChangeEvent
 
+export type RReactElement = React.ReactElement
 
 
 
@@ -78,8 +86,7 @@ export type NetState = {
   user: UserRes,
   transactions: {},
   transactionsById: {},
-  categories: CategoryListRes,
-  categoriesById: CategoriesById,
+  categories: ct.CategoriesState,
   accounts: AccountListRes,
   accountsById: AccountsById,
   payees: [],
@@ -219,32 +226,6 @@ export type AccountListRes = AccountWithBalanceRes[]
 
 export type AccountsById = {
   [key: string]: AccountWithBalanceRes,
-}
-
-
-
-/**
- * Category
- */
-
-export type CategoryReq = {
-  id?          : string,
-  title        : string,
-  createdAt?   : string,
-  updatedAt?   : string,
-}
-
-export type CategoryRes = {
-  id          : string,
-  title       : string,
-  createdAt   : string,
-  updatedAt   : string,
-}
-
-export type CategoryListRes = CategoryRes[]
-
-export type CategoriesById = {
-  [key: string]: CategoryRes,
 }
 
 

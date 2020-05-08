@@ -316,7 +316,7 @@ class Drawer extends m.ViewComponent {
  * Entities
  */
 
-class EntityPlaceholder extends m.ViewComponent {
+export class EntityPlaceholder extends m.ViewComponent {
   render() {
     const {context} = this
 
@@ -345,20 +345,25 @@ class EntityPlaceholder extends m.ViewComponent {
   }
 }
 
-class EntityItem extends m.ViewComponent {
-  constructor({onOpen}) {
-    super(...arguments)
-    this.actionsRef = React.createRef()
 
-    this.onClick = event => {
-      if (!onOpen) return
-      fpx.validate(onOpen, fpx.isFunction)
+type EntityItemProps = {
+  icon: t.RReactElement,
+  onOpen: (event: t.RMouseEvent) => void,
+  onDelete: (event: t.RMouseEvent) => void,
+}
 
-      const actionsNode = u.findDomNode(this.actionsRef.current)
-      if (u.isAncestorOf(actionsNode, event.target)) return
+export class EntityItem extends m.ViewComponent<EntityItemProps> {
+  actionsRef = React.createRef<HTMLDivElement>()
 
-      onOpen()
+  onClick = (event: t.RMouseEvent) => {
+    const {actionsRef, props: {onOpen}} = this
+
+    const actionsNode = u.findDomNode(actionsRef.current)
+    if (u.isAncestorOf(actionsNode, event.target)) {
+      return
     }
+
+    onOpen(event)
   }
 
   render() {
@@ -413,198 +418,6 @@ class Placeholder extends m.ViewComponent {
     )
   }
 }
-
-
-
-/**
- * Categories
- */
-
-class _CategoriesPage extends m.ViewComponent {
-  render() {
-    const {
-      context,
-      props: {dispatch},
-    } = this
-
-    const action = (
-      <Fab
-        onClick={() => dispatch(a.addDialog(FormDialog, {
-          form: CategoryForm,
-          title: i18n.xln(context, i18n.NEW_CATEGORY),
-        }))} />
-    )
-
-    return (
-      <ListPage action={action}>
-        <CategoriesList />
-      </ListPage>
-    )
-  }
-}
-
-export const CategoriesPage = connect()(_CategoriesPage)
-
-class _CategoryForm extends m.ViewComponent {
-  constructor({dispatch}) {
-    super(...arguments)
-
-    this.state = {formValues: this.props.category || {}}
-
-    this.onSubmit = event => {
-      u.preventDefault(event)
-
-      this.setState({errors: undefined})
-
-      const {context, props, state} = this
-      const {formValues} = state
-
-      const promise = formValues.id
-        ? dispatch(a.updateCategory(formValues.id, formValues, i18n.xln(context, i18n.UPDATING_CATEGORY)))
-        : dispatch(a.createCategory(formValues, i18n.xln(context, i18n.CREATING_CATEGORY)))
-
-      promise
-        .catch(errors => {
-          this.setState({errors})
-          throw errors
-        })
-        .then(() => {props.onSubmitSuccess()})
-        .then(() => dispatch(a.addNotification(formValues.id
-          ? i18n.xln(context, i18n.CATEGORY_UPDATED)
-          : i18n.xln(context, i18n.CATEGORY_CREATED)
-        )))
-        .then(() => dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))))
-    }
-
-    this.onDelete = event => {
-      u.preventDefault(event)
-
-      this.setState({errors: undefined})
-
-      const {context, props, state} = this
-      const {formValues} = state
-
-      dispatch(a.addDialog(ConfirmDialog, {
-        question: i18n.xln(context, i18n.DELETE_CATEGORY),
-        onConfirm: () => {
-          dispatch(a.deleteCategory(formValues.id, i18n.xln(context, i18n.DELETING_CATEGORY)))
-            .then(() => {props.onSubmitSuccess()})
-            .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.CATEGORY_DELETED))))
-            .then(() => dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))))
-        },
-      }))
-    }
-  }
-
-  render() {
-    const {
-      context,
-      state: {errors, formValues: {id}},
-      props: {pending},
-      onSubmit, onDelete,
-    } = this
-
-    const isMobile = g.isMobile(context)
-    const disabled = pending
-
-    return (
-      <form className='col-start-stretch' onSubmit={onSubmit}>
-        <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
-          <f.FormTextElement
-            name='title'
-            label={i18n.xln(context, i18n.TITLE)}
-            disabled={disabled}
-            {...u.bindValue(this, ['formValues', 'title'])} />
-        </div>
-        <hr className='hr margin-h-1x25' />
-        <div className='row-between-stretch padding-v-1 padding-h-1x25'>
-          <div className='flex-1 row-start-stretch'>
-            {!id ? null :
-            <m.FakeButton
-              className='btn-transparent'
-              onClick={onDelete}
-              disabled={disabled}>
-              {i18n.xln(context, i18n.DELETE)}
-            </m.FakeButton>}
-          </div>
-          <button
-            type='submit'
-            className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
-            disabled={disabled}>
-            {i18n.xln(context, i18n.SUBMIT)}
-          </button>
-          <div className='flex-1' />
-        </div>
-        {!errors ? null :
-        <hr className='hr margin-h-1x25' />}
-        <f.FormErrors errors={errors} />
-      </form>
-    )
-  }
-}
-
-const CategoryForm = connect(state => ({
-  pending: !fpx.isEmpty(state.net.pending),
-}))(_CategoryForm)
-
-class _CategoriesList extends m.ViewComponent {
-  constructor({dispatch}) {
-    super(...arguments)
-
-    const {context} = this
-
-    this.onOpen = category => () => {
-      dispatch(a.addDialog(FormDialog, {
-        form: CategoryForm,
-        formProps: {category},
-        title: i18n.xln(context, i18n.EDIT_CATEGORY),
-      }))
-    }
-
-    this.onDelete = category => () => {
-      dispatch(a.addDialog(ConfirmDialog, {
-        question: i18n.xln(context, i18n.DELETE_CATEGORY),
-        onConfirm: () => {
-          dispatch(a.deleteCategory(category.id, i18n.xln(context, i18n.DELETING_CATEGORY)))
-            .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.CATEGORY_DELETED))))
-            .then(() => dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))))
-        },
-      }))
-    }
-  }
-
-  render() {
-    const {
-      props: {categories, pending},
-      onOpen, onDelete,
-    } = this
-
-    return pending || !fpx.size(categories) ? (
-      <div className='col-start-stretch'>
-        {fpx.map(new Array(fpx.size(categories) || 3), (__, index) => (
-          <EntityPlaceholder key={`placeholder-${index}`} />
-        ))}
-      </div>
-    ) : (
-      <div className='col-start-stretch'>
-        {fpx.map(categories, category => (
-          <EntityItem
-            key={category.id}
-            icon={<s.Tag className='font-large fg-primary' />}
-            onOpen={onOpen(category)}
-            onDelete={onDelete(category)}>
-            {category.title}
-          </EntityItem>
-        ))}
-      </div>
-    )
-  }
-}
-
-const CategoriesList = connect(state => ({
-  categories: state.net.categories,
-  pending: !fpx.isEmpty(state.net.pending),
-}))(_CategoriesList)
 
 
 
@@ -1403,7 +1216,7 @@ class _TransactionForm extends m.ViewComponent {
 }
 
 const TransactionForm = withRouter(connect(state => ({
-  categories: state.net.categories,
+  categories: state.net.categories.categoryList,
   accounts: state.net.accounts,
   payees: state.net.payees,
   pending: !fpx.isEmpty(state.net.pending),
@@ -1650,7 +1463,7 @@ class _TransactionOrigin extends m.ViewComponent {
 }
 
 const TransactionOrigin = connect(state => ({
-  categoriesById: state.net.categoriesById,
+  categoriesById: state.net.categories.categoriesById,
   payeesById: state.net.payeesById,
 }))(_TransactionOrigin)
 
@@ -1791,7 +1604,7 @@ class _FormDialog extends m.ViewComponent<FormDialogProps> {
   }
 }
 
-const FormDialog = connect<FormDialogStateProps, {}, FormDialogOwnProps, t.AppState>()(_FormDialog)
+export const FormDialog = connect<FormDialogStateProps, {}, FormDialogOwnProps, t.AppState>()(_FormDialog)
 
 class _ConfirmDialog extends m.ViewComponent {
   constructor({dispatch}) {
@@ -1840,7 +1653,7 @@ class _ConfirmDialog extends m.ViewComponent {
   }
 }
 
-const ConfirmDialog = connect()(_ConfirmDialog)
+export const ConfirmDialog = connect()(_ConfirmDialog)
 
 
 
@@ -1848,7 +1661,11 @@ const ConfirmDialog = connect()(_ConfirmDialog)
  * Misc
  */
 
-class ListPage extends m.ViewComponent {
+type ListPageProps = {
+  action: t.RReactElement,
+}
+
+export class ListPage extends m.ViewComponent<ListPageProps> {
   render() {
     const {
       context,
@@ -2102,7 +1919,7 @@ class _FiltersForm extends m.ViewComponent {
 }
 
 const FiltersForm = withRouter(connect(state => ({
-  categories: state.net.categories,
+  categories: state.net.categories.categoryList,
   accounts: state.net.accounts,
   payees: state.net.payees,
   pending: !fpx.isEmpty(state.net.pending),
@@ -2175,7 +1992,7 @@ function resetFilters(history, location) {
   })}`)
 }
 
-class Fab extends m.ViewComponent {
+export class Fab extends m.ViewComponent {
   render() {
     const {props: {className: cls, ...props}} = this
 

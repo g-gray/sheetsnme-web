@@ -6,13 +6,13 @@ import * as fpx from 'fpx'
 import * as a from './actions'
 
 import * as pr from './pending/reducers'
+import * as cr from './categories/reducers'
 
 const defaultNetState: t.NetState = {
   user: {},
   transactions: {},
   transactionsById: {},
-  categories: [],
-  categoriesById: {},
+  categories: cr.defaultState,
   accounts: [],
   accountsById: {},
   payees: [],
@@ -31,11 +31,9 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
     }
 
     case a.RECEIVE_CATEGORIES: {
-      const {categories} = action.payload
       return {
         ...state,
-        categories,
-        categoriesById: fpx.keyBy(categories, (category: t.CategoryRes) => category.id),
+        categories: cr.categories(state.categories, action),
       }
     }
 

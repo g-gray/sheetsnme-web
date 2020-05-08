@@ -31,23 +31,29 @@ Usable for layouts unsupported by the native button element, such as a flex
 container. Doesn't work for submit buttons. Supports focus and keyboard
 activation. Should be the last resort; try <Button /> first.
 */
-export class FakeButton extends ViewComponent {
-  constructor() {
-    super(...arguments)
-    this.onKeyPress = simulateEnterOnKeyPress.bind(undefined, this)
-  }
+
+type FakeButtonProps = {
+  className?: string,
+  type?: string,
+  disabled?: boolean,
+  onClick: t.RMouseEventHandler,
+}
+
+export class FakeButton extends ViewComponent<FakeButtonProps> {
+  onKeyPress = simulateEnterOnKeyPress.bind(undefined, this)
 
   render() {
     const {
       onKeyPress,
-      props: {type = 'span', onClick, disabled, ...props},
+      props: {className, type = 'span', onClick, disabled, ...props},
     } = this
     return React.createElement(type, {
+      className,
       role: 'button',
       tabIndex: disabled ? undefined : '0',
+      disabled,
       onKeyPress: onClick ? onKeyPress : undefined,
       onClick,
-      disabled,
       ...props,
     })
   }

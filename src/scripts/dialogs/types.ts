@@ -1,7 +1,7 @@
 export type DialogsState = DialogList
 
 export type Dialog<P> = {
-  dialog: React.ComponentType<P>,
+  dialog: t.RComponentType<P>,
   dialogProps?: P,
 }
 
