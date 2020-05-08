@@ -101,7 +101,7 @@ export enum KEY_NAMES_US {
   K          = 75,
 }
 
-export function eventKeyCode({keyCode}: KeyboardEvent): number {
+export function eventKeyCode({keyCode}: KeyboardEvent | t.RKeyboardEvent): number {
   return keyCode
 }
 
@@ -292,8 +292,10 @@ export function prepend(char: string, value: void | string): string {
 // Note: if the URL contains spaces or other non-URL characters, it must be
 // URL-encoded before calling this function. We can't encode them
 // indiscriminately, because that would wreck some valid URLs.
-export function bgUrl(url: string): void | t.BgUrl {
-  if (url == null || url === '') return undefined
+export function bgUrl(url: string): undefined | t.BgUrl {
+  if (url == null || url === '') {
+    return undefined
+  }
   fpx.validate(url, fpx.isString)
   return {backgroundImage: `url(${url})`}
 }

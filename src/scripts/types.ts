@@ -48,12 +48,16 @@ export type AppState = {
 
 export type RFormEventHandler = React.FormEventHandler
 export type RMouseEventHandler = React.MouseEventHandler
+export type RKeyboardEventHandler = React.KeyboardEventHandler
 
 export type RFormEvent = React.FormEvent
 export type RMouseEvent = React.MouseEvent
 export type RChangeEvent = React.ChangeEvent
+export type RKeyboardEvent = React.KeyboardEvent
 
 export type RReactElement = React.ReactElement
+export type RComponentType = React.ComponentType
+export type RReactInstance = React.ReactInstance
 
 
 

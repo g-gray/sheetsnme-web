@@ -1,6 +1,6 @@
 import * as t from '../types'
 
-import React from 'react'
+import React, { MouseEvent } from 'react'
 
 import * as u from '../utils'
 import * as e from '../env'
@@ -36,35 +36,46 @@ type FakeButtonProps = {
   className?: string,
   type?: string,
   disabled?: boolean,
-  onClick: t.RMouseEventHandler,
+  onClick: (event: t.RKeyboardEvent | t.RMouseEvent) => void,
 }
 
 export class FakeButton extends ViewComponent<FakeButtonProps> {
-  onKeyPress = simulateEnterOnKeyPress.bind(undefined, this)
+  keyPress = (event: t.RKeyboardEvent) => {
+    const {props: {onClick}} = this
+    if (u.eventKeyCode(event) === u.KEY_NAMES_US.ENTER) {
+      onClick(event)
+    }
+  }
+
+  click = (event: t.RMouseEvent) => {
+    const {props: {onClick}} = this
+    onClick(event)
+  }
 
   render() {
     const {
-      onKeyPress,
       props: {className, type = 'span', onClick, disabled, ...props},
+      keyPress, click,
     } = this
     return React.createElement(type, {
       className,
       role: 'button',
       tabIndex: disabled ? undefined : '0',
       disabled,
-      onKeyPress: onClick ? onKeyPress : undefined,
-      onClick,
+      onKeyPress: keyPress,
+      onClick: click,
       ...props,
     })
   }
 }
 
-function simulateEnterOnKeyPress(view, event) {
-  const {props: {onClick}} = view
-  if (u.eventKeyCode(event) === u.KEY_NAMES_US.ENTER && onClick) onClick(event)
+
+type CircleUserPicProps = {
+  url: string,
+  size: number,
 }
 
-export class CircleUserPic extends ViewComponent {
+export class CircleUserPic extends ViewComponent<CircleUserPicProps> {
   render() {
     const {props: {url, size, ...props}} = this
     const bgUrl = url || '/images/no-avatar-square.png'
@@ -74,7 +85,8 @@ export class CircleUserPic extends ViewComponent {
         <span
           className='block bg-circle-trick'
           style={u.bgUrl(bgUrl)}
-          {...props} />
+          {...props}
+        />
       )
     }
 
@@ -96,23 +108,35 @@ a popup. Usage:
     ... content ...
   </Closer>
 */
-export class Closer extends ViewComponent {
-  constructor() {
-    super(...arguments)
 
-    const maybeClose = event => {
-      const {props: {close}} = this
-      if (close) close(event)
+type CloserProps = {
+  root: t.RReactInstance,
+  close: (event: Event) => void,
+}
+
+export class Closer extends ViewComponent<CloserProps> {
+  unKeyDown: () => void = () => {}
+  unClick: () => void = () => {}
+
+  maybeClose = (event: Event) => {
+    const {props: {close}} = this
+    if (close) close(event)
+  }
+
+  onKeyDown = (event: Event) => {
+    if (
+      event instanceof KeyboardEvent &&
+      u.eventKeyCode(event) === u.KEY_NAMES_US.ESCAPE
+    ) {
+      this.maybeClose(event)
     }
+  }
 
-    this.onKeyDown = event => {
-      if (u.eventKeyCode(event) === u.KEY_NAMES_US.ESCAPE) maybeClose(event)
-    }
-
-    this.onClick = event => {
-      const {props: {root}} = this
-      const node = u.findDomNode(root)
-      if (node && !u.isAncestorOf(node, event.target)) maybeClose(event)
+  onClick = (event: Event) => {
+    const {props: {root}} = this
+    const node = u.findDomNode(root)
+    if (!u.isAncestorOf(node, event.target)) {
+      this.maybeClose(event)
     }
   }
 
@@ -122,8 +146,8 @@ export class Closer extends ViewComponent {
   }
 
   componentWillUnmount() {
-    if (this.unKeyDown) this.unKeyDown()
-    if (this.unClick) this.unClick()
+    this.unKeyDown()
+    this.unClick()
   }
 
   render() {

@@ -36,7 +36,7 @@ export const GlobalDialog = connect<GlobalDialogStateProps, {}, {}, t.AppState>(
 type DialogProps = {
   className: void | string,
   dialogsNumber: number,
-  onEscape: void | ((event: KeyboardEvent) => void),
+  onEscape: (event: KeyboardEvent) => void,
 }
 
 export class Dialog extends m.ViewComponent<DialogProps> {
@@ -48,8 +48,7 @@ export class Dialog extends m.ViewComponent<DialogProps> {
     this.unsub = u.addEvent(window, 'keydown', (event) => {
       if (
         event instanceof KeyboardEvent &&
-        u.eventKeyCode(event) === u.KEY_NAMES_US.ESCAPE &&
-        typeof onEscape === 'function'
+        u.eventKeyCode(event) === u.KEY_NAMES_US.ESCAPE
       ) {
         onEscape(event)
       }
