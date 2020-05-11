@@ -103,7 +103,7 @@ class _CategoryForm extends m.ViewComponent<CategoryFormProps, CategoryFormState
       .then(() => dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))))
   }
 
-  onDelete = (event: t.RFormEvent) => {
+  onDelete = (event: t.RKeyboardEvent | t.RMouseEvent) => {
     u.preventDefault(event)
 
     this.setState({errors: undefined})
@@ -121,7 +121,7 @@ class _CategoryForm extends m.ViewComponent<CategoryFormProps, CategoryFormState
           formValues.id,
           i18n.xln(context, i18n.DELETING_CATEGORY)
         ))
-          .then(() => {onSubmitSuccess()})
+          .then(() => onSubmitSuccess())
           .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.CATEGORY_DELETED))))
           .then(() => dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))))
       },
@@ -222,10 +222,10 @@ class _CategoriesList extends m.ViewComponent<CategoriesListProps> {
       onOpen, onDelete,
     } = this
 
-    return pending || !fpx.size(categories) ? (
+    return pending || !categories.length ? (
       <div className='col-start-stretch'>
-        {new Array(fpx.size(categories) || 3).map((__, index) => (
-          <p.EntityPlaceholder key={`placeholder-${index}`} />
+        {new Array(categories.length || 3).fill(undefined).map((__, index) => (
+          <p.EntityPlaceholder key={index} />
         ))}
       </div>
     ) : (

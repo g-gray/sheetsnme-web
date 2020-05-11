@@ -105,7 +105,7 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
       .then(() => dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
   }
 
-  onDelete = (event: t.RFormEvent) => {
+  onDelete = (event: t.RKeyboardEvent | t.RMouseEvent) => {
     u.preventDefault(event)
 
     const {
@@ -116,7 +116,7 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
 
     this.setState({errors: undefined})
 
-    dispatch(a.addDialog(ConfirmDialog, {
+    dispatch(a.addDialog(p.ConfirmDialog, {
       question: i18n.xln(context, i18n.DELETE_ACCOUNT),
       onConfirm: () => {
         dispatch(a.deleteAccount(
@@ -248,11 +248,11 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
                   onDelete={onDelete(account)}>
                   <div className='flex-1 row-between-center gaps-h-1'>
                     <span>{account.title}</span>
-                    {account.balance > 0
-                      ? <span className='fg-success'>+{account.balance}</span>
-                      : account.balance < 0
-                      ? <span className='fg-error'>{account.balance}</span>
-                      : <span className='fg-on-surface-pale'>{account.balance}</span>}
+                    { account.balance > 0
+                    ? <span className='fg-success'>+{account.balance}</span>
+                    : account.balance < 0
+                    ? <span className='fg-error'>{account.balance}</span>
+                    : <span className='fg-on-surface-pale'>{account.balance}</span>}
                   </div>
                 </p.EntityItem>
               ))}
