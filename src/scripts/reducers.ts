@@ -7,14 +7,14 @@ import * as a from './actions'
 
 import * as pr from './pending/reducers'
 import * as cr from './categories/reducers'
+import * as ar from './accounts/reducers'
 
 const defaultNetState: t.NetState = {
   user: {},
   transactions: {},
   transactionsById: {},
   categories: cr.defaultState,
-  accounts: [],
-  accountsById: {},
+  accounts: ar.defaultState,
   payees: [],
   payeesById: {},
   pending: pr.defaultState,
@@ -38,11 +38,9 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
     }
 
     case a.RECEIVE_ACCOUNTS: {
-      const {accounts} = action.payload
       return {
         ...state,
-        accounts,
-        accountsById: fpx.keyBy(accounts, (account: t.AccountRes) => account.id),
+        accounts: ar.accounts(state.accounts, action),
       }
     }
 

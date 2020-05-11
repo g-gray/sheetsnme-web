@@ -22,6 +22,9 @@ export * from './pending/types'
 import * as ct from './categories/types'
 export * from './categories/types'
 
+import * as at from './accounts/types'
+export * from './accounts/types'
+
 /**
  * Env
  */
@@ -91,8 +94,7 @@ export type NetState = {
   transactions: {},
   transactionsById: {},
   categories: ct.CategoriesState,
-  accounts: AccountListRes,
-  accountsById: AccountsById,
+  accounts: at.AccountsState,
   payees: [],
   payeesById: {},
   pending: pt.Pending,
@@ -198,38 +200,6 @@ export type UserRes = {
 
 export type SpreadsheetRes = {
   id: string,
-}
-
-
-
-/**
- * Account
- */
-
-export type AccountReq = {
-  id?          : string,
-  title        : string,
-  currencyCode?: string,
-  createdAt?   : string,
-  updatedAt?   : string,
-}
-
-export type AccountRes = {
-  id          : string,
-  title       : string,
-  currencyCode: string,
-  createdAt   : string,
-  updatedAt   : string,
-}
-
-export type AccountWithBalanceRes = AccountRes & {
-  balance: number,
-}
-
-export type AccountListRes = AccountWithBalanceRes[]
-
-export type AccountsById = {
-  [key: string]: AccountWithBalanceRes,
 }
 
 
