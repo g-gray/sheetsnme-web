@@ -34,8 +34,8 @@ export const GlobalDialog = connect<GlobalDialogStateProps, {}, {}, t.AppState>(
 
 
 type DialogProps = {
-  className: void | string,
-  dialogsNumber: number,
+  className?: string,
+  dialogsNumber?: number,
   onEscape: (event: KeyboardEvent) => void,
 }
 
@@ -72,15 +72,15 @@ export class Dialog extends m.ViewComponent<DialogProps> {
   }
 }
 
-function onDialogOpen(dialogsNumber: number) {
+function onDialogOpen(dialogsNumber: void | number) {
   if (dialogsNumber > 0) {
     document.body.style.marginRight = `${u.getGlobalScrollbarWidth()}px`
     document.body.classList.add('overflow-x-scroll')
   }
 }
 
-function onDialogClose(dialogsNumber: number) {
-  if (dialogsNumber === 0) {
+function onDialogClose(dialogsNumber: void | number) {
+  if (!dialogsNumber) {
     document.body.style.marginRight = ''
     document.body.classList.remove('overflow-x-scroll')
   }

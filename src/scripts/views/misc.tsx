@@ -72,7 +72,7 @@ export class FakeButton extends ViewComponent<FakeButtonProps> {
 
 type CircleUserPicProps = {
   url: string,
-  size: number,
+  size?: number,
 }
 
 export class CircleUserPic extends ViewComponent<CircleUserPicProps> {
@@ -80,7 +80,7 @@ export class CircleUserPic extends ViewComponent<CircleUserPicProps> {
     const {props: {url, size, ...props}} = this
     const bgUrl = url || '/images/no-avatar-square.png'
 
-    if (!size) {
+    if (size == null) {
       return (
         <span
           className='block bg-circle-trick'
