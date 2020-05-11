@@ -19,6 +19,9 @@ export * from './dialogs/types'
 import * as pent from './pending/types'
 export * from './pending/types'
 
+import * as ut from './user/types'
+export * from './user/types'
+
 import * as ct from './categories/types'
 export * from './categories/types'
 
@@ -93,7 +96,7 @@ export type Dict = {
  */
 
 export type NetState = {
-  user: UserRes,
+  user: ut.UserState,
   transactions: {},
   transactionsById: {},
   categories: ct.CategoriesState,
@@ -181,27 +184,6 @@ export type BindChecked = {
   onUpdate: (value: any) => void,
   value: any,
   checked: boolean,
-}
-
-
-
-/**
- * User
- */
-
-export type UserRes = {
-  id           : string,
-  pictureUrl   : string,
-  email        : string,
-  firstName    : string,
-  lastName     : string,
-  spreadsheets : SpreadsheetRes[],
-  createdAt    : Date,
-  updatedAt    : Date,
-}
-
-export type SpreadsheetRes = {
-  id: string,
 }
 
 

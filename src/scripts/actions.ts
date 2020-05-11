@@ -18,6 +18,9 @@ import * as da from './dialogs/actions'
 export * from './pending/actions'
 import * as pena from './pending/actions'
 
+export * from './user/actions'
+import * as ua from './user/actions'
+
 export * from './categories/actions'
 import * as ca from './categories/actions'
 
@@ -35,49 +38,11 @@ export type DomActions =
 
 export type NetAction =
   pena.PendingActions |
-  ReceiveUser |
+  ua.UserActions |
   ca.CategoryActions |
   aa.AccountActions |
   pa.PayeeActions |
   ReceiveTransactions
-
-
-
-/**
- * User
- */
-
-export const RECEIVE_USER = 'RECEIVE_USER'
-
-interface ReceiveUser extends t.AppAction {
-  type: typeof RECEIVE_USER,
-  payload: {
-    user: t.UserRes,
-  },
-}
-
-export function receiveUser(user: t.UserRes): ReceiveUser {
-  return {
-    type: RECEIVE_USER,
-    payload: {
-      user,
-    },
-  }
-}
-
-export function fetchUser(message: string): t.AppThunk<Promise<t.UserRes>> {
-  return (dispatch) => {
-    return dispatch(pena.trackRequest<t.UserRes>({
-      message,
-      requestName: 'getUser',
-      promise: n.authedJsonFetch('/api/user'),
-    }))
-      .then((user) => {
-        dispatch(receiveUser(user))
-        return user
-      })
-  }
-}
 
 
 
