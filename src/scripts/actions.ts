@@ -16,13 +16,16 @@ export * from './dialogs/actions'
 import * as da from './dialogs/actions'
 
 export * from './pending/actions'
-import * as pa from './pending/actions'
+import * as pena from './pending/actions'
 
 export * from './categories/actions'
 import * as ca from './categories/actions'
 
 export * from './accounts/actions'
 import * as aa from './accounts/actions'
+
+export * from './payees/actions'
+import * as pa from './payees/actions'
 
 export type DomActions =
   ga.GeometryActions |
@@ -31,12 +34,12 @@ export type DomActions =
   da.DialogActions
 
 export type NetAction =
-  pa.PendingActions |
+  pena.PendingActions |
   ReceiveUser |
   ca.CategoryActions |
   aa.AccountActions |
-  ReceiveTransactions |
-  ReceivePayees
+  pa.PayeeActions |
+  ReceiveTransactions
 
 
 
@@ -64,7 +67,7 @@ export function receiveUser(user: t.UserRes): ReceiveUser {
 
 export function fetchUser(message: string): t.AppThunk<Promise<t.UserRes>> {
   return (dispatch) => {
-    return dispatch(pa.trackRequest<t.UserRes>({
+    return dispatch(pena.trackRequest<t.UserRes>({
       message,
       requestName: 'getUser',
       promise: n.authedJsonFetch('/api/user'),
@@ -73,94 +76,6 @@ export function fetchUser(message: string): t.AppThunk<Promise<t.UserRes>> {
         dispatch(receiveUser(user))
         return user
       })
-  }
-}
-
-
-
-/**
- * Payees
- */
-
-export const RECEIVE_PAYEES = 'RECEIVE_PAYEES'
-
-interface ReceivePayees extends t.AppAction {
-  type: typeof RECEIVE_PAYEES,
-  payload: {
-    payees: t.PayeeListRes,
-  },
-}
-
-export function receivePayees(payees: t.PayeeListRes): ReceivePayees {
-  return {
-    type: RECEIVE_PAYEES,
-    payload: {
-      payees,
-    },
-  }
-}
-
-export function fetchPayees(
-  message: string
-): t.AppThunk<Promise<t.PayeeListRes>> {
-  return (dispatch) => {
-    return dispatch(pa.trackRequest({
-      message,
-      requestName: 'getPayees',
-      promise: n.authedJsonFetch<t.PayeeListRes>('/api/payees'),
-    }))
-      .then((payees) => {
-        dispatch(receivePayees(payees))
-        return payees
-      })
-  }
-}
-
-export function createPayee(
-  payee: t.PayeeReq,
-  message: string
-): t.AppThunk<Promise<t.PayeeRes>> {
-  return (dispatch) => {
-    return dispatch(pa.trackRequest({
-      message,
-      requestName: 'postPayee',
-      promise: n.authedJsonFetch<t.PayeeRes>('/api/payees', {
-        method: 'POST',
-        body: payee,
-      }),
-    }))
-  }
-}
-
-export function updatePayee(
-  id: string,
-  payee: t.PayeeReq,
-  message: string
-): t.AppThunk<Promise<t.PayeeRes>> {
-  return (dispatch) => {
-    return dispatch(pa.trackRequest({
-      message,
-      requestName: 'postPayee',
-      promise: n.authedJsonFetch<t.PayeeRes>(`/api/payees/${id}`, {
-        method: 'POST',
-        body: payee,
-      }),
-    }))
-  }
-}
-
-export function deletePayee(
-  id: string,
-  message: string
-): t.AppThunk<Promise<t.PayeeRes>> {
-  return (dispatch) => {
-    return dispatch(pa.trackRequest({
-      message,
-      requestName: 'deletePayee',
-      promise: n.authedJsonFetch<t.PayeeRes>(`/api/payees/${id}`, {
-        method: 'DELETE',
-      }),
-    }))
   }
 }
 
@@ -206,7 +121,7 @@ export function fetchTransactions(
       limit,
     }
 
-    return dispatch(pa.trackRequest({
+    return dispatch(pena.trackRequest({
       message,
       requestName: 'getTransactions',
       promise: n.authedJsonFetch<t.TransactionListRes>('/api/transactions', {
@@ -226,7 +141,7 @@ export function createTransaction(
   message: string
 ): t.AppThunk<Promise<t.TransactionRes>> {
   return (dispatch) => {
-    return dispatch(pa.trackRequest({
+    return dispatch(pena.trackRequest({
       message,
       requestName: 'postTransaction',
       promise: n.authedJsonFetch<t.TransactionRes>('/api/transactions', {
@@ -243,7 +158,7 @@ export function updateTransaction(
   message: string
 ): t.AppThunk<Promise<t.TransactionRes>> {
   return (dispatch) => {
-    return dispatch(pa.trackRequest({
+    return dispatch(pena.trackRequest({
       message,
       requestName: 'postTransaction',
       promise: n.authedJsonFetch<t.TransactionRes>(`/api/transactions/${id}`, {
@@ -259,7 +174,7 @@ export function deleteTransaction(
   message:string
 ): t.AppThunk<Promise<t.TransactionRes>> {
   return (dispatch) => {
-    return dispatch(pa.trackRequest({
+    return dispatch(pena.trackRequest({
       message,
       requestName: 'deleteTransaction',
       promise: n.authedJsonFetch<t.TransactionRes>(`/api/transactions/${id}`, {

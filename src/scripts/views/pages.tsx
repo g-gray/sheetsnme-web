@@ -422,221 +422,6 @@ class Placeholder extends m.ViewComponent {
 
 
 /**
- * Payees
- */
-
-class _PayeesPage extends m.ViewComponent {
-  render() {
-    const {
-      context,
-      props: {dispatch},
-    } = this
-
-    const action = (
-      <Fab
-        onClick={() => dispatch(a.addDialog(FormDialog, {
-          form: PayeeForm,
-          title: i18n.xln(context, i18n.NEW_PAYEE),
-        }))} />
-    )
-
-    return (
-      <ListPage action={action}>
-        <PayeesList />
-      </ListPage>
-    )
-  }
-}
-
-export const PayeesPage = connect()(_PayeesPage)
-
-class _PayeeForm extends m.ViewComponent {
-  constructor({dispatch}) {
-    super(...arguments)
-
-    this.state = {formValues: this.props.payee || {}}
-
-    this.onSubmit = event => {
-      u.preventDefault(event)
-
-      this.setState({errors: undefined})
-
-      const {context, props, state} = this
-      const {formValues} = state
-
-      const promise = formValues.id
-        ? dispatch(a.updatePayee(formValues.id, formValues, i18n.xln(context, i18n.UPDATING_PAYEE)))
-        : dispatch(a.createPayee(formValues, i18n.xln(context, i18n.CREATING_PAYEE)))
-
-      promise
-        .catch(errors => {
-          this.setState({errors})
-          throw errors
-        })
-        .then(() => {props.onSubmitSuccess()})
-        .then(() => dispatch(a.addNotification(formValues.id
-          ? i18n.xln(context, i18n.PAYEE_UPDATED)
-          : i18n.xln(context, i18n.PAYEE_CREATED)
-        )))
-        .then(() => dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))))
-    }
-
-    this.onDelete = event => {
-      u.preventDefault(event)
-
-      this.setState({errors: undefined})
-
-      const {context, props, state} = this
-      const {formValues} = state
-
-      dispatch(a.addDialog(ConfirmDialog, {
-        question: i18n.xln(context, i18n.DELETE_PAYEE),
-        onConfirm: () => {
-          dispatch(a.deletePayee(formValues.id, i18n.xln(context, i18n.DELETING_PAYEE)))
-            .then(() => {props.onSubmitSuccess()})
-            .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.PAYEE_DELETED))))
-            .then(() => dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))))
-        },
-      }))
-    }
-  }
-
-  render() {
-    const {
-      context,
-      state: {errors, formValues: {id}},
-      props: {pending},
-      onSubmit, onDelete,
-    } = this
-
-    const isMobile = g.isMobile(context)
-    const disabled = pending
-
-    return (
-      <form className='col-start-stretch' onSubmit={onSubmit}>
-        <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
-          <f.FormTextElement
-            name='title'
-            label='Name'
-            disabled={disabled}
-            {...u.bindValue(this, ['formValues', 'title'])} />
-        </div>
-        <hr className='hr margin-h-1x25' />
-        <div className='row-between-stretch padding-v-1 padding-h-1x25'>
-          <div className='flex-1 row-start-stretch'>
-            {!id ? null :
-            <m.FakeButton
-              className='btn-transparent'
-              onClick={onDelete}
-              disabled={disabled}>
-              {i18n.xln(context, i18n.DELETE)}
-            </m.FakeButton>}
-          </div>
-          <button
-            type='submit'
-            className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
-            disabled={disabled}>
-            {i18n.xln(context, i18n.SUBMIT)}
-          </button>
-          <div className='flex-1' />
-        </div>
-        {!errors ? null :
-        <hr className='hr margin-h-1x25' />}
-        <f.FormErrors errors={errors} />
-      </form>
-    )
-  }
-}
-
-const PayeeForm = connect(state => ({
-  pending: !fpx.isEmpty(state.net.pending),
-}))(_PayeeForm)
-
-class _PayeesList extends m.ViewComponent {
-  constructor({dispatch}) {
-    super(...arguments)
-
-    const {context} = this
-
-    this.onOpen = payee => () => {
-      dispatch(a.addDialog(FormDialog, {
-        form: PayeeForm,
-        formProps: {payee},
-        title: i18n.xln(context, i18n.EDIT_PAYEE),
-      }))
-    }
-
-    this.onDelete = payee => () => {
-      dispatch(a.addDialog(ConfirmDialog, {
-        question: i18n.xln(context, i18n.DELETE_PAYEE),
-        onConfirm: () => {
-          dispatch(a.deletePayee(payee.id, i18n.xln(context, i18n.DELETING_PAYEE)))
-            .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.PAYEE_DELETED))))
-            .then(() => dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))))
-        },
-      }))
-    }
-  }
-
-  render() {
-    const {
-      context,
-      props: {payees, pending},
-      onOpen, onDelete,
-    } = this
-
-    const isMobile = g.isMobile(context)
-    return (
-      <div className='col-start-stretch gaps-v-2'>
-        <div className='col-start-stretch gaps-v-0x25'>
-          <div className={`row-end-center ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}>
-            <span className='fg-on-surface-pale'>{i18n.xln(context, i18n.DEBT)}</span>
-          </div>
-          {pending || !fpx.size(payees) ? (
-            <div className='col-start-stretch'>
-              {fpx.map(new Array(fpx.size(payees) || 3), (__, index) => (
-                <EntityPlaceholder key={`placeholder-${index}`} />
-              ))}
-            </div>
-          ) : (
-            <div className='col-start-stretch'>
-              {fpx.map(payees, payee => (
-                <EntityItem
-                  key={payee.id}
-                  icon={<s.Users className='font-large fg-primary' />}
-                  onOpen={onOpen(payee)}
-                  onDelete={onDelete(payee)}>
-                  <div className='flex-1 row-between-center gaps-h-1'>
-                    <span>{payee.title}</span>
-                    { payee.debt > 0
-                    ? <span className='fg-success'>+{payee.debt}</span>
-                    : payee.debt < 0
-                    ? <span className='fg-error'>{payee.debt}</span>
-                    : <span className='fg-on-surface-pale'>{payee.debt}</span>}
-                  </div>
-                </EntityItem>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    )
-  }
-}
-
-const PayeesList = connect(state => {
-  const payees  = fpx.sortBy(state.net.payees, payee => !payee.debt ? Infinity : payee.debt)
-  const pending = !fpx.isEmpty(state.net.pending)
-
-  return {
-    payees,
-    pending,
-  }
-})(_PayeesList)
-
-
-
-/**
  * Transactions
  */
 
@@ -966,7 +751,7 @@ class _TransactionForm extends m.ViewComponent {
 const TransactionForm = withRouter(connect(state => ({
   categories: state.net.categories.categoryList,
   accounts: state.net.accounts.accountList,
-  payees: state.net.payees,
+  payees: state.net.payees.payeeList,
   pending: !fpx.isEmpty(state.net.pending),
 }))(_TransactionForm))
 
@@ -1212,7 +997,7 @@ class _TransactionOrigin extends m.ViewComponent {
 
 const TransactionOrigin = connect(state => ({
   categoriesById: state.net.categories.categoriesById,
-  payeesById: state.net.payeesById,
+  payeesById: state.net.payees.payeesById,
 }))(_TransactionOrigin)
 
 class _TransactionsList extends m.ViewComponent {
@@ -1669,7 +1454,7 @@ class _FiltersForm extends m.ViewComponent {
 const FiltersForm = withRouter(connect(state => ({
   categories: state.net.categories.categoryList,
   accounts: state.net.accounts.accountList,
-  payees: state.net.payees,
+  payees: state.net.payees.payeeList,
   pending: !fpx.isEmpty(state.net.pending),
 }))(_FiltersForm))
 

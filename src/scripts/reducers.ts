@@ -5,9 +5,10 @@ import * as fpx from 'fpx'
 
 import * as a from './actions'
 
-import * as pr from './pending/reducers'
+import * as penr from './pending/reducers'
 import * as cr from './categories/reducers'
 import * as ar from './accounts/reducers'
+import * as pr from './payees/reducers'
 
 const defaultNetState: t.NetState = {
   user: {},
@@ -15,9 +16,9 @@ const defaultNetState: t.NetState = {
   transactionsById: {},
   categories: cr.defaultState,
   accounts: ar.defaultState,
-  payees: [],
+  payees: pr.defaultState,
   payeesById: {},
-  pending: pr.defaultState,
+  pending: penr.defaultState,
 }
 
 export const net = (state = defaultNetState, action: a.NetAction) => {
@@ -45,11 +46,9 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
     }
 
     case a.RECEIVE_PAYEES: {
-      const {payees} = action.payload
       return {
         ...state,
-        payees,
-        payeesById: fpx.keyBy(payees, (payee: t.PayeeRes) => payee.id),
+        payees: pr.payees(state.payees, action),
       }
     }
 
@@ -69,7 +68,7 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
     case a.REQUEST_END: {
       return {
         ...state,
-        pending: pr.pending(state.pending, action),
+        pending: penr.pending(state.pending, action),
       }
     }
 

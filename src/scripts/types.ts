@@ -16,7 +16,7 @@ export * from './notifications/types'
 import * as dt from './dialogs/types'
 export * from './dialogs/types'
 
-import * as pt from './pending/types'
+import * as pent from './pending/types'
 export * from './pending/types'
 
 import * as ct from './categories/types'
@@ -24,6 +24,9 @@ export * from './categories/types'
 
 import * as at from './accounts/types'
 export * from './accounts/types'
+
+import * as pt from './payees/types'
+export * from './payees/types'
 
 /**
  * Env
@@ -95,9 +98,8 @@ export type NetState = {
   transactionsById: {},
   categories: ct.CategoriesState,
   accounts: at.AccountsState,
-  payees: [],
-  payeesById: {},
-  pending: pt.Pending,
+  payees: pt.PayeesState,
+  pending: pent.Pending,
 }
 
 
@@ -200,36 +202,6 @@ export type UserRes = {
 
 export type SpreadsheetRes = {
   id: string,
-}
-
-
-
-/**
- * Payee
- */
-
-export type PayeeReq = {
-  id?          : string,
-  title        : string,
-  createdAt?   : string,
-  updatedAt?   : string,
-}
-
-export type PayeeRes = {
-  id          : string,
-  title       : string,
-  createdAt   : string,
-  updatedAt   : string,
-}
-
-export type PayeeWithDebtRes = PayeeRes & {
-  debt: number,
-}
-
-export type PayeeListRes = PayeeWithDebtRes[]
-
-export type PayeesById = {
-  [key: string]: PayeeWithDebtRes,
 }
 
 
