@@ -32,7 +32,8 @@ class _TransactionsPage extends m.ViewComponent {
         onClick={() => dispatch(a.addDialog(p.FormDialog, {
           form: TransactionForm,
           title: i18n.xln(context, i18n.NEW_TRANSACTION),
-        }))} />
+        }))}
+      />
     )
 
     return (

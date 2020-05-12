@@ -31,7 +31,8 @@ class _PayeesPage extends m.ViewComponent {
         onClick={() => dispatch(a.addDialog(p.FormDialog, {
           form: PayeeForm,
           title: i18n.xln(context, i18n.NEW_PAYEE),
-        }))} />
+        }))}
+      />
     )
 
     return (

@@ -102,8 +102,8 @@ export class DialogOverlay extends m.ViewComponent<DialogOverlayProps> {
 
 
 type DialogScrollableProps = {
-  onClick: (event: t.RMouseEvent) => void,
-  className: void | string
+  className?: string,
+  onClick?: (event: t.RMouseEvent) => void,
 }
 
 export class DialogScrollable extends m.ViewComponent<DialogScrollableProps> {

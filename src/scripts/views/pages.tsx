@@ -26,7 +26,12 @@ import * as i18n from '../i18n'
  * Layouts
  */
 
-class PageLayout extends m.ViewComponent {
+type PageLayoutProps = {
+  className?: string,
+  style?: t.RCSSProperties,
+}
+
+class PageLayout extends m.ViewComponent<PageLayoutProps> {
   render() {
     const {
       props: {className: cls, style, children},
@@ -40,7 +45,8 @@ class PageLayout extends m.ViewComponent {
           <div
             className={`flex-1 ${cls || ''}`}
             style={style}
-            children={children} />
+            children={children}
+          />
         </div>
         <div className='fix-b-l z-index-tooltip width-100p row-start-center margin-0x5'>
           <n.Notifications />
@@ -51,10 +57,23 @@ class PageLayout extends m.ViewComponent {
   }
 }
 
-class _MobilePageLayout extends m.ViewComponent {
+type MobilePageLayoutOwnProps = {
+  className?: string,
+  style?: t.RCSSProperties,
+  children?: t.RReactChildren,
+  action?: t.RReactElement,
+}
+
+type MobilePageLayoutStateProps = {
+  hasDialogs: boolean,
+}
+
+type MobilePageLayoutProps = MobilePageLayoutOwnProps & MobilePageLayoutStateProps
+
+class _MobilePageLayout extends m.ViewComponent<MobilePageLayoutProps> {
   render() {
     const {
-      props: {className: cls, style, children, action, dialogs},
+      props: {className: cls, style, children, action, hasDialogs},
     } = this
 
     return (
@@ -66,7 +85,7 @@ class _MobilePageLayout extends m.ViewComponent {
           children={children} />
         <div className='fix-b-l z-index-tooltip width-100p col-start-stretch gaps-v-0x5 padding-0x5'>
           <n.Notifications />
-          {!action || fpx.size(dialogs) ? null :
+          {!action || hasDialogs ? null :
           <div className='row-end-center padding-0x5'>
             {action}
           </div>}
@@ -77,8 +96,8 @@ class _MobilePageLayout extends m.ViewComponent {
   }
 }
 
-const MobilePageLayout = connect(state => ({
-  dialogs: state.dom.dialogs,
+const MobilePageLayout = connect<MobilePageLayoutStateProps, {}, MobilePageLayoutOwnProps, t.AppState>(state => ({
+  hasDialogs: !state.dom.dialogs.length,
 }))(_MobilePageLayout)
 
 
@@ -119,14 +138,14 @@ export class EntityPlaceholder extends m.ViewComponent {
 
 type EntityItemProps = {
   icon: t.RReactElement,
-  onOpen: (event: t.RMouseEvent) => void,
-  onDelete: (event: t.RMouseEvent) => void,
+  onOpen: (event: m.FakeButtonEvent) => void,
+  onDelete: (event: m.FakeButtonEvent) => void,
 }
 
 export class EntityItem extends m.ViewComponent<EntityItemProps> {
   actionsRef = React.createRef<HTMLDivElement>()
 
-  onClick = (event: t.RMouseEvent) => {
+  onClick = (event: m.FakeButtonEvent): void => {
     const {actionsRef, props: {onOpen}} = this
 
     const actionsNode = u.findDomNode(actionsRef.current)
@@ -198,19 +217,15 @@ export class Placeholder extends m.ViewComponent<PlaceholderProps> {
 
 
 
-type FormDialogOwnProps = {
-  onClose: void | ((event: KeyboardEvent) => void),
+type FormDialogProps<P> = {
   title: string,
   form: React.ComponentType<P>,
   formProps: P,
+  onClose?: (event: t.RKeyboardEvent | t.RMouseEvent) => void,
 }
 
-type FormDialogStateProps = {}
-
-type FormDialogProps = FormDialogOwnProps & FormDialogStateProps
-
-class _FormDialog extends m.ViewComponent<FormDialogProps> {
-  close = (event) => {
+class _FormDialog<P> extends m.ViewComponent<FormDialogProps<P>> {
+  close = (event: t.RKeyboardEvent | t.RMouseEvent) => {
     const {dispatch, onClose} = this.props
     dispatch(a.removeDialog())
 
@@ -235,7 +250,10 @@ class _FormDialog extends m.ViewComponent<FormDialogProps> {
                 <h2 className='font-large weight-medium'>
                   {title}
                 </h2>
-                <m.FakeButton className='row-center-center padding-1x25' onClick={close}>
+                <m.FakeButton
+                  className='row-center-center padding-1x25'
+                  onClick={close}
+                >
                   <s.X className='font-large' />
                 </m.FakeButton>
               </div>
@@ -273,21 +291,27 @@ class _FormDialog extends m.ViewComponent<FormDialogProps> {
   }
 }
 
-export const FormDialog = connect<FormDialogStateProps, {}, FormDialogOwnProps, t.AppState>()(_FormDialog)
+export const FormDialog = connect()(_FormDialog)
 
-class _ConfirmDialog extends m.ViewComponent {
-  constructor({dispatch}) {
-    super(...arguments)
+type ConfirmDialog = {
+  question: string,
+  cancelText?: string,
+  confirmText?: string,
+  onClose: (event: m.FakeButtonEvent) => void,
+  onConfirm: (event: m.FakeButtonEvent) => void,
+}
 
-    this.close = () => {
-      dispatch(a.removeDialog())
-      if (this.props.onClose) this.props.onClose()
-    }
+class _ConfirmDialog extends m.ViewComponent<ConfirmDialog> {
+  close = (event: m.FakeButtonEvent) => {
+    const {props: {dispatch, onClose}} = this
+    dispatch(a.removeDialog())
+    onClose(event)
+  }
 
-    this.confirm = () => {
-      dispatch(a.removeDialog())
-      if (this.props.onConfirm) this.props.onConfirm()
-    }
+  confirm = (event: m.FakeButtonEvent) => {
+    const {props: {dispatch, onConfirm}} = this
+    dispatch(a.removeDialog())
+    onConfirm(event)
   }
 
   render() {
@@ -332,6 +356,7 @@ export const ConfirmDialog = connect()(_ConfirmDialog)
 
 type ListPageProps = {
   action: t.RReactElement,
+  children: t.RReactChildren,
 }
 
 export class ListPage extends m.ViewComponent<ListPageProps> {
@@ -490,50 +515,50 @@ export class Fab extends m.ViewComponent<FabProps> {
 }
 
 // TODO Unused. Candidate to delete
-class _ActionsMenu extends m.ViewComponent {
-  constructor() {
-    super(...arguments)
+// class _ActionsMenu extends m.ViewComponent {
+//   constructor() {
+//     super(...arguments)
 
-    this.state = {expanded: false}
+//     this.state = {expanded: false}
 
-    this.close = () => {
-      this.setState({expanded: false})
-    }
+//     this.close = () => {
+//       this.setState({expanded: false})
+//     }
 
-    this.toggle = () => {
-      this.setState({expanded: !this.state.expanded})
-    }
-  }
+//     this.toggle = () => {
+//       this.setState({expanded: !this.state.expanded})
+//     }
+//   }
 
-  render() {
-    const {
-      props: {children},
-      state: {expanded},
-      toggle, close,
-    } = this
+//   render() {
+//     const {
+//       props: {children},
+//       state: {expanded},
+//       toggle, close,
+//     } = this
 
-    return !children ? null : (
-      <div className='relative row-start-stretch'>
-        <m.FakeButton
-          onClick={toggle}
-          className='relative row-start-center decorate-drawer-link z-index-2'
-          aria-expanded={expanded}>
-          <s.MoreVertical className='font-large' />
-        </m.FakeButton>
-        {!expanded ? null :
-        <m.Closer root={this} close={close}>
-          <div
-            className='dropdown-position z-index-1'
-            onClick={close}>
-            <div className='dropdown dropdown-padding col-start-stretch' style={{minWidth: '11rem'}}>
-              {children}
-            </div>
-          </div>
-        </m.Closer>}
-      </div>
-    )
-  }
-}
+//     return !children ? null : (
+//       <div className='relative row-start-stretch'>
+//         <m.FakeButton
+//           onClick={toggle}
+//           className='relative row-start-center decorate-drawer-link z-index-2'
+//           aria-expanded={expanded}>
+//           <s.MoreVertical className='font-large' />
+//         </m.FakeButton>
+//         {!expanded ? null :
+//         <m.Closer root={this} close={close}>
+//           <div
+//             className='dropdown-position z-index-1'
+//             onClick={close}>
+//             <div className='dropdown dropdown-padding col-start-stretch' style={{minWidth: '11rem'}}>
+//               {children}
+//             </div>
+//           </div>
+//         </m.Closer>}
+//       </div>
+//     )
+//   }
+// }
 
 export class Page404 extends m.ViewComponent {
   render() {

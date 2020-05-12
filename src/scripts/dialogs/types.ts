@@ -12,7 +12,7 @@ export type DialogComponent<P> = t.RComponentType<DialogProps<P>>
 export type DialogProps<P = {}> = P & {
   className?: string,
   dialogsNumber?: number,
-  onEscape: (event: KeyboardEvent) => void,
+  onEscape: (event: t.RKeyboardEvent) => void,
 }
 
 export type DialogList = Dialog<any>[]

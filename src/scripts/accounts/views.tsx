@@ -33,7 +33,8 @@ class _AccountsPage extends m.ViewComponent<AccountPageProps> {
         onClick={() => dispatch(a.addDialog(p.FormDialog, {
           form: AccountForm,
           title: i18n.xln(context, i18n.NEW_ACCOUNT),
-        }))} />
+        }))}
+      />
     )
 
     return (

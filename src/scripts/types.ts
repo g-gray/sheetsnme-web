@@ -72,6 +72,7 @@ export type RKeyboardEvent = React.KeyboardEvent
 export type RReactElement = React.ReactElement
 export type RComponentType<P> = React.ComponentType<P>
 export type RReactInstance = React.ReactInstance
+export type RReactChildren = React.ReactNode | React.ReactNode[]
 
 export type RCSSProperties = React.CSSProperties
 
