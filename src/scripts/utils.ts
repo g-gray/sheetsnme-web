@@ -121,13 +121,13 @@ export function addEvent(
   }
 }
 
-export function preventDefault(event: t.RFormEvent): void {
+export function preventDefault(event: t.REvent): void {
   if (event && event.preventDefault) {
     event.preventDefault()
   }
 }
 
-export function stopPropagation(event: t.RFormEvent): void {
+export function stopPropagation(event: t.REvent): void {
   if (event && event.stopPropagation) {
     event.stopPropagation()
   }
@@ -318,4 +318,10 @@ export function omitEmpty(value: void | t.Dict): t.Dict {
 
 export function keyById(list: any) {
   return fpx.keyBy(list, (item: any) => item.id)
+}
+
+export function mayBeFirstQueryParam(item: string[] | string): string {
+  return Array.isArray(item)
+    ? item[0]
+    : item
 }

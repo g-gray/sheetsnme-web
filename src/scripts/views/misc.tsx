@@ -32,11 +32,16 @@ container. Doesn't work for submit buttons. Supports focus and keyboard
 activation. Should be the last resort; try <Button /> first.
 */
 
+export type FakeButtonEvent = t.RKeyboardEvent | t.RMouseEvent
+
+export type FakeButtonClickHandler = (event: FakeButtonEvent) => void
+
 type FakeButtonProps = {
   className?: string,
+  style?: t.RCSSProperties,
   type?: string,
   disabled?: boolean,
-  onClick: (event: t.RKeyboardEvent | t.RMouseEvent) => void,
+  onClick: FakeButtonClickHandler,
 }
 
 export class FakeButton extends ViewComponent<FakeButtonProps> {

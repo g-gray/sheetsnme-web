@@ -102,7 +102,7 @@ class _PayeeForm extends m.ViewComponent<PayeeFormProps, PayeeFormState> {
       .then(() => dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))))
   }
 
-  onDelete = (event: t.RKeyboardEvent | t.RMouseEvent) => {
+  onDelete = (event: m.FakeButtonEvent): void => {
     u.preventDefault(event)
 
     this.setState({errors: undefined})

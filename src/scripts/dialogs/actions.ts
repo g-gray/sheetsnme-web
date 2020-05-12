@@ -8,12 +8,15 @@ export const ADD_DIALOG = 'ADD_DIALOG'
 interface AddDialog<P = any> extends t.AppAction {
   type: typeof ADD_DIALOG,
   payload: {
-    dialog: t.Dialog<P>,
+    dialog: t.DialogComponent<P>,
     dialogProps?: P,
   },
 }
 
-export function addDialog<P>(dialog: t.Dialog<P>, dialogProps?: P): AddDialog<P> {
+export function addDialog<P>(
+  dialog: t.DialogComponent<P>,
+  dialogProps?: P
+): AddDialog<P> {
   return {
     type: ADD_DIALOG,
     payload: {

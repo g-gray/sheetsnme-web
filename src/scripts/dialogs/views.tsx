@@ -33,11 +33,7 @@ export const GlobalDialog = connect<GlobalDialogStateProps, {}, {}, t.AppState>(
 }))(_GlobalDialog)
 
 
-type DialogProps = {
-  className?: string,
-  dialogsNumber?: number,
-  onEscape: (event: KeyboardEvent) => void,
-}
+type DialogProps = t.DialogProps
 
 export class Dialog extends m.ViewComponent<DialogProps> {
   unsub: (() => void) | undefined

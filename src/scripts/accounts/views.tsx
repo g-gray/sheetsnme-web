@@ -105,7 +105,7 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
       .then(() => dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
   }
 
-  onDelete = (event: t.RKeyboardEvent | t.RMouseEvent) => {
+  onDelete = (event: m.FakeButtonEvent): void => {
     u.preventDefault(event)
 
     const {

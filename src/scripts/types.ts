@@ -2,7 +2,8 @@ import React from 'react'
 import {Action, Dispatch} from 'redux'
 import {ThunkAction, ThunkDispatch} from 'redux-thunk'
 import {ParsedUrlQuery, ParsedUrlQueryInput} from 'querystring'
-import {Location} from 'history'
+import {History, Location} from 'history'
+import {RouteComponentProps} from 'react-router-dom'
 
 import * as gt from './geometry/types'
 export * from './geometry/types'
@@ -30,6 +31,9 @@ export * from './accounts/types'
 
 import * as pt from './payees/types'
 export * from './payees/types'
+
+import * as tt from './transactions/types'
+export * from './transactions/types'
 
 /**
  * Env
@@ -59,14 +63,19 @@ export type RFormEventHandler = React.FormEventHandler
 export type RMouseEventHandler = React.MouseEventHandler
 export type RKeyboardEventHandler = React.KeyboardEventHandler
 
+export type REvent = React.SyntheticEvent
 export type RFormEvent = React.FormEvent
 export type RMouseEvent = React.MouseEvent
 export type RChangeEvent = React.ChangeEvent
 export type RKeyboardEvent = React.KeyboardEvent
 
 export type RReactElement = React.ReactElement
-export type RComponentType = React.ComponentType
+export type RComponentType<P> = React.ComponentType<P>
 export type RReactInstance = React.ReactInstance
+
+export type RCSSProperties = React.CSSProperties
+
+export type RRRouteComponentProps = RouteComponentProps
 
 
 
@@ -75,10 +84,10 @@ export type RReactInstance = React.ReactInstance
  */
 
 export type DomState = {
-  geometry: gt.GeometryState,
-  i18n: i18nt.i18nState,
+  geometry     : gt.GeometryState,
+  i18n         : i18nt.i18nState,
   notifications: nt.NotificationsState,
-  dialogs: dt.DialogsState,
+  dialogs      : dt.DialogsState,
 }
 
 export type BgUrl = {
@@ -96,13 +105,12 @@ export type Dict = {
  */
 
 export type NetState = {
-  user: ut.UserState,
-  transactions: {},
-  transactionsById: {},
-  categories: ct.CategoriesState,
-  accounts: at.AccountsState,
-  payees: pt.PayeesState,
-  pending: pent.Pending,
+  pending         : pent.Pending,
+  user            : ut.UserState,
+  categories      : ct.CategoriesState,
+  accounts        : at.AccountsState,
+  payees          : pt.PayeesState,
+  transactions    : tt.TransactionsState,
 }
 
 
@@ -126,7 +134,8 @@ export interface AppAction extends Action<string> {
   payload?: any,
 }
 
-export type RLocation = Location
+export type RRHistory = History
+export type RRLocation = Location
 
 
 
@@ -184,77 +193,6 @@ export type BindChecked = {
   onUpdate: (value: any) => void,
   value: any,
   checked: boolean,
-}
-
-
-
-/**
- * Transaction
- */
-
-export type TransactionReq = {
-  id?              : string,
-  type             : TRANSACTION_TYPE,
-  date             : string,
-  categoryId?      : string,
-  payeeId?         : string,
-  comment?         : string,
-  outcomeAccountId?: string,
-  outcomeAmount?   : number,
-  incomeAccountId? : string,
-  incomeAmount?    : number,
-  createdAt?       : string,
-  updatedAt?       : string,
-}
-
-export type TransactionRes = {
-  id              : string,
-  type            : TRANSACTION_TYPE,
-  date            : string,
-  categoryId      : string,
-  payeeId         : string,
-  comment         : string,
-  outcomeAccountId: string,
-  outcomeAmount   : number,
-  incomeAccountId : string,
-  incomeAmount    : number,
-  createdAt       : string,
-  updatedAt       : string,
-}
-
-export enum TRANSACTION_TYPE {
-  OUTCOME  = 'OUTCOME',
-  INCOME   = 'INCOME',
-  TRANSFER = 'TRANSFER',
-  LOAN     = 'LOAN',
-  BORROW   = 'BORROW',
-}
-
-export type TransactionListRes = {
-  limit: number,
-  offset: number,
-  total: number,
-  items: TransactionRes[],
-  outcomeAmount: number,
-  incomeAmount: number,
-}
-
-export type TransactionsById = {
-  [key: string]: TransactionRes,
-}
-
-export type TransactionsFilter = {
-  id?        : string,
-  dateFrom?  : string,
-  dateTo?    : string,
-  categoryId?: string,
-  payeeId?   : string,
-  comment?   : string,
-  accountId? : string,
-  amountFrom?: string,
-  amountTo?  : string,
-  limit?     : string,
-  offset?    : string,
 }
 
 

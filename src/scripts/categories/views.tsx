@@ -103,7 +103,7 @@ class _CategoryForm extends m.ViewComponent<CategoryFormProps, CategoryFormState
       .then(() => dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))))
   }
 
-  onDelete = (event: t.RKeyboardEvent | t.RMouseEvent) => {
+  onDelete = (event: m.FakeButtonEvent): void => {
     u.preventDefault(event)
 
     this.setState({errors: undefined})

@@ -1,8 +1,5 @@
 import * as t from './types'
 
-// @ts-ignore
-import * as fpx from 'fpx'
-
 import * as a from './actions'
 
 import * as penr from './pending/reducers'
@@ -12,15 +9,15 @@ import * as ur from './user/reducers'
 import * as cr from './categories/reducers'
 import * as ar from './accounts/reducers'
 import * as pr from './payees/reducers'
+import * as tr from './transactions/reducers'
 
 const defaultNetState: t.NetState = {
-  pending: penr.defaultState,
-  user: ur.defaultState,
-  categories: cr.defaultState,
-  accounts: ar.defaultState,
-  payees: pr.defaultState,
-  transactions: {},
-  transactionsById: {},
+  pending     : penr.defaultState,
+  user        : ur.defaultState,
+  categories  : cr.defaultState,
+  accounts    : ar.defaultState,
+  payees      : pr.defaultState,
+  transactions: tr.defaultState,
 }
 
 export const net = (state = defaultNetState, action: a.NetAction) => {
@@ -62,14 +59,9 @@ export const net = (state = defaultNetState, action: a.NetAction) => {
     }
 
     case a.RECEIVE_TRANSACTIONS: {
-      const {transactions} = action.payload
       return {
         ...state,
-        transactions,
-        transactionsById: fpx.keyBy(
-          transactions.items,
-          (transaction: t.TransactionRes) => transaction.id
-        ),
+        transactions: tr.transactions(state.transactions, action),
       }
     }
 
