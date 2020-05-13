@@ -1,4 +1,4 @@
-export type UserState = undefined | UserRes
+export type UserState = null | UserRes
 
 export type UserRes = {
   id           : string,

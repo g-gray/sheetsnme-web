@@ -1,7 +1,7 @@
 import * as t from '../types'
 
 import * as n from '../net'
-import * as a from '../actions'
+import * as pa from '../pending/actions'
 
 export type PayeeActions = ReceivePayees
 
@@ -28,7 +28,7 @@ export function fetchPayees(
   message: string
 ): t.AppThunk<Promise<t.PayeeListRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'getPayees',
       promise: n.authedJsonFetch<t.PayeeListRes>('/api/payees'),
@@ -45,7 +45,7 @@ export function createPayee(
   message: string
 ): t.AppThunk<Promise<t.PayeeRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'postPayee',
       promise: n.authedJsonFetch<t.PayeeRes>('/api/payees', {
@@ -62,7 +62,7 @@ export function updatePayee(
   message: string
 ): t.AppThunk<Promise<t.PayeeRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'postPayee',
       promise: n.authedJsonFetch<t.PayeeRes>(`/api/payees/${id}`, {
@@ -78,7 +78,7 @@ export function deletePayee(
   message: string
 ): t.AppThunk<Promise<t.PayeeRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'deletePayee',
       promise: n.authedJsonFetch<t.PayeeRes>(`/api/payees/${id}`, {

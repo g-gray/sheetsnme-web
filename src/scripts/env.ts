@@ -9,7 +9,13 @@ import {i18n} from './i18n/reducers'
 import {notifications} from './notifications/reducers'
 import {dialogs} from './dialogs/reducers'
 
-import {net} from './reducers'
+import {pending} from './pending/reducers'
+import {user} from './user/reducers'
+
+import {categories} from './categories/reducers'
+import {accounts} from './accounts/reducers'
+import {payees} from './payees/reducers'
+import {transactions} from './transactions/reducers'
 
 export const store = createStore(
   combineReducers({
@@ -19,7 +25,14 @@ export const store = createStore(
       notifications,
       dialogs,
     }),
-    net,
+    net: combineReducers({
+      pending,
+      user,
+      categories,
+      accounts,
+      payees,
+      transactions,
+    }),
   }),
   applyMiddleware(thunk)
 )

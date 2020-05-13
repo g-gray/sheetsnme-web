@@ -27,7 +27,7 @@ export function bindValue(
   component: React.Component,
   path: t.Path,
   fun?: (value: any) => any
-): t.BindValue {
+): t.BindValueProps {
   fpx.validate(component, isComponent)
   fpx.validate(path, isPath)
 
@@ -47,7 +47,7 @@ export function bindChecked(
   component: React.Component,
   path: t.Path,
   value: any,
-): t.BindChecked {
+): t.BindCheckedProps {
   fpx.validate(component, isComponent)
   fpx.validate(path, isPath)
 
@@ -292,7 +292,7 @@ export function prepend(char: string, value: void | string): string {
 // Note: if the URL contains spaces or other non-URL characters, it must be
 // URL-encoded before calling this function. We can't encode them
 // indiscriminately, because that would wreck some valid URLs.
-export function bgUrl(url: string): undefined | t.BgUrl {
+export function bgImg(url: string): undefined | t.BgImgStyles {
   if (url == null || url === '') {
     return undefined
   }

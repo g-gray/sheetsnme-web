@@ -2,7 +2,7 @@ import * as t from '../types'
 
 import * as n from '../net'
 import * as u from '../utils'
-import * as a from '../actions'
+import * as pa from '../pending/actions'
 
 export type TransactionActions = ReceiveTransactions
 
@@ -43,7 +43,7 @@ export function fetchTransactions(
       limit,
     }
 
-    return dispatch(a.trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'getTransactions',
       promise: n.authedJsonFetch<t.TransactionListRes>('/api/transactions', {
@@ -63,7 +63,7 @@ export function createTransaction(
   message: string
 ): t.AppThunk<Promise<t.TransactionRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'postTransaction',
       promise: n.authedJsonFetch<t.TransactionRes>('/api/transactions', {
@@ -80,7 +80,7 @@ export function updateTransaction(
   message: string
 ): t.AppThunk<Promise<t.TransactionRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'postTransaction',
       promise: n.authedJsonFetch<t.TransactionRes>(`/api/transactions/${id}`, {
@@ -96,7 +96,7 @@ export function deleteTransaction(
   message:string
 ): t.AppThunk<Promise<t.TransactionRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'deleteTransaction',
       promise: n.authedJsonFetch<t.TransactionRes>(`/api/transactions/${id}`, {

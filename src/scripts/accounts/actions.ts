@@ -1,7 +1,7 @@
 import * as t from '../types'
 
 import * as n from '../net'
-import * as a from '../actions'
+import * as pa from '../pending/actions'
 
 export type AccountActions = ReceiveAccounts
 
@@ -28,7 +28,7 @@ export function fetchAccounts(
   message: string
 ): t.AppThunk<Promise<t.AccountListRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest<t.AccountListRes>({
+    return dispatch(pa.trackRequest<t.AccountListRes>({
       message,
       requestName: 'getAccounts',
       promise: n.authedJsonFetch<t.AccountListRes>('/api/accounts'),
@@ -45,7 +45,7 @@ export function createAccount(
   message: string
 ): t.AppThunk<Promise<t.AccountRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest<t.AccountRes>({
+    return dispatch(pa.trackRequest<t.AccountRes>({
       message,
       requestName: 'postAccount',
       promise: n.authedJsonFetch<t.AccountRes>('/api/accounts', {
@@ -62,7 +62,7 @@ export function updateAccount(
   message: string
 ): t.AppThunk<Promise<t.AccountRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest<t.AccountRes>({
+    return dispatch(pa.trackRequest<t.AccountRes>({
       message,
       requestName: 'postAccount',
       promise: n.authedJsonFetch<t.AccountRes>(`/api/accounts/${id}`, {
@@ -78,7 +78,7 @@ export function deleteAccount (
   message: string
 ): t.AppThunk<Promise<t.AccountRes>>{
   return (dispatch) => {
-    return dispatch(a.trackRequest<t.AccountRes>({
+    return dispatch(pa.trackRequest<t.AccountRes>({
       message,
       requestName: 'deleteAccount',
       promise: n.authedJsonFetch<t.AccountRes>(`/api/accounts/${id}`, {

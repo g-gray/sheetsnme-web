@@ -89,7 +89,7 @@ export class CircleUserPic extends ViewComponent<CircleUserPicProps> {
       return (
         <span
           className='block bg-circle-trick'
-          style={u.bgUrl(bgUrl)}
+          style={u.bgImg(bgUrl)}
           {...props}
         />
       )
@@ -98,7 +98,7 @@ export class CircleUserPic extends ViewComponent<CircleUserPicProps> {
     return (
       <span
         className='block bg-circle-trick'
-        style={{width: `${size}rem`, ...u.bgUrl(bgUrl)}}
+        style={{width: `${size}rem`, ...u.bgImg(bgUrl)}}
         {...props} />
     )
   }

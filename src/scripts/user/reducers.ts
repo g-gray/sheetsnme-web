@@ -2,7 +2,7 @@ import * as t from './types'
 
 import * as a from './actions'
 
-export const defaultState: t.UserState = undefined
+export const defaultState: t.UserState = null
 
 export const user = (state = defaultState, action: a.UserActions) => {
   switch (action.type) {

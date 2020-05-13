@@ -51,13 +51,14 @@ declare global {
 
 export type AppContext = {
   isMobile: boolean,
-  lang: i18nt.LANG,
+  lang    : i18nt.LANG,
 }
 
-export type AppState = {
-  dom: DomState,
-  net: NetState,
-}
+
+
+/**
+ * React
+ */
 
 export type RFormEventHandler = React.FormEventHandler
 export type RMouseEventHandler = React.MouseEventHandler
@@ -76,45 +77,22 @@ export type RReactChildren = React.ReactNode | React.ReactNode[]
 
 export type RCSSProperties = React.CSSProperties
 
+
+
+/**
+ * React Router
+ */
+
+export type RRHistory = History
+export type RRLocation = Location
+
 export type RRRouteComponentProps = RouteComponentProps
 
 
 
 /**
- * Dom
+ * Redux Thunk
  */
-
-export type DomState = {
-  geometry     : gt.GeometryState,
-  i18n         : i18nt.i18nState,
-  notifications: nt.NotificationsState,
-  dialogs      : dt.DialogsState,
-}
-
-export type BgUrl = {
-  backgroundImage: string,
-}
-
-export type Dict = {
-  [key: string]: any,
-}
-
-
-
-/**
- * Net
- */
-
-export type NetState = {
-  pending         : pent.Pending,
-  user            : ut.UserState,
-  categories      : ct.CategoriesState,
-  accounts        : at.AccountsState,
-  payees          : pt.PayeesState,
-  transactions    : tt.TransactionsState,
-}
-
-
 
 export type AppThunk<R = void> = ThunkAction<
   R,
@@ -129,14 +107,35 @@ export type AppThunkDispatch = ThunkDispatch<
   AppAction
 >
 
+
+
+
+/**
+ * Redux
+ */
+
 export interface AppDispatch extends Dispatch<AppAction> {}
 
 export interface AppAction extends Action<string> {
   payload?: any,
 }
 
-export type RRHistory = History
-export type RRLocation = Location
+export type AppState = {
+  dom: {
+    geometry     : gt.GeometryState,
+    i18n         : i18nt.i18nState,
+    notifications: nt.NotificationsState,
+    dialogs      : dt.DialogsState,
+  },
+  net: {
+    pending     : pent.Pending,
+    user        : ut.UserState,
+    categories  : ct.CategoriesState,
+    accounts    : at.AccountsState,
+    payees      : pt.PayeesState,
+    transactions: tt.TransactionsState,
+  },
+}
 
 
 
@@ -180,28 +179,36 @@ export type XHttpResponse = {
 
 
 /**
- * Utils
- */
-
-export type Path = (string | number)[]
-
-export type BindValue = {
-  onUpdate: (value: any) => void,
-  value: any,
-}
-
-export type BindChecked = {
-  onUpdate: (value: any) => void,
-  value: any,
-  checked: boolean,
-}
-
-
-
-/**
  * Errors
  */
 
 export type ValidationError = {
   text: string,
+}
+
+
+
+/**
+ * Utils
+ */
+
+export type Path = (string | number)[]
+
+export type BindValueProps = {
+  onUpdate: (value: any) => void,
+  value: any,
+}
+
+export type BindCheckedProps = {
+  onUpdate: (value: any) => void,
+  value: any,
+  checked: boolean,
+}
+
+export type BgImgStyles = {
+  backgroundImage: string,
+}
+
+export type Dict = {
+  [key: string]: any,
 }

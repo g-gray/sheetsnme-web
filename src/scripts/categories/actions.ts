@@ -1,7 +1,7 @@
 import * as t from '../types'
 
 import * as n from '../net'
-import * as a from '../actions'
+import * as pa from '../pending/actions'
 
 export type CategoryActions = ReceiveCategories
 
@@ -28,7 +28,7 @@ export function fetchCategories(
   message: string
 ): t.AppThunk<Promise<t.CategoryListRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'getCategories',
       promise: n.authedJsonFetch<t.CategoryListRes>('/api/categories'),
@@ -45,7 +45,7 @@ export function createCategory(
   message: string
 ): t.AppThunk<Promise<t.CategoryRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'postCategory',
       promise: n.authedJsonFetch<t.CategoryRes>('/api/categories', {
@@ -62,7 +62,7 @@ export function updateCategory(
   message: string,
 ): t.AppThunk<Promise<t.CategoryRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'postCategory',
       promise: n.authedJsonFetch<t.CategoryRes>(`/api/categories/${id}`, {
@@ -78,7 +78,7 @@ export function deleteCategory(
   message: string
 ): t.AppThunk<Promise<t.CategoryRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'deleteCategory',
       promise: n.authedJsonFetch<t.CategoryRes>(`/api/categories/${id}`, {

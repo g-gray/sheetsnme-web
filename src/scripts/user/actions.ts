@@ -1,7 +1,7 @@
 import * as t from '../types'
 
 import * as n from '../net'
-import * as a from '../actions'
+import * as pa from '../pending/actions'
 
 export type UserActions = ReceiveUser
 
@@ -15,7 +15,7 @@ interface ReceiveUser extends t.AppAction {
   },
 }
 
-export function receiveUser(user: t.UserRes): ReceiveUser {
+function receiveUser(user: t.UserRes): ReceiveUser {
   return {
     type: RECEIVE_USER,
     payload: {
@@ -26,7 +26,7 @@ export function receiveUser(user: t.UserRes): ReceiveUser {
 
 export function fetchUser(message: string): t.AppThunk<Promise<t.UserRes>> {
   return (dispatch) => {
-    return dispatch(a.trackRequest<t.UserRes>({
+    return dispatch(pa.trackRequest<t.UserRes>({
       message,
       requestName: 'getUser',
       promise: n.authedJsonFetch('/api/user'),
