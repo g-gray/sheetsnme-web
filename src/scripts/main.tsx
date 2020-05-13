@@ -1,16 +1,33 @@
+import * as t from './types'
+
 import React from 'react'
 import {render} from 'react-dom'
 import {Provider, connect} from 'react-redux'
 import {BrowserRouter as Router, withRouter} from 'react-router-dom'
 
 import * as e from './env'
+import * as u from './utils'
+
 import * as a from './actions'
+
 import * as i18n from './i18n'
 
 import * as m from './views/misc'
 import {Routes} from './views/routes'
 
-class _App extends m.ViewComponent {
+type AppOwnProps = t.RRRouteComponentProps
+
+type AppStateProps = {
+  lang    : t.LANG,
+  isMobile: boolean,
+}
+
+type AppProps = AppOwnProps & AppStateProps
+
+class _App extends m.ViewComponent<AppProps> {
+  unlisten: () => void = () => {}
+  unresize: () => void = () => {}
+
   render() {
     const {props: {isMobile, lang}} = this
 
@@ -23,19 +40,14 @@ class _App extends m.ViewComponent {
   }
 
   componentDidMount() {
-    const {props} = this
-    const {dispatch, location, isMobile, lang} = props
+    const {props: {dispatch, history, location, isMobile, lang}} = this
     const context = {isMobile, lang}
 
-    dispatch(a.fetchUser(i18n.xln(context, i18n.FETCHING_USER)))
-      .then(() => Promise.all([
-        dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))),
-        dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))),
-        dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))),
-      ]))
-      .then(() => dispatch(a.fetchTransactions(location, i18n.xln(context, i18n.FETCHING_TRANSACTIONS))))
+    this.unresize = u.addEvent(window, 'resize', () => {
+      e.store.dispatch(a.resize(window.innerWidth))
+    })
 
-    this.unlisten = this.props.history.listen(nextLocation => {
+    this.unlisten = history.listen(nextLocation => {
       if (new RegExp(`^/transactions`, 'g').test(nextLocation.pathname)) {
         dispatch(a.fetchTransactions(nextLocation, i18n.xln(context, i18n.FETCHING_TRANSACTIONS)))
         return
@@ -55,14 +67,26 @@ class _App extends m.ViewComponent {
         dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES)))
       }
     })
+
+    dispatch(a.fetchUser(i18n.xln(context, i18n.FETCHING_USER)))
+    .then(() => Promise.all([
+      dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))),
+      dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))),
+      dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))),
+    ]))
+    .then(() => dispatch(a.fetchTransactions(
+      location,
+      i18n.xln(context, i18n.FETCHING_TRANSACTIONS)
+    )))
   }
 
   componentWillUnmount() {
     this.unlisten()
+    this.unresize()
   }
 }
 
-const App = withRouter(connect(state => ({
+const App = withRouter(connect<AppStateProps, {}, AppOwnProps, t.AppState>(state => ({
   isMobile: state.dom.geometry.isMobile,
   lang: state.dom.i18n.lang,
 }))(_App))
@@ -76,11 +100,4 @@ const elem = (
 )
 
 const rootNode = document.getElementById('root')
-
-render(elem, rootNode, initDom)
-
-function initDom() {
-  window.addEventListener('resize', () => {
-    e.store.dispatch(a.resize(window.innerWidth))
-  })
-}
+render(elem, rootNode)
