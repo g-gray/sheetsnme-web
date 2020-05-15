@@ -7,31 +7,8 @@ import * as u from './../utils'
 
 import * as a from './actions'
 
-export const AVAILABLE_LANGS: t.LANG[] = Object.values(t.LANG)
-
-export const QUERY_LANG: t.LANG = fpx.intersection(
-  fpx.flatten([u.decodeQuery(window.location.search).lang]),
-  AVAILABLE_LANGS,
-)[0]
-
-export const STORAGE_LANG: t.LANG = fpx.intersection(
-  [u.storageRead(['lang'])],
-  AVAILABLE_LANGS,
-)[0]
-
-export const DEFAULT_LANG: t.LANG = fpx.intersection(
-  window.navigator.languages.map(langPrefix),
-  AVAILABLE_LANGS,
-)[0] || AVAILABLE_LANGS[0]
-
-function langPrefix(langCode: string): string {
-  return langCode.split('-')[0]
-}
-
-
-
 export const defaultState: t.i18nState = {
-  lang: QUERY_LANG || STORAGE_LANG || DEFAULT_LANG,
+  lang: defLang(),
 }
 
 export const i18n = (state = defaultState, action: a.I18nActions) => {
@@ -54,6 +31,32 @@ export const i18n = (state = defaultState, action: a.I18nActions) => {
   }
 }
 
+
+
+export function defLang(): t.LANG {
+  return QUERY_LANG || STORAGE_LANG || DEFAULT_LANG
+}
+
+const AVAILABLE_LANGS: t.LANG[] = Object.values(t.LANG)
+
+const QUERY_LANG: t.LANG = fpx.intersection(
+  fpx.flatten([u.decodeQuery(window.location.search).lang]),
+  AVAILABLE_LANGS,
+)[0]
+
+const STORAGE_LANG: t.LANG = fpx.intersection(
+  [u.storageRead(['lang'])],
+  AVAILABLE_LANGS,
+)[0]
+
+export const DEFAULT_LANG: t.LANG = fpx.intersection(
+  window.navigator.languages.map(langPrefix),
+  AVAILABLE_LANGS,
+)[0] || AVAILABLE_LANGS[0]
+
+function langPrefix(langCode: string): string {
+  return langCode.split('-')[0]
+}
 
 
 function selectNextLang(currentLang: t.LANG): t.LANG {

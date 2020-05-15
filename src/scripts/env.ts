@@ -4,8 +4,8 @@ import React from 'react'
 import {createStore, combineReducers, applyMiddleware} from 'redux'
 import thunk from 'redux-thunk'
 
-import {geometry} from './geometry/reducers'
-import {i18n} from './i18n/reducers'
+import {geometry, defMobile} from './geometry/reducers'
+import {i18n, defLang} from './i18n/reducers'
 import {notifications} from './notifications/reducers'
 import {dialogs} from './dialogs/reducers'
 
@@ -38,8 +38,8 @@ export const store = createStore(
 )
 
 const defaultContext: t.AppContext = {
-  isMobile: false,
-  lang: t.LANG.en,
+  isMobile: defMobile(window.innerWidth),
+  lang: defLang(),
 }
 
 export const Context = React.createContext<t.AppContext>(defaultContext)

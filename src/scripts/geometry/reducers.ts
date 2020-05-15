@@ -4,7 +4,9 @@ import * as a from './actions'
 
 const MOBILE_WIDTH_MAX: number = 980
 
-export const defaultState: t.GeometryState = defGeometry(window.innerWidth)
+export const defaultState: t.GeometryState = {
+  isMobile: defMobile(window.innerWidth),
+}
 
 export const geometry = (state = defaultState, action: a.GeometryActions) => {
   switch (action.type) {
@@ -12,7 +14,7 @@ export const geometry = (state = defaultState, action: a.GeometryActions) => {
       const {width} = action.payload
       return {
         ...state,
-        ...defGeometry(width),
+        isMobile: defMobile(width),
       }
     }
 
@@ -21,6 +23,6 @@ export const geometry = (state = defaultState, action: a.GeometryActions) => {
   }
 }
 
-function defGeometry(width: number): t.Geometry {
-  return {isMobile: width <= MOBILE_WIDTH_MAX}
+export function defMobile(width: number): boolean {
+  return width <= MOBILE_WIDTH_MAX
 }
