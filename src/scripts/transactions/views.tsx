@@ -118,7 +118,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
       ))
   }
 
-  onDelete = (event: m.FakeButtonEvent): void => {
+  onDelete = (event: v.FakeButtonEvent): void => {
     u.preventDefault(event)
 
     this.setState({errors: undefined})
@@ -420,13 +420,13 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
         <div className='row-between-stretch padding-v-1 padding-h-1x25'>
           <div className='flex-1 row-start-stretch'>
             {!id ? null :
-            <m.FakeButton
+            <v.FakeButton
               className='btn-transparent'
               onClick={onDelete}
               disabled={disabled}
             >
               {i18n.xln(context, i18n.DELETE)}
-            </m.FakeButton>}
+            </v.FakeButton>}
           </div>
           <button
             type='submit'
@@ -497,7 +497,7 @@ class _Transaction extends m.ViewComponent<TransactionProps> {
   actionsRef = React.createRef<HTMLDivElement>()
 
   onOpen = (transaction: t.TransactionRes) => {
-    return (event: m.FakeButtonEvent): void => {
+    return (event: v.FakeButtonEvent): void => {
       const {
         context,
         props: {dispatch},
@@ -546,7 +546,7 @@ class _Transaction extends m.ViewComponent<TransactionProps> {
     const isMobile = g.isMobile(context)
 
     return (
-      <m.FakeButton
+      <v.FakeButton
         type='div'
         onClick={onOpen(transaction)}
         className='row-start-start gaps-h-1 padding-h-1 list-item trigger text-left theme-drawer-link-busy rounded'>
@@ -575,14 +575,14 @@ class _Transaction extends m.ViewComponent<TransactionProps> {
             className='row-center-center'
             style={{minHeight: '2.5rem'}}
           >
-            <m.FakeButton
+            <v.FakeButton
               className='row-center-center show-on-trigger-hover decorate-icon-button'
               onClick={onDelete(transaction)}>
               <s.Trash2 className='font-large' />
-            </m.FakeButton>
+            </v.FakeButton>
           </div>
         </div>}
-      </m.FakeButton>
+      </v.FakeButton>
     )
   }
 }
@@ -1038,7 +1038,7 @@ class _TransactionFiltersControls extends m.ViewComponent<TransactionFiltersCont
     return (
       <div className='row-start-center padding-h-1 flex-wrap'>
         <div className='row-start-center gaps-h-0x5'>
-          <m.FakeButton
+          <v.FakeButton
             className='decorate-link'
             disabled={pending || !fpx.size(transactions)}
             onClick={() => dispatch(a.addDialog(p.FormDialog, {
@@ -1047,16 +1047,16 @@ class _TransactionFiltersControls extends m.ViewComponent<TransactionFiltersCont
             }))}
           >
             {i18n.xln(context, i18n.FILTERS)}
-          </m.FakeButton>
+          </v.FakeButton>
           {noFilters ? null :
-          <m.FakeButton
+          <v.FakeButton
             className='decorate-link row-center-center bg-primary rounded-50p'
             style={{padding: '2px'}}
             disabled={pending}
             onClick={() => resetFilters(history, location)}
           >
             <s.X className='fg-surface' />
-          </m.FakeButton>}
+          </v.FakeButton>}
         </div>
       </div>
     )

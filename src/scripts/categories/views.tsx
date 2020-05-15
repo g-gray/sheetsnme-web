@@ -104,7 +104,7 @@ class _CategoryForm extends m.ViewComponent<CategoryFormProps, CategoryFormState
       .then(() => dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))))
   }
 
-  onDelete = (event: m.FakeButtonEvent): void => {
+  onDelete = (event: v.FakeButtonEvent): void => {
     u.preventDefault(event)
 
     this.setState({errors: undefined})
@@ -157,13 +157,13 @@ class _CategoryForm extends m.ViewComponent<CategoryFormProps, CategoryFormState
         <div className='row-between-stretch padding-v-1 padding-h-1x25'>
           <div className='flex-1 row-start-stretch'>
             {!id ? null :
-            <m.FakeButton
+            <v.FakeButton
               className='btn-transparent'
               onClick={onDelete}
               disabled={disabled}
             >
               {i18n.xln(context, i18n.DELETE)}
-            </m.FakeButton>}
+            </v.FakeButton>}
           </div>
           <button
             type='submit'

@@ -107,7 +107,7 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
       .then(() => dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
   }
 
-  onDelete = (event: m.FakeButtonEvent): void => {
+  onDelete = (event: v.FakeButtonEvent): void => {
     u.preventDefault(event)
 
     const {
@@ -160,13 +160,13 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
         <div className='row-between-stretch padding-v-1 padding-h-1x25'>
           <div className='flex-1 row-start-stretch'>
             {!id ? null :
-            <m.FakeButton
+            <v.FakeButton
               className='btn-transparent'
               onClick={onDelete}
               disabled={disabled}
             >
               {i18n.xln(context, i18n.DELETE)}
-            </m.FakeButton>}
+            </v.FakeButton>}
           </div>
           <button
             type='submit'

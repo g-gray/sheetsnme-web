@@ -15,6 +15,7 @@ import * as i18n from '../i18n'
 import * as m from './misc'
 import * as s from './svg'
 import * as l from './layouts'
+import * as f from './fake-button'
 
 /**
  * Entities
@@ -52,14 +53,14 @@ export class EntityPlaceholder extends m.ViewComponent {
 
 type EntityItemProps = {
   icon: t.RReactElement,
-  onOpen: (event: m.FakeButtonEvent) => void,
-  onDelete: (event: m.FakeButtonEvent) => void,
+  onOpen: (event: f.FakeButtonEvent) => void,
+  onDelete: (event: f.FakeButtonEvent) => void,
 }
 
 export class EntityItem extends m.ViewComponent<EntityItemProps> {
   actionsRef = React.createRef<HTMLDivElement>()
 
-  onClick = (event: m.FakeButtonEvent): void => {
+  onClick = (event: f.FakeButtonEvent): void => {
     const {actionsRef, props: {onOpen}} = this
 
     const actionsNode = u.findDomNode(actionsRef.current)
@@ -80,7 +81,7 @@ export class EntityItem extends m.ViewComponent<EntityItemProps> {
     const isMobile = g.isMobile(context)
 
     return (
-      <m.FakeButton
+      <f.FakeButton
         type='div'
         onClick={onClick}
         className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-drawer-link-busy rounded trigger'>
@@ -97,14 +98,14 @@ export class EntityItem extends m.ViewComponent<EntityItemProps> {
         {isMobile ? null :
         <div className='row-center-center padding-h-0x25' ref={actionsRef}>
           <div className='row-center-center' style={{minHeight: '2.5rem'}}>
-            <m.FakeButton
+            <f.FakeButton
               className='row-center-center show-on-trigger-hover decorate-icon-button'
               onClick={onDelete}>
               <s.Trash2 className='font-large' />
-            </m.FakeButton>
+            </f.FakeButton>
           </div>
         </div>}
-      </m.FakeButton>
+      </f.FakeButton>
     )
   }
 }
@@ -164,12 +165,12 @@ class _FormDialog<P> extends m.ViewComponent<FormDialogProps<P>> {
                 <h2 className='font-large weight-medium'>
                   {title}
                 </h2>
-                <m.FakeButton
+                <f.FakeButton
                   className='row-center-center padding-1x25'
                   onClick={close}
                 >
                   <s.X className='font-large' />
-                </m.FakeButton>
+                </f.FakeButton>
               </div>
               <hr className='hr' />
               {!Form ? null :
@@ -191,9 +192,9 @@ class _FormDialog<P> extends m.ViewComponent<FormDialogProps<P>> {
               <h2 className='font-large weight-medium'>
                 {title}
               </h2>
-              <m.FakeButton className='row-center-center' onClick={close}>
+              <f.FakeButton className='row-center-center' onClick={close}>
                 <s.X className='font-large' />
-              </m.FakeButton>
+              </f.FakeButton>
             </div>
             <hr className='hr' />
             {!Form ? null :
@@ -211,18 +212,18 @@ type ConfirmDialog = {
   question: string,
   cancelText?: string,
   confirmText?: string,
-  onClose: (event: m.FakeButtonEvent) => void,
-  onConfirm: (event: m.FakeButtonEvent) => void,
+  onClose: (event: f.FakeButtonEvent) => void,
+  onConfirm: (event: f.FakeButtonEvent) => void,
 }
 
 class _ConfirmDialog extends m.ViewComponent<ConfirmDialog> {
-  close = (event: m.FakeButtonEvent) => {
+  close = (event: f.FakeButtonEvent) => {
     const {props: {dispatch, onClose}} = this
     dispatch(a.removeDialog())
     onClose(event)
   }
 
-  confirm = (event: m.FakeButtonEvent) => {
+  confirm = (event: f.FakeButtonEvent) => {
     const {props: {dispatch, onConfirm}} = this
     dispatch(a.removeDialog())
     onConfirm(event)
@@ -246,12 +247,12 @@ class _ConfirmDialog extends m.ViewComponent<ConfirmDialog> {
               {question}
             </p>
             <div className='row-center-center gaps-h-1'>
-              <m.FakeButton className='btn-secondary' onClick={close}>
+              <f.FakeButton className='btn-secondary' onClick={close}>
                 {cancelText || i18n.xln(context, i18n.CANCEL)}
-              </m.FakeButton>
-              <m.FakeButton className='btn-primary' onClick={confirm}>
+              </f.FakeButton>
+              <f.FakeButton className='btn-primary' onClick={confirm}>
                 {confirmText || i18n.xln(context, i18n.OK)}
-              </m.FakeButton>
+              </f.FakeButton>
             </div>
           </div>
         </d.DialogCentered>
@@ -274,7 +275,7 @@ export const ConfirmDialog = connect()(_ConfirmDialog)
 
 type FabProps = {
   className?: string,
-  onClick: (event: m.FakeButtonEvent) => void,
+  onClick: (event: f.FakeButtonEvent) => void,
 }
 
 export class Fab extends m.ViewComponent<FabProps> {
@@ -282,14 +283,14 @@ export class Fab extends m.ViewComponent<FabProps> {
     const {props: {className: cls, ...props}} = this
 
     return (
-      <m.FakeButton
+      <f.FakeButton
         className={`row-start-stretch width-3x5 ${cls || ''}`}
         {...props}
       >
         <span className='flex-1 relative circle square bg-accent shadow-dept-2'>
           <s.Plus className='abs-center font-giant fg-on-accent' />
         </span>
-      </m.FakeButton>
+      </f.FakeButton>
     )
   }
 }
@@ -319,12 +320,12 @@ export class Fab extends m.ViewComponent<FabProps> {
 
 //     return !children ? null : (
 //       <div className='relative row-start-stretch'>
-//         <m.FakeButton
+//         <f.FakeButton
 //           onClick={toggle}
 //           className='relative row-start-center decorate-drawer-link z-index-2'
 //           aria-expanded={expanded}>
 //           <s.MoreVertical className='font-large' />
-//         </m.FakeButton>
+//         </f.FakeButton>
 //         {!expanded ? null :
 //         <m.Closer root={this} close={close}>
 //           <div
