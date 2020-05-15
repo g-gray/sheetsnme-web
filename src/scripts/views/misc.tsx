@@ -73,34 +73,3 @@ export class FakeButton extends ViewComponent<FakeButtonProps> {
     })
   }
 }
-
-
-type CircleUserPicProps = {
-  url: string,
-  size?: number,
-}
-
-export class CircleUserPic extends ViewComponent<CircleUserPicProps> {
-  render() {
-    const {props: {url, size, ...props}} = this
-    const bgUrl = url || '/images/no-avatar-square.png'
-
-    if (size == null) {
-      return (
-        <span
-          className='block bg-circle-trick'
-          style={u.bgImg(bgUrl)}
-          {...props}
-        />
-      )
-    }
-
-    return (
-      <span
-        className='block bg-circle-trick'
-        style={{width: `${size}rem`, ...u.bgImg(bgUrl)}}
-        {...props}
-      />
-    )
-  }
-}

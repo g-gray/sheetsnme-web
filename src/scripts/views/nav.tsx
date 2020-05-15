@@ -4,6 +4,8 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {NavLink, Link} from 'react-router-dom'
 
+import * as u from '../utils'
+
 import * as a from '../actions'
 
 import * as d from '../dialogs'
@@ -21,6 +23,8 @@ class Logo extends m.ViewComponent {
     )
   }
 }
+
+
 
 class _Navbar extends m.ViewComponent {
   open = () => {
@@ -82,6 +86,8 @@ class _Navbar extends m.ViewComponent {
 
 export const Navbar = connect()(_Navbar)
 
+
+
 type UserMenuStateProps = {
   user: t.UserState,
 }
@@ -123,7 +129,7 @@ class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
           onClick={toggle}
           className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item z-index-2'
           aria-expanded={expanded}>
-          <m.CircleUserPic
+          <CircleUserPic
             url={pictureUrl}
             size={2}
           />
@@ -138,7 +144,7 @@ class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
               style={{minWidth: '11rem'}}
             >
               <div className='row-start-center gaps-h-0x75 padding-v-0x5 padding-h-1'>
-                <m.CircleUserPic
+                <CircleUserPic
                   url={pictureUrl}
                   size={4}
                 />
@@ -172,6 +178,7 @@ const UserMenu = connect<UserMenuStateProps, {}, {}, t.AppState>(state => ({
 }))(_UserMenu)
 
 
+
 class _MobileMenu extends m.ViewComponent {
   close = () => {
     const {props: {dispatch}} = this
@@ -203,6 +210,8 @@ class _MobileMenu extends m.ViewComponent {
 }
 
 const MobileMenu = connect()(_MobileMenu)
+
+
 
 export class Drawer extends m.ViewComponent {
   render() {
@@ -247,6 +256,37 @@ export class Drawer extends m.ViewComponent {
           </NavLink>
         </div>
       </aside>
+    )
+  }
+}
+
+
+type CircleUserPicProps = {
+  url: string,
+  size?: number,
+}
+
+class CircleUserPic extends m.ViewComponent<CircleUserPicProps> {
+  render() {
+    const {props: {url, size, ...props}} = this
+    const bgUrl = url || '/images/no-avatar-square.png'
+
+    if (size == null) {
+      return (
+        <span
+          className='block bg-circle-trick'
+          style={u.bgImg(bgUrl)}
+          {...props}
+        />
+      )
+    }
+
+    return (
+      <span
+        className='block bg-circle-trick'
+        style={{width: `${size}rem`, ...u.bgImg(bgUrl)}}
+        {...props}
+      />
     )
   }
 }
