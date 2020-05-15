@@ -26,7 +26,7 @@ export function receivePayees(payeeList: t.PayeeListRes): ReceivePayees {
 
 export function fetchPayees(
   message: string
-): t.AppThunk<Promise<t.PayeeListRes>> {
+): t.AppThunkAction<Promise<t.PayeeListRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,
@@ -43,7 +43,7 @@ export function fetchPayees(
 export function createPayee(
   payee: t.PayeeReq,
   message: string
-): t.AppThunk<Promise<t.PayeeRes>> {
+): t.AppThunkAction<Promise<t.PayeeRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,
@@ -60,7 +60,7 @@ export function updatePayee(
   id: string,
   payee: t.PayeeReq,
   message: string
-): t.AppThunk<Promise<t.PayeeRes>> {
+): t.AppThunkAction<Promise<t.PayeeRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,
@@ -76,7 +76,7 @@ export function updatePayee(
 export function deletePayee(
   id: string,
   message: string
-): t.AppThunk<Promise<t.PayeeRes>> {
+): t.AppThunkAction<Promise<t.PayeeRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,

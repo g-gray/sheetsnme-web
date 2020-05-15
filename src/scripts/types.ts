@@ -94,7 +94,7 @@ export type RRRouteComponentProps = RouteComponentProps
  * Redux Thunk
  */
 
-export type AppThunk<R = void> = ThunkAction<
+export type AppThunkAction<R = void> = ThunkAction<
   R,
   AppState,
   unknown,

@@ -24,7 +24,7 @@ function receiveUser(user: t.UserRes): ReceiveUser {
   }
 }
 
-export function fetchUser(message: string): t.AppThunk<Promise<t.UserRes>> {
+export function fetchUser(message: string): t.AppThunkAction<Promise<t.UserRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest<t.UserRes>({
       message,

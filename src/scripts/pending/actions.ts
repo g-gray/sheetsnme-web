@@ -7,7 +7,7 @@ export type PendingActions = RequestStartAction | RequestEndAction
 
 export function trackRequest<P>(
   opts: {message: string, requestName: string, promise: Promise<P>}
-): t.AppThunk<Promise<P>> {
+): t.AppThunkAction<Promise<P>> {
   return (dispatch): Promise<P> => {
     const {message, requestName, promise} = opts
 

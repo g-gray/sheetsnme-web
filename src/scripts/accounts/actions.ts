@@ -26,7 +26,7 @@ export function receiveAccounts(accountList: t.AccountListRes): ReceiveAccounts 
 
 export function fetchAccounts(
   message: string
-): t.AppThunk<Promise<t.AccountListRes>> {
+): t.AppThunkAction<Promise<t.AccountListRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest<t.AccountListRes>({
       message,
@@ -43,7 +43,7 @@ export function fetchAccounts(
 export function createAccount(
   account: t.AccountReq,
   message: string
-): t.AppThunk<Promise<t.AccountRes>> {
+): t.AppThunkAction<Promise<t.AccountRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest<t.AccountRes>({
       message,
@@ -60,7 +60,7 @@ export function updateAccount(
   id: string,
   account: t.AccountReq,
   message: string
-): t.AppThunk<Promise<t.AccountRes>> {
+): t.AppThunkAction<Promise<t.AccountRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest<t.AccountRes>({
       message,
@@ -76,7 +76,7 @@ export function updateAccount(
 export function deleteAccount (
   id: string,
   message: string
-): t.AppThunk<Promise<t.AccountRes>>{
+): t.AppThunkAction<Promise<t.AccountRes>>{
   return (dispatch) => {
     return dispatch(pa.trackRequest<t.AccountRes>({
       message,
