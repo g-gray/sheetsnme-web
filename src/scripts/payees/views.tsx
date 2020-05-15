@@ -18,6 +18,7 @@ import * as s from '../views/svg'
 import * as f from '../views/forms'
 
 import * as p from '../views/pages'
+import * as v from '../views'
 
 class _PayeesPage extends m.ViewComponent {
   render() {
@@ -36,9 +37,9 @@ class _PayeesPage extends m.ViewComponent {
     )
 
     return (
-      <p.ListPage action={action}>
+      <v.ListPage action={action}>
         <PayeesList />
-      </p.ListPage>
+      </v.ListPage>
     )
   }
 }

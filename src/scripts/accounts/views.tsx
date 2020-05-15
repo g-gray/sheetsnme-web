@@ -18,6 +18,7 @@ import * as s from '../views/svg'
 import * as f from '../views/forms'
 
 import * as p from '../views/pages'
+import * as v from '../views'
 
 type AccountPageProps = {}
 
@@ -38,9 +39,9 @@ class _AccountsPage extends m.ViewComponent<AccountPageProps> {
     )
 
     return (
-      <p.ListPage action={action}>
+      <v.ListPage action={action}>
         <AccountList />
-      </p.ListPage>
+      </v.ListPage>
     )
   }
 }

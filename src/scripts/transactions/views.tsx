@@ -38,9 +38,9 @@ class _TransactionsPage extends m.ViewComponent {
     )
 
     return (
-      <p.ListPage action={action}>
+      <v.ListPage action={action}>
         <TransactionsList />
-      </p.ListPage>
+      </v.ListPage>
     )
   }
 }
