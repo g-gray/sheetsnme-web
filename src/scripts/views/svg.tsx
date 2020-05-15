@@ -1,4 +1,4 @@
-/* eslint-disable jsx-quotes, react/self-closing-comp */
+import * as t from '../types'
 
 import * as React from 'react'
 import * as m from './misc'
@@ -15,7 +15,16 @@ To add an icon, copy-paste SVG markup as JSX. Local setup:
 Unused components are ok; they should be removed by minification.
 */
 
-function featherProps({replaceClass, className: cls, ...props}) {
+type FeatherPropsArgs = t.RSVGProps & {
+  replaceClass?: string,
+  className?   : string,
+}
+
+function featherProps({
+  replaceClass,
+  className: cls,
+  ...props
+}: FeatherPropsArgs): t.RSVGProps {
   return {
     className: replaceClass || `feather ${cls || ''}`,
     'xmlns': 'http://www.w3.org/2000/svg',
@@ -31,7 +40,15 @@ function featherProps({replaceClass, className: cls, ...props}) {
   }
 }
 
-export function svgProps({className: cls, ...props}) {
+type SvgPropsArgs = t.RSVGProps & {
+  replaceClass?: string,
+  className?   : string,
+}
+
+export function svgProps({
+  className: cls,
+  ...props
+}: SvgPropsArgs): t.RSVGProps {
   return {
     className: `${cls || ''}`,
     'xmlns': 'http://www.w3.org/2000/svg',
@@ -44,7 +61,7 @@ export function svgProps({className: cls, ...props}) {
   }
 }
 
-export class Logo extends m.ViewComponent {
+export class Logo extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -56,7 +73,7 @@ export class Logo extends m.ViewComponent {
   }
 }
 
-export class Square extends m.ViewComponent {
+export class Square extends m.ViewComponent<SvgPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -67,7 +84,7 @@ export class Square extends m.ViewComponent {
   }
 }
 
-export class CheckSquare extends m.ViewComponent {
+export class CheckSquare extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -79,7 +96,7 @@ export class CheckSquare extends m.ViewComponent {
   }
 }
 
-export class Check extends m.ViewComponent {
+export class Check extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -90,7 +107,7 @@ export class Check extends m.ViewComponent {
   }
 }
 
-export class Star extends m.ViewComponent {
+export class Star extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -101,7 +118,7 @@ export class Star extends m.ViewComponent {
   }
 }
 
-export class MapPin extends m.ViewComponent {
+export class MapPin extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -113,7 +130,7 @@ export class MapPin extends m.ViewComponent {
   }
 }
 
-export class Clock extends m.ViewComponent {
+export class Clock extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -125,7 +142,7 @@ export class Clock extends m.ViewComponent {
   }
 }
 
-export class ChevronDown extends m.ViewComponent {
+export class ChevronDown extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -136,7 +153,7 @@ export class ChevronDown extends m.ViewComponent {
   }
 }
 
-export class ChevronRight extends m.ViewComponent {
+export class ChevronRight extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -147,7 +164,7 @@ export class ChevronRight extends m.ViewComponent {
   }
 }
 
-export class ChevronLeft extends m.ViewComponent {
+export class ChevronLeft extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -158,7 +175,7 @@ export class ChevronLeft extends m.ViewComponent {
   }
 }
 
-export class ChevronsRight extends m.ViewComponent {
+export class ChevronsRight extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -170,7 +187,7 @@ export class ChevronsRight extends m.ViewComponent {
   }
 }
 
-export class CornerUpLeft extends m.ViewComponent {
+export class CornerUpLeft extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -182,7 +199,7 @@ export class CornerUpLeft extends m.ViewComponent {
   }
 }
 
-export class Paperclip extends m.ViewComponent {
+export class Paperclip extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -193,7 +210,7 @@ export class Paperclip extends m.ViewComponent {
   }
 }
 
-export class LogOut extends m.ViewComponent {
+export class LogOut extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -206,7 +223,7 @@ export class LogOut extends m.ViewComponent {
   }
 }
 
-export class LogIn extends m.ViewComponent {
+export class LogIn extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -219,7 +236,7 @@ export class LogIn extends m.ViewComponent {
   }
 }
 
-export class Female extends m.ViewComponent {
+export class Female extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -232,7 +249,7 @@ export class Female extends m.ViewComponent {
   }
 }
 
-export class Male extends m.ViewComponent {
+export class Male extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -246,7 +263,7 @@ export class Male extends m.ViewComponent {
   }
 }
 
-export class MaleFemale extends m.ViewComponent {
+export class MaleFemale extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -262,7 +279,7 @@ export class MaleFemale extends m.ViewComponent {
   }
 }
 
-export class Case extends m.ViewComponent {
+export class Case extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -274,7 +291,7 @@ export class Case extends m.ViewComponent {
   }
 }
 
-export class Mail extends m.ViewComponent {
+export class Mail extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -286,7 +303,7 @@ export class Mail extends m.ViewComponent {
   }
 }
 
-export class Phone extends m.ViewComponent {
+export class Phone extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -297,7 +314,7 @@ export class Phone extends m.ViewComponent {
   }
 }
 
-export class X extends m.ViewComponent {
+export class X extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -309,7 +326,7 @@ export class X extends m.ViewComponent {
   }
 }
 
-export class XCircle extends m.ViewComponent {
+export class XCircle extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -322,7 +339,7 @@ export class XCircle extends m.ViewComponent {
   }
 }
 
-export class Filter extends m.ViewComponent {
+export class Filter extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -333,7 +350,7 @@ export class Filter extends m.ViewComponent {
   }
 }
 
-export class Upload extends m.ViewComponent {
+export class Upload extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -346,7 +363,7 @@ export class Upload extends m.ViewComponent {
   }
 }
 
-export class Globe extends m.ViewComponent {
+export class Globe extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -359,7 +376,7 @@ export class Globe extends m.ViewComponent {
   }
 }
 
-export class BarChart extends m.ViewComponent {
+export class BarChart extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -372,7 +389,7 @@ export class BarChart extends m.ViewComponent {
   }
 }
 
-export class Eye extends m.ViewComponent {
+export class Eye extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -384,7 +401,7 @@ export class Eye extends m.ViewComponent {
   }
 }
 
-export class Users extends m.ViewComponent {
+export class Users extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -398,7 +415,7 @@ export class Users extends m.ViewComponent {
   }
 }
 
-export class User extends m.ViewComponent {
+export class User extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -410,7 +427,7 @@ export class User extends m.ViewComponent {
   }
 }
 
-export class UserPlus extends m.ViewComponent {
+export class UserPlus extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -424,7 +441,7 @@ export class UserPlus extends m.ViewComponent {
   }
 }
 
-export class Settings extends m.ViewComponent {
+export class Settings extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -436,7 +453,7 @@ export class Settings extends m.ViewComponent {
   }
 }
 
-export class Camera extends m.ViewComponent {
+export class Camera extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -448,7 +465,7 @@ export class Camera extends m.ViewComponent {
   }
 }
 
-export class Heart extends m.ViewComponent {
+export class Heart extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -459,7 +476,7 @@ export class Heart extends m.ViewComponent {
   }
 }
 
-export class PieChart extends m.ViewComponent {
+export class PieChart extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -471,7 +488,7 @@ export class PieChart extends m.ViewComponent {
   }
 }
 
-export class Hash extends m.ViewComponent {
+export class Hash extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -485,7 +502,7 @@ export class Hash extends m.ViewComponent {
   }
 }
 
-export class Search extends m.ViewComponent {
+export class Search extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -497,7 +514,7 @@ export class Search extends m.ViewComponent {
   }
 }
 
-export class Bell extends m.ViewComponent {
+export class Bell extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -508,7 +525,7 @@ export class Bell extends m.ViewComponent {
   }
 }
 
-export class Home extends m.ViewComponent {
+export class Home extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -520,7 +537,7 @@ export class Home extends m.ViewComponent {
   }
 }
 
-export class Cast extends m.ViewComponent {
+export class Cast extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -532,7 +549,7 @@ export class Cast extends m.ViewComponent {
   }
 }
 
-export class List extends m.ViewComponent {
+export class List extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -548,7 +565,7 @@ export class List extends m.ViewComponent {
   }
 }
 
-export class MessageSquare extends m.ViewComponent {
+export class MessageSquare extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -559,7 +576,7 @@ export class MessageSquare extends m.ViewComponent {
   }
 }
 
-export class MessageCircle extends m.ViewComponent {
+export class MessageCircle extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -570,7 +587,7 @@ export class MessageCircle extends m.ViewComponent {
   }
 }
 
-export class Share extends m.ViewComponent {
+export class Share extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -583,7 +600,7 @@ export class Share extends m.ViewComponent {
   }
 }
 
-export class MoreHorizontal extends m.ViewComponent {
+export class MoreHorizontal extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -596,7 +613,7 @@ export class MoreHorizontal extends m.ViewComponent {
   }
 }
 
-export class MoreVertical extends m.ViewComponent {
+export class MoreVertical extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -609,7 +626,7 @@ export class MoreVertical extends m.ViewComponent {
   }
 }
 
-export class Activity extends m.ViewComponent {
+export class Activity extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -620,7 +637,7 @@ export class Activity extends m.ViewComponent {
   }
 }
 
-export class Aperture extends m.ViewComponent {
+export class Aperture extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -637,7 +654,7 @@ export class Aperture extends m.ViewComponent {
   }
 }
 
-export class Plus extends m.ViewComponent {
+export class Plus extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -649,7 +666,7 @@ export class Plus extends m.ViewComponent {
   }
 }
 
-export class Minus extends m.ViewComponent {
+export class Minus extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -660,7 +677,7 @@ export class Minus extends m.ViewComponent {
   }
 }
 
-export class Send extends m.ViewComponent {
+export class Send extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -672,7 +689,7 @@ export class Send extends m.ViewComponent {
   }
 }
 
-export class Cog extends m.ViewComponent {
+export class Cog extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -684,7 +701,7 @@ export class Cog extends m.ViewComponent {
   }
 }
 
-export class Layers extends m.ViewComponent {
+export class Layers extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -697,7 +714,7 @@ export class Layers extends m.ViewComponent {
   }
 }
 
-export class Info extends m.ViewComponent {
+export class Info extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -710,7 +727,7 @@ export class Info extends m.ViewComponent {
   }
 }
 
-export class BookOpen extends m.ViewComponent {
+export class BookOpen extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -722,7 +739,7 @@ export class BookOpen extends m.ViewComponent {
   }
 }
 
-export class Menu extends m.ViewComponent {
+export class Menu extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -735,7 +752,7 @@ export class Menu extends m.ViewComponent {
   }
 }
 
-export class Edit extends m.ViewComponent {
+export class Edit extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -747,7 +764,7 @@ export class Edit extends m.ViewComponent {
   }
 }
 
-export class CreditCard extends m.ViewComponent {
+export class CreditCard extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -759,7 +776,7 @@ export class CreditCard extends m.ViewComponent {
   }
 }
 
-export class Tag extends m.ViewComponent {
+export class Tag extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -771,7 +788,7 @@ export class Tag extends m.ViewComponent {
   }
 }
 
-export class ArrowDown extends m.ViewComponent {
+export class ArrowDown extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -783,7 +800,7 @@ export class ArrowDown extends m.ViewComponent {
   }
 }
 
-export class ArrowLeft extends m.ViewComponent {
+export class ArrowLeft extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -795,7 +812,7 @@ export class ArrowLeft extends m.ViewComponent {
   }
 }
 
-export class ArrowRight extends m.ViewComponent {
+export class ArrowRight extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -807,7 +824,7 @@ export class ArrowRight extends m.ViewComponent {
   }
 }
 
-export class Trash extends m.ViewComponent {
+export class Trash extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -819,7 +836,7 @@ export class Trash extends m.ViewComponent {
   }
 }
 
-export class Trash2 extends m.ViewComponent {
+export class Trash2 extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (
@@ -833,7 +850,7 @@ export class Trash2 extends m.ViewComponent {
   }
 }
 
-export class Repeat extends m.ViewComponent {
+export class Repeat extends m.ViewComponent<FeatherPropsArgs> {
   render() {
     const {props} = this
     return (

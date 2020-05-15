@@ -76,6 +76,7 @@ export type RReactInstance = React.ReactInstance
 export type RReactChildren = React.ReactNode | React.ReactNode[]
 
 export type RCSSProperties = React.CSSProperties
+export type RSVGProps = React.SVGProps<SVGSVGElement>
 
 
 
