@@ -19,6 +19,7 @@ import * as s from '../views/svg'
 import * as f from '../views/forms'
 
 import * as p from '../views/pages'
+import * as v from '../views'
 
 class _TransactionsPage extends m.ViewComponent {
   render() {
@@ -812,7 +813,7 @@ class _TransactionsList extends m.ViewComponent<TransactionListProps> {
           )}
         </div>
         {!transactions.length ? null :
-        <p.Paginator pageCount={pageCount} />}
+        <v.Paginator pageCount={pageCount} />}
       </div>
     )
   }

@@ -2,18 +2,13 @@ import * as t from '../types'
 
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
-import {NavLink, Link, withRouter} from 'react-router-dom'
-import ReactPaginate from 'react-paginate'
-
-// @ts-ignore
-import * as fpx from 'fpx'
+import {Link} from 'react-router-dom'
 
 import * as a from '../actions'
 import * as u from '../utils'
 
 import * as m from './misc'
 import * as s from './svg'
-import * as f from './forms'
 import * as nav from './nav'
 
 import * as d from '../dialogs'
@@ -389,107 +384,6 @@ export class ListPage extends m.ViewComponent<ListPageProps> {
   }
 }
 
-
-type PaginatorProps = t.RRRouteComponentProps & {
-  pageCount: number,
-  onPageChange?: (pageNumber: number) => void,
-}
-
-type PaginatorState = {
-  forcePage: number,
-}
-
-class _Paginator extends m.ViewComponent<PaginatorProps, PaginatorState> {
-  state: Readonly<PaginatorState>
-  unlisten: () => void = () => {}
-
-  constructor(props: PaginatorProps) {
-    super(props)
-
-    const query = u.decodeQuery(this.props.location.search)
-    const page = Array.isArray(query.page)
-      ? query.page[0]
-      : query.page
-
-    this.state =  {
-      forcePage: parseInt(page) || 1,
-    }
-  }
-
-  onPageChange = ({selected}: {selected: number}): void => {
-    const {props: {history, location, onPageChange}} = this
-
-    const query = u.decodeQuery(location.search)
-    const page = selected + 1
-    history.push(`/transactions/${u.encodeQuery({...query, page})}`)
-
-    if (typeof onPageChange === 'function') {
-      onPageChange(page)
-    }
-  }
-
-  hrefBulder = (page: number) => {
-    const query = u.decodeQuery(this.props.location.search)
-    return `/transactions/${u.encodeQuery({...query, page})}`
-  }
-
-  componentDidMount() {
-    this.unlisten = this.props.history.listen(nextLocation => {
-      const location = this.props.location
-      if (location.pathname !== nextLocation.pathname) return
-
-      const nextQuery = u.decodeQuery(nextLocation.search)
-      const page = Array.isArray(nextQuery.page)
-        ? nextQuery.page[0]
-        : nextQuery.page
-      this.setState({forcePage: parseInt(page) || 1})
-    })
-  }
-
-  componentWillUnmount() {
-    this.unlisten()
-  }
-
-  render() {
-    const {
-      context,
-      props: {pageCount},
-      state: {forcePage},
-      onPageChange, hrefBulder,
-    } = this
-
-    const isMobile = g.isMobile(context)
-
-    return (
-      <ReactPaginate
-        pageCount={pageCount}
-        pageRangeDisplayed={isMobile ? 2 : 3}
-        marginPagesDisplayed={isMobile ? 1 : 2}
-        previousLabel={<s.ArrowLeft />}
-        nextLabel={<s.ArrowRight />}
-        breakLabel='...'
-        breakClassName={`block ${isMobile ? '' : 'padding-h-0x75'}`}
-        breakLinkClassName='btn-secondary row-center-center'
-        onPageChange={onPageChange}
-        forcePage={forcePage - 1}
-        disableInitialCallback={true}
-        containerClassName={`${isMobile
-          ? 'col-start-stretch gaps-v-1 padding-h-1x25'
-          : 'row-center-center gaps-h-0x25'}`}
-        pageClassName='block'
-        pageLinkClassName='btn-secondary row-center-center'
-        previousClassName='block'
-        previousLinkClassName='btn-secondary row-center-center'
-        nextClassName='block'
-        nextLinkClassName='btn-secondary row-center-center'
-        hrefBuilder={hrefBulder}
-        ariaLabelBuilder={page => `${i18n.xln(context, i18n.PAGE)} ${page}`}
-      />
-    )
-  }
-}
-
-export const Paginator = withRouter(_Paginator)
 
 
 type FabProps = {
