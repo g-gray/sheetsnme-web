@@ -6,12 +6,13 @@ import {NavLink, Link} from 'react-router-dom'
 
 import * as a from '../actions'
 
-import * as m from './misc'
-import * as s from './svg'
 import * as d from '../dialogs'
 import * as g from '../geometry'
-
 import * as i18n from '../i18n'
+
+import * as m from './misc'
+import * as s from './svg'
+import * as c from './closer'
 
 class Logo extends m.ViewComponent {
   render() {
@@ -128,7 +129,7 @@ class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
           />
         </m.FakeButton>
         {!expanded ? null :
-        <m.Closer root={this} close={close}>
+        <c.Closer root={this} close={close}>
           <div
             className='dropdown-position z-index-tooltip'
             onClick={close}>
@@ -160,7 +161,7 @@ class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
               </div>
             </div>
           </div>
-        </m.Closer>}
+        </c.Closer>}
       </div>
     )
   }
