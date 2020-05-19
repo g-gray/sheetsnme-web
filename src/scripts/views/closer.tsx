@@ -1,7 +1,5 @@
 import * as t from '../types'
 
-import React from 'react'
-
 import * as u from '../utils'
 
 import * as m from './misc'

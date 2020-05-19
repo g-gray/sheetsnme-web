@@ -15,7 +15,7 @@ import * as i18n from '../i18n'
 import * as m from './misc'
 import * as s from './svg'
 import * as l from './layouts'
-import * as f from './fake-button'
+import * as fb from './fake-button'
 
 /**
  * Entities
@@ -53,14 +53,14 @@ export class EntityPlaceholder extends m.ViewComponent {
 
 type EntityItemProps = {
   icon: t.RReactElement,
-  onOpen: (event: f.FakeButtonEvent) => void,
-  onDelete: (event: f.FakeButtonEvent) => void,
+  onOpen: (event: fb.FakeButtonEvent) => void,
+  onDelete: (event: fb.FakeButtonEvent) => void,
 }
 
 export class EntityItem extends m.ViewComponent<EntityItemProps> {
   actionsRef = React.createRef<HTMLDivElement>()
 
-  onClick = (event: f.FakeButtonEvent): void => {
+  onClick = (event: fb.FakeButtonEvent): void => {
     const {actionsRef, props: {onOpen}} = this
 
     const actionsNode = u.findDomNode(actionsRef.current)
@@ -81,7 +81,7 @@ export class EntityItem extends m.ViewComponent<EntityItemProps> {
     const isMobile = g.isMobile(context)
 
     return (
-      <f.FakeButton
+      <fb.FakeButton
         type='div'
         onClick={onClick}
         className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-drawer-link-busy rounded trigger'>
@@ -98,14 +98,14 @@ export class EntityItem extends m.ViewComponent<EntityItemProps> {
         {isMobile ? null :
         <div className='row-center-center padding-h-0x25' ref={actionsRef}>
           <div className='row-center-center' style={{minHeight: '2.5rem'}}>
-            <f.FakeButton
+            <fb.FakeButton
               className='row-center-center show-on-trigger-hover decorate-icon-button'
               onClick={onDelete}>
               <s.Trash2 className='font-large' />
-            </f.FakeButton>
+            </fb.FakeButton>
           </div>
         </div>}
-      </f.FakeButton>
+      </fb.FakeButton>
     )
   }
 }
@@ -165,12 +165,12 @@ class _FormDialog<P> extends m.ViewComponent<FormDialogProps<P>> {
                 <h2 className='font-large weight-medium'>
                   {title}
                 </h2>
-                <f.FakeButton
+                <fb.FakeButton
                   className='row-center-center padding-1x25'
                   onClick={close}
                 >
                   <s.X className='font-large' />
-                </f.FakeButton>
+                </fb.FakeButton>
               </div>
               <hr className='hr' />
               {!Form ? null :
@@ -192,9 +192,9 @@ class _FormDialog<P> extends m.ViewComponent<FormDialogProps<P>> {
               <h2 className='font-large weight-medium'>
                 {title}
               </h2>
-              <f.FakeButton className='row-center-center' onClick={close}>
+              <fb.FakeButton className='row-center-center' onClick={close}>
                 <s.X className='font-large' />
-              </f.FakeButton>
+              </fb.FakeButton>
             </div>
             <hr className='hr' />
             {!Form ? null :
@@ -212,18 +212,18 @@ type ConfirmDialog = {
   question: string,
   cancelText?: string,
   confirmText?: string,
-  onClose: (event: f.FakeButtonEvent) => void,
-  onConfirm: (event: f.FakeButtonEvent) => void,
+  onClose: (event: fb.FakeButtonEvent) => void,
+  onConfirm: (event: fb.FakeButtonEvent) => void,
 }
 
 class _ConfirmDialog extends m.ViewComponent<ConfirmDialog> {
-  close = (event: f.FakeButtonEvent) => {
+  close = (event: fb.FakeButtonEvent) => {
     const {props: {dispatch, onClose}} = this
     dispatch(a.removeDialog())
     onClose(event)
   }
 
-  confirm = (event: f.FakeButtonEvent) => {
+  confirm = (event: fb.FakeButtonEvent) => {
     const {props: {dispatch, onConfirm}} = this
     dispatch(a.removeDialog())
     onConfirm(event)
@@ -247,12 +247,12 @@ class _ConfirmDialog extends m.ViewComponent<ConfirmDialog> {
               {question}
             </p>
             <div className='row-center-center gaps-h-1'>
-              <f.FakeButton className='btn-secondary' onClick={close}>
+              <fb.FakeButton className='btn-secondary' onClick={close}>
                 {cancelText || i18n.xln(context, i18n.CANCEL)}
-              </f.FakeButton>
-              <f.FakeButton className='btn-primary' onClick={confirm}>
+              </fb.FakeButton>
+              <fb.FakeButton className='btn-primary' onClick={confirm}>
                 {confirmText || i18n.xln(context, i18n.OK)}
-              </f.FakeButton>
+              </fb.FakeButton>
             </div>
           </div>
         </d.DialogCentered>

@@ -15,7 +15,7 @@ import * as i18n from '../i18n'
 import * as m from './misc'
 import * as s from './svg'
 import * as c from './closer'
-import * as f from './fake-button'
+import * as fb from './fake-button'
 
 class Logo extends m.ViewComponent {
   render() {
@@ -48,19 +48,19 @@ class _Navbar extends m.ViewComponent {
       return (
         <header className='row-between-stretch bg-primary navbar-height shadow-dept-1'>
           <div className='row-start-center gaps-h-0x75 padding-h-1'>
-            <f.FakeButton
+            <fb.FakeButton
               className='row-center-center padding-0x5 circle decorate-dark-menu-item'
               onClick={open}>
               <s.Menu
                 style={{fontSize: '1.5rem'}} />
-            </f.FakeButton>
+            </fb.FakeButton>
           </div>
           <div className='row-start-stretch relative z-index-1'>
-            <f.FakeButton
+            <fb.FakeButton
               onClick={nextLang}
               className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
               {i18n.xln(context, i18n.LANG)}
-            </f.FakeButton>
+            </fb.FakeButton>
             <UserMenu />
           </div>
         </header>
@@ -73,11 +73,11 @@ class _Navbar extends m.ViewComponent {
           <Logo />
         </Link>
         <div className='row-start-stretch relative z-index-1'>
-          <f.FakeButton
+          <fb.FakeButton
             onClick={nextLang}
             className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
             {i18n.xln(context, i18n.LANG)}
-          </f.FakeButton>
+          </fb.FakeButton>
           <UserMenu />
         </div>
       </header>
@@ -126,7 +126,7 @@ class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
 
     return (
       <div className='relative row-start-stretch'>
-        <f.FakeButton
+        <fb.FakeButton
           onClick={toggle}
           className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item z-index-2'
           aria-expanded={expanded}>
@@ -134,7 +134,7 @@ class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
             url={pictureUrl}
             size={2}
           />
-        </f.FakeButton>
+        </fb.FakeButton>
         {!expanded ? null :
         <c.Closer root={this} close={close}>
           <div
