@@ -23,6 +23,14 @@ type AppProps = AppOwnProps & AppStateProps
 class _App extends m.ViewComponent<AppProps> {
   unresize: () => void = () => {}
 
+  resize = () => {
+    e.store.dispatch(a.resize(window.innerWidth))
+  }
+
+  throttledResize = () => {
+    requestAnimationFrame(this.resize)
+  }
+
   render() {
     const {props: {isMobile, lang}} = this
 
@@ -35,9 +43,7 @@ class _App extends m.ViewComponent<AppProps> {
   }
 
   componentDidMount() {
-    this.unresize = u.addEvent(window, 'resize', () => {
-      e.store.dispatch(a.resize(window.innerWidth))
-    })
+    this.unresize = u.addEvent(window, 'resize', this.throttledResize)
   }
 
   componentWillUnmount() {
