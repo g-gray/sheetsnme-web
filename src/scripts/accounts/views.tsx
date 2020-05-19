@@ -30,7 +30,7 @@ class _AccountsPage extends m.ViewComponent<AccountPageProps> {
     } = this
 
     const action = (
-      <p.Fab
+      <v.Fab
         onClick={() => dispatch(a.addDialog(p.FormDialog, {
           form: AccountForm,
           title: i18n.xln(context, i18n.NEW_ACCOUNT),

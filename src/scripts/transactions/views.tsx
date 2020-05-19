@@ -29,7 +29,7 @@ class _TransactionsPage extends m.ViewComponent {
     } = this
 
     const action = (
-      <p.Fab
+      <v.Fab
         onClick={() => dispatch(a.addDialog(p.FormDialog, {
           form: TransactionForm,
           title: i18n.xln(context, i18n.NEW_TRANSACTION),

@@ -28,7 +28,7 @@ class _PayeesPage extends m.ViewComponent {
     } = this
 
     const action = (
-      <p.Fab
+      <v.Fab
         onClick={() => dispatch(a.addDialog(p.FormDialog, {
           form: PayeeForm,
           title: i18n.xln(context, i18n.NEW_PAYEE),
