@@ -243,7 +243,7 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
           ) : (
             <div className='col-start-stretch'>
               {accounts.map((account) => (
-                <p.EntityItem
+                <v.EntityItem
                   key={account.id}
                   icon={<s.CreditCard className='font-large fg-primary' />}
                   onOpen={onOpen(account)}
@@ -256,7 +256,7 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
                     ? <span className='fg-error'>{account.balance}</span>
                     : <span className='fg-on-surface-pale'>{account.balance}</span>}
                   </div>
-                </p.EntityItem>
+                </v.EntityItem>
               ))}
             </div>
           )}

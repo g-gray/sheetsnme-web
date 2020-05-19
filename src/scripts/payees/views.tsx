@@ -239,7 +239,7 @@ class _PayeesList extends m.ViewComponent<PayeesListProps> {
           ) : (
             <div className='col-start-stretch'>
               {payees.map(payee => (
-                <p.EntityItem
+                <v.EntityItem
                   key={payee.id}
                   icon={<s.Users className='font-large fg-primary' />}
                   onOpen={onOpen(payee)}
@@ -252,7 +252,7 @@ class _PayeesList extends m.ViewComponent<PayeesListProps> {
                     ? <span className='fg-error'>{payee.debt}</span>
                     : <span className='fg-on-surface-pale'>{payee.debt}</span>}
                   </div>
-                </p.EntityItem>
+                </v.EntityItem>
               ))}
             </div>
           )}

@@ -232,13 +232,13 @@ class _CategoriesList extends m.ViewComponent<CategoriesListProps> {
     ) : (
       <div className='col-start-stretch'>
         {categories.map(category => (
-          <p.EntityItem
+          <v.EntityItem
             key={category.id}
             icon={<s.Tag className='font-large fg-primary' />}
             onOpen={onOpen(category)}
             onDelete={onDelete(category)}>
             {category.title}
-          </p.EntityItem>
+          </v.EntityItem>
         ))}
       </div>
     )
