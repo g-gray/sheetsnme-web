@@ -237,7 +237,7 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
           {pending || !accounts.length ? (
             <div className='col-start-stretch'>
               {new Array(accounts.length || 3).fill(undefined).map((__, index) => (
-                <p.EntityPlaceholder key={index} />
+                <v.EntityPlaceholder key={index} />
               ))}
             </div>
           ) : (

@@ -467,12 +467,12 @@ class TransactionPlaceholder extends m.ViewComponent {
         <div className='flex-1 col-start-stretch transaction-line-height'>
           <div className='col-start-stretch gaps-v-0x25 padding-v-1'>
             <div className='row-between-center gaps-h-1 font-midsmall fg-on-surface-pale'>
-              <p.Placeholder style={{width: '4em'}} />
-              <p.Placeholder style={{width: '6em'}} />
+              <v.Placeholder style={{width: '4em'}} />
+              <v.Placeholder style={{width: '6em'}} />
             </div>
             <div className='row-between-start gaps-h-1'>
-              <p.Placeholder style={{width: '8em'}} />
-              <p.Placeholder style={{width: '3em'}} />
+              <v.Placeholder style={{width: '8em'}} />
+              <v.Placeholder style={{width: '3em'}} />
             </div>
           </div>
           <hr className='hr hide-in-list-last-child' />

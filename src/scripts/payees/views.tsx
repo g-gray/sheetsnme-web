@@ -233,7 +233,7 @@ class _PayeesList extends m.ViewComponent<PayeesListProps> {
           {pending || !payees.length ? (
             <div className='col-start-stretch'>
               {new Array(payees.length || 3).fill(undefined).map((__, index) => (
-                <p.EntityPlaceholder key={index} />
+                <v.EntityPlaceholder key={index} />
               ))}
             </div>
           ) : (

@@ -9,6 +9,7 @@ import * as g from '../geometry'
 import * as m from './misc'
 import * as s from './svg'
 import * as fb from './fake-button'
+import * as p from './placeholder'
 
 type EntityItemProps = {
   icon: t.RReactElement,
@@ -65,6 +66,35 @@ export class EntityItem extends m.ViewComponent<EntityItemProps> {
           </div>
         </div>}
       </fb.FakeButton>
+    )
+  }
+}
+
+export class EntityPlaceholder extends m.ViewComponent {
+  render() {
+    const {context} = this
+
+    const isMobile = g.isMobile(context)
+
+    return (
+      <div className='row-start-stretch gaps-h-1 padding-h-1'>
+        <div className='relative width-2x5 square'>
+          <div className='row-center-center abs-center'>
+            <div className='width-1x5 square circle decorate-placeholder' />
+          </div>
+        </div>
+        <div className='flex-1 col-start-stretch'>
+          <div className='flex-1 row-start-center padding-v-1'>
+            <p.Placeholder style={{width: '8em'}} />
+          </div>
+        </div>
+        {isMobile ? null :
+        <div className='row-center-center padding-h-0x25'>
+          <div className='row-center-center' style={{minHeight: '2.5rem'}}>
+            <s.Trash2 className='font-large fg-transparent' />
+          </div>
+        </div>}
+      </div>
     )
   }
 }

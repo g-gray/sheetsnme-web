@@ -16,59 +16,6 @@ import * as s from './svg'
 import * as l from './layouts'
 import * as fb from './fake-button'
 
-/**
- * Entities
- */
-
-export class EntityPlaceholder extends m.ViewComponent {
-  render() {
-    const {context} = this
-
-    const isMobile = g.isMobile(context)
-
-    return (
-      <div className='row-start-stretch gaps-h-1 padding-h-1'>
-        <div className='relative width-2x5 square'>
-          <div className='row-center-center abs-center'>
-            <div className='width-1x5 square circle decorate-placeholder' />
-          </div>
-        </div>
-        <div className='flex-1 col-start-stretch'>
-          <div className='flex-1 row-start-center padding-v-1'>
-            <Placeholder style={{width: '8em'}} />
-          </div>
-        </div>
-        {isMobile ? null :
-        <div className='row-center-center padding-h-0x25'>
-          <div className='row-center-center' style={{minHeight: '2.5rem'}}>
-            <s.Trash2 className='font-large fg-transparent' />
-          </div>
-        </div>}
-      </div>
-    )
-  }
-}
-
-type PlaceholderProps = {
-  className?: string,
-  style?: t.RCSSProperties,
-}
-
-export class Placeholder extends m.ViewComponent<PlaceholderProps> {
-  render() {
-    const {props: {style, className: cls}} = this
-
-    return (
-      <span className={`inline-block ${cls || ''}`}>
-        <span
-          className='inline-block valign-middle decorate-placeholder rounded-50p'
-          style={{width: '3em', height: '1em', ...style}} />
-      </span>
-    )
-  }
-}
-
-
 
 type FormDialogProps<P> = {
   title: string,
