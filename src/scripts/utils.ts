@@ -11,17 +11,9 @@ import * as querystring from 'querystring'
 
 export const DEFAULT_PAGE_SIZE: number = 25
 
-export function findDomNode(instance: React.ReactInstance | null | undefined): Element | Text | null {
-  const element = ReactDom.findDOMNode(instance)
-  if (element != null) fpx.validate(element, isElement)
-  return element
-}
-
-function isComponent(value: any): boolean {
-  return fpx.isInstance(value, React.Component)
-}
-
-
+/**
+ * Bind
+ */
 
 export function bindValue(
   component: React.Component,
@@ -65,6 +57,18 @@ export function bindChecked(
 /**
  * Dom
  */
+
+export function findDomNode(
+  instance: React.ReactInstance | null | undefined
+): Element | Text | null {
+  const element = ReactDom.findDOMNode(instance)
+  if (element != null) fpx.validate(element, isElement)
+  return element
+}
+
+function isComponent(value: any): boolean {
+  return fpx.isInstance(value, React.Component)
+}
 
 export function isNode(value: any): boolean {
   return fpx.isInstance(value, Node)
@@ -197,6 +201,8 @@ export function parseNum(value: any): void | number {
   if (fpx.isFinite(value)) return value
   return undefined
 }
+
+
 
 /**
  * Net
