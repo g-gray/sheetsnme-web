@@ -183,6 +183,8 @@ export type XHttpResponse = {
  * Errors
  */
 
+export type FetchError = ValidationError[]
+
 export type ValidationError = {
   text: string,
 }

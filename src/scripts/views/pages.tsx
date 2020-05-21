@@ -16,34 +16,32 @@ import * as s from './svg'
 import * as l from './layouts'
 import * as fb from './fake-button'
 
+export type FormDialogProps<P> = t.DialogProps<{
+  title        : string,
+  form         : t.RComponentType<FormProps<P>>,
+  formProps?   : Omit<FormProps<P>, 'onSubmitSuccess'>,
+}>
 
-type FormDialogProps<P> = {
-  title: string,
-  form: React.ComponentType<P>,
-  formProps: P,
-  onClose?: (event: t.RKeyboardEvent | t.RMouseEvent) => void,
+export type FormProps<P> = P & {
+  onSubmitSuccess: (event?: KeyboardEvent | t.RKeyboardEvent | t.RMouseEvent) => void,
 }
 
 class _FormDialog<P> extends m.ViewComponent<FormDialogProps<P>> {
-  close = (event: t.RKeyboardEvent | t.RMouseEvent) => {
-    const {dispatch, onClose} = this.props
+  close = () => {
+    const {dispatch} = this.props
     dispatch(a.removeDialog())
-
-    if (onClose) {
-      onClose(event)
-    }
   }
 
   render() {
     const {
       context,
-      props: {title, form: Form, formProps},
+      props: {title, form: Form, formProps, dialogsNumber},
       close,
     } = this
 
     if (g.isMobile(context)) {
       return (
-        <d.Dialog onEscape={close}>
+        <d.Dialog dialogsNumber={dialogsNumber} onEscape={close}>
           <d.DialogScrollable className='bg-surface'>
             <div className='relative col-start-stretch'>
               <div className='row-between-center gaps-h-1 padding-l-1x25 navbar-height'>
@@ -67,7 +65,7 @@ class _FormDialog<P> extends m.ViewComponent<FormDialogProps<P>> {
     }
 
     return (
-      <d.Dialog onEscape={close}>
+      <d.Dialog dialogsNumber={dialogsNumber} onEscape={close}>
         <d.DialogOverlay className='bg-overlay' />
         <d.DialogCentered onClick={close}>
           <div
@@ -93,19 +91,22 @@ class _FormDialog<P> extends m.ViewComponent<FormDialogProps<P>> {
 
 export const FormDialog = connect()(_FormDialog)
 
-type ConfirmDialog = {
+export type ConfirmDialogProps = t.DialogProps<{
   question: string,
   cancelText?: string,
   confirmText?: string,
-  onClose: (event: fb.FakeButtonEvent) => void,
+  onClose?: (event: KeyboardEvent | fb.FakeButtonEvent) => void,
   onConfirm: (event: fb.FakeButtonEvent) => void,
-}
+}>
 
-class _ConfirmDialog extends m.ViewComponent<ConfirmDialog> {
-  close = (event: fb.FakeButtonEvent) => {
+class _ConfirmDialog extends m.ViewComponent<ConfirmDialogProps> {
+  close = (event: KeyboardEvent | fb.FakeButtonEvent) => {
     const {props: {dispatch, onClose}} = this
     dispatch(a.removeDialog())
-    onClose(event)
+
+    if (typeof onClose === 'function') {
+      onClose(event)
+    }
   }
 
   confirm = (event: fb.FakeButtonEvent) => {
@@ -117,12 +118,12 @@ class _ConfirmDialog extends m.ViewComponent<ConfirmDialog> {
   render() {
     const {
       context,
-      props: {question, cancelText, confirmText},
+      props: {question, cancelText, confirmText, dialogsNumber},
       confirm, close,
     } = this
 
     return (
-      <d.Dialog onEscape={close}>
+      <d.Dialog dialogsNumber={dialogsNumber} onEscape={close}>
         <d.DialogOverlay className='bg-overlay' />
         <d.DialogCentered onClick={close}>
           <div

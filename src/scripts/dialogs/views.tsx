@@ -17,10 +17,11 @@ class _GlobalDialog extends m.ViewComponent<GlobalDialogProps> {
     const {props: {dialogs}} = this
     return dialogs.map((dialog, index) => {
       const {dialog: Dialog, dialogProps} = dialog
+
       return (
         <Dialog
           key={index}
-          dialogsNumber={dialogs}
+          dialogsNumber={dialogs.length}
           {...dialogProps}
         />
       )
@@ -32,11 +33,10 @@ export const GlobalDialog = connect<GlobalDialogStateProps, {}, {}, t.AppState>(
   dialogs: state.dom.dialogs,
 }))(_GlobalDialog)
 
+type DialogProps<P> = t.DialogProps<P>
 
-type DialogProps = t.DialogProps
-
-export class Dialog extends m.ViewComponent<DialogProps> {
-  unsub: (() => void) | undefined
+export class Dialog<P> extends m.ViewComponent<DialogProps<P>> {
+  unsub: () => void = () => {}
 
   componentDidMount() {
     const {props: {dialogsNumber, onEscape}} = this
@@ -44,7 +44,8 @@ export class Dialog extends m.ViewComponent<DialogProps> {
     this.unsub = u.addEvent(window, 'keydown', (event) => {
       if (
         event instanceof KeyboardEvent &&
-        u.eventKeyCode(event) === u.KEY_NAMES_US.ESCAPE
+        u.eventKeyCode(event) === u.KEY_NAMES_US.ESCAPE &&
+        typeof onEscape === 'function'
       ) {
         onEscape(event)
       }
@@ -54,12 +55,16 @@ export class Dialog extends m.ViewComponent<DialogProps> {
   }
 
   componentWillUnmount() {
-    if (this.unsub) this.unsub()
-    onDialogClose(this.props.dialogsNumber)
+    const {props: {dialogsNumber}} = this
+
+    this.unsub()
+
+    onDialogClose(dialogsNumber - 1)
   }
 
   render() {
     const {props: {className: cls, children}} = this
+
     return (
       <div className={`dialog ${cls || ''}`}>
         {children}
@@ -68,14 +73,14 @@ export class Dialog extends m.ViewComponent<DialogProps> {
   }
 }
 
-function onDialogOpen(dialogsNumber: void | number) {
+function onDialogOpen(dialogsNumber: number) {
   if (dialogsNumber > 0) {
     document.body.style.marginRight = `${u.getGlobalScrollbarWidth()}px`
     document.body.classList.add('overflow-x-scroll')
   }
 }
 
-function onDialogClose(dialogsNumber: void | number) {
+function onDialogClose(dialogsNumber: number) {
   if (!dialogsNumber) {
     document.body.style.marginRight = ''
     document.body.classList.remove('overflow-x-scroll')
@@ -84,7 +89,7 @@ function onDialogClose(dialogsNumber: void | number) {
 
 
 type DialogOverlayProps = {
-  className: void | string,
+  className?: string,
 }
 
 export class DialogOverlay extends m.ViewComponent<DialogOverlayProps> {
@@ -120,7 +125,10 @@ export class DialogScrollable extends m.ViewComponent<DialogScrollableProps> {
     // When making changes, make sure to test all the edge cases.
     return (
       <div className={`dialog-scrollable ${cls || ''}`}>
-        <div className='abs-fit' onClick={onClick} />
+        <div
+          className='abs-fit'
+          onClick={onClick}
+        />
         {children}
       </div>
     )
