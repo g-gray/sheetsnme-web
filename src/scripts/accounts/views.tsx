@@ -257,32 +257,28 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
           <div className={`row-end-center ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}>
             <span className='fg-on-surface-pale'>{i18n.xln(context, i18n.BALANCE)}</span>
           </div>
-          {pending || !accounts.length ? (
-            <div className='col-start-stretch'>
-              {new Array(accounts.length || 3).fill(undefined).map((__, index) => (
-                <v.EntityPlaceholder key={index} />
-              ))}
-            </div>
-          ) : (
-            <div className='col-start-stretch'>
-              {accounts.map((account) => (
-                <v.EntityItem
-                  key={account.id}
-                  icon={<s.CreditCard className='font-large fg-primary' />}
-                  onOpen={onOpen(account)}
-                  onDelete={onDelete(account)}>
-                  <div className='flex-1 row-between-center gaps-h-1'>
-                    <span>{account.title}</span>
-                    { account.balance > 0
-                    ? <span className='fg-success'>+{account.balance}</span>
-                    : account.balance < 0
-                    ? <span className='fg-error'>{account.balance}</span>
-                    : <span className='fg-on-surface-pale'>{account.balance}</span>}
-                  </div>
-                </v.EntityItem>
-              ))}
-            </div>
-          )}
+          <v.EntityItemList
+            entityList={accounts}
+            pending={pending}
+          >
+            {accounts.map((account) => (
+              <v.EntityItem
+                key={account.id}
+                icon={<s.CreditCard className='font-large fg-primary' />}
+                onOpen={onOpen(account)}
+                onDelete={onDelete(account)}
+              >
+                <div className='flex-1 row-between-center gaps-h-1'>
+                  <span>{account.title}</span>
+                  { account.balance > 0
+                  ? <span className='fg-success'>+{account.balance}</span>
+                  : account.balance < 0
+                  ? <span className='fg-error'>{account.balance}</span>
+                  : <span className='fg-on-surface-pale'>{account.balance}</span>}
+                </div>
+              </v.EntityItem>
+            ))}
+          </v.EntityItemList>
         </div>
       </div>
     )

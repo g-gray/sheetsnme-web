@@ -2,10 +2,7 @@ import * as t from '../types'
 
 import React from 'react'
 
-import * as g from '../geometry'
-
 import * as m from './misc'
-import * as s from './svg'
 
 type PlaceholderProps = {
   className?: string,
