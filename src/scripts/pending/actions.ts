@@ -7,7 +7,7 @@ export type PendingActions = RequestStartAction | RequestEndAction
 
 export function trackRequest<P>(
   opts: {message: string, requestName: string, promise: Promise<P>}
-): t.AppThunkAction<Promise<P>> {
+): t.ReduxThunkAction<Promise<P>> {
   return (dispatch): Promise<P> => {
     const {message, requestName, promise} = opts
 
@@ -37,7 +37,7 @@ export function trackRequest<P>(
 
 export const REQUEST_START = 'REQUEST_START'
 
-interface RequestStartAction extends t.AppAction {
+interface RequestStartAction extends t.ReduxAction {
   type: typeof REQUEST_START,
   payload: {
     requestName: string,
@@ -54,7 +54,7 @@ const requestStart = (requestName: string): RequestStartAction => ({
 
 export const REQUEST_END = 'REQUEST_END'
 
-interface RequestEndAction extends t.AppAction {
+interface RequestEndAction extends t.ReduxAction {
   type: typeof REQUEST_END,
   payload: {
     requestName: string,

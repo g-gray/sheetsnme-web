@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 // @ts-ignore
 import * as fpx from 'fpx'
 
+import * as e from '../env'
 import * as u from '../utils'
 
 import * as a from '../actions'
@@ -20,44 +21,55 @@ import * as f from '../views/forms'
 import * as p from '../views/pages'
 import * as v from '../views'
 
+/**
+ * AccountPage
+ */
+
 type AccountPageProps = {}
 
-class _AccountsPage extends m.ViewComponent<AccountPageProps> {
-  render() {
-    const {
-      context,
-      props: {dispatch},
-    } = this
+export class AccountsPage extends m.ViewComponent<AccountPageProps> {
+  openAccountFormDialog = () => {
+    const {context} = this
 
-    const action = (
-      <v.Fab
-        onClick={() => dispatch(a.addDialog<p.FormDialogProps<AccountFormOwnProps>>(p.FormDialog, {
+    e.dispatch(
+      a.addDialog<p.FormDialogProps<AccountFormOwnProps>>(
+        p.FormDialog,
+        {
           title: i18n.xln(context, i18n.NEW_ACCOUNT),
           form: AccountForm,
-        }))}
-      />
+        }
+      )
     )
+  }
+
+  render() {
+    const {openAccountFormDialog} = this
 
     return (
-      <v.ListPage action={action}>
+      <v.ListPage action={
+          <v.Fab onClick={openAccountFormDialog} />
+        }>
         <AccountList />
       </v.ListPage>
     )
   }
 }
 
-export const AccountsPage = connect()(_AccountsPage)
 
+
+/**
+ * AccountForm
+ */
+
+type AccountFormOwnProps = p.FormProps<{
+  account?: t.AccountReq,
+}>
 
 type AccountFormStateProps = {
   pending: boolean,
 }
 
-type AccountFormOwnProps = p.FormProps<{
-  account?: t.AccountRes | t.AccountReq,
-}>
-
-type AccountFormProps = AccountFormStateProps & AccountFormOwnProps
+type AccountFormProps = AccountFormOwnProps & AccountFormStateProps
 
 type AccountFormState = {
   formValues: t.AccountReq,
@@ -76,19 +88,19 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
 
     const {
       context,
-      props: {dispatch, onSubmitSuccess},
+      props: {onSubmitSuccess},
       state: {formValues},
     } = this
 
     this.setState({errors: undefined})
 
     const promise = formValues.id
-      ? dispatch(a.updateAccount(
+      ? e.dispatch(a.updateAccount(
         formValues.id,
         formValues,
         i18n.xln(context, i18n.UPDATING_ACCOUNT)
       ))
-      : dispatch(a.createAccount(
+      : e.dispatch(a.createAccount(
         formValues,
         i18n.xln(context, i18n.CREATING_ACCOUNT)
       ))
@@ -99,11 +111,11 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
         throw errors
       })
       .then(() => onSubmitSuccess())
-      .then(() => dispatch(a.addNotification(formValues.id
+      .then(() => e.dispatch(a.addNotification(formValues.id
         ? i18n.xln(context, i18n.ACCOUNT_UPDATED)
         : i18n.xln(context, i18n.ACCOUNT_CREATED)
       )))
-      .then(() => dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
+      .then(() => e.dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
   }
 
   onDelete = (event: v.FakeButtonEvent): void => {
@@ -111,13 +123,13 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
 
     const {
       context,
-      props: {dispatch, onSubmitSuccess},
+      props: {onSubmitSuccess},
       state: {formValues},
     } = this
 
     this.setState({errors: undefined})
 
-    dispatch(a.addDialog(p.ConfirmDialog, {
+    e.dispatch(a.addDialog(p.ConfirmDialog, {
       question: i18n.xln(context, i18n.DELETE_ACCOUNT),
       onConfirm: () => {
         if (!formValues.id) {
@@ -125,13 +137,13 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
           return
         }
 
-        dispatch(a.deleteAccount(
+        e.dispatch(a.deleteAccount(
           formValues.id,
           i18n.xln(context, i18n.DELETING_ACCOUNT)
         ))
           .then(() => onSubmitSuccess())
-          .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.ACCOUNT_DELETED))))
-          .then(() => dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
+          .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.ACCOUNT_DELETED))))
+          .then(() => e.dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
       },
     }))
   }
@@ -189,9 +201,15 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
 }
 
 const AccountForm = connect<AccountFormStateProps, {}, AccountFormOwnProps, t.AppState>((state) => ({
-  pending: !fpx.isEmpty(state.net.pending),
+  // pending: !fpx.isEmpty(state.net.pending),
+  pending: !Object.keys(state.net.pending).length,
 }))(_AccountForm)
 
+
+
+/**
+ * AccountList
+ */
 
 type AccountListStateProps = {
   accounts: t.AccountListRes,
@@ -202,9 +220,9 @@ type AccountListProps = AccountListStateProps
 
 class _AccountList extends m.ViewComponent<AccountListProps> {
   onOpen = (account: t.AccountRes) => () => {
-    const {context, props: {dispatch}} = this
+    const {context} = this
 
-    dispatch(a.addDialog<p.FormDialogProps<AccountFormOwnProps>>(
+    e.dispatch(a.addDialog<p.FormDialogProps<AccountFormOwnProps>>(
       p.FormDialog, {
       title: i18n.xln(context, i18n.EDIT_ACCOUNT),
       form: AccountForm,
@@ -213,14 +231,14 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
   }
 
   onDelete = (account: t.AccountRes) => () => {
-    const {context, props: {dispatch}} = this
+    const {context} = this
 
-    dispatch(a.addDialog<p.ConfirmDialogProps>(p.ConfirmDialog, {
+    e.dispatch(a.addDialog<p.ConfirmDialogProps>(p.ConfirmDialog, {
       question: i18n.xln(context, i18n.DELETE_ACCOUNT),
       onConfirm: () => {
-        dispatch(a.deleteAccount(account.id, i18n.xln(context, i18n.DELETING_ACCOUNT)))
-          .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.ACCOUNT_DELETED))))
-          .then(() => dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
+        e.dispatch(a.deleteAccount(account.id, i18n.xln(context, i18n.DELETING_ACCOUNT)))
+          .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.ACCOUNT_DELETED))))
+          .then(() => e.dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
       },
     }))
   }

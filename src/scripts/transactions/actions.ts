@@ -9,7 +9,7 @@ export type TransactionActions = ReceiveTransactions
 
 export const RECEIVE_TRANSACTIONS = 'RECEIVE_TRANSACTIONS'
 
-interface ReceiveTransactions extends t.AppAction {
+interface ReceiveTransactions extends t.ReduxAction {
   type: typeof RECEIVE_TRANSACTIONS,
   payload: {
     transactionList: t.TransactionListRes,
@@ -28,7 +28,7 @@ export function receiveTransactions(transactionList: t.TransactionListRes): Rece
 export function fetchTransactions(
   location: t.RRLocation,
   message: string
-): t.AppThunkAction<Promise<t.TransactionListRes>> {
+): t.ReduxThunkAction<Promise<t.TransactionListRes>> {
   return (dispatch) => {
     const query = u.decodeQuery(location.search)
     const page: number = parseInt(Array.isArray(query.page)
@@ -61,7 +61,7 @@ export function fetchTransactions(
 export function createTransaction(
   transaction: t.TransactionReq,
   message: string
-): t.AppThunkAction<Promise<t.TransactionRes>> {
+): t.ReduxThunkAction<Promise<t.TransactionRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,
@@ -78,7 +78,7 @@ export function updateTransaction(
   id: string,
   transaction: t.TransactionReq,
   message: string
-): t.AppThunkAction<Promise<t.TransactionRes>> {
+): t.ReduxThunkAction<Promise<t.TransactionRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,
@@ -94,7 +94,7 @@ export function updateTransaction(
 export function deleteTransaction(
   id: string,
   message:string
-): t.AppThunkAction<Promise<t.TransactionRes>> {
+): t.ReduxThunkAction<Promise<t.TransactionRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,

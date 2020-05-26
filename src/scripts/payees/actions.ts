@@ -8,7 +8,7 @@ export type PayeeActions = ReceivePayees
 
 export const RECEIVE_PAYEES = 'RECEIVE_PAYEES'
 
-interface ReceivePayees extends t.AppAction {
+interface ReceivePayees extends t.ReduxAction {
   type: typeof RECEIVE_PAYEES,
   payload: {
     payeeList: t.PayeeListRes,
@@ -26,7 +26,7 @@ export function receivePayees(payeeList: t.PayeeListRes): ReceivePayees {
 
 export function fetchPayees(
   message: string
-): t.AppThunkAction<Promise<t.PayeeListRes>> {
+): t.ReduxThunkAction<Promise<t.PayeeListRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,
@@ -43,7 +43,7 @@ export function fetchPayees(
 export function createPayee(
   payee: t.PayeeReq,
   message: string
-): t.AppThunkAction<Promise<t.PayeeRes>> {
+): t.ReduxThunkAction<Promise<t.PayeeRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,
@@ -60,7 +60,7 @@ export function updatePayee(
   id: string,
   payee: t.PayeeReq,
   message: string
-): t.AppThunkAction<Promise<t.PayeeRes>> {
+): t.ReduxThunkAction<Promise<t.PayeeRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,
@@ -76,7 +76,7 @@ export function updatePayee(
 export function deletePayee(
   id: string,
   message: string
-): t.AppThunkAction<Promise<t.PayeeRes>> {
+): t.ReduxThunkAction<Promise<t.PayeeRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,

@@ -2,7 +2,7 @@ import * as t from './types'
 
 import React from 'react'
 import {createStore, combineReducers, applyMiddleware} from 'redux'
-import thunk from 'redux-thunk'
+import thunk, {ThunkMiddleware} from 'redux-thunk'
 
 import {geometry, defMobile} from './geometry/reducers'
 import {i18n, defLang} from './i18n/reducers'
@@ -34,8 +34,10 @@ export const store = createStore(
       transactions,
     }),
   }),
-  applyMiddleware(thunk)
+  applyMiddleware(thunk as ThunkMiddleware<t.AppState, t.ReduxAction>)
 )
+
+export const dispatch = store.dispatch
 
 const defaultContext: t.AppContext = {
   isMobile: defMobile(window.innerWidth),

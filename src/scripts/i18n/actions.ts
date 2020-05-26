@@ -4,7 +4,7 @@ export type I18nActions = NextLang
 
 export const NEXT_LANG = 'NEXT_LANG'
 
-interface NextLang extends t.AppAction {
+interface NextLang extends t.ReduxAction {
   type: typeof NEXT_LANG,
 }
 

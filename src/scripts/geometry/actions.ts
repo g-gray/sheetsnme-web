@@ -4,7 +4,7 @@ export type GeometryActions = Resize
 
 export const RESIZE = 'RESIZE'
 
-interface Resize extends t.AppAction {
+interface Resize extends t.ReduxAction {
   type: typeof RESIZE,
   payload: {
     width: number,

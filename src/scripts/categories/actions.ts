@@ -8,7 +8,7 @@ export type CategoryActions = ReceiveCategories
 
 export const RECEIVE_CATEGORIES = 'RECEIVE_CATEGORIES'
 
-interface ReceiveCategories extends t.AppAction {
+interface ReceiveCategories extends t.ReduxAction {
   type: typeof RECEIVE_CATEGORIES,
   payload: {
     categoryList: t.CategoryListRes,
@@ -26,7 +26,7 @@ function receiveCategories(categoryList: t.CategoryListRes): ReceiveCategories {
 
 export function fetchCategories(
   message: string
-): t.AppThunkAction<Promise<t.CategoryListRes>> {
+): t.ReduxThunkAction<Promise<t.CategoryListRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,
@@ -43,7 +43,7 @@ export function fetchCategories(
 export function createCategory(
   category: t.CategoryReq,
   message: string
-): t.AppThunkAction<Promise<t.CategoryRes>> {
+): t.ReduxThunkAction<Promise<t.CategoryRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,
@@ -60,7 +60,7 @@ export function updateCategory(
   id: string,
   category: t.CategoryReq,
   message: string,
-): t.AppThunkAction<Promise<t.CategoryRes>> {
+): t.ReduxThunkAction<Promise<t.CategoryRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,
@@ -76,7 +76,7 @@ export function updateCategory(
 export function deleteCategory(
   id: string,
   message: string
-): t.AppThunkAction<Promise<t.CategoryRes>> {
+): t.ReduxThunkAction<Promise<t.CategoryRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest({
       message,

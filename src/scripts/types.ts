@@ -92,34 +92,8 @@ export type RRRouteComponentProps = RouteComponentProps
 
 
 /**
- * Redux Thunk
- */
-
-export type AppThunkAction<R = void> = ThunkAction<
-  R,
-  AppState,
-  unknown,
-  AppAction
->
-
-export type AppThunkDispatch = ThunkDispatch<
-  AppState,
-  unknown,
-  AppAction
->
-
-
-
-
-/**
  * Redux
  */
-
-export interface AppDispatch extends Dispatch<AppAction> {}
-
-export interface AppAction extends Action<string> {
-  payload?: any,
-}
 
 export type AppState = {
   dom: {
@@ -137,6 +111,18 @@ export type AppState = {
     transactions: tt.TransactionsState,
   },
 }
+
+
+export interface ReduxAction extends Action<string> {
+  payload?: any,
+}
+
+export interface ReduxThunkAction<R> extends ThunkAction<
+  R,
+  AppState,
+  unknown,
+  ReduxAction
+> {}
 
 
 

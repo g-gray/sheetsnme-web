@@ -5,7 +5,7 @@ export type DialogActions = AddDialog | RemoveDialog
 
 export const ADD_DIALOG = 'ADD_DIALOG'
 
-interface AddDialog<P = unknown> extends t.AppAction {
+interface AddDialog<P = any> extends t.ReduxAction {
   type: typeof ADD_DIALOG,
   payload: {
     dialog: t.RComponentType<t.DialogProps<P>>,
@@ -29,7 +29,7 @@ export function addDialog<P>(
 
 export const REMOVE_DIALOG = 'REMOVE_DIALOG'
 
-interface RemoveDialog extends t.AppAction {
+interface RemoveDialog extends t.ReduxAction {
   type: typeof REMOVE_DIALOG,
 }
 

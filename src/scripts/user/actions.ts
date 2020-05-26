@@ -8,7 +8,7 @@ export type UserActions = ReceiveUser
 
 export const RECEIVE_USER = 'RECEIVE_USER'
 
-interface ReceiveUser extends t.AppAction {
+interface ReceiveUser extends t.ReduxAction {
   type: typeof RECEIVE_USER,
   payload: {
     user: t.UserRes,
@@ -24,7 +24,9 @@ function receiveUser(user: t.UserRes): ReceiveUser {
   }
 }
 
-export function fetchUser(message: string): t.AppThunkAction<Promise<t.UserRes>> {
+export function fetchUser(
+  message: string
+): t.ReduxThunkAction<Promise<t.UserRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest<t.UserRes>({
       message,

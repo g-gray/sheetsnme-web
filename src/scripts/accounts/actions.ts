@@ -8,7 +8,7 @@ export type AccountActions = ReceiveAccounts
 
 export const RECEIVE_ACCOUNTS = 'RECEIVE_ACCOUNTS'
 
-interface ReceiveAccounts extends t.AppAction {
+interface ReceiveAccounts extends t.ReduxAction {
   type: typeof RECEIVE_ACCOUNTS,
   payload: {
     accountList: t.AccountListRes,
@@ -26,7 +26,7 @@ export function receiveAccounts(accountList: t.AccountListRes): ReceiveAccounts 
 
 export function fetchAccounts(
   message: string
-): t.AppThunkAction<Promise<t.AccountListRes>> {
+): t.ReduxThunkAction<Promise<t.AccountListRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest<t.AccountListRes>({
       message,
@@ -43,7 +43,7 @@ export function fetchAccounts(
 export function createAccount(
   account: t.AccountReq,
   message: string
-): t.AppThunkAction<Promise<t.AccountRes>> {
+): t.ReduxThunkAction<Promise<t.AccountRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest<t.AccountRes>({
       message,
@@ -60,7 +60,7 @@ export function updateAccount(
   id: string,
   account: t.AccountReq,
   message: string
-): t.AppThunkAction<Promise<t.AccountRes>> {
+): t.ReduxThunkAction<Promise<t.AccountRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest<t.AccountRes>({
       message,
@@ -76,7 +76,7 @@ export function updateAccount(
 export function deleteAccount (
   id: string,
   message: string
-): t.AppThunkAction<Promise<t.AccountRes>>{
+): t.ReduxThunkAction<Promise<t.AccountRes>> {
   return (dispatch) => {
     return dispatch(pa.trackRequest<t.AccountRes>({
       message,

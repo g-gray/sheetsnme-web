@@ -5,7 +5,7 @@ export type DialogsState = DialogList
 export type DialogList = Dialog<unknown>[]
 
 export type Dialog<P> = {
-  dialog: t.RComponentType<DialogProps<P>>,
+  dialog      : t.RComponentType<DialogProps<P>>,
   dialogProps?: DialogProps<P>,
 }
 

@@ -6,7 +6,7 @@ export type NotificationActions =
 
 export const ADD_NOTIFICATION = 'ADD_NOTIFICATION'
 
-interface AddNotification extends t.AppAction {
+interface AddNotification extends t.ReduxAction {
   type: typeof ADD_NOTIFICATION,
   payload: {
     text: string,
@@ -30,7 +30,7 @@ export const addNotification = (
 
 export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION'
 
-interface RemoveNotification extends t.AppAction {
+interface RemoveNotification extends t.ReduxAction {
   type: typeof REMOVE_NOTIFICATION,
   payload: {
     time: number,
