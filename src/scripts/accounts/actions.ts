@@ -15,7 +15,9 @@ interface ReceiveAccounts extends t.ReduxAction {
   },
 }
 
-export function receiveAccounts(accountList: t.AccountListRes): ReceiveAccounts {
+export function receiveAccounts(
+  accountList: t.AccountListRes
+): ReceiveAccounts {
   return {
     type: RECEIVE_ACCOUNTS,
     payload: {
@@ -28,7 +30,7 @@ export function fetchAccounts(
   message: string
 ): t.ReduxThunkAction<Promise<t.AccountListRes>> {
   return (dispatch) => {
-    return dispatch(pa.trackRequest<t.AccountListRes>({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'getAccounts',
       promise: n.authedJsonFetch<t.AccountListRes>('/api/accounts'),
@@ -45,7 +47,7 @@ export function createAccount(
   message: string
 ): t.ReduxThunkAction<Promise<t.AccountRes>> {
   return (dispatch) => {
-    return dispatch(pa.trackRequest<t.AccountRes>({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'postAccount',
       promise: n.authedJsonFetch<t.AccountRes>('/api/accounts', {
@@ -62,7 +64,7 @@ export function updateAccount(
   message: string
 ): t.ReduxThunkAction<Promise<t.AccountRes>> {
   return (dispatch) => {
-    return dispatch(pa.trackRequest<t.AccountRes>({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'postAccount',
       promise: n.authedJsonFetch<t.AccountRes>(`/api/accounts/${id}`, {
@@ -78,7 +80,7 @@ export function deleteAccount (
   message: string
 ): t.ReduxThunkAction<Promise<t.AccountRes>> {
   return (dispatch) => {
-    return dispatch(pa.trackRequest<t.AccountRes>({
+    return dispatch(pa.trackRequest({
       message,
       requestName: 'deleteAccount',
       promise: n.authedJsonFetch<t.AccountRes>(`/api/accounts/${id}`, {

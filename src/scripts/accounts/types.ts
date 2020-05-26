@@ -1,5 +1,5 @@
 export type AccountsState = {
-  accountList: AccountListRes,
+  accountList : AccountListRes,
   accountsById: AccountsById,
 }
 

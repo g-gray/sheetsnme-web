@@ -11,7 +11,6 @@ import * as u from '../utils'
 
 import * as a from '../actions'
 
-import * as g from '../geometry'
 import * as i18n from '../i18n'
 
 import * as m from '../views/misc'
@@ -27,28 +26,25 @@ import * as v from '../views'
 
 type AccountPageProps = {}
 
+
 export class AccountsPage extends m.ViewComponent<AccountPageProps> {
   openAccountFormDialog = () => {
     const {context} = this
 
-    e.dispatch(
-      a.addDialog<p.FormDialogProps<AccountFormOwnProps>>(
-        p.FormDialog,
-        {
-          title: i18n.xln(context, i18n.NEW_ACCOUNT),
-          form: AccountForm,
-        }
-      )
-    )
+    e.dispatch(a.addDialog<p.FormDialogProps<AccountFormOwnProps>>(
+      p.FormDialog,
+      {
+        title: i18n.xln(context, i18n.NEW_ACCOUNT),
+        form: AccountForm,
+      }
+    ))
   }
 
   render() {
     const {openAccountFormDialog} = this
 
     return (
-      <v.ListPage action={
-          <v.Fab onClick={openAccountFormDialog} />
-        }>
+      <v.ListPage action={<v.Fab onClick={openAccountFormDialog} />}>
         <AccountList />
       </v.ListPage>
     )
@@ -73,7 +69,7 @@ type AccountFormProps = AccountFormOwnProps & AccountFormStateProps
 
 type AccountFormState = {
   formValues: t.AccountReq,
-  errors: void | t.ValidationError[],
+  errors    : undefined | t.ValidationError[],
 }
 
 
@@ -81,6 +77,11 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
   readonly state = {
     formValues: this.props.account || {title: ''},
     errors: undefined,
+  }
+
+  fetchAccounts = () => {
+    const {context} = this
+    return e.dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS)))
   }
 
   onSubmit = (event: t.RFormEvent) => {
@@ -115,10 +116,10 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
         ? i18n.xln(context, i18n.ACCOUNT_UPDATED)
         : i18n.xln(context, i18n.ACCOUNT_CREATED)
       )))
-      .then(() => e.dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
+      .then(this.fetchAccounts)
   }
 
-  onDelete = (event: v.FakeButtonEvent): void => {
+  onDelete = (event: v.FakeButtonEvent) => {
     u.preventDefault(event)
 
     const {
@@ -132,32 +133,24 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
     e.dispatch(a.addDialog(p.ConfirmDialog, {
       question: i18n.xln(context, i18n.DELETE_ACCOUNT),
       onConfirm: () => {
-        if (!formValues.id) {
-          this.setState({errors: [{text: i18n.xln(context, i18n.DELETE_ERROR)}]})
-          return
-        }
-
         e.dispatch(a.deleteAccount(
-          formValues.id,
+          formValues.id!,
           i18n.xln(context, i18n.DELETING_ACCOUNT)
         ))
           .then(() => onSubmitSuccess())
           .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.ACCOUNT_DELETED))))
-          .then(() => e.dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
+          .then(this.fetchAccounts)
       },
     }))
   }
 
   render() {
     const {
-      context,
+      context, context: {isMobile},
       state: {errors, formValues: {id}},
       props: {pending},
       onSubmit, onDelete,
     } = this
-
-    const isMobile = g.isMobile(context)
-    const disabled = pending
 
     return (
       <form className='col-start-stretch' onSubmit={onSubmit}>
@@ -168,7 +161,7 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
           <f.FormTextElement
             name='title'
             label={i18n.xln(context, i18n.TITLE)}
-            disabled={disabled}
+            disabled={pending}
             {...u.bindValue(this, ['formValues', 'title'])}
           />
         </div>
@@ -179,7 +172,7 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
             <v.FakeButton
               className='btn-transparent'
               onClick={onDelete}
-              disabled={disabled}
+              disabled={pending}
             >
               {i18n.xln(context, i18n.DELETE)}
             </v.FakeButton>}
@@ -187,7 +180,7 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
           <button
             type='submit'
             className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
-            disabled={disabled}>
+            disabled={pending}>
             {i18n.xln(context, i18n.SUBMIT)}
           </button>
           <div className='flex-1' />
@@ -201,8 +194,7 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
 }
 
 const AccountForm = connect<AccountFormStateProps, {}, AccountFormOwnProps, t.AppState>((state) => ({
-  // pending: !fpx.isEmpty(state.net.pending),
-  pending: !Object.keys(state.net.pending).length,
+  pending: !fpx.isEmpty(state.net.pending),
 }))(_AccountForm)
 
 
@@ -213,30 +205,36 @@ const AccountForm = connect<AccountFormStateProps, {}, AccountFormOwnProps, t.Ap
 
 type AccountListStateProps = {
   accounts: t.AccountListRes,
-  pending: boolean,
+  pending : boolean,
 }
 
 type AccountListProps = AccountListStateProps
 
+
 class _AccountList extends m.ViewComponent<AccountListProps> {
-  onOpen = (account: t.AccountRes) => () => {
+  onOpen = (account: t.AccountRes) => (): void => {
     const {context} = this
 
     e.dispatch(a.addDialog<p.FormDialogProps<AccountFormOwnProps>>(
-      p.FormDialog, {
-      title: i18n.xln(context, i18n.EDIT_ACCOUNT),
-      form: AccountForm,
-      formProps: {account},
-    }))
+      p.FormDialog,
+      {
+        title: i18n.xln(context, i18n.EDIT_ACCOUNT),
+        form: AccountForm,
+        formProps: {account},
+      }
+    ))
   }
 
-  onDelete = (account: t.AccountRes) => () => {
+  onDelete = (account: t.AccountRes) => (): void => {
     const {context} = this
 
     e.dispatch(a.addDialog<p.ConfirmDialogProps>(p.ConfirmDialog, {
       question: i18n.xln(context, i18n.DELETE_ACCOUNT),
       onConfirm: () => {
-        e.dispatch(a.deleteAccount(account.id, i18n.xln(context, i18n.DELETING_ACCOUNT)))
+        e.dispatch(a.deleteAccount(
+          account.id,
+          i18n.xln(context, i18n.DELETING_ACCOUNT)
+        ))
           .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.ACCOUNT_DELETED))))
           .then(() => e.dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
       },
@@ -245,17 +243,21 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
 
   render() {
     const {
-      context,
+      context, context: {isMobile},
       props: {accounts, pending},
       onOpen, onDelete,
     } = this
 
-    const isMobile = g.isMobile(context)
     return (
       <div className='col-start-stretch gaps-v-2'>
         <div className='col-start-stretch gaps-v-0x25'>
-          <div className={`row-end-center ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}>
-            <span className='fg-on-surface-pale'>{i18n.xln(context, i18n.BALANCE)}</span>
+          <div
+            className={`row-end-center
+                        ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}
+          >
+            <span className='fg-on-surface-pale'>
+              {i18n.xln(context, i18n.BALANCE)}
+            </span>
           </div>
           <v.EntityItemList
             entityList={accounts}
