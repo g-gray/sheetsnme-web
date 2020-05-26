@@ -6,11 +6,11 @@ import {connect} from 'react-redux'
 // @ts-ignore
 import * as fpx from 'fpx'
 
+import * as e from '../env'
 import * as u from '../utils'
 
 import * as a from '../actions'
 
-import * as g from '../geometry'
 import * as i18n from '../i18n'
 
 import * as m from '../views/misc'
@@ -20,42 +20,46 @@ import * as f from '../views/forms'
 import * as p from '../views/pages'
 import * as v from '../views'
 
-class _PayeesPage extends m.ViewComponent {
-  render() {
-    const {
-      context,
-      props: {dispatch},
-    } = this
+/**
+ * PayeePage
+ */
 
-    const action = (
-      <v.Fab
-        onClick={() => dispatch(a.addDialog(p.FormDialog, {
-          form: PayeeForm,
-          title: i18n.xln(context, i18n.NEW_PAYEE),
-        }))}
-      />
-    )
+type PayeePageProps = {}
+
+
+export class PayeesPage extends m.ViewComponent<PayeePageProps> {
+  openDialog = () => {
+    const {context} = this
+
+    e.dispatch(a.addDialog<p.FormDialogProps<PayeeFormOwnProps>>(
+      p.FormDialog,
+      {
+        title: i18n.xln(context, i18n.NEW_PAYEE),
+        form: PayeeForm,
+      }
+    ))
+  }
+
+  render() {
+    const {openDialog} = this
 
     return (
-      <v.ListPage action={action}>
+      <v.ListPage action={<v.Fab onClick={openDialog} />}>
         <PayeesList />
       </v.ListPage>
     )
   }
 }
 
-export const PayeesPage = connect()(_PayeesPage)
 
 
-type PayeeFormState = {
-  formValues: t.PayeeRes,
-  errors: undefined | t.ValidationError[],
-}
+/**
+ * PayeeForm
+ */
 
-type PayeeFormOwnProps = {
-  payee: t.PayeeRes,
-  onSubmitSuccess: () => void,
-}
+type PayeeFormOwnProps = p.FormProps<{
+  payee?: t.PayeeReq,
+}>
 
 type PayeeFormStateProps = {
   pending: boolean,
@@ -63,82 +67,90 @@ type PayeeFormStateProps = {
 
 type PayeeFormProps = PayeeFormOwnProps & PayeeFormStateProps
 
+type PayeeFormState = {
+  formValues: t.PayeeReq,
+  errors    : undefined | t.ValidationError[],
+}
+
+
 class _PayeeForm extends m.ViewComponent<PayeeFormProps, PayeeFormState> {
-  state: Readonly<PayeeFormState> = {
-    formValues: this.props.payee || {},
+  readonly state = {
+    formValues: this.props.payee || {title: ''},
     errors: undefined,
+  }
+
+  fetchPayees = () => {
+    const {context} = this
+    return e.dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES)))
   }
 
   onSubmit = (event: t.RFormEvent): void => {
     u.preventDefault(event)
 
-    this.setState({errors: undefined})
-
     const {
       context,
-      props: {dispatch, onSubmitSuccess},
+      props: {onSubmitSuccess},
       state: {formValues},
     } = this
 
+    this.setState({errors: undefined})
+
     const promise = formValues.id
-      ? dispatch(a.updatePayee(
+      ? e.dispatch(a.updatePayee(
         formValues.id,
         formValues,
         i18n.xln(context, i18n.UPDATING_PAYEE)
       ))
-      : dispatch(a.createPayee(
+      : e.dispatch(a.createPayee(
         formValues,
         i18n.xln(context, i18n.CREATING_PAYEE)
       ))
 
     promise
-      .catch(errors => {
+      .catch((errors: t.FetchError) => {
         this.setState({errors})
         throw errors
       })
       .then(() => onSubmitSuccess())
-      .then(() => dispatch(a.addNotification(formValues.id
+      .then(() => e.dispatch(a.addNotification(formValues.id
         ? i18n.xln(context, i18n.PAYEE_UPDATED)
         : i18n.xln(context, i18n.PAYEE_CREATED)
       )))
-      .then(() => dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))))
+      .then(this.fetchPayees)
   }
 
   onDelete = (event: v.FakeButtonEvent): void => {
     u.preventDefault(event)
 
-    this.setState({errors: undefined})
-
     const {
       context,
-      props: {dispatch, onSubmitSuccess},
+      props: {onSubmitSuccess},
       state: {formValues},
     } = this
 
-    dispatch(a.addDialog(p.ConfirmDialog, {
+    this.setState({errors: undefined})
+
+    e.dispatch(a.addDialog(p.ConfirmDialog, {
       question: i18n.xln(context, i18n.DELETE_PAYEE),
       onConfirm: () => {
-        dispatch(a.deletePayee(
-          formValues.id,
+        e.dispatch(a.deletePayee(
+          formValues.id!,
           i18n.xln(context, i18n.DELETING_PAYEE)
         ))
           .then(() => onSubmitSuccess())
-          .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.PAYEE_DELETED))))
-          .then(() => dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))))
+          .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.PAYEE_DELETED))))
+          .then(this.fetchPayees)
       },
     }))
   }
 
   render() {
     const {
-      context,
+      context, context: {isMobile},
       state: {errors, formValues: {id}},
       props: {pending},
       onSubmit, onDelete,
     } = this
-
-    const isMobile = g.isMobile(context)
-    const disabled = pending
 
     return (
       <form className='col-start-stretch' onSubmit={onSubmit}>
@@ -149,8 +161,9 @@ class _PayeeForm extends m.ViewComponent<PayeeFormProps, PayeeFormState> {
           <f.FormTextElement
             name='title'
             label={i18n.xln(context, i18n.TITLE)}
-            disabled={disabled}
-            {...u.bindValue(this, ['formValues', 'title'])} />
+            disabled={pending}
+            {...u.bindValue(this, ['formValues', 'title'])}
+          />
         </div>
         <hr className='hr margin-h-1x25' />
         <div className='row-between-stretch padding-v-1 padding-h-1x25'>
@@ -159,7 +172,7 @@ class _PayeeForm extends m.ViewComponent<PayeeFormProps, PayeeFormState> {
             <v.FakeButton
               className='btn-transparent'
               onClick={onDelete}
-              disabled={disabled}
+              disabled={pending}
             >
               {i18n.xln(context, i18n.DELETE)}
             </v.FakeButton>}
@@ -167,7 +180,7 @@ class _PayeeForm extends m.ViewComponent<PayeeFormProps, PayeeFormState> {
           <button
             type='submit'
             className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
-            disabled={disabled}>
+            disabled={pending}>
             {i18n.xln(context, i18n.SUBMIT)}
           </button>
           <div className='flex-1' />
@@ -185,77 +198,89 @@ const PayeeForm = connect<PayeeFormStateProps, {}, PayeeFormOwnProps, t.AppState
 }))(_PayeeForm)
 
 
+
+/**
+ * PayeeList
+ */
+
 type PayeesListStateProps = {
-  payees: t.PayeeListRes,
+  payees : t.PayeeListRes,
   pending: boolean,
 }
 
 type PayeesListProps = PayeesListStateProps
 
+
 class _PayeesList extends m.ViewComponent<PayeesListProps> {
   onOpen = (payee: t.PayeeRes) => () => {
-    const {context, props: {dispatch}} = this
+    const {context} = this
 
-    dispatch(a.addDialog(p.FormDialog, {
-      form: PayeeForm,
-      formProps: {payee},
-      title: i18n.xln(context, i18n.EDIT_PAYEE),
-    }))
+    e.dispatch(a.addDialog<p.FormDialogProps<PayeeFormOwnProps>>(
+      p.FormDialog,
+      {
+        title: i18n.xln(context, i18n.EDIT_PAYEE),
+        form: PayeeForm,
+        formProps: {payee},
+      }
+    ))
   }
 
   onDelete = (payee: t.PayeeRes) => () => {
-    const {context, props: {dispatch}} = this
+    const {context} = this
 
-    dispatch(a.addDialog(p.ConfirmDialog, {
+    e.dispatch(a.addDialog<p.ConfirmDialogProps>(p.ConfirmDialog, {
       question: i18n.xln(context, i18n.DELETE_PAYEE),
       onConfirm: () => {
-        dispatch(a.deletePayee(payee.id, i18n.xln(context, i18n.DELETING_PAYEE)))
-          .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.PAYEE_DELETED))))
-          .then(() => dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))))
+        e.dispatch(a.deletePayee(
+          payee.id,
+          i18n.xln(context, i18n.DELETING_PAYEE)
+        ))
+          .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.PAYEE_DELETED))))
+          .then(() => e.dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))))
       },
     }))
   }
 
   render() {
     const {
-      context,
+      context, context: {isMobile},
       props: {payees, pending},
       onOpen, onDelete,
     } = this
 
-    const isMobile = g.isMobile(context)
     return (
       <div className='col-start-stretch gaps-v-2'>
         <div className='col-start-stretch gaps-v-0x25'>
-          <div className={`row-end-center ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}>
-            <span className='fg-on-surface-pale'>{i18n.xln(context, i18n.DEBT)}</span>
+          <div
+            className={`row-end-center
+                        ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}
+          >
+            <span className='fg-on-surface-pale'>
+              {i18n.xln(context, i18n.DEBT)}
+            </span>
           </div>
-          {pending || !payees.length ? (
-            <div className='col-start-stretch'>
-              {new Array(payees.length || 3).fill(undefined).map((__, index) => (
-                <v.EntityPlaceholder key={index} />
-              ))}
-            </div>
-          ) : (
-            <div className='col-start-stretch'>
-              {payees.map(payee => (
-                <v.EntityItem
-                  key={payee.id}
-                  icon={<s.Users className='font-large fg-primary' />}
-                  onOpen={onOpen(payee)}
-                  onDelete={onDelete(payee)}>
-                  <div className='flex-1 row-between-center gaps-h-1'>
-                    <span>{payee.title}</span>
-                    { payee.debt > 0
-                    ? <span className='fg-success'>+{payee.debt}</span>
-                    : payee.debt < 0
-                    ? <span className='fg-error'>{payee.debt}</span>
-                    : <span className='fg-on-surface-pale'>{payee.debt}</span>}
-                  </div>
-                </v.EntityItem>
-              ))}
-            </div>
-          )}
+          <v.EntityItemList
+            entityList={payees}
+            pending={pending}
+          >
+            {payees.map(payee => (
+              <v.EntityItem
+                key={payee.id}
+                icon={<s.Users className='font-large fg-primary' />}
+                onOpen={onOpen(payee)}
+                onDelete={onDelete(payee)}
+              >
+                <div className='flex-1 row-between-center gaps-h-1'>
+                  <span>{payee.title}</span>
+                  { payee.debt > 0
+                  ? <span className='fg-success'>+{payee.debt}</span>
+                  : payee.debt < 0
+                  ? <span className='fg-error'>{payee.debt}</span>
+                  : <span className='fg-on-surface-pale'>{payee.debt}</span>}
+                </div>
+              </v.EntityItem>
+            ))}
+          </v.EntityItemList>
         </div>
       </div>
     )
