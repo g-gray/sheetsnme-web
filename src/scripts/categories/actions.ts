@@ -15,7 +15,9 @@ interface ReceiveCategories extends t.ReduxAction {
   },
 }
 
-function receiveCategories(categoryList: t.CategoryListRes): ReceiveCategories {
+function receiveCategories(
+  categoryList: t.CategoryListRes
+): ReceiveCategories {
   return {
     type: RECEIVE_CATEGORIES,
     payload: {

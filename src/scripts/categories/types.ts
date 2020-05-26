@@ -1,20 +1,20 @@
 export type CategoriesState = {
-  categoryList: CategoryListRes,
+  categoryList  : CategoryListRes,
   categoriesById: CategoriesById,
 }
 
 export type CategoryReq = {
-  id?          : string,
-  title        : string,
-  createdAt?   : string,
-  updatedAt?   : string,
+  id?       : string,
+  title     : string,
+  createdAt?: string,
+  updatedAt?: string,
 }
 
 export type CategoryRes = {
-  id          : string,
-  title       : string,
-  createdAt   : string,
-  updatedAt   : string,
+  id       : string,
+  title    : string,
+  createdAt: string,
+  updatedAt: string,
 }
 
 export type CategoryListRes = CategoryRes[]
