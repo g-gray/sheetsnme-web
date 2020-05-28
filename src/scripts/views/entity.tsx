@@ -18,18 +18,19 @@ import * as p from './placeholder'
  */
 
 type EntityItemListProps = {
-  entityList: any[],
-  pending   : boolean,
+  entityList  : any[],
+  pending     : boolean,
+  Placeholder?: t.RComponentType<EntityListPlaceholderProps>
 }
 
 export class EntityItemList extends m.ViewComponent<EntityItemListProps> {
   render() {
-    const {props: {entityList, pending, children}} = this
+    const {props: {entityList, pending, Placeholder, children}} = this
 
     if (pending || entityList.length === 0) {
-      return (
-        <EntityListPlaceholder length={entityList.length} />
-      )
+      return Placeholder
+        ? <Placeholder length={entityList.length} />
+        : <EntityListPlaceholder length={entityList.length} />
     }
 
     return children

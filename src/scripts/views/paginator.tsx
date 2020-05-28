@@ -13,8 +13,8 @@ import * as g from '../geometry'
 import * as i18n from '../i18n'
 
 type PaginatorProps = t.RRRouteComponentProps & {
-  pageCount   : number,
-  onPageChange: (pageNumber: number) => void,
+  pageCount    : number,
+  onPageChange?: (pageNumber: number) => void,
 }
 
 type PaginatorState = {

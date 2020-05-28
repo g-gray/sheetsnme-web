@@ -7,11 +7,11 @@ import {withRouter} from 'react-router-dom'
 // @ts-ignore
 import * as fpx from 'fpx'
 
+import * as e from '../env'
 import * as u from '../utils'
 
 import * as a from '../actions'
 
-import * as g from '../geometry'
 import * as i18n from '../i18n'
 
 import * as m from '../views/misc'
@@ -21,53 +21,64 @@ import * as f from '../views/forms'
 import * as p from '../views/pages'
 import * as v from '../views'
 
-class _TransactionsPage extends m.ViewComponent {
-  render() {
-    const {
-      context,
-      props: {dispatch},
-    } = this
+/**
+ * TransactionPage
+ */
 
-    const action = (
-      <v.Fab
-        onClick={() => dispatch(a.addDialog(p.FormDialog, {
-          form: TransactionForm,
-          title: i18n.xln(context, i18n.NEW_TRANSACTION),
-        }))}
-      />
-    )
+type TransactionPageProps = {}
+
+
+export class TransactionsPage extends m.ViewComponent<TransactionPageProps> {
+  openDialog = () => {
+    const {context} = this
+
+    e.dispatch(a.addDialog(
+      p.FormDialog,
+      {
+        title: i18n.xln(context, i18n.NEW_TRANSACTION),
+        form: TransactionForm,
+      }
+    ))
+  }
+
+  render() {
+    const {openDialog} = this
 
     return (
-      <v.ListPage action={action}>
+      <v.ListPage action={<v.Fab onClick={openDialog} />}>
         <TransactionsList />
       </v.ListPage>
     )
   }
 }
 
-export const TransactionsPage = connect()(_TransactionsPage)
 
-type TransactionFormOwnProps = t.RRRouteComponentProps & {
-  transaction: t.TransactionRes,
-  onSubmitSuccess: () => void,
-}
+
+/**
+ * TransactionForm
+ */
+
+type TransactionFormOwnProps = t.RRRouteComponentProps & p.FormProps<{
+  transaction?: t.TransactionReq,
+}>
 
 type TransactionFormStateProps = {
-  pending: boolean,
+  pending   : boolean,
   categories: t.CategoryListRes,
-  accounts: t.AccountListRes,
-  payees: t.PayeeListRes,
+  accounts  : t.AccountListRes,
+  payees    : t.PayeeListRes,
 }
 
 type TransactionFormProps = TransactionFormOwnProps & TransactionFormStateProps
 
 type TransactionFormState = {
-  formValues: t.TransactionRes,
-  errors: undefined | t.ValidationError[],
+  formValues: t.TransactionReq,
+  errors    : undefined | t.ValidationError[],
 }
 
+
 class _TransactionForm extends m.ViewComponent<TransactionFormProps, TransactionFormState> {
-  state: Readonly<TransactionFormState> = {
+  readonly state = {
     formValues: this.props.transaction || {
       type: t.TRANSACTION_TYPE.OUTCOME,
       date: u.formatDate(new Date()),
@@ -75,16 +86,28 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
     errors: undefined,
   }
 
+  fetchTransactions = () => {
+    const {
+      context,
+      props: {location},
+    } = this
+
+    return e.dispatch(a.fetchTransactions(
+      location,
+      i18n.xln(context, i18n.FETCHING_TRANSACTIONS)
+    ))
+  }
+
   onSubmit = (event: t.RFormEvent) => {
     u.preventDefault(event)
 
-    this.setState({errors: undefined})
-
     const {
       context,
-      props: {dispatch, location, onSubmitSuccess},
+      props: {onSubmitSuccess},
       state: {formValues},
     } = this
+
+    this.setState({errors: undefined})
 
     const data = {
       ...formValues,
@@ -92,12 +115,12 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
     }
 
     const promise = formValues.id
-      ? dispatch(a.updateTransaction(
+      ? e.dispatch(a.updateTransaction(
           formValues.id,
           data,
           i18n.xln(context, i18n.UPDATING_TRANSACTION)
         ))
-      : dispatch(a.createTransaction(
+      : e.dispatch(a.createTransaction(
           data,
           i18n.xln(context, i18n.CREATING_TRANSACTION)
         ))
@@ -108,14 +131,11 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
         throw errors
       })
       .then(() => onSubmitSuccess())
-      .then(() => dispatch(a.addNotification(formValues.id
+      .then(() => e.dispatch(a.addNotification(formValues.id
           ? i18n.xln(context, i18n.TRANSACTION_UPDATED)
           : i18n.xln(context, i18n.TRANSACTION_CREATED)
       )))
-      .then(() => dispatch(a.fetchTransactions(
-        location,
-        i18n.xln(context, i18n.FETCHING_TRANSACTIONS))
-      ))
+      .then(this.fetchTransactions)
   }
 
   onDelete = (event: v.FakeButtonEvent): void => {
@@ -125,39 +145,45 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
 
     const {
       context,
-      props: {dispatch, location, onSubmitSuccess},
+      props: {onSubmitSuccess},
       state: {formValues},
     } = this
 
-    dispatch(a.addDialog(p.ConfirmDialog, {
+    e.dispatch(a.addDialog(p.ConfirmDialog, {
       question: i18n.xln(context, i18n.DELETE_TRANSACTION),
       onConfirm: () => {
-        dispatch(a.deleteTransaction(
-          formValues.id,
+        e.dispatch(a.deleteTransaction(
+          formValues.id!,
           i18n.xln(context, i18n.DELETING_TRANSACTION)
         ))
           .then(() => {onSubmitSuccess()})
-          .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.TRANSACTION_DELETED))))
-          .then(() => dispatch(a.fetchTransactions(
-            location,
-            i18n.xln(context, i18n.FETCHING_TRANSACTIONS)
-          )))
+          .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.TRANSACTION_DELETED))))
+          .then(this.fetchTransactions)
       },
     }))
   }
 
-  onTypeUpdated = value => {
+  onTypeUpdated = (value: f.RadioValue) => {
+    const nextType = value as t.TRANSACTION_TYPE
     const {formValues} = this.state
-    const {type, outcomeAccountId, outcomeAmount, incomeAccountId, incomeAmount} = formValues
+    const {
+      type,
+      outcomeAccountId,
+      outcomeAmount,
+      incomeAccountId,
+      incomeAmount,
+    } = formValues
+
+    const {INCOME, OUTCOME, LOAN, BORROW, TRANSFER} = t.TRANSACTION_TYPE
 
     if (
-      fpx.includes([t.TRANSACTION_TYPE.OUTCOME, t.TRANSACTION_TYPE.LOAN], type) &&
-      fpx.includes([t.TRANSACTION_TYPE.INCOME, t.TRANSACTION_TYPE.BORROW], value)
+      fpx.includes([OUTCOME, LOAN], type) &&
+      fpx.includes([INCOME, BORROW], nextType)
     ) {
       this.setState({
         formValues: {
           ...formValues,
-          type: value,
+          type: nextType,
           incomeAccountId : outcomeAccountId,
           incomeAmount    : outcomeAmount,
           outcomeAccountId: incomeAccountId,
@@ -168,13 +194,13 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
     }
 
     if (
-      fpx.includes([t.TRANSACTION_TYPE.INCOME, t.TRANSACTION_TYPE.BORROW], type) &&
-      fpx.includes([t.TRANSACTION_TYPE.OUTCOME, t.TRANSACTION_TYPE.LOAN], value)
+      fpx.includes([INCOME, BORROW], type) &&
+      fpx.includes([OUTCOME, LOAN], nextType)
     ) {
       this.setState({
         formValues: {
           ...formValues,
-          type: value,
+          type: nextType,
           outcomeAccountId: incomeAccountId,
           outcomeAmount   : incomeAmount,
           incomeAccountId : outcomeAccountId,
@@ -185,13 +211,13 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
     }
 
     if (
-      fpx.includes([t.TRANSACTION_TYPE.OUTCOME, t.TRANSACTION_TYPE.LOAN], type) &&
-      fpx.includes([t.TRANSACTION_TYPE.TRANSFER], value)
+      fpx.includes([OUTCOME, LOAN], type) &&
+      fpx.includes([TRANSFER], nextType)
     ) {
       this.setState({
         formValues: {
           ...formValues,
-          type: value,
+          type: nextType,
           incomeAmount: outcomeAmount,
         },
       })
@@ -199,13 +225,13 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
     }
 
     if (
-      fpx.includes([t.TRANSACTION_TYPE.INCOME, t.TRANSACTION_TYPE.BORROW], type) &&
-      fpx.includes([t.TRANSACTION_TYPE.TRANSFER], value)
+      fpx.includes([INCOME, BORROW], type) &&
+      fpx.includes([TRANSFER], nextType)
     ) {
       this.setState({
         formValues: {
           ...formValues,
-          type: value,
+          type: nextType,
           outcomeAmount: incomeAmount,
         },
       })
@@ -214,20 +240,19 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
 
     this.setState({formValues: {
       ...formValues,
-      type: value,
+      type: nextType,
     }})
   }
 
   render() {
     const {
-      context,
+      context, context: {isMobile},
       state: {formValues: {type, id}, errors},
       props: {categories, accounts, payees, pending},
       onSubmit, onDelete, onTypeUpdated,
     } = this
 
-    const isMobile = g.isMobile(context)
-    const disabled = pending
+    const {INCOME, OUTCOME, LOAN, BORROW, TRANSFER} = t.TRANSACTION_TYPE
 
     return (
       <form
@@ -241,7 +266,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
           <f.FormDateElement
             name='date'
             label={i18n.xln(context, i18n.DATE)}
-            disabled={disabled}
+            disabled={pending}
             {...u.bindValue(this, ['formValues', 'date'])}
           />
           <f.G7FormLine>
@@ -253,8 +278,8 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                 <label className='row-start-center gaps-h-0x5'>
                   <f.Radio
                     name='type'
-                    disabled={disabled}
-                    {...u.bindChecked(this, ['formValues', 'type'], t.TRANSACTION_TYPE.OUTCOME)}
+                    disabled={pending}
+                    {...u.bindChecked(this, ['formValues', 'type'], OUTCOME)}
                     onUpdate={onTypeUpdated}
                   />
                   <span>{i18n.xln(context, i18n.OUTCOME)}</span>
@@ -262,8 +287,8 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                 <label className='row-start-center gaps-h-0x5'>
                   <f.Radio
                     name='type'
-                    disabled={disabled}
-                    {...u.bindChecked(this, ['formValues', 'type'], t.TRANSACTION_TYPE.INCOME)}
+                    disabled={pending}
+                    {...u.bindChecked(this, ['formValues', 'type'], INCOME)}
                     onUpdate={onTypeUpdated}
                   />
                   <span>{i18n.xln(context, i18n.INCOME)}</span>
@@ -271,8 +296,8 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                 <label className='row-start-center gaps-h-0x5'>
                   <f.Radio
                     name='type'
-                    disabled={disabled}
-                    {...u.bindChecked(this, ['formValues', 'type'], t.TRANSACTION_TYPE.TRANSFER)}
+                    disabled={pending}
+                    {...u.bindChecked(this, ['formValues', 'type'], TRANSFER)}
                     onUpdate={onTypeUpdated}
                   />
                   <span>{i18n.xln(context, i18n.TRANSFER)}</span>
@@ -282,8 +307,8 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                 <label className='row-start-center gaps-h-0x5'>
                   <f.Radio
                     name='type'
-                    disabled={disabled}
-                    {...u.bindChecked(this, ['formValues', 'type'], t.TRANSACTION_TYPE.LOAN)}
+                    disabled={pending}
+                    {...u.bindChecked(this, ['formValues', 'type'], LOAN)}
                     onUpdate={onTypeUpdated}
                   />
                   <span>{i18n.xln(context, i18n.I_LOANED)}</span>
@@ -291,8 +316,8 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                 <label className='row-start-center gaps-h-0x5'>
                   <f.Radio
                     name='type'
-                    disabled={disabled}
-                    {...u.bindChecked(this, ['formValues', 'type'], t.TRANSACTION_TYPE.BORROW)}
+                    disabled={pending}
+                    {...u.bindChecked(this, ['formValues', 'type'], BORROW)}
                     onUpdate={onTypeUpdated}
                   />
                   <span>{i18n.xln(context, i18n.I_BORROWED)}</span>
@@ -301,24 +326,20 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
             </div>
           </f.G7FormLine>
 
-          {!fpx.includes([
-            t.TRANSACTION_TYPE.OUTCOME,
-            t.TRANSACTION_TYPE.LOAN,
-            t.TRANSACTION_TYPE.TRANSFER,
-          ], type) ? null :
+          {!fpx.includes([OUTCOME, LOAN, TRANSFER], type) ? null :
           <Fragment>
             <f.FormTextElement
               type='number'
               step='0.01'
               name='outcomeAmount'
               label={i18n.xln(context, i18n.AMOUNT)}
-              disabled={disabled}
+              disabled={pending}
               {...u.bindValue(this, ['formValues', 'outcomeAmount'], u.parseNum)}
             />
             <f.FormSelectElement
               name='outcomeAccountId'
               label={i18n.xln(context, i18n.ACCOUNT)}
-              disabled={disabled}
+              disabled={pending}
               {...u.bindValue(this, ['formValues', 'outcomeAccountId'])}
             >
               <option value='' />
@@ -333,24 +354,20 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
             </f.FormSelectElement>
           </Fragment>}
 
-          {!fpx.includes([
-            t.TRANSACTION_TYPE.INCOME,
-            t.TRANSACTION_TYPE.BORROW,
-            t.TRANSACTION_TYPE.TRANSFER,
-          ], type) ? null :
+          {!fpx.includes([INCOME, BORROW, TRANSFER], type) ? null :
           <Fragment>
             <f.FormTextElement
               type='number'
               step='0.01'
               name='incomeAmount'
               label={i18n.xln(context, i18n.AMOUNT)}
-              disabled={disabled}
+              disabled={pending}
               {...u.bindValue(this, ['formValues', 'incomeAmount'], u.parseNum)}
             />
             <f.FormSelectElement
               name='incomeAccountId'
               label={i18n.xln(context, i18n.ACCOUNT)}
-              disabled={disabled}
+              disabled={pending}
               {...u.bindValue(this, ['formValues', 'incomeAccountId'])}
             >
               <option value='' />
@@ -365,14 +382,11 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
             </f.FormSelectElement>
           </Fragment>}
 
-          {!fpx.includes([
-            t.TRANSACTION_TYPE.OUTCOME,
-            t.TRANSACTION_TYPE.INCOME,
-          ], type) ? null :
+          {!fpx.includes([OUTCOME, INCOME], type) ? null :
           <f.FormSelectElement
             name='categoryId'
             label={i18n.xln(context, i18n.CATEGORY)}
-            disabled={disabled}
+            disabled={pending}
             {...u.bindValue(this, ['formValues', 'categoryId'])}
           >
             <option value='' />
@@ -386,16 +400,11 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
             ))}
           </f.FormSelectElement>}
 
-          {!fpx.includes([
-            t.TRANSACTION_TYPE.OUTCOME,
-            t.TRANSACTION_TYPE.INCOME,
-            t.TRANSACTION_TYPE.LOAN,
-            t.TRANSACTION_TYPE.BORROW,
-          ], type) ? null :
+          {!fpx.includes([OUTCOME, INCOME, LOAN, BORROW], type) ? null :
           <f.FormSelectElement
             name='payeeId'
             label={i18n.xln(context, i18n.PAYEE)}
-            disabled={disabled}
+            disabled={pending}
             {...u.bindValue(this, ['formValues', 'payeeId'])}
           >
             <option value='' />
@@ -412,7 +421,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
           <f.FormTextElement
             name='comment'
             label={i18n.xln(context, i18n.COMMENT)}
-            disabled={disabled}
+            disabled={pending}
             {...u.bindValue(this, ['formValues', 'comment'])}
           />
         </div>
@@ -423,7 +432,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
             <v.FakeButton
               className='btn-transparent'
               onClick={onDelete}
-              disabled={disabled}
+              disabled={pending}
             >
               {i18n.xln(context, i18n.DELETE)}
             </v.FakeButton>}
@@ -431,7 +440,8 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
           <button
             type='submit'
             className={`btn-primary ${isMobile ? '' : 'btn-wide'}`}
-            disabled={disabled}>
+            disabled={pending}
+          >
             {i18n.xln(context, i18n.SUBMIT)}
           </button>
           <div className='flex-1' />
@@ -453,41 +463,9 @@ const TransactionForm = withRouter(connect<TransactionFormStateProps, {}, Transa
 
 
 
-class TransactionPlaceholder extends m.ViewComponent {
-  render() {
-    const {context} = this
-
-    const isMobile = g.isMobile(context)
-
-    return (
-      <div className='row-start-center gaps-h-1 padding-h-1 list-item'>
-        <div className='row-start-center padding-v-1'>
-          <div className='relative width-2x5 square circle decorate-placeholder' />
-        </div>
-        <div className='flex-1 col-start-stretch transaction-line-height'>
-          <div className='col-start-stretch gaps-v-0x25 padding-v-1'>
-            <div className='row-between-center gaps-h-1 font-midsmall fg-on-surface-pale'>
-              <v.Placeholder style={{width: '4em'}} />
-              <v.Placeholder style={{width: '6em'}} />
-            </div>
-            <div className='row-between-start gaps-h-1'>
-              <v.Placeholder style={{width: '8em'}} />
-              <v.Placeholder style={{width: '3em'}} />
-            </div>
-          </div>
-          <hr className='hr hide-in-list-last-child' />
-        </div>
-        {isMobile ? null :
-        <div className='row-center-center padding-v-1 padding-h-0x25'>
-          <div className='row-center-center' style={{minHeight: '2.5rem'}}>
-            <s.Trash2 className='font-large fg-transparent' />
-          </div>
-        </div>}
-      </div>
-    )
-  }
-}
-
+/**
+ * Transaction
+ */
 
 type TransactionProps = t.RRRouteComponentProps & {
   transaction: t.TransactionRes,
@@ -496,54 +474,55 @@ type TransactionProps = t.RRRouteComponentProps & {
 class _Transaction extends m.ViewComponent<TransactionProps> {
   actionsRef = React.createRef<HTMLDivElement>()
 
-  onOpen = (transaction: t.TransactionRes) => {
-    return (event: v.FakeButtonEvent): void => {
-      const {
-        context,
-        props: {dispatch},
-      } = this
+  fetchTransactions = () => {
+    const {
+      context,
+      props: {location},
+    } = this
 
-      const actionsNode = u.findDomNode(this.actionsRef.current)
+    return e.dispatch(a.fetchTransactions(
+      location,
+      i18n.xln(context, i18n.FETCHING_TRANSACTIONS)
+    ))
+  }
+
+  onOpen = (transaction: t.TransactionRes) => {
+    return (event: v.FakeButtonEvent) => {
+      const {context, actionsRef} = this
+
+      const actionsNode = u.findDomNode(actionsRef.current)
       if (u.isAncestorOf(actionsNode, event.target)) return
 
-      dispatch(a.addDialog(p.FormDialog, {
+      e.dispatch(a.addDialog(p.FormDialog, {
+        title: i18n.xln(context, i18n.EDIT_TRANSACTION),
         form: TransactionForm,
         formProps: {transaction},
-        title: i18n.xln(context, i18n.EDIT_TRANSACTION),
       }))
     }
   }
 
   onDelete = (transaction: t.TransactionRes) => () => {
-    const {
-      context,
-      props: {dispatch, location},
-    } = this
+    const {context} = this
 
-    dispatch(a.addDialog(p.ConfirmDialog, {
+    e.dispatch(a.addDialog(p.ConfirmDialog, {
       question: i18n.xln(context, i18n.DELETE_TRANSACTION),
       onConfirm: () => {
-        dispatch(a.deleteTransaction(
+        e.dispatch(a.deleteTransaction(
           transaction.id,
           i18n.xln(context, i18n.DELETING_TRANSACTION)
         ))
-          .then(() => dispatch(a.addNotification(i18n.xln(context, i18n.TRANSACTION_DELETED))))
-          .then(() => dispatch(a.fetchTransactions(
-            location,
-            i18n.xln(context, i18n.FETCHING_TRANSACTIONS)
-          )))
+          .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.TRANSACTION_DELETED))))
+          .then(this.fetchTransactions)
       },
     }))
   }
 
   render() {
     const {
-      context,
+      context: {isMobile},
       props: {transaction},
       onOpen, onDelete, actionsRef,
     } = this
-
-    const isMobile = g.isMobile(context)
 
     return (
       <v.FakeButton
@@ -577,7 +556,8 @@ class _Transaction extends m.ViewComponent<TransactionProps> {
           >
             <v.FakeButton
               className='row-center-center show-on-trigger-hover decorate-icon-button'
-              onClick={onDelete(transaction)}>
+              onClick={onDelete(transaction)}
+            >
               <s.Trash2 className='font-large' />
             </v.FakeButton>
           </div>
@@ -590,6 +570,7 @@ class _Transaction extends m.ViewComponent<TransactionProps> {
 const Transaction = withRouter(connect()(_Transaction))
 
 
+
 type TransactionMetaProps = {
   transaction: t.TransactionRes,
 }
@@ -597,18 +578,20 @@ type TransactionMetaProps = {
 class TransactionMeta extends m.ViewComponent<TransactionMetaProps> {
   render() {
     const {
-      context,
+      context: {isMobile},
       props: {transaction},
     } = this
 
-    const isMobile = g.isMobile(context)
+    if (isMobile) {
+      return (
+        <span className='col-start-start gaps-v-0x25'>
+          <span>{transaction.date}</span>
+          <span>{transaction.comment}</span>
+        </span>
+      )
+    }
 
-    return isMobile ? (
-      <span className='col-start-start gaps-v-0x25'>
-        <span>{transaction.date}</span>
-        <span>{transaction.comment}</span>
-      </span>
-    ) : (
+    return (
       <span>
         {transaction.date} {transaction.comment ? '·' : ''} {transaction.comment}
       </span>
@@ -617,25 +600,25 @@ class TransactionMeta extends m.ViewComponent<TransactionMetaProps> {
 }
 
 
+
 type TransactionIconProps = {
   transaction: t.TransactionRes,
 }
 
 class TransactionIcon extends m.ViewComponent<TransactionIconProps> {
   render() {
-    const {
-      props: {transaction},
-    } = this
+    const {props: {transaction}} = this
+    const {INCOME, OUTCOME, LOAN, BORROW} = t.TRANSACTION_TYPE
 
     return (
       <div className='row-start-center'>
-        {fpx.includes([t.TRANSACTION_TYPE.OUTCOME, t.TRANSACTION_TYPE.LOAN], transaction.type) ? (
+        {fpx.includes([OUTCOME, LOAN], transaction.type) ? (
           <div className='relative width-2x5 square circle bg-primary'>
             <div className='row-center-center abs-center fg-on-primary font-large'>
               <s.Minus />
             </div>
           </div>
-        ) : fpx.includes([t.TRANSACTION_TYPE.INCOME, t.TRANSACTION_TYPE.BORROW], transaction.type) ? (
+        ) : fpx.includes([INCOME, BORROW], transaction.type) ? (
           <div className='relative width-2x5 square circle bg-primary'>
             <div className='row-center-center abs-center fg-on-primary font-large'>
               <s.Plus />
@@ -654,31 +637,33 @@ class TransactionIcon extends m.ViewComponent<TransactionIconProps> {
 }
 
 
+
 type TransactionAmountProps = {
   transaction: t.TransactionRes,
 }
 
 class TransactionAmount extends m.ViewComponent<TransactionAmountProps> {
   render() {
-    const {
-      props: {transaction},
-    } = this
+    const {props: {transaction}} = this
+    const {INCOME, OUTCOME, LOAN, BORROW} = t.TRANSACTION_TYPE
 
     return (
       <span className='wspace-nowrap'>
-        { transaction.type === t.TRANSACTION_TYPE.BORROW
+        { transaction.type === BORROW
         ? <span className='fg-success'>+{transaction.outcomeAmount}</span>
-        : transaction.type === t.TRANSACTION_TYPE.LOAN
+        : transaction.type === LOAN
         ? <span className='fg-error'>-{transaction.incomeAmount}</span>
-        : transaction.type === t.TRANSACTION_TYPE.INCOME
+        : transaction.type === INCOME
         ? <span className='fg-success'>+{transaction.incomeAmount}</span>
-        : transaction.type === t.TRANSACTION_TYPE.OUTCOME
+        : transaction.type === OUTCOME
         ? <span className='fg-error'>-{transaction.outcomeAmount}</span>
         : <span>{transaction.outcomeAmount || transaction.incomeAmount}</span>}
       </span>
     )
   }
 }
+
+
 
 type TransactionAccountOwnProps = {
   transaction: t.TransactionRes,
@@ -712,6 +697,8 @@ class _TransactionAccount extends m.ViewComponent<TransactionAccountProps> {
   }
 }
 
+
+
 const TransactionAccount = connect<TransactionAccountStateProps, {}, TransactionAccountOwnProps, t.AppState>(state => ({
   accountsById: state.net.accounts.accountsById,
 }))(_TransactionAccount)
@@ -723,7 +710,7 @@ type TransactionOriginOwnProps = {
 
 type TransactionOriginStateProps = {
   categoriesById: t.CategoriesById,
-  payeesById: t.PayeesById,
+  payeesById    : t.PayeesById,
 }
 
 type TransactionOriginProps = TransactionOriginOwnProps & TransactionOriginStateProps
@@ -772,25 +759,31 @@ type TransactionListProps = TransactionListOwnProps & TransactionListStateProps
 class _TransactionsList extends m.ViewComponent<TransactionListProps> {
   render() {
     const {
-      context,
+      context, context: {isMobile},
       props: {outcomeAmount, incomeAmount, transactions, pageCount, pending},
     } = this
 
-    const isMobile = g.isMobile(context)
     return (
       <div className='col-start-stretch gaps-v-2'>
         <div className='col-start-stretch gaps-v-0x25'>
-          <div className={`row-between-center ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}>
+          <div
+            className={`row-between-center
+                        ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}
+          >
             <TransactionFiltersControls />
             {pending ? null :
             <div className='gaps-h-0x5'>
               <span className='gaps-h-0x5'>
-                <span className='fg-on-surface-pale'>{i18n.xln(context, i18n.OUTCOME)}:</span>
+                <span className='fg-on-surface-pale'>
+                  {i18n.xln(context, i18n.OUTCOME)}:
+                </span>
                 <span className='fg-error'>-{outcomeAmount}</span>
               </span>
               <span className='fg-on-surface-pale'>/</span>
               <span className='gaps-h-0x5'>
-                <span className='fg-on-surface-pale'>{i18n.xln(context, i18n.INCOME)}:</span>
+                <span className='fg-on-surface-pale'>
+                  {i18n.xln(context, i18n.INCOME)}:
+                </span>
                 <span className='fg-success'>+{incomeAmount}</span>
               </span>
               <span className='fg-on-surface-pale'>
@@ -798,19 +791,17 @@ class _TransactionsList extends m.ViewComponent<TransactionListProps> {
               </span>
             </div>}
           </div>
-          {pending || !fpx.size(transactions) ? (
-            <div className='col-start-stretch'>
-              {new Array(transactions.length || 3).fill(undefined).map((__, index) => (
-                <TransactionPlaceholder key={`placeholder-${index}`} />
-              ))}
-            </div>
-          ) : (
+          <v.EntityItemList
+            entityList={transactions}
+            pending={pending}
+            Placeholder={TransactionListPlaceholder}
+          >
             <div className='col-start-stretch'>
               {transactions.map(transaction => (
                 <Transaction key={transaction.id} transaction={transaction} />
               ))}
             </div>
-          )}
+          </v.EntityItemList>
         </div>
         {!transactions.length ? null :
         <v.Paginator pageCount={pageCount} />}
@@ -830,16 +821,76 @@ const TransactionsList = withRouter(connect<TransactionListStateProps, {}, Trans
 })(_TransactionsList))
 
 
+/**
+ * TransactionListPlaceholder
+ */
 
-type TransactionFiltersFormOwnProps = t.RRRouteComponentProps & {
-  onSubmitSuccess: (formValues: t.TransactionsFilterForm) => void,
+type TransactionListPlaceholderProps = {
+  length: number,
 }
+
+
+export class TransactionListPlaceholder extends m.ViewComponent<TransactionListPlaceholderProps> {
+  render() {
+    const {props: {length}} = this
+
+    return (
+      <div className='col-start-stretch'>
+        {fpx.range(0, length).map((key: number) => (
+          <TransactionPlaceholder key={key} />
+        ))}
+      </div>
+    )
+  }
+}
+
+
+/**
+ * TransactionPlaceholder
+ */
+
+class TransactionPlaceholder extends m.ViewComponent {
+  render() {
+    const {context: {isMobile}} = this
+
+    return (
+      <div className='row-start-center gaps-h-1 padding-h-1 list-item'>
+        <div className='row-start-center padding-v-1'>
+          <div className='relative width-2x5 square circle decorate-placeholder' />
+        </div>
+        <div className='flex-1 col-start-stretch transaction-line-height'>
+          <div className='col-start-stretch gaps-v-0x25 padding-v-1'>
+            <div className='row-between-center gaps-h-1 font-midsmall fg-on-surface-pale'>
+              <v.Placeholder style={{width: '4em'}} />
+              <v.Placeholder style={{width: '6em'}} />
+            </div>
+            <div className='row-between-start gaps-h-1'>
+              <v.Placeholder style={{width: '8em'}} />
+              <v.Placeholder style={{width: '3em'}} />
+            </div>
+          </div>
+          <hr className='hr hide-in-list-last-child' />
+        </div>
+        {isMobile ? null :
+        <div className='row-center-center padding-v-1 padding-h-0x25'>
+          <div className='row-center-center' style={{minHeight: '2.5rem'}}>
+            <s.Trash2 className='font-large fg-transparent' />
+          </div>
+        </div>}
+      </div>
+    )
+  }
+}
+
+
+
+type TransactionFiltersFormOwnProps = p.FormProps<t.RRRouteComponentProps>
 
 type TransactionFiltersFormStateProps = {
   categories: t.CategoryListRes,
-  accounts: t.AccountListRes,
-  payees: t.PayeeListRes,
-  pending: boolean,
+  accounts  : t.AccountListRes,
+  payees    : t.PayeeListRes,
+  pending   : boolean,
 }
 
 type TransactionFiltersFormProps = TransactionFiltersFormOwnProps & TransactionFiltersFormStateProps
@@ -849,7 +900,7 @@ type TransactionFiltersFormState = {
 }
 
 class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProps, TransactionFiltersFormState> {
-  state: Readonly<TransactionFiltersFormState> = {
+  readonly state = {
     formValues: getFilterValues(this.props.location),
   }
   unlisten: () => void = () => {}
@@ -872,7 +923,7 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
     })}`)
 
     if (typeof onSubmitSuccess === 'function') {
-      onSubmitSuccess(this.state.formValues)
+      onSubmitSuccess()
     }
   }
 
@@ -901,13 +952,12 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
 
   render() {
     const {
-      context,
+      context, context: {isMobile},
       props: {accounts, categories, payees, pending},
       state: {formValues},
       onSubmit, onReset,
     } = this
 
-    const isMobile = g.isMobile(context)
     const noFilters = fpx.isEmpty(u.omitEmpty(formValues))
     return (
       <form className='col-start-stretch' onSubmit={onSubmit} onReset={onReset}>
@@ -1027,10 +1077,20 @@ type TransactionFiltersControlsStateProps = {
 type TransactionFiltersControlsProps = TransactionFiltersControlsOwnProps & TransactionFiltersControlsStateProps
 
 class _TransactionFiltersControls extends m.ViewComponent<TransactionFiltersControlsProps> {
+  openDialog = () => {
+    const {context} = this
+
+     e.dispatch(a.addDialog(p.FormDialog, {
+      form: TransactoinFiltersForm,
+      title: i18n.xln(context, i18n.FILTERS),
+    }))
+  }
+
   render() {
     const {
       context,
-      props: {dispatch, history, location, transactions, pending},
+      props: {history, location, transactions, pending},
+      openDialog,
     } = this
 
     const noFilters = fpx.isEmpty(u.omitEmpty(getFilterValues(location)))
@@ -1041,10 +1101,7 @@ class _TransactionFiltersControls extends m.ViewComponent<TransactionFiltersCont
           <v.FakeButton
             className='decorate-link'
             disabled={pending || !fpx.size(transactions)}
-            onClick={() => dispatch(a.addDialog(p.FormDialog, {
-              form: TransactoinFiltersForm,
-              title: i18n.xln(context, i18n.FILTERS),
-            }))}
+            onClick={openDialog}
           >
             {i18n.xln(context, i18n.FILTERS)}
           </v.FakeButton>

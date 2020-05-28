@@ -404,14 +404,16 @@ export class FormErrors extends m.ViewComponent<FormErrorsProps> {
 }
 
 
+export type RadioValue = number | string
+
 type RadioProps = {
-  name: string,
-  value: number| string | string[],
+  name           : string,
+  value          : RadioValue,
   defaultChecked?: boolean,
-  checked: boolean,
-  readOnly?: boolean,
-  disabled?: boolean,
-  onUpdate: (value: void | number | string) => void,
+  checked        : boolean,
+  readOnly?      : boolean,
+  disabled?      : boolean,
+  onUpdate       : (value: RadioValue) => void,
 }
 
 export class Radio extends m.ViewComponent<RadioProps> {
