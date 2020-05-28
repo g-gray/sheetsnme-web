@@ -11,14 +11,12 @@ import * as a from '../actions'
 import * as m from './misc'
 import {Router} from './router'
 
-type AppOwnProps = t.RRRouteComponentProps
-
 type AppStateProps = {
   lang    : t.LANG,
   isMobile: boolean,
 }
 
-type AppProps = AppOwnProps & AppStateProps
+type AppProps = AppStateProps
 
 class _App extends m.ViewComponent<AppProps> {
   unresize: () => void = () => {}
@@ -51,7 +49,7 @@ class _App extends m.ViewComponent<AppProps> {
   }
 }
 
-export const App = connect<AppStateProps, {}, AppOwnProps, t.AppState>(state => ({
+export const App = connect<AppStateProps, {}, {}, t.AppState>(state => ({
   isMobile: state.dom.geometry.isMobile,
   lang: state.dom.i18n.lang,
 }))(_App)
