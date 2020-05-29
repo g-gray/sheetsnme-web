@@ -15,11 +15,16 @@ export const DEFAULT_PAGE_SIZE: number = 25
  * Bind
  */
 
+type BindValueProps = {
+  onUpdate: (value: any) => void,
+  value: any,
+}
+
 export function bindValue(
   component: React.Component,
   path: t.Path,
   fun?: (value: any) => any
-): t.BindValueProps {
+): BindValueProps {
   fpx.validate(component, isComponent)
   fpx.validate(path, isPath)
 
@@ -35,11 +40,18 @@ export function bindValue(
   }
 }
 
+
+type BindCheckedProps = {
+  onUpdate: (value: any) => void,
+  value: any,
+  checked: boolean,
+}
+
 export function bindChecked(
   component: React.Component,
   path: t.Path,
   value: any,
-): t.BindCheckedProps {
+): BindCheckedProps {
   fpx.validate(component, isComponent)
   fpx.validate(path, isPath)
 
@@ -153,7 +165,7 @@ export function getGlobalScrollbarWidth(): number {
  * Format
  */
 
-export function toValidDate(value: any): void | Date {
+export function toValidDate(value: any): undefined | Date {
   // Gotcha: `new Date(null)` ≡ `new Date(0)`
   if (value == null) return undefined
   const date = new Date(value)
@@ -170,8 +182,8 @@ export function formatDate(value: any): string {
   return match ? match[1] : ''
 }
 
-export function addBrowserOffset(value: any): void | Date {
-  const date: void | Date = toValidDate(value)
+export function addBrowserOffset(value: any): undefined | Date {
+  const date: undefined | Date = toValidDate(value)
   if (!date) return undefined
   date.setTime(date.getTime() - (date.getTimezoneOffset() * 60 * 1000))
   return date
@@ -188,15 +200,15 @@ function isMonthNumber(month: number): boolean {
 }
 
 export function daysInMonthList(
-  year: void | number,
-  month: void | number
+  year: undefined | null | number,
+  month: undefined | null | number
 ): number[] {
   return year != null && month != null
     ? fpx.range(1, daysInMonth(year, month) + 1)
     : fpx.range(1, 32)
 }
 
-export function parseNum(value: any): void | number {
+export function parseNum(value: any): undefined | number {
   if (fpx.isString(value)) value = parseFloat(value)
   if (fpx.isFinite(value)) return value
   return undefined
@@ -208,7 +220,7 @@ export function parseNum(value: any): void | number {
  * Net
  */
 
-export function jsonParams(params: void | t.JsonParams): t.XHttpParams {
+export function jsonParams(params: undefined | null | t.JsonParams): t.XHttpParams {
   return emerge.merge(params, {headers: jsonHeaders})
 }
 
@@ -236,7 +248,7 @@ const STORAGE_KEY: string = 'data'
 
 export const storage: {[key: string]: any} | Storage = initStorage() || {}
 
-function initStorage(): void | Storage {
+function initStorage(): undefined | Storage {
   try {return localStorage}
   catch (err) {
     console.warn('Failed to initialise localStorage:', err)
@@ -282,7 +294,7 @@ export function encodeQuery(query: t.DecodedQueryInput): string {
   )))
 }
 
-export function prepend(char: string, value: void | string): string {
+export function prepend(char: string, value: undefined | null | string): string {
   fpx.validate(char, fpx.isString)
   if (value == null || value === '') return ''
   fpx.validate(value, fpx.isString)
@@ -298,7 +310,7 @@ export function prepend(char: string, value: void | string): string {
 // Note: if the URL contains spaces or other non-URL characters, it must be
 // URL-encoded before calling this function. We can't encode them
 // indiscriminately, because that would wreck some valid URLs.
-export function bgImg(url: string): undefined | t.BgImgStyles {
+export function bgImg(url: undefined | null | string): undefined | t.BgImgStyles {
   if (url == null || url === '') {
     return undefined
   }
@@ -310,7 +322,7 @@ function isPath (value: any): boolean {
   return fpx.isList(value) && fpx.every(value, fpx.isKey)
 }
 
-export function omitEmpty(value: void | t.Dict): t.Dict {
+export function omitEmpty(value: undefined | null | t.Dict): t.Dict {
   return fpx.omitBy(value, (v: any) => {
     return fpx.isArray(v) || fpx.isDict(v)
       ? fpx.isEmpty(v)

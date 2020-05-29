@@ -69,8 +69,8 @@ export type TransactionsFilter = {
 }
 
 export type TransactionsFilterForm = {
-  dateFrom  : void | Date,
-  dateTo    : void | Date,
+  dateFrom  : undefined | Date,
+  dateTo    : undefined | Date,
   accountId : string,
   categoryId: string,
   payeeId   : string,

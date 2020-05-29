@@ -125,7 +125,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
     }))
   }
 
-  onTypeUpdated = (value: f.RadioValue) => {
+  onTypeUpdated = (value: string) => {
     const nextType = value as t.TRANSACTION_TYPE
     const {formValues} = this.state
     const {
@@ -290,13 +290,12 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
 
           {!fpx.includes([OUTCOME, LOAN, TRANSFER], type) ? null :
           <Fragment>
-            <f.FormTextElement
-              type='number'
+            <f.FormNumberElement
               step='0.01'
               name='outcomeAmount'
               label={i18n.xln(context, i18n.AMOUNT)}
               disabled={pending}
-              {...u.bindValue(this, ['formValues', 'outcomeAmount'], u.parseNum)}
+              {...u.bindValue(this, ['formValues', 'outcomeAmount'])}
             />
             <f.FormSelectElement
               name='outcomeAccountId'
@@ -318,13 +317,12 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
 
           {!fpx.includes([INCOME, BORROW, TRANSFER], type) ? null :
           <Fragment>
-            <f.FormTextElement
-              type='number'
+            <f.FormNumberElement
               step='0.01'
               name='incomeAmount'
               label={i18n.xln(context, i18n.AMOUNT)}
               disabled={pending}
-              {...u.bindValue(this, ['formValues', 'incomeAmount'], u.parseNum)}
+              {...u.bindValue(this, ['formValues', 'incomeAmount'])}
             />
             <f.FormSelectElement
               name='incomeAccountId'

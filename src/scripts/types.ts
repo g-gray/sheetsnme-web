@@ -67,7 +67,7 @@ export type RKeyboardEventHandler = React.KeyboardEventHandler
 export type REvent = React.SyntheticEvent
 export type RFormEvent = React.FormEvent
 export type RMouseEvent = React.MouseEvent
-export type RChangeEvent = React.ChangeEvent
+export type RChangeEvent<T> = React.ChangeEvent<T>
 export type RKeyboardEvent = React.KeyboardEvent
 
 export type RReactElement = React.ReactElement
@@ -181,18 +181,7 @@ export type ValidationError = {
  * Utils
  */
 
-export type Path = (string | number)[]
-
-export type BindValueProps = {
-  onUpdate: (value: any) => void,
-  value: any,
-}
-
-export type BindCheckedProps = {
-  onUpdate: (value: any) => void,
-  value: any,
-  checked: boolean,
-}
+export type Path = (number | string)[]
 
 export type BgImgStyles = {
   backgroundImage: string,
