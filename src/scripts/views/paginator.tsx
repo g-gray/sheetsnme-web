@@ -8,7 +8,6 @@ import * as u from '../utils'
 
 import * as m from './misc'
 import * as s from './svg'
-import * as g from '../geometry'
 
 import * as i18n from '../i18n'
 
@@ -69,13 +68,11 @@ class _Paginator extends m.ViewComponent<PaginatorProps, PaginatorState> {
 
   render() {
     const {
-      context,
+      context: {isMobile},
       props: {pageCount},
       state: {forcePage},
       onPageChange, hrefBulder,
     } = this
-
-    const isMobile = g.isMobile(context)
 
     return (
       <ReactPaginate

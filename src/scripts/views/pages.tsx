@@ -7,7 +7,6 @@ import {Link} from 'react-router-dom'
 import * as a from '../actions'
 
 import * as d from '../dialogs'
-import * as g from '../geometry'
 
 import * as i18n from '../i18n'
 
@@ -34,12 +33,12 @@ class _FormDialog<P> extends m.ViewComponent<FormDialogProps<P>> {
 
   render() {
     const {
-      context,
+      context: {isMobile},
       props: {title, form: Form, formProps, dialogsNumber},
       close,
     } = this
 
-    if (g.isMobile(context)) {
+    if (isMobile) {
       return (
         <d.Dialog dialogsNumber={dialogsNumber} onEscape={close}>
           <d.DialogScrollable className='bg-surface'>
@@ -203,7 +202,7 @@ export const ConfirmDialog = connect()(_ConfirmDialog)
 
 export class Page404 extends m.ViewComponent {
   render() {
-    const {context} = this
+    const {context: {isMobile}} = this
 
     const content = (
       <Fragment>
@@ -217,7 +216,7 @@ export class Page404 extends m.ViewComponent {
       </Fragment>
     )
 
-    if (g.isMobile(context)) {
+    if (isMobile) {
       return (
         <l.MobilePageLayout>
           <div className='col-start-stretch gaps-v-1 padding-v-3'>

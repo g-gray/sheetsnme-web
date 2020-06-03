@@ -8,7 +8,6 @@ import * as nav from './nav'
 
 import * as d from '../dialogs'
 import * as n from '../notifications'
-import * as g from '../geometry'
 
 type ListPageProps = {
   action: t.RReactElement,
@@ -18,11 +17,11 @@ type ListPageProps = {
 export class ListPage extends m.ViewComponent<ListPageProps> {
   render() {
     const {
-      context,
+      context: {isMobile},
       props: {action, children},
     } = this
 
-    if (g.isMobile(context)) {
+    if (isMobile) {
       return (
         <MobilePageLayout action={action}>
           <div className='col-start-stretch padding-v-0x5'>

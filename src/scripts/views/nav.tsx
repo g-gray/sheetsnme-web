@@ -9,7 +9,6 @@ import * as u from '../utils'
 import * as a from '../actions'
 
 import * as d from '../dialogs'
-import * as g from '../geometry'
 import * as i18n from '../i18n'
 
 import * as m from './misc'
@@ -40,11 +39,11 @@ class _Navbar extends m.ViewComponent {
 
   render() {
     const {
-      context,
+      context, context: {isMobile},
       open, nextLang,
     } = this
 
-    if (g.isMobile(context)) {
+    if (isMobile) {
       return (
         <header className='row-between-stretch bg-primary navbar-height shadow-dept-1'>
           <div className='row-start-center gaps-h-0x75 padding-h-1'>

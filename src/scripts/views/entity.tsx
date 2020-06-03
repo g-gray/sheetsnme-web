@@ -6,8 +6,6 @@ import * as fpx from 'fpx'
 
 import * as u from '../utils'
 
-import * as g from '../geometry'
-
 import * as m from './misc'
 import * as s from './svg'
 import * as fb from './fake-button'
@@ -69,12 +67,10 @@ export class EntityItem extends m.ViewComponent<EntityItemProps> {
 
   render() {
     const {
-      context,
+      context: {isMobile},
       props: {children, icon, onDelete},
       onClick, actionsRef,
     } = this
-
-    const isMobile = g.isMobile(context)
 
     return (
       <fb.FakeButton

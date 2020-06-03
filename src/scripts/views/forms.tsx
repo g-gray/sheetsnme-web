@@ -6,7 +6,6 @@ import React from 'react'
 import * as fpx from 'fpx'
 
 import * as u from '../utils'
-import * as g from '../geometry'
 import * as i18n from '../i18n'
 
 import * as m from './misc'
@@ -14,11 +13,11 @@ import * as m from './misc'
 export class G7FormLine extends m.ViewComponent {
   render() {
     const {
-      context,
+      context: {isMobile},
       props: {children},
     } = this
 
-    if (g.isMobile(context)) {
+    if (isMobile) {
       return (
         <div className='col-start-stretch gaps-v-0x5 mobile-form-element-spacing'>
           {children}
@@ -57,11 +56,11 @@ type FormLabelProps = {
 export class FormLabel extends m.ViewComponent<FormLabelProps> {
   render() {
     const {
-      context,
+      context: {isMobile},
       props: {children, className: cls, htmlFor},
     } = this
 
-    if (g.isMobile(context)) {
+    if (isMobile) {
       return (
         <label
           className={`row-start-center fg-on-surface-pale ${cls || ''}`}
