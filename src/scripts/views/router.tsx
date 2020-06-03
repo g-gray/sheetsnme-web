@@ -4,6 +4,8 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Switch, Route, Redirect, withRouter} from 'react-router-dom'
 
+import * as e from '../env'
+
 import * as a from '../actions'
 import * as i18n from '../i18n'
 
@@ -23,37 +25,37 @@ class _Routes extends m.ViewComponent<RoutesProps> {
   componentDidMount() {
     const {
       context,
-      props: {dispatch, history, location},
+      props: {history, location},
     } = this
 
     this.unlisten = history.listen(nextLocation => {
       if (new RegExp(`^/transactions`, 'g').test(nextLocation.pathname)) {
-        dispatch(a.fetchTransactions(nextLocation, i18n.xln(context, i18n.FETCHING_TRANSACTIONS)))
+        e.dispatch(a.fetchTransactions(nextLocation, i18n.xln(context, i18n.FETCHING_TRANSACTIONS)))
         return
       }
 
       if (new RegExp(`^/categories`, 'g').test(nextLocation.pathname)) {
-        dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES)))
+        e.dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES)))
         return
       }
 
       if (new RegExp(`^/accounts`, 'g').test(nextLocation.pathname)) {
-        dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS)))
+        e.dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS)))
         return
       }
 
       if (new RegExp(`^/payees`, 'g').test(nextLocation.pathname)) {
-        dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES)))
+        e.dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES)))
       }
     })
 
-    dispatch(a.fetchUser(i18n.xln(context, i18n.FETCHING_USER)))
+    e.dispatch(a.fetchUser(i18n.xln(context, i18n.FETCHING_USER)))
       .then(() => Promise.all([
-        dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))),
-        dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))),
-        dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))),
+        e.dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))),
+        e.dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))),
+        e.dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))),
       ]))
-      .then(() => dispatch(a.fetchTransactions(
+      .then(() => e.dispatch(a.fetchTransactions(
         location,
         i18n.xln(context, i18n.FETCHING_TRANSACTIONS)
       )))

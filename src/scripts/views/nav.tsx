@@ -4,6 +4,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {NavLink, Link} from 'react-router-dom'
 
+import * as e from '../env'
 import * as u from '../utils'
 
 import * as a from '../actions'
@@ -16,25 +17,25 @@ import * as s from './svg'
 import * as c from './closer'
 import * as fb from './fake-button'
 
-class Logo extends m.ViewComponent {
-  render() {
-    return (
-      <s.Logo className='fg-surface' style={{width: '2rem', height: '2rem'}} />
-    )
-  }
-}
-
-
+/**
+ * Navbar
+ */
 
 class _Navbar extends m.ViewComponent {
   open = () => {
-    const {props: {dispatch}} = this
-    dispatch(a.addDialog(MobileMenu))
+    const close = () => {
+      e.dispatch(a.removeDialog<MobileMenuProps>(dialog))
+    }
+
+    const dialog = (
+      <MobileMenu onClose={close} />
+    )
+
+    e.dispatch(a.addDialog<MobileMenuProps>(dialog))
   }
 
   nextLang = () => {
-    const {props: {dispatch}} = this
-    dispatch(a.nextLang())
+    e.dispatch(a.nextLang())
   }
 
   render() {
@@ -49,15 +50,16 @@ class _Navbar extends m.ViewComponent {
           <div className='row-start-center gaps-h-0x75 padding-h-1'>
             <fb.FakeButton
               className='row-center-center padding-0x5 circle decorate-dark-menu-item'
-              onClick={open}>
-              <s.Menu
-                style={{fontSize: '1.5rem'}} />
+              onClick={open}
+            >
+              <s.Menu style={{fontSize: '1.5rem'}} />
             </fb.FakeButton>
           </div>
           <div className='row-start-stretch relative z-index-1'>
             <fb.FakeButton
+              className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'
               onClick={nextLang}
-              className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
+            >
               {i18n.xln(context, i18n.LANG)}
             </fb.FakeButton>
             <UserMenu />
@@ -68,13 +70,17 @@ class _Navbar extends m.ViewComponent {
 
     return (
       <header className='row-between-stretch bg-primary navbar-height shadow-dept-1'>
-        <Link to='/' className='row-center-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
+        <Link
+          to='/'
+          className='row-center-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'
+        >
           <Logo />
         </Link>
         <div className='row-start-stretch relative z-index-1'>
           <fb.FakeButton
             onClick={nextLang}
-            className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'>
+            className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'
+          >
             {i18n.xln(context, i18n.LANG)}
           </fb.FakeButton>
           <UserMenu />
@@ -87,6 +93,10 @@ class _Navbar extends m.ViewComponent {
 export const Navbar = connect()(_Navbar)
 
 
+
+/**
+ * UserMenu
+ */
 
 type UserMenuStateProps = {
   user: t.UserState,
@@ -135,10 +145,14 @@ class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
           />
         </fb.FakeButton>
         {!expanded ? null :
-        <c.Closer root={this} close={close}>
+        <c.Closer
+          root={this}
+          close={close}
+        >
           <div
             className='dropdown-position z-index-tooltip'
-            onClick={close}>
+            onClick={close}
+          >
             <div
               className='dropdown dropdown-padding col-start-stretch'
               style={{minWidth: '11rem'}}
@@ -179,24 +193,27 @@ const UserMenu = connect<UserMenuStateProps, {}, {}, t.AppState>(state => ({
 
 
 
-class _MobileMenu extends m.ViewComponent {
-  close = () => {
-    const {props: {dispatch}} = this
-    dispatch(a.removeDialog())
-  }
+/**
+ * MobileMenu
+ */
 
+export type MobileMenuProps = {
+  onClose : (event?: KeyboardEvent | fb.FakeButtonEvent) => void,
+}
+
+class _MobileMenu extends m.ViewComponent<MobileMenuProps> {
   render() {
-    const {close} = this
+    const {props: {onClose}} = this
 
     return (
-      <d.Dialog onEscape={close}>
+      <d.Dialog onEscape={onClose}>
         <d.DialogScrollable
           className='row-start-stretch bg-overlay fade-in-fast'
-          onClick={close}
+          onClick={onClose}
         >
           <div
             className='relative col-start-stretch gaps-v-0x5 bg-surface slide-in-left-fast'
-            onClick={close}
+            onClick={onClose}
           >
             <div className='row-start-center padding-h-1 bg-primary navbar-height shadow-dept-1'>
               <Logo />
@@ -213,6 +230,27 @@ const MobileMenu = connect()(_MobileMenu)
 
 
 
+/**
+ * Logo
+ */
+
+class Logo extends m.ViewComponent {
+  render() {
+    return (
+      <s.Logo
+        className='fg-surface'
+        style={{width: '2rem', height: '2rem'}}
+      />
+    )
+  }
+}
+
+
+
+/**
+ * Drawer
+ */
+
 export class Drawer extends m.ViewComponent {
   render() {
     const {context} = this
@@ -226,7 +264,8 @@ export class Drawer extends m.ViewComponent {
           <NavLink
             to='/'
             exact
-            className='drawer-link decorate-drawer-link'>
+            className='drawer-link decorate-drawer-link'
+          >
             <s.BarChart className='font-large theme-drawer-icon' />
             <span>{i18n.xln(context, i18n.TRANSACTIONS)}</span>
           </NavLink>
@@ -236,21 +275,24 @@ export class Drawer extends m.ViewComponent {
           <NavLink
             to='/categories'
             exact
-            className='drawer-link decorate-drawer-link'>
+            className='drawer-link decorate-drawer-link'
+          >
             <s.Tag className='font-large theme-drawer-icon' />
             <span>{i18n.xln(context, i18n.CATEGORIES)}</span>
           </NavLink>
           <NavLink
             to='/accounts'
             exact
-            className='drawer-link decorate-drawer-link'>
+            className='drawer-link decorate-drawer-link'
+          >
             <s.CreditCard className='font-large theme-drawer-icon' />
             <span>{i18n.xln(context, i18n.ACCOUNTS)}</span>
           </NavLink>
           <NavLink
             to='/payees'
             exact
-            className='drawer-link decorate-drawer-link'>
+            className='drawer-link decorate-drawer-link'
+          >
             <s.Users className='font-large theme-drawer-icon' />
             <span>{i18n.xln(context, i18n.PAYEES)}</span>
           </NavLink>
@@ -261,10 +303,16 @@ export class Drawer extends m.ViewComponent {
 }
 
 
+
+/**
+ * CircleUserPic
+ */
+
 type CircleUserPicProps = {
-  url: string,
+  url  : string,
   size?: number,
 }
+
 
 class CircleUserPic extends m.ViewComponent<CircleUserPicProps> {
   render() {

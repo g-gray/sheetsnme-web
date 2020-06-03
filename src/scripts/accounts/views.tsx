@@ -28,23 +28,30 @@ type AccountPageProps = {}
 
 
 export class AccountsPage extends m.ViewComponent<AccountPageProps> {
-  openAccountFormDialog = () => {
+  openDialog = () => {
     const {context} = this
 
-    e.dispatch(a.addDialog<p.FormDialogProps<AccountFormOwnProps>>(
-      p.FormDialog,
-      {
-        title: i18n.xln(context, i18n.NEW_ACCOUNT),
-        form: AccountForm,
-      }
-    ))
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.FormDialog
+        title={i18n.xln(context, i18n.NEW_ACCOUNT)}
+        onClose={closeDialog}
+      >
+        <AccountForm onSubmitSuccess={closeDialog} />
+      </p.FormDialog>
+    )
+
+    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
   }
 
   render() {
-    const {openAccountFormDialog} = this
+    const {openDialog} = this
 
     return (
-      <v.ListPage action={<v.Fab onClick={openAccountFormDialog} />}>
+      <v.ListPage action={<v.Fab onClick={openDialog} />}>
         <AccountList />
       </v.ListPage>
     )
@@ -57,9 +64,9 @@ export class AccountsPage extends m.ViewComponent<AccountPageProps> {
  * AccountForm
  */
 
-type AccountFormOwnProps = p.FormProps<{
+type AccountFormOwnProps = p.FormProps & {
   account?: t.AccountReq,
-}>
+}
 
 type AccountFormStateProps = {
   pending: boolean,
@@ -130,18 +137,27 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
 
     this.setState({errors: undefined})
 
-    e.dispatch(a.addDialog(p.ConfirmDialog, {
-      question: i18n.xln(context, i18n.DELETE_ACCOUNT),
-      onConfirm: () => {
-        e.dispatch(a.deleteAccount(
-          formValues.id!,
-          i18n.xln(context, i18n.DELETING_ACCOUNT)
-        ))
-          .then(() => onSubmitSuccess())
-          .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.ACCOUNT_DELETED))))
-          .then(this.fetchAccounts)
-      },
-    }))
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.ConfirmDialog
+        question={i18n.xln(context, i18n.DELETE_ACCOUNT)}
+        onConfirm={() => {
+          e.dispatch(a.deleteAccount(
+            formValues.id!,
+            i18n.xln(context, i18n.DELETING_ACCOUNT)
+          ))
+            .then(() => onSubmitSuccess())
+            .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.ACCOUNT_DELETED))))
+            .then(this.fetchAccounts)
+        }}
+        onClose={closeDialog}
+      />
+    )
+
+    e.dispatch(a.addDialog<p.ConfirmDialogProps>(dialog))
   }
 
   render() {
@@ -153,7 +169,10 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
     } = this
 
     return (
-      <form className='col-start-stretch' onSubmit={onSubmit}>
+      <form
+        className='col-start-stretch'
+        onSubmit={onSubmit}
+      >
         <div
           className={`col-start-stretch
                       ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}
@@ -212,33 +231,55 @@ type AccountListProps = AccountListStateProps
 
 
 class _AccountList extends m.ViewComponent<AccountListProps> {
-  onOpen = (account: t.AccountRes) => (): void => {
-    const {context} = this
-
-    e.dispatch(a.addDialog<p.FormDialogProps<AccountFormOwnProps>>(
-      p.FormDialog,
-      {
-        title: i18n.xln(context, i18n.EDIT_ACCOUNT),
-        form: AccountForm,
-        formProps: {account},
-      }
-    ))
+  fetchAccounts = () => {
+    return
   }
 
-  onDelete = (account: t.AccountRes) => (): void => {
+  onOpen = (account: t.AccountRes) => () => {
     const {context} = this
 
-    e.dispatch(a.addDialog<p.ConfirmDialogProps>(p.ConfirmDialog, {
-      question: i18n.xln(context, i18n.DELETE_ACCOUNT),
-      onConfirm: () => {
-        e.dispatch(a.deleteAccount(
-          account.id,
-          i18n.xln(context, i18n.DELETING_ACCOUNT)
-        ))
-          .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.ACCOUNT_DELETED))))
-          .then(() => e.dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
-      },
-    }))
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.FormDialog
+        title={i18n.xln(context, i18n.EDIT_ACCOUNT)}
+        onClose={closeDialog}
+      >
+        <AccountForm
+          account={account}
+          onSubmitSuccess={closeDialog}
+        />
+      </p.FormDialog>
+    )
+
+    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
+  }
+
+  onDelete = (account: t.AccountRes) => () => {
+    const {context} = this
+
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.ConfirmDialog
+        question={i18n.xln(context, i18n.DELETE_ACCOUNT)}
+        onConfirm={() => {
+          e.dispatch(a.deleteAccount(
+            account.id,
+            i18n.xln(context, i18n.DELETING_ACCOUNT)
+          ))
+            .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.ACCOUNT_DELETED))))
+            .then(() => e.dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))))
+        }}
+        onClose={closeDialog}
+      />
+    )
+
+    e.dispatch(a.addDialog<p.ConfirmDialogProps>(dialog))
   }
 
   render() {

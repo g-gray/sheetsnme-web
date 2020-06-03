@@ -4,13 +4,10 @@ export type DialogsState = DialogList
 
 export type DialogList = Dialog<unknown>[]
 
-export type Dialog<P> = {
-  dialog      : t.RComponentType<DialogProps<P>>,
-  dialogProps?: DialogProps<P>,
-}
+export type Dialog<P> = t.RReactElement<P & DialogProps>
 
-export type DialogProps<P> = P & {
-  className?   : string,
-  dialogsNumber: number,
-  onEscape?    : (event: KeyboardEvent) => void,
+export type DialogProps = {
+  className?: string,
+  onEscape? : (event: KeyboardEvent) => void,
+  children? : t.RReactChildren,
 }

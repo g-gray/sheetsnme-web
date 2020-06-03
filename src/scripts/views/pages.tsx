@@ -4,8 +4,6 @@ import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 
-import * as a from '../actions'
-
 import * as d from '../dialogs'
 
 import * as i18n from '../i18n'
@@ -15,32 +13,26 @@ import * as s from './svg'
 import * as l from './layouts'
 import * as fb from './fake-button'
 
-export type FormDialogProps<P> = t.DialogProps<{
-  title        : string,
-  form         : t.RComponentType<FormProps<P>>,
-  formProps?   : Omit<FormProps<P>, 'onSubmitSuccess'>,
-}>
-
-export type FormProps<P> = P & {
-  onSubmitSuccess: (event?: KeyboardEvent | t.RKeyboardEvent | t.RMouseEvent) => void,
+export type FormDialogProps = {
+  title   : string,
+  onClose : (event?: KeyboardEvent | fb.FakeButtonEvent) => void,
+  children: t.RReactChildren,
 }
 
-class _FormDialog<P> extends m.ViewComponent<FormDialogProps<P>> {
-  close = () => {
-    const {dispatch} = this.props
-    dispatch(a.removeDialog())
-  }
+export type FormProps = {
+  onSubmitSuccess: (event?: KeyboardEvent | t.RMouseEvent) => void,
+}
 
+class _FormDialog extends m.ViewComponent<FormDialogProps> {
   render() {
     const {
       context: {isMobile},
-      props: {title, form: Form, formProps, dialogsNumber},
-      close,
+      props: {title, children, onClose},
     } = this
 
     if (isMobile) {
       return (
-        <d.Dialog dialogsNumber={dialogsNumber} onEscape={close}>
+        <d.Dialog onEscape={onClose}>
           <d.DialogScrollable className='bg-surface'>
             <div className='relative col-start-stretch'>
               <div className='row-between-center gaps-h-1 padding-l-1x25 navbar-height'>
@@ -49,14 +41,13 @@ class _FormDialog<P> extends m.ViewComponent<FormDialogProps<P>> {
                 </h2>
                 <fb.FakeButton
                   className='row-center-center padding-1x25'
-                  onClick={close}
+                  onClick={onClose}
                 >
                   <s.X className='font-large' />
                 </fb.FakeButton>
               </div>
               <hr className='hr' />
-              {!Form ? null :
-              <Form {...formProps} onSubmitSuccess={close} />}
+              {children}
             </div>
           </d.DialogScrollable>
         </d.Dialog>
@@ -64,7 +55,7 @@ class _FormDialog<P> extends m.ViewComponent<FormDialogProps<P>> {
     }
 
     return (
-      <d.Dialog dialogsNumber={dialogsNumber} onEscape={close}>
+      <d.Dialog onEscape={onClose}>
         <d.DialogOverlay className='bg-overlay' />
         <d.DialogCentered onClick={close}>
           <div
@@ -74,13 +65,15 @@ class _FormDialog<P> extends m.ViewComponent<FormDialogProps<P>> {
               <h2 className='font-large weight-medium'>
                 {title}
               </h2>
-              <fb.FakeButton className='row-center-center' onClick={close}>
+              <fb.FakeButton
+                className='row-center-center'
+                onClick={close}
+              >
                 <s.X className='font-large' />
               </fb.FakeButton>
             </div>
             <hr className='hr' />
-            {!Form ? null :
-            <Form {...formProps} onSubmitSuccess={close} />}
+            {children}
           </div>
         </d.DialogCentered>
       </d.Dialog>
@@ -90,52 +83,43 @@ class _FormDialog<P> extends m.ViewComponent<FormDialogProps<P>> {
 
 export const FormDialog = connect()(_FormDialog)
 
-export type ConfirmDialogProps = t.DialogProps<{
-  question: string,
-  cancelText?: string,
+export type ConfirmDialogProps = {
+  question    : string,
+  cancelText? : string,
   confirmText?: string,
-  onClose?: (event: KeyboardEvent | fb.FakeButtonEvent) => void,
-  onConfirm: (event: fb.FakeButtonEvent) => void,
-}>
+  onClose     : (event: KeyboardEvent | fb.FakeButtonEvent) => void,
+  onConfirm   : (event: fb.FakeButtonEvent) => void,
+}
 
 class _ConfirmDialog extends m.ViewComponent<ConfirmDialogProps> {
-  close = (event: KeyboardEvent | fb.FakeButtonEvent) => {
-    const {props: {dispatch, onClose}} = this
-    dispatch(a.removeDialog())
-
-    if (typeof onClose === 'function') {
-      onClose(event)
-    }
-  }
-
-  confirm = (event: fb.FakeButtonEvent) => {
-    const {props: {dispatch, onConfirm}} = this
-    dispatch(a.removeDialog())
-    onConfirm(event)
-  }
-
   render() {
     const {
       context,
-      props: {question, cancelText, confirmText, dialogsNumber},
-      confirm, close,
+      props: {question, cancelText, confirmText, onConfirm, onClose},
     } = this
 
     return (
-      <d.Dialog dialogsNumber={dialogsNumber} onEscape={close}>
+      <d.Dialog onEscape={onClose}>
         <d.DialogOverlay className='bg-overlay' />
-        <d.DialogCentered onClick={close}>
+        <d.DialogCentered onClick={onClose}>
           <div
             className='col-start-stretch gaps-v-1 padding-v-1 rounded bg-surface shadow-dept-3'
-            style={{minWidth: '11rem'}}>
+            style={{minWidth: '11rem'}}
+          >
             <p className='padding-h-1x25 font-midlarge weight-medium'>
               {question}
             </p>
             <div className='row-center-center gaps-h-1'>
-              <fb.FakeButton className='btn-secondary' onClick={close}>
+              <fb.FakeButton
+                className='btn-secondary'
+                onClick={onClose}
+              >
                 {cancelText || i18n.xln(context, i18n.CANCEL)}
               </fb.FakeButton>
-              <fb.FakeButton className='btn-primary' onClick={confirm}>
+              <fb.FakeButton
+                className='btn-primary'
+                onClick={onConfirm}
+              >
                 {confirmText || i18n.xln(context, i18n.OK)}
               </fb.FakeButton>
             </div>

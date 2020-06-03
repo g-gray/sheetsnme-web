@@ -10,7 +10,7 @@ import * as d from '../dialogs'
 import * as n from '../notifications'
 
 type ListPageProps = {
-  action: t.RReactElement,
+  action  : t.RReactElement,
   children: t.RReactChildren,
 }
 
@@ -71,7 +71,7 @@ export class PageLayout extends m.ViewComponent<PageLayoutProps> {
         <div className='fix-b-l z-index-tooltip width-100p row-start-center margin-0x5'>
           <n.Notifications />
         </div>
-        <d.GlobalDialog />
+        <d.Dialogs />
       </div>
     )
   }
@@ -112,12 +112,12 @@ class _MobilePageLayout extends m.ViewComponent<MobilePageLayoutProps> {
             {action}
           </div>}
         </div>
-        <d.GlobalDialog />
+        <d.Dialogs />
       </div>
     )
   }
 }
 
 export const MobilePageLayout = connect<MobilePageLayoutStateProps, {}, MobilePageLayoutOwnProps, t.AppState>(state => ({
-  hasDialogs: !state.dom.dialogs.length,
+  hasDialogs: !!state.dom.dialogs.length,
 }))(_MobilePageLayout)

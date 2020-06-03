@@ -6,40 +6,68 @@ import {connect} from 'react-redux'
 import * as u from '../utils'
 import * as m from '../views/misc'
 
-type GlobalDialogStateProps = {
+/**
+ * Dialogs
+ */
+
+type DialogsStateProps = {
   dialogs: t.DialogList,
 }
 
-type GlobalDialogProps = GlobalDialogStateProps
+type DialogsProps = DialogsStateProps
 
-class _GlobalDialog extends m.ViewComponent<GlobalDialogProps> {
+
+class _Dialogs extends m.ViewComponent<DialogsProps> {
+  componentDidMount() {
+    const {props: {dialogs}} = this
+    toglleOverflow(dialogs.length)
+  }
+
+  componentDidUpdate() {
+    const {props: {dialogs}} = this
+    toglleOverflow(dialogs.length)
+  }
+
   render() {
     const {props: {dialogs}} = this
     return dialogs.map((dialog, index) => {
-      const {dialog: Dialog, dialogProps} = dialog
-
-      return (
-        <Dialog
-          key={index}
-          dialogsNumber={dialogs.length}
-          {...dialogProps}
-        />
-      )
+      return React.cloneElement(dialog, {
+        key: index,
+      })
     })
   }
 }
 
-export const GlobalDialog = connect<GlobalDialogStateProps, {}, {}, t.AppState>(state => ({
+export const Dialogs = connect<DialogsStateProps, {}, {}, t.AppState>(state => ({
   dialogs: state.dom.dialogs,
-}))(_GlobalDialog)
+}))(_Dialogs)
 
-type DialogProps<P> = t.DialogProps<P>
 
-export class Dialog<P> extends m.ViewComponent<DialogProps<P>> {
+function toglleOverflow(dialogsNumber: number) {
+  if (dialogsNumber > 0) {
+    document.body.style.marginRight = `${u.getGlobalScrollbarWidth()}px`
+    document.body.classList.add('overflow-x-scroll')
+  }
+  else {
+    document.body.style.marginRight = ''
+    document.body.classList.remove('overflow-x-scroll')
+  }
+}
+
+
+
+/**
+ * Dialog
+ */
+
+type DialogProps = t.DialogProps
+
+
+export class Dialog extends m.ViewComponent<DialogProps> {
   unsub: () => void = () => {}
 
   componentDidMount() {
-    const {props: {dialogsNumber, onEscape}} = this
+    const {props: {onEscape}} = this
 
     this.unsub = u.addEvent(window, 'keydown', (event) => {
       if (
@@ -50,16 +78,10 @@ export class Dialog<P> extends m.ViewComponent<DialogProps<P>> {
         onEscape(event)
       }
     })
-
-    onDialogOpen(dialogsNumber)
   }
 
   componentWillUnmount() {
-    const {props: {dialogsNumber}} = this
-
     this.unsub()
-
-    onDialogClose(dialogsNumber - 1)
   }
 
   render() {
@@ -73,24 +95,16 @@ export class Dialog<P> extends m.ViewComponent<DialogProps<P>> {
   }
 }
 
-function onDialogOpen(dialogsNumber: number) {
-  if (dialogsNumber > 0) {
-    document.body.style.marginRight = `${u.getGlobalScrollbarWidth()}px`
-    document.body.classList.add('overflow-x-scroll')
-  }
-}
 
-function onDialogClose(dialogsNumber: number) {
-  if (!dialogsNumber) {
-    document.body.style.marginRight = ''
-    document.body.classList.remove('overflow-x-scroll')
-  }
-}
 
+/**
+ * DialogOverlay
+ */
 
 type DialogOverlayProps = {
   className?: string,
 }
+
 
 export class DialogOverlay extends m.ViewComponent<DialogOverlayProps> {
   render() {
@@ -106,10 +120,16 @@ export class DialogOverlay extends m.ViewComponent<DialogOverlayProps> {
 }
 
 
+
+/**
+ * DialogScrollable
+ */
+
 type DialogScrollableProps = {
   className?: string,
-  onClick?: (event: t.RMouseEvent) => void,
+  onClick?  : (event: t.RMouseEvent) => void,
 }
+
 
 export class DialogScrollable extends m.ViewComponent<DialogScrollableProps> {
   render() {
@@ -135,7 +155,17 @@ export class DialogScrollable extends m.ViewComponent<DialogScrollableProps> {
   }
 }
 
-type DialogCenteredProps = DialogScrollableProps
+
+
+/**
+ * DialogCentered
+ */
+
+type DialogCenteredProps = {
+  className?: string,
+  onClick?  : (event: t.RMouseEvent) => void,
+}
+
 
 export class DialogCentered extends m.ViewComponent<DialogCenteredProps> {
   render () {
@@ -144,12 +174,9 @@ export class DialogCentered extends m.ViewComponent<DialogCenteredProps> {
     return (
       <DialogScrollable {...props}>
         <div className='dialog-center'>
-          {React.cloneElement(
-            <div className='relative'>
-              {children}
-            </div>,
-            {onClick: u.stopPropagation}
-          )}
+          <div className='relative'>
+            {children}
+          </div>,
         </div>
       </DialogScrollable>
     )

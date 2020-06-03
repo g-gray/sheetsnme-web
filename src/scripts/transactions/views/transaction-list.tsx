@@ -71,7 +71,10 @@ class _TransactionsList extends m.ViewComponent<TransactionListProps> {
           >
             <div className='col-start-stretch'>
               {transactions.map(transaction => (
-                <tli.Transaction key={transaction.id} transaction={transaction} />
+                <tli.Transaction
+                  key={transaction.id}
+                  transaction={transaction}
+                />
               ))}
             </div>
           </v.EntityItemList>
@@ -92,6 +95,7 @@ export const TransactionsList = withRouter(connect<TransactionListStateProps, {}
     pending      : !fpx.isEmpty(state.net.pending),
   }
 })(_TransactionsList))
+
 
 
 /**
@@ -116,6 +120,7 @@ export class TransactionListPlaceholder extends m.ViewComponent<TransactionListP
     )
   }
 }
+
 
 
 /**

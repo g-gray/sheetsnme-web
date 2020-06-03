@@ -6,7 +6,11 @@ export type PendingActions = RequestStartAction | RequestEndAction
 
 
 export function trackRequest<P>(
-  opts: {message: string, requestName: string, promise: Promise<P>}
+  opts: {
+    message: string,
+    requestName: string,
+    promise: Promise<P>,
+  }
 ): t.ReduxThunkAction<Promise<P>> {
   return (dispatch): Promise<P> => {
     const {message, requestName, promise} = opts

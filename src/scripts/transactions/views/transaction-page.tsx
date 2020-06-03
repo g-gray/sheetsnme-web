@@ -1,3 +1,5 @@
+import * as t from '../../types'
+
 import React from 'react'
 
 import * as e from '../../env'
@@ -21,13 +23,20 @@ export class TransactionsPage extends m.ViewComponent<TransactionPageProps> {
   openDialog = () => {
     const {context} = this
 
-    e.dispatch(a.addDialog(
-      p.FormDialog,
-      {
-        title: i18n.xln(context, i18n.NEW_TRANSACTION),
-        form: tf.TransactionForm,
-      }
-    ))
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.FormDialog
+        title={i18n.xln(context, i18n.NEW_TRANSACTION)}
+        onClose={closeDialog}
+      >
+        <tf.TransactionForm onSubmitSuccess={closeDialog} />
+      </p.FormDialog>
+    )
+
+    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
   }
 
   render() {

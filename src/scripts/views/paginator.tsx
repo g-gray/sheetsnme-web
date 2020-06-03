@@ -68,7 +68,7 @@ class _Paginator extends m.ViewComponent<PaginatorProps, PaginatorState> {
 
   render() {
     const {
-      context: {isMobile},
+      context, context: {isMobile},
       props: {pageCount},
       state: {forcePage},
       onPageChange, hrefBulder,

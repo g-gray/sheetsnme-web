@@ -28,23 +28,30 @@ type CategoryPageProps = {}
 
 
 export class CategoriesPage extends m.ViewComponent<CategoryPageProps> {
-  openCategoryFormDialog = () => {
+  openDialog = () => {
     const {context} = this
 
-    e.dispatch(a.addDialog<p.FormDialogProps<CategoryFormOwnProps>>(
-      p.FormDialog,
-      {
-        title: i18n.xln(context, i18n.NEW_CATEGORY),
-        form: CategoryForm,
-      }
-    ))
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.FormDialog
+        title={i18n.xln(context, i18n.NEW_CATEGORY)}
+        onClose={closeDialog}
+      >
+        <CategoryForm onSubmitSuccess={closeDialog} />
+      </p.FormDialog>
+    )
+
+    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
   }
 
   render() {
-    const {openCategoryFormDialog} = this
+    const {openDialog} = this
 
     return (
-      <v.ListPage action={<v.Fab onClick={openCategoryFormDialog} />}>
+      <v.ListPage action={<v.Fab onClick={openDialog} />}>
         <CategoriesList />
       </v.ListPage>
     )
@@ -57,9 +64,9 @@ export class CategoriesPage extends m.ViewComponent<CategoryPageProps> {
  * CategoryForm
  */
 
-type CategoryFormOwnProps = p.FormProps<{
+type CategoryFormOwnProps = p.FormProps & {
   category?: t.CategoryReq,
-}>
+}
 
 type CategoryFormStateProps = {
   pending: boolean,
@@ -130,18 +137,27 @@ class _CategoryForm extends m.ViewComponent<CategoryFormProps, CategoryFormState
 
     this.setState({errors: undefined})
 
-    e.dispatch(a.addDialog(p.ConfirmDialog, {
-      question: i18n.xln(context, i18n.DELETE_CATEGORY),
-      onConfirm: () => {
-        e.dispatch(a.deleteCategory(
-          formValues.id!,
-          i18n.xln(context, i18n.DELETING_CATEGORY)
-        ))
-          .then(() => onSubmitSuccess())
-          .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.CATEGORY_DELETED))))
-          .then(this.fetchCategories)
-      },
-    }))
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.ConfirmDialog
+        question={i18n.xln(context, i18n.DELETE_CATEGORY)}
+        onConfirm={() => {
+          e.dispatch(a.deleteCategory(
+            formValues.id!,
+            i18n.xln(context, i18n.DELETING_CATEGORY)
+          ))
+            .then(() => onSubmitSuccess())
+            .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.CATEGORY_DELETED))))
+            .then(this.fetchCategories)
+        }}
+        onClose={closeDialog}
+      />
+    )
+
+    e.dispatch(a.addDialog<p.ConfirmDialogProps>(dialog))
   }
 
   render() {
@@ -153,7 +169,10 @@ class _CategoryForm extends m.ViewComponent<CategoryFormProps, CategoryFormState
     } = this
 
     return (
-      <form className='col-start-stretch' onSubmit={onSubmit}>
+      <form
+        className='col-start-stretch'
+        onSubmit={onSubmit}
+      >
         <div
           className={`col-start-stretch
                       ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}
@@ -215,30 +234,48 @@ class _CategoriesList extends m.ViewComponent<CategoriesListProps> {
   onOpen = (category: t.CategoryRes) => (): void => {
     const {context} = this
 
-    e.dispatch(a.addDialog<p.FormDialogProps<CategoryFormOwnProps>>(
-      p.FormDialog,
-      {
-        title: i18n.xln(context, i18n.EDIT_CATEGORY),
-        form: CategoryForm,
-        formProps: {category},
-      }
-    ))
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.FormDialog
+        title={i18n.xln(context, i18n.EDIT_CATEGORY)}
+        onClose={closeDialog}
+      >
+        <CategoryForm
+          category={category}
+          onSubmitSuccess={closeDialog}
+        />
+      </p.FormDialog>
+    )
+
+    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
   }
 
   onDelete = (category: t.CategoryRes) => (): void => {
     const {context} = this
 
-    e.dispatch(a.addDialog(p.ConfirmDialog, {
-      question: i18n.xln(context, i18n.DELETE_CATEGORY),
-      onConfirm: () => {
-        e.dispatch(a.deleteCategory(
-          category.id,
-          i18n.xln(context, i18n.DELETING_CATEGORY)
-        ))
-          .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.CATEGORY_DELETED))))
-          .then(() => e.dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))))
-      },
-    }))
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.ConfirmDialog
+        question={i18n.xln(context, i18n.DELETE_CATEGORY)}
+        onConfirm={() => {
+          e.dispatch(a.deleteCategory(
+            category.id,
+            i18n.xln(context, i18n.DELETING_CATEGORY)
+          ))
+            .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.CATEGORY_DELETED))))
+            .then(() => e.dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))))
+        }}
+        onClose={closeDialog}
+      />
+    )
+
+    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
   }
 
   render() {

@@ -3,6 +3,8 @@ import * as t from '../types'
 import React from 'react'
 import {connect} from 'react-redux'
 
+import * as e from '../env'
+
 import * as m from '../views/misc'
 
 import * as a from './actions'
@@ -21,14 +23,14 @@ class _Notifications extends m.ViewComponent<NotificationsProps> {
   }
 
   render() {
-    const {props: {notifications, dispatch}} = this
+    const {props: {notifications}} = this
 
     const notification = notifications[0]
     if (!notification) return null
 
     if (notification.timeout) {
       this.timeoutId = setTimeout(() => {
-        dispatch(a.removeNotification(notification.time))
+        e.dispatch(a.removeNotification(notification.time))
       }, notification.timeout)
     }
 

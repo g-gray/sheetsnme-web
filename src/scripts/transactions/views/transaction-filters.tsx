@@ -21,7 +21,7 @@ import * as f from '../../views/forms'
 import * as p from '../../views/pages'
 import * as v from '../../views'
 
-type TransactionFiltersFormOwnProps = p.FormProps<t.RRRouteComponentProps>
+type TransactionFiltersFormOwnProps =  t.RRRouteComponentProps
 
 type TransactionFiltersFormStateProps = {
   categories: t.CategoryListRes,
@@ -46,7 +46,7 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
     u.preventDefault(event)
 
     const {
-      props: {history, location, onSubmitSuccess},
+      props: {history, location},
       state: {formValues},
     } = this
 
@@ -58,10 +58,6 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
       dateTo  : u.formatDate(formValues.dateTo),
       page    : undefined,
     })}`)
-
-    if (typeof onSubmitSuccess === 'function') {
-      onSubmitSuccess()
-    }
   }
 
   onReset = (event: t.RFormEvent) => {
@@ -97,8 +93,15 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
 
     const noFilters = fpx.isEmpty(u.omitEmpty(formValues))
     return (
-      <form className='col-start-stretch' onSubmit={onSubmit} onReset={onReset}>
-        <div className={`col-start-stretch ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}>
+      <form
+        className='col-start-stretch'
+        onSubmit={onSubmit}
+        onReset={onReset}
+      >
+        <div
+          className={`col-start-stretch
+                      ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}
+        >
           <f.FormDateElement
             name='dateFrom'
             label={i18n.xln(context, i18n.DATE_FROM)}
@@ -217,10 +220,18 @@ class _TransactionFiltersControls extends m.ViewComponent<TransactionFiltersCont
   openDialog = () => {
     const {context} = this
 
-     e.dispatch(a.addDialog(p.FormDialog, {
-      form: TransactoinFiltersForm,
-      title: i18n.xln(context, i18n.FILTERS),
-    }))
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.FormDialog
+        title={i18n.xln(context, i18n.FILTERS)}
+        onClose={closeDialog}
+      >
+        <TransactoinFiltersForm />
+      </p.FormDialog>
+    )
   }
 
   render() {
@@ -277,6 +288,7 @@ function getFilterValues(location: t.RRLocation): t.TransactionsFilterForm {
 
 function resetFilters(history: t.RRHistory, location: t.RRLocation) {
   const query = u.decodeQuery(location.search)
+  history.location
   history.push(`/transactions/${u.encodeQuery({
     ...query,
     dateFrom  : undefined,

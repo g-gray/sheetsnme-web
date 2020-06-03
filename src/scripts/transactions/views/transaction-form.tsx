@@ -20,9 +20,9 @@ import * as f from '../../views/forms'
 import * as p from '../../views/pages'
 import * as v from '../../views'
 
-type TransactionFormOwnProps = t.RRRouteComponentProps & p.FormProps<{
+type TransactionFormOwnProps = t.RRRouteComponentProps & p.FormProps & {
   transaction?: t.TransactionReq,
-}>
+}
 
 type TransactionFormStateProps = {
   pending   : boolean,
@@ -103,26 +103,35 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
   onDelete = (event: v.FakeButtonEvent): void => {
     u.preventDefault(event)
 
-    this.setState({errors: undefined})
-
     const {
       context,
       props: {onSubmitSuccess},
       state: {formValues},
     } = this
 
-    e.dispatch(a.addDialog(p.ConfirmDialog, {
-      question: i18n.xln(context, i18n.DELETE_TRANSACTION),
-      onConfirm: () => {
-        e.dispatch(a.deleteTransaction(
-          formValues.id!,
-          i18n.xln(context, i18n.DELETING_TRANSACTION)
-        ))
-          .then(() => {onSubmitSuccess()})
-          .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.TRANSACTION_DELETED))))
-          .then(this.fetchTransactions)
-      },
-    }))
+    this.setState({errors: undefined})
+
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.ConfirmDialog
+        question={i18n.xln(context, i18n.DELETE_TRANSACTION)}
+        onConfirm={() => {
+          e.dispatch(a.deleteTransaction(
+            formValues.id!,
+            i18n.xln(context, i18n.DELETING_TRANSACTION)
+          ))
+            .then(() => onSubmitSuccess())
+            .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.TRANSACTION_DELETED))))
+            .then(this.fetchTransactions)
+        }}
+        onClose={closeDialog}
+      />
+    )
+
+    e.dispatch(a.addDialog<p.ConfirmDialogProps>(dialog))
   }
 
   onTypeUpdated = (value: string) => {

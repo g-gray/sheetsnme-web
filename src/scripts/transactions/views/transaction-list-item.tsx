@@ -26,6 +26,7 @@ type TransactionProps = t.RRRouteComponentProps & {
   transaction: t.TransactionRes,
 }
 
+
 class _Transaction extends m.ViewComponent<TransactionProps> {
   actionsRef = React.createRef<HTMLDivElement>()
 
@@ -46,30 +47,53 @@ class _Transaction extends m.ViewComponent<TransactionProps> {
       const {context, actionsRef} = this
 
       const actionsNode = u.findDomNode(actionsRef.current)
-      if (u.isAncestorOf(actionsNode, event.target)) return
+      if (u.isAncestorOf(actionsNode, event.target)) {
+        return
+      }
 
-      e.dispatch(a.addDialog(p.FormDialog, {
-        title: i18n.xln(context, i18n.EDIT_TRANSACTION),
-        form: tf.TransactionForm,
-        formProps: {transaction},
-      }))
+      const closeDialog = () => {
+        e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+      }
+
+      const dialog = (
+        <p.FormDialog
+          title={i18n.xln(context, i18n.EDIT_TRANSACTION)}
+          onClose={closeDialog}
+        >
+          <tf.TransactionForm
+            transaction={transaction}
+            onSubmitSuccess={closeDialog}
+          />
+        </p.FormDialog>
+      )
+
+      e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
     }
   }
 
   onDelete = (transaction: t.TransactionRes) => () => {
     const {context} = this
 
-    e.dispatch(a.addDialog(p.ConfirmDialog, {
-      question: i18n.xln(context, i18n.DELETE_TRANSACTION),
-      onConfirm: () => {
-        e.dispatch(a.deleteTransaction(
-          transaction.id,
-          i18n.xln(context, i18n.DELETING_TRANSACTION)
-        ))
-          .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.TRANSACTION_DELETED))))
-          .then(this.fetchTransactions)
-      },
-    }))
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.ConfirmDialog
+        question={i18n.xln(context, i18n.DELETE_TRANSACTION)}
+        onConfirm={() => {
+          e.dispatch(a.deleteTransaction(
+            transaction.id,
+            i18n.xln(context, i18n.DELETING_TRANSACTION)
+          ))
+            .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.TRANSACTION_DELETED))))
+            .then(this.fetchTransactions)
+        }}
+        onClose={closeDialog}
+      />
+    )
+
+    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
   }
 
   render() {
@@ -83,7 +107,8 @@ class _Transaction extends m.ViewComponent<TransactionProps> {
       <v.FakeButton
         type='div'
         onClick={onOpen(transaction)}
-        className='row-start-start gaps-h-1 padding-h-1 list-item trigger text-left theme-drawer-link-busy rounded'>
+        className='row-start-start gaps-h-1 padding-h-1 list-item trigger text-left theme-drawer-link-busy rounded'
+      >
         <div className='row-start-center padding-v-1'>
           <TransactionIcon transaction={transaction} />
         </div>
@@ -126,9 +151,14 @@ export const Transaction = withRouter(connect()(_Transaction))
 
 
 
+/**
+ * TransactionMeta
+ */
+
 type TransactionMetaProps = {
   transaction: t.TransactionRes,
 }
+
 
 class TransactionMeta extends m.ViewComponent<TransactionMetaProps> {
   render() {
@@ -159,6 +189,7 @@ class TransactionMeta extends m.ViewComponent<TransactionMetaProps> {
 type TransactionIconProps = {
   transaction: t.TransactionRes,
 }
+
 
 class TransactionIcon extends m.ViewComponent<TransactionIconProps> {
   render() {
@@ -193,9 +224,14 @@ class TransactionIcon extends m.ViewComponent<TransactionIconProps> {
 
 
 
+/**
+ * TransactionAmount
+ */
+
 type TransactionAmountProps = {
   transaction: t.TransactionRes,
 }
+
 
 class TransactionAmount extends m.ViewComponent<TransactionAmountProps> {
   render() {
@@ -220,6 +256,10 @@ class TransactionAmount extends m.ViewComponent<TransactionAmountProps> {
 
 
 
+/**
+ * TransactionAccount
+ */
+
 type TransactionAccountOwnProps = {
   transaction: t.TransactionRes,
 }
@@ -229,6 +269,7 @@ type TransactionAccountStateProps = {
 }
 
 type TransactionAccountProps = TransactionAccountOwnProps & TransactionAccountStateProps
+
 
 class _TransactionAccount extends m.ViewComponent<TransactionAccountProps> {
   render() {
@@ -252,12 +293,15 @@ class _TransactionAccount extends m.ViewComponent<TransactionAccountProps> {
   }
 }
 
-
-
 const TransactionAccount = connect<TransactionAccountStateProps, {}, TransactionAccountOwnProps, t.AppState>(state => ({
   accountsById: state.net.accounts.accountsById,
 }))(_TransactionAccount)
 
+
+
+/**
+ * TransactionOrigin
+ */
 
 type TransactionOriginOwnProps = {
   transaction: t.TransactionRes,

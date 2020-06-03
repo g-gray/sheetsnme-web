@@ -31,13 +31,20 @@ export class PayeesPage extends m.ViewComponent<PayeePageProps> {
   openDialog = () => {
     const {context} = this
 
-    e.dispatch(a.addDialog<p.FormDialogProps<PayeeFormOwnProps>>(
-      p.FormDialog,
-      {
-        title: i18n.xln(context, i18n.NEW_PAYEE),
-        form: PayeeForm,
-      }
-    ))
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.FormDialog
+        title={i18n.xln(context, i18n.NEW_PAYEE)}
+        onClose={closeDialog}
+      >
+        <PayeeForm onSubmitSuccess={closeDialog} />
+      </p.FormDialog>
+    )
+
+    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
   }
 
   render() {
@@ -57,9 +64,9 @@ export class PayeesPage extends m.ViewComponent<PayeePageProps> {
  * PayeeForm
  */
 
-type PayeeFormOwnProps = p.FormProps<{
+type PayeeFormOwnProps = p.FormProps & {
   payee?: t.PayeeReq,
-}>
+}
 
 type PayeeFormStateProps = {
   pending: boolean,
@@ -130,18 +137,27 @@ class _PayeeForm extends m.ViewComponent<PayeeFormProps, PayeeFormState> {
 
     this.setState({errors: undefined})
 
-    e.dispatch(a.addDialog(p.ConfirmDialog, {
-      question: i18n.xln(context, i18n.DELETE_PAYEE),
-      onConfirm: () => {
-        e.dispatch(a.deletePayee(
-          formValues.id!,
-          i18n.xln(context, i18n.DELETING_PAYEE)
-        ))
-          .then(() => onSubmitSuccess())
-          .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.PAYEE_DELETED))))
-          .then(this.fetchPayees)
-      },
-    }))
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.ConfirmDialog
+        question={i18n.xln(context, i18n.DELETE_PAYEE)}
+        onConfirm={() => {
+          e.dispatch(a.deletePayee(
+            formValues.id!,
+            i18n.xln(context, i18n.DELETING_PAYEE)
+          ))
+            .then(() => onSubmitSuccess())
+            .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.PAYEE_DELETED))))
+            .then(this.fetchPayees)
+        }}
+        onClose={closeDialog}
+      />
+    )
+
+    e.dispatch(a.addDialog<p.ConfirmDialogProps>(dialog))
   }
 
   render() {
@@ -153,7 +169,10 @@ class _PayeeForm extends m.ViewComponent<PayeeFormProps, PayeeFormState> {
     } = this
 
     return (
-      <form className='col-start-stretch' onSubmit={onSubmit}>
+      <form
+        className='col-start-stretch'
+        onSubmit={onSubmit}
+      >
         <div
           className={`col-start-stretch
                       ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}
@@ -215,30 +234,48 @@ class _PayeesList extends m.ViewComponent<PayeesListProps> {
   onOpen = (payee: t.PayeeRes) => () => {
     const {context} = this
 
-    e.dispatch(a.addDialog<p.FormDialogProps<PayeeFormOwnProps>>(
-      p.FormDialog,
-      {
-        title: i18n.xln(context, i18n.EDIT_PAYEE),
-        form: PayeeForm,
-        formProps: {payee},
-      }
-    ))
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.FormDialog
+        title={i18n.xln(context, i18n.EDIT_PAYEE)}
+        onClose={closeDialog}
+      >
+        <PayeeForm
+          payee={payee}
+          onSubmitSuccess={closeDialog}
+        />
+      </p.FormDialog>
+    )
+
+    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
   }
 
   onDelete = (payee: t.PayeeRes) => () => {
     const {context} = this
 
-    e.dispatch(a.addDialog<p.ConfirmDialogProps>(p.ConfirmDialog, {
-      question: i18n.xln(context, i18n.DELETE_PAYEE),
-      onConfirm: () => {
-        e.dispatch(a.deletePayee(
-          payee.id,
-          i18n.xln(context, i18n.DELETING_PAYEE)
-        ))
-          .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.PAYEE_DELETED))))
-          .then(() => e.dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))))
-      },
-    }))
+    const closeDialog = () => {
+      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+    }
+
+    const dialog = (
+      <p.ConfirmDialog
+        question={i18n.xln(context, i18n.DELETE_PAYEE)}
+        onConfirm={() => {
+          e.dispatch(a.deletePayee(
+            payee.id,
+            i18n.xln(context, i18n.DELETING_PAYEE)
+          ))
+            .then(() => e.dispatch(a.addNotification(i18n.xln(context, i18n.PAYEE_DELETED))))
+            .then(() => e.dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))))
+        }}
+        onClose={closeDialog}
+      />
+    )
+
+    e.dispatch(a.addDialog<p.ConfirmDialogProps>(dialog))
   }
 
   render() {

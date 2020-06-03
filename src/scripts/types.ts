@@ -70,7 +70,7 @@ export type RMouseEvent = React.MouseEvent
 export type RChangeEvent<T> = React.ChangeEvent<T>
 export type RKeyboardEvent = React.KeyboardEvent
 
-export type RReactElement = React.ReactElement
+export type RReactElement<P = any> = React.ReactElement<P>
 export type RComponentType<P> = React.ComponentType<P>
 export type RReactInstance = React.ReactInstance
 export type RReactChildren = React.ReactNode | React.ReactNode[]
