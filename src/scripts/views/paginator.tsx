@@ -26,13 +26,10 @@ class _Paginator extends m.ViewComponent<PaginatorProps, PaginatorState> {
   }
   unlisten: () => void = () => {}
 
-  getPage(search: string) {
+  getPage(search: string): number {
     const query = u.decodeQuery(search)
-    const page = Array.isArray(query.page)
-      ? query.page[0]
-      : query.page
-
-    return parseInt(page) || 1
+    const page = parseInt(u.alwaysArray(query.page)[0]) || 1
+    return page
   }
 
   hrefBulder = (page: number) => {

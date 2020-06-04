@@ -21,6 +21,10 @@ import * as f from '../../views/forms'
 import * as p from '../../views/pages'
 import * as v from '../../views'
 
+/**
+ * TransactionFiltersForm
+ */
+
 type TransactionFiltersFormOwnProps =  t.RRRouteComponentProps
 
 type TransactionFiltersFormStateProps = {
@@ -36,10 +40,12 @@ type TransactionFiltersFormState = {
   formValues: t.TransactionsFilterForm,
 }
 
+
 class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProps, TransactionFiltersFormState> {
   readonly state = {
-    formValues: getFilterValues(this.props.location),
+    formValues: parseFilters(this.props.location.search),
   }
+
   unlisten: () => void = () => {}
 
   onSubmit = (event: t.RFormEvent) => {
@@ -53,18 +59,14 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
     const query = u.decodeQuery(location.search)
     history.push(`/transactions/${u.encodeQuery({
       ...query,
-      ...formValues,
-      dateFrom: u.formatDate(formValues.dateFrom),
-      dateTo  : u.formatDate(formValues.dateTo),
-      page    : undefined,
+      ...stringifyFilters(formValues),
+      page: undefined,
     })}`)
   }
 
   onReset = (event: t.RFormEvent) => {
     u.preventDefault(event)
-
     const {props: {history, location}} = this
-
     resetFilters(history, location)
   }
 
@@ -74,7 +76,7 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
       if (location.pathname !== nextLocation.pathname) return
 
       this.setState({
-        formValues: getFilterValues(nextLocation),
+        formValues: parseFilters(nextLocation.search),
       })
     })
   }
@@ -108,14 +110,12 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'dateFrom'])}
           />
-
           <f.FormDateElement
             name='dateTo'
             label={i18n.xln(context, i18n.DATE_TO)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'dateTo'])}
           />
-
           <f.FormSelectElement
             name='accountId'
             label={i18n.xln(context, i18n.ACCOUNT)}
@@ -132,7 +132,6 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
               </option>
             ))}
           </f.FormSelectElement>
-
           <f.FormSelectElement
             name='categoryId'
             label={i18n.xln(context, i18n.CATEGORY)}
@@ -149,7 +148,6 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
               </option>
             ))}
           </f.FormSelectElement>
-
           <f.FormSelectElement
             name='payeeId'
             label={i18n.xln(context, i18n.PAYEE)}
@@ -166,7 +164,6 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
               </option>
             ))}
           </f.FormSelectElement>
-
           <f.FormTextElement
             name='comment'
             label={i18n.xln(context, i18n.COMMENT)}
@@ -207,14 +204,19 @@ export const TransactoinFiltersForm = withRouter(connect<TransactionFiltersFormS
 
 
 
+/**
+ * TransactionFiltersControls
+ */
+
 type TransactionFiltersControlsOwnProps = t.RRRouteComponentProps
 
 type TransactionFiltersControlsStateProps = {
   transactions: t.TransactionRes[],
-  pending: boolean,
+  pending     : boolean,
 }
 
 type TransactionFiltersControlsProps = TransactionFiltersControlsOwnProps & TransactionFiltersControlsStateProps
+
 
 class _TransactionFiltersControls extends m.ViewComponent<TransactionFiltersControlsProps> {
   openDialog = () => {
@@ -234,14 +236,19 @@ class _TransactionFiltersControls extends m.ViewComponent<TransactionFiltersCont
     )
   }
 
+  onReset = () => {
+    const {props: {history, location}} = this
+    resetFilters(history, location)
+  }
+
   render() {
     const {
       context,
-      props: {history, location, transactions, pending},
-      openDialog,
+      props: {location, transactions, pending},
+      openDialog, onReset,
     } = this
 
-    const noFilters = fpx.isEmpty(u.omitEmpty(getFilterValues(location)))
+    const noFilters = fpx.isEmpty(u.omitEmpty(parseFilters(location.search)))
 
     return (
       <div className='row-start-center padding-h-1 flex-wrap'>
@@ -258,7 +265,7 @@ class _TransactionFiltersControls extends m.ViewComponent<TransactionFiltersCont
             className='decorate-link row-center-center bg-primary rounded-50p'
             style={{padding: '2px'}}
             disabled={pending}
-            onClick={() => resetFilters(history, location)}
+            onClick={onReset}
           >
             <s.X className='fg-surface' />
           </v.FakeButton>}
@@ -273,22 +280,32 @@ export const TransactionFiltersControls = withRouter(connect<TransactionFiltersC
   pending: !fpx.isEmpty(state.net.pending),
 }))(_TransactionFiltersControls))
 
-function getFilterValues(location: t.RRLocation): t.TransactionsFilterForm {
-  const query = u.decodeQuery(location.search)
+function parseFilters(search: string): t.TransactionsFilterForm {
+  const query = u.decodeQuery(search)
 
   return {
-    dateFrom  : u.toValidDate(u.mayBeFirstQueryParam(query.dateFrom)),
-    dateTo    : u.toValidDate(u.mayBeFirstQueryParam(query.dateTo)),
-    accountId : u.mayBeFirstQueryParam(query.accountId),
-    categoryId: u.mayBeFirstQueryParam(query.categoryId),
-    payeeId   : u.mayBeFirstQueryParam(query.payeeId),
-    comment   : u.mayBeFirstQueryParam(query.comment),
+    dateFrom  : u.toValidDate(u.alwaysArray(query.dateFrom)[0]),
+    dateTo    : u.toValidDate(u.alwaysArray(query.dateTo)[0]),
+    accountId : u.alwaysArray(query.accountId)[0],
+    categoryId: u.alwaysArray(query.categoryId)[0],
+    payeeId   : u.alwaysArray(query.payeeId)[0],
+    comment   : u.alwaysArray(query.comment)[0],
+  }
+}
+
+function stringifyFilters(filters: t.TransactionsFilterForm): t.TransactionsFilter {
+  return {
+    dateFrom  : u.formatDate(filters.dateFrom),
+    dateTo    : u.formatDate(filters.dateTo),
+    accountId : filters.accountId,
+    categoryId: filters.categoryId,
+    payeeId   : filters.payeeId,
+    comment   : filters.comment,
   }
 }
 
 function resetFilters(history: t.RRHistory, location: t.RRLocation) {
   const query = u.decodeQuery(location.search)
-  history.location
   history.push(`/transactions/${u.encodeQuery({
     ...query,
     dateFrom  : undefined,

@@ -16,7 +16,9 @@ interface ReceiveTransactions extends t.ReduxAction {
   },
 }
 
-export function receiveTransactions(transactionList: t.TransactionListRes): ReceiveTransactions {
+export function receiveTransactions(
+  transactionList: t.TransactionListRes
+): ReceiveTransactions {
   return {
     type: RECEIVE_TRANSACTIONS,
     payload: {
@@ -31,10 +33,7 @@ export function fetchTransactions(
 ): t.ReduxThunkAction<Promise<t.TransactionListRes>> {
   return (dispatch) => {
     const query = u.decodeQuery(location.search)
-    const page: number = parseInt(Array.isArray(query.page)
-      ? query.page[0]
-      : query.page
-    ) || 1
+    const page = parseInt(u.alwaysArray(query.page)[0]) || 1
     const offset = String(u.DEFAULT_PAGE_SIZE * (page - 1))
     const limit = String(u.DEFAULT_PAGE_SIZE)
     const filter: t.TransactionsFilter = {

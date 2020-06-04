@@ -284,14 +284,11 @@ export function storageWrite(path: t.Path, value: any): void {
  */
 
 export function decodeQuery(searchString: string): t.DecodedQuery {
-  return querystring.decode((searchString).replace(/^[?]/, ''))
+  return querystring.decode(searchString.replace(/^[?]/, ''))
 }
 
 export function encodeQuery(query: t.DecodedQueryInput): string {
-  return prepend('?', querystring.encode(fpx.omitBy(
-    query,
-    (value: any): boolean => !value
-  )))
+  return prepend('?', querystring.encode(omitEmpty(query)))
 }
 
 export function prepend(char: string, value: undefined | null | string): string {
@@ -338,8 +335,6 @@ export function keyById(list: any) {
   return fpx.keyBy(list, (item: any) => item.id)
 }
 
-export function mayBeFirstQueryParam(item: string[] | string): string {
-  return Array.isArray(item)
-    ? item[0]
-    : item
+export function alwaysArray<T = any>(item: T[] | T): T[] {
+  return new Array<T>().concat(item)
 }
