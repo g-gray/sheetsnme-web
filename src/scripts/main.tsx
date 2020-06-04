@@ -5,7 +5,7 @@ import {BrowserRouter as Router} from 'react-router-dom'
 
 import * as e from './env'
 
-import {App} from './views/app'
+import {App} from './app'
 
 const rootElem = (
   <Provider store={e.store}>

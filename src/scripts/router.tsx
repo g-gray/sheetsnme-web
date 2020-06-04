@@ -1,21 +1,21 @@
-import * as t from '../types'
+import * as t from './types'
 
 import React from 'react'
 import {connect} from 'react-redux'
 import {Switch, Route, Redirect, withRouter} from 'react-router-dom'
 
-import * as e from '../env'
+import * as e from './env'
 
-import * as a from '../actions'
-import * as i18n from '../i18n'
+import * as a from './actions'
+import * as i18n from './i18n'
 
-import {CategoriesPage} from '../categories'
-import {AccountsPage} from '../accounts'
-import {PayeesPage} from '../payees'
-import {TransactionsPage} from '../transactions'
+import {CategoriesPage} from './categories'
+import {AccountsPage} from './accounts'
+import {PayeesPage} from './payees'
+import {TransactionsPage} from './transactions'
 
-import * as p from './pages'
-import * as m from './misc'
+import * as p from './views/pages'
+import * as m from './views/misc'
 
 type RoutesProps = t.RRRouteComponentProps
 

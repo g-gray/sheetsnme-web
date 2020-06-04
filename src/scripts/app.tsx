@@ -1,14 +1,14 @@
-import * as t from '../types'
+import * as t from './types'
 
 import React from 'react'
 import {connect} from 'react-redux'
 
-import * as e from '../env'
-import * as u from '../utils'
+import * as e from './env'
+import * as u from './utils'
 
-import * as a from '../actions'
+import * as a from './actions'
 
-import * as m from './misc'
+import * as m from './views/misc'
 import {Router} from './router'
 
 type AppStateProps = {
