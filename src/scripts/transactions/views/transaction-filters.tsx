@@ -13,6 +13,7 @@ import * as u from '../../utils'
 import * as a from '../../actions'
 
 import * as i18n from '../../i18n'
+import * as d from '../../dialogs'
 
 import * as m from '../../views/misc'
 import * as s from '../../views/svg'
@@ -223,16 +224,16 @@ class _TransactionFiltersControls extends m.ViewComponent<TransactionFiltersCont
     const {context} = this
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.FormDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.FormDialog
+      <d.FormDialog
         title={i18n.xln(context, i18n.FILTERS)}
         onClose={closeDialog}
       >
         <TransactoinFiltersForm />
-      </p.FormDialog>
+      </d.FormDialog>
     )
   }
 

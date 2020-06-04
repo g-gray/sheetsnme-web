@@ -13,6 +13,7 @@ import * as u from '../../utils'
 import * as a from '../../actions'
 
 import * as i18n from '../../i18n'
+import * as d from '../../dialogs'
 
 import * as m from '../../views/misc'
 import * as f from '../../views/forms'
@@ -20,7 +21,7 @@ import * as f from '../../views/forms'
 import * as p from '../../views/pages'
 import * as v from '../../views'
 
-type TransactionFormOwnProps = t.RRRouteComponentProps & p.FormProps & {
+type TransactionFormOwnProps = t.RRRouteComponentProps & f.FormProps & {
   transaction?: t.TransactionReq,
 }
 
@@ -112,11 +113,11 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
     this.setState({errors: undefined})
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.ConfirmDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.ConfirmDialog
+      <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_TRANSACTION)}
         onConfirm={() => {
           e.dispatch(a.deleteTransaction(
@@ -131,7 +132,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
       />
     )
 
-    e.dispatch(a.addDialog<p.ConfirmDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.ConfirmDialogProps>(dialog))
   }
 
   onTypeUpdated = (value: string) => {

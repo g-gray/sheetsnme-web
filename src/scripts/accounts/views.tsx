@@ -12,6 +12,7 @@ import * as u from '../utils'
 import * as a from '../actions'
 
 import * as i18n from '../i18n'
+import * as d from '../dialogs'
 
 import * as m from '../views/misc'
 import * as s from '../views/svg'
@@ -32,19 +33,19 @@ export class AccountsPage extends m.ViewComponent<AccountPageProps> {
     const {context} = this
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.FormDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.FormDialog
+      <d.FormDialog
         title={i18n.xln(context, i18n.NEW_ACCOUNT)}
         onClose={closeDialog}
       >
         <AccountForm onSubmitSuccess={closeDialog} />
-      </p.FormDialog>
+      </d.FormDialog>
     )
 
-    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.FormDialogProps>(dialog))
   }
 
   render() {
@@ -64,7 +65,7 @@ export class AccountsPage extends m.ViewComponent<AccountPageProps> {
  * AccountForm
  */
 
-type AccountFormOwnProps = p.FormProps & {
+type AccountFormOwnProps = f.FormProps & {
   account?: t.AccountReq,
 }
 
@@ -138,11 +139,11 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
     this.setState({errors: undefined})
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.ConfirmDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.ConfirmDialog
+      <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_ACCOUNT)}
         onConfirm={() => {
           e.dispatch(a.deleteAccount(
@@ -157,7 +158,7 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
       />
     )
 
-    e.dispatch(a.addDialog<p.ConfirmDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.ConfirmDialogProps>(dialog))
   }
 
   render() {
@@ -239,11 +240,11 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
     const {context} = this
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.FormDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.FormDialog
+      <d.FormDialog
         title={i18n.xln(context, i18n.EDIT_ACCOUNT)}
         onClose={closeDialog}
       >
@@ -251,21 +252,21 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
           account={account}
           onSubmitSuccess={closeDialog}
         />
-      </p.FormDialog>
+      </d.FormDialog>
     )
 
-    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.FormDialogProps>(dialog))
   }
 
   onDelete = (account: t.AccountRes) => () => {
     const {context} = this
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.ConfirmDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.ConfirmDialog
+      <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_ACCOUNT)}
         onConfirm={() => {
           e.dispatch(a.deleteAccount(
@@ -279,7 +280,7 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
       />
     )
 
-    e.dispatch(a.addDialog<p.ConfirmDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.ConfirmDialogProps>(dialog))
   }
 
   render() {

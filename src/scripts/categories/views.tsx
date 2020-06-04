@@ -12,6 +12,7 @@ import * as u from '../utils'
 import * as a from '../actions'
 
 import * as i18n from '../i18n'
+import * as d from '../dialogs'
 
 import * as m from '../views/misc'
 import * as s from '../views/svg'
@@ -32,19 +33,19 @@ export class CategoriesPage extends m.ViewComponent<CategoryPageProps> {
     const {context} = this
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.FormDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.FormDialog
+      <d.FormDialog
         title={i18n.xln(context, i18n.NEW_CATEGORY)}
         onClose={closeDialog}
       >
         <CategoryForm onSubmitSuccess={closeDialog} />
-      </p.FormDialog>
+      </d.FormDialog>
     )
 
-    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.FormDialogProps>(dialog))
   }
 
   render() {
@@ -64,7 +65,7 @@ export class CategoriesPage extends m.ViewComponent<CategoryPageProps> {
  * CategoryForm
  */
 
-type CategoryFormOwnProps = p.FormProps & {
+type CategoryFormOwnProps = f.FormProps & {
   category?: t.CategoryReq,
 }
 
@@ -138,11 +139,11 @@ class _CategoryForm extends m.ViewComponent<CategoryFormProps, CategoryFormState
     this.setState({errors: undefined})
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.ConfirmDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.ConfirmDialog
+      <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_CATEGORY)}
         onConfirm={() => {
           e.dispatch(a.deleteCategory(
@@ -157,7 +158,7 @@ class _CategoryForm extends m.ViewComponent<CategoryFormProps, CategoryFormState
       />
     )
 
-    e.dispatch(a.addDialog<p.ConfirmDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.ConfirmDialogProps>(dialog))
   }
 
   render() {
@@ -235,11 +236,11 @@ class _CategoriesList extends m.ViewComponent<CategoriesListProps> {
     const {context} = this
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.FormDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.FormDialog
+      <d.FormDialog
         title={i18n.xln(context, i18n.EDIT_CATEGORY)}
         onClose={closeDialog}
       >
@@ -247,21 +248,21 @@ class _CategoriesList extends m.ViewComponent<CategoriesListProps> {
           category={category}
           onSubmitSuccess={closeDialog}
         />
-      </p.FormDialog>
+      </d.FormDialog>
     )
 
-    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.FormDialogProps>(dialog))
   }
 
   onDelete = (category: t.CategoryRes) => (): void => {
     const {context} = this
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.ConfirmDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.ConfirmDialog
+      <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_CATEGORY)}
         onConfirm={() => {
           e.dispatch(a.deleteCategory(
@@ -275,7 +276,7 @@ class _CategoriesList extends m.ViewComponent<CategoriesListProps> {
       />
     )
 
-    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.FormDialogProps>(dialog))
   }
 
   render() {

@@ -10,6 +10,15 @@ import * as i18n from '../i18n'
 
 import * as m from './misc'
 
+export type FormProps = {
+  onSubmitSuccess: (event?: KeyboardEvent | t.RMouseEvent) => void,
+}
+
+
+/**
+ * G7FormLine
+ */
+
 export class G7FormLine extends m.ViewComponent {
   render() {
     const {

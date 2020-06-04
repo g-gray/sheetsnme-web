@@ -7,10 +7,10 @@ import * as e from '../../env'
 import * as a from '../../actions'
 
 import * as i18n from '../../i18n'
+import * as d from '../../dialogs'
 
 import * as m from '../../views/misc'
 
-import * as p from '../../views/pages'
 import * as v from '../../views'
 
 import * as tf from './transaction-form'
@@ -24,19 +24,19 @@ export class TransactionsPage extends m.ViewComponent<TransactionPageProps> {
     const {context} = this
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.FormDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.FormDialog
+      <d.FormDialog
         title={i18n.xln(context, i18n.NEW_TRANSACTION)}
         onClose={closeDialog}
       >
         <tf.TransactionForm onSubmitSuccess={closeDialog} />
-      </p.FormDialog>
+      </d.FormDialog>
     )
 
-    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.FormDialogProps>(dialog))
   }
 
   render() {

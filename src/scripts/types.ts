@@ -1,6 +1,6 @@
 import React from 'react'
-import {Action, Dispatch} from 'redux'
-import {ThunkAction, ThunkDispatch} from 'redux-thunk'
+import {Action} from 'redux'
+import {ThunkAction} from 'redux-thunk'
 import {ParsedUrlQuery, ParsedUrlQueryInput} from 'querystring'
 import {History, Location} from 'history'
 import {RouteComponentProps} from 'react-router-dom'

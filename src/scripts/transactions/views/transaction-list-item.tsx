@@ -13,6 +13,7 @@ import * as u from '../../utils'
 import * as a from '../../actions'
 
 import * as i18n from '../../i18n'
+import * as d from '../../dialogs'
 
 import * as m from '../../views/misc'
 import * as s from '../../views/svg'
@@ -52,11 +53,11 @@ class _Transaction extends m.ViewComponent<TransactionProps> {
       }
 
       const closeDialog = () => {
-        e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+        e.dispatch(a.removeDialog<d.FormDialogProps>(dialog))
       }
 
       const dialog = (
-        <p.FormDialog
+        <d.FormDialog
           title={i18n.xln(context, i18n.EDIT_TRANSACTION)}
           onClose={closeDialog}
         >
@@ -64,10 +65,10 @@ class _Transaction extends m.ViewComponent<TransactionProps> {
             transaction={transaction}
             onSubmitSuccess={closeDialog}
           />
-        </p.FormDialog>
+        </d.FormDialog>
       )
 
-      e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
+      e.dispatch(a.addDialog<d.FormDialogProps>(dialog))
     }
   }
 
@@ -75,11 +76,11 @@ class _Transaction extends m.ViewComponent<TransactionProps> {
     const {context} = this
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.ConfirmDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.ConfirmDialog
+      <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_TRANSACTION)}
         onConfirm={() => {
           e.dispatch(a.deleteTransaction(
@@ -93,7 +94,7 @@ class _Transaction extends m.ViewComponent<TransactionProps> {
       />
     )
 
-    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.FormDialogProps>(dialog))
   }
 
   render() {

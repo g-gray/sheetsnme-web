@@ -12,6 +12,7 @@ import * as u from '../utils'
 import * as a from '../actions'
 
 import * as i18n from '../i18n'
+import * as d from '../dialogs'
 
 import * as m from '../views/misc'
 import * as s from '../views/svg'
@@ -32,19 +33,19 @@ export class PayeesPage extends m.ViewComponent<PayeePageProps> {
     const {context} = this
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.FormDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.FormDialog
+      <d.FormDialog
         title={i18n.xln(context, i18n.NEW_PAYEE)}
         onClose={closeDialog}
       >
         <PayeeForm onSubmitSuccess={closeDialog} />
-      </p.FormDialog>
+      </d.FormDialog>
     )
 
-    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.FormDialogProps>(dialog))
   }
 
   render() {
@@ -64,7 +65,7 @@ export class PayeesPage extends m.ViewComponent<PayeePageProps> {
  * PayeeForm
  */
 
-type PayeeFormOwnProps = p.FormProps & {
+type PayeeFormOwnProps = f.FormProps & {
   payee?: t.PayeeReq,
 }
 
@@ -138,11 +139,11 @@ class _PayeeForm extends m.ViewComponent<PayeeFormProps, PayeeFormState> {
     this.setState({errors: undefined})
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.ConfirmDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.ConfirmDialog
+      <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_PAYEE)}
         onConfirm={() => {
           e.dispatch(a.deletePayee(
@@ -157,7 +158,7 @@ class _PayeeForm extends m.ViewComponent<PayeeFormProps, PayeeFormState> {
       />
     )
 
-    e.dispatch(a.addDialog<p.ConfirmDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.ConfirmDialogProps>(dialog))
   }
 
   render() {
@@ -235,11 +236,11 @@ class _PayeesList extends m.ViewComponent<PayeesListProps> {
     const {context} = this
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.FormDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.FormDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.FormDialog
+      <d.FormDialog
         title={i18n.xln(context, i18n.EDIT_PAYEE)}
         onClose={closeDialog}
       >
@@ -247,21 +248,21 @@ class _PayeesList extends m.ViewComponent<PayeesListProps> {
           payee={payee}
           onSubmitSuccess={closeDialog}
         />
-      </p.FormDialog>
+      </d.FormDialog>
     )
 
-    e.dispatch(a.addDialog<p.FormDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.FormDialogProps>(dialog))
   }
 
   onDelete = (payee: t.PayeeRes) => () => {
     const {context} = this
 
     const closeDialog = () => {
-      e.dispatch(a.removeDialog<p.ConfirmDialogProps>(dialog))
+      e.dispatch(a.removeDialog<d.ConfirmDialogProps>(dialog))
     }
 
     const dialog = (
-      <p.ConfirmDialog
+      <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_PAYEE)}
         onConfirm={() => {
           e.dispatch(a.deletePayee(
@@ -275,7 +276,7 @@ class _PayeesList extends m.ViewComponent<PayeesListProps> {
       />
     )
 
-    e.dispatch(a.addDialog<p.ConfirmDialogProps>(dialog))
+    e.dispatch(a.addDialog<d.ConfirmDialogProps>(dialog))
   }
 
   render() {
