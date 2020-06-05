@@ -3,7 +3,7 @@ import * as t from '../../types'
 import React from 'react'
 
 import * as u from '../../utils'
-import * as m from '../../views/misc'
+import * as v from '../../views'
 
 /**
  * Dialog
@@ -12,7 +12,7 @@ import * as m from '../../views/misc'
 type DialogProps = t.DialogProps
 
 
-export class Dialog extends m.ViewComponent<DialogProps> {
+export class Dialog extends v.ViewComponent<DialogProps> {
   unsub: () => void = () => {}
 
   componentDidMount() {
@@ -55,7 +55,7 @@ type DialogOverlayProps = {
 }
 
 
-export class DialogOverlay extends m.ViewComponent<DialogOverlayProps> {
+export class DialogOverlay extends v.ViewComponent<DialogOverlayProps> {
   render() {
     const {props: {className: cls, ...props}} = this
 
@@ -80,7 +80,7 @@ type DialogScrollableProps = {
 }
 
 
-export class DialogScrollable extends m.ViewComponent<DialogScrollableProps> {
+export class DialogScrollable extends v.ViewComponent<DialogScrollableProps> {
   render() {
     const {props: {onClick, className: cls, children}} = this
     // This combination of element nesting and properties appears to satisfy
@@ -116,7 +116,7 @@ type DialogCenteredProps = {
 }
 
 
-export class DialogCentered extends m.ViewComponent<DialogCenteredProps> {
+export class DialogCentered extends v.ViewComponent<DialogCenteredProps> {
   render () {
     const {children, ...props} = this.props
 

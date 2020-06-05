@@ -9,10 +9,8 @@ import * as fpx from 'fpx'
 
 import * as i18n from '../../i18n'
 
-import * as m from '../../views/misc'
-import * as s from '../../views/svg'
-
 import * as v from '../../views'
+import * as s from '../../views/svg'
 
 import * as tli from './transaction-list-item'
 import * as tf from './transaction-filters'
@@ -29,7 +27,7 @@ type TransactionListOwnProps = t.RRRouteComponentProps
 
 type TransactionListProps = TransactionListOwnProps & TransactionListStateProps
 
-class _TransactionsList extends m.ViewComponent<TransactionListProps> {
+class _TransactionsList extends v.ViewComponent<TransactionListProps> {
   render() {
     const {
       context, context: {isMobile},
@@ -107,7 +105,7 @@ type TransactionListPlaceholderProps = {
 }
 
 
-export class TransactionListPlaceholder extends m.ViewComponent<TransactionListPlaceholderProps> {
+export class TransactionListPlaceholder extends v.ViewComponent<TransactionListPlaceholderProps> {
   render() {
     const {props: {length}} = this
 
@@ -127,7 +125,7 @@ export class TransactionListPlaceholder extends m.ViewComponent<TransactionListP
  * TransactionPlaceholder
  */
 
-class TransactionPlaceholder extends m.ViewComponent {
+class TransactionPlaceholder extends v.ViewComponent {
   render() {
     const {context: {isMobile}} = this
 

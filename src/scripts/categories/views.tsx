@@ -14,11 +14,8 @@ import * as a from '../actions'
 import * as i18n from '../i18n'
 import * as d from '../dialogs'
 
-import * as m from '../views/misc'
-import * as s from '../views/svg'
-import * as f from '../views/forms'
-
 import * as v from '../views'
+import * as s from '../views/svg'
 
 /**
  * CategoryPage
@@ -27,7 +24,7 @@ import * as v from '../views'
 type CategoryPageProps = {}
 
 
-export class CategoriesPage extends m.ViewComponent<CategoryPageProps> {
+export class CategoriesPage extends v.ViewComponent<CategoryPageProps> {
   openDialog = () => {
     const {context} = this
 
@@ -64,7 +61,7 @@ export class CategoriesPage extends m.ViewComponent<CategoryPageProps> {
  * CategoryForm
  */
 
-type CategoryFormOwnProps = f.FormProps & {
+type CategoryFormOwnProps = v.FormProps & {
   category?: t.CategoryReq,
 }
 
@@ -80,7 +77,7 @@ type CategoryFormState = {
 }
 
 
-class _CategoryForm extends m.ViewComponent<CategoryFormProps, CategoryFormState> {
+class _CategoryForm extends v.ViewComponent<CategoryFormProps, CategoryFormState> {
   readonly state = {
     formValues: this.props.category || {title: ''},
     errors: undefined,
@@ -177,7 +174,7 @@ class _CategoryForm extends m.ViewComponent<CategoryFormProps, CategoryFormState
           className={`col-start-stretch
                       ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}
         >
-          <f.FormTextElement
+          <v.FormTextElement
             name='title'
             label={i18n.xln(context, i18n.TITLE)}
             disabled={pending}
@@ -206,7 +203,7 @@ class _CategoryForm extends m.ViewComponent<CategoryFormProps, CategoryFormState
         </div>
         {!errors ? null :
         <hr className='hr margin-h-1x25' />}
-        <f.FormErrors errors={errors} />
+        <v.FormErrors errors={errors} />
       </form>
     )
   }
@@ -230,7 +227,7 @@ type CategoriesListStateProps = {
 type CategoriesListProps = CategoriesListStateProps
 
 
-class _CategoriesList extends m.ViewComponent<CategoriesListProps> {
+class _CategoriesList extends v.ViewComponent<CategoriesListProps> {
   onOpen = (category: t.CategoryRes) => (): void => {
     const {context} = this
 

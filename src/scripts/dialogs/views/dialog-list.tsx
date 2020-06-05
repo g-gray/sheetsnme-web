@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 
 import * as u from '../../utils'
 
-import * as m from '../../views/misc'
+import * as v from '../../views'
 
 /**
  * Dialogs
@@ -18,7 +18,7 @@ type DialogsStateProps = {
 type DialogsProps = DialogsStateProps
 
 
-class _Dialogs extends m.ViewComponent<DialogsProps> {
+class _Dialogs extends v.ViewComponent<DialogsProps> {
   componentDidMount() {
     const {props: {dialogs}} = this
     toglleOverflow(dialogs.length)

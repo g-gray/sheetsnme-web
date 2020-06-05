@@ -15,11 +15,8 @@ import * as a from '../../actions'
 import * as i18n from '../../i18n'
 import * as d from '../../dialogs'
 
-import * as m from '../../views/misc'
-import * as s from '../../views/svg'
-
-import * as p from '../../views/pages'
 import * as v from '../../views'
+import * as s from '../../views/svg'
 
 import * as tf from './transaction-form'
 
@@ -28,7 +25,7 @@ type TransactionProps = t.RRRouteComponentProps & {
 }
 
 
-class _Transaction extends m.ViewComponent<TransactionProps> {
+class _Transaction extends v.ViewComponent<TransactionProps> {
   actionsRef = React.createRef<HTMLDivElement>()
 
   fetchTransactions = () => {
@@ -161,7 +158,7 @@ type TransactionMetaProps = {
 }
 
 
-class TransactionMeta extends m.ViewComponent<TransactionMetaProps> {
+class TransactionMeta extends v.ViewComponent<TransactionMetaProps> {
   render() {
     const {
       context: {isMobile},
@@ -192,7 +189,7 @@ type TransactionIconProps = {
 }
 
 
-class TransactionIcon extends m.ViewComponent<TransactionIconProps> {
+class TransactionIcon extends v.ViewComponent<TransactionIconProps> {
   render() {
     const {props: {transaction}} = this
     const {INCOME, OUTCOME, LOAN, BORROW} = t.TRANSACTION_TYPE
@@ -234,7 +231,7 @@ type TransactionAmountProps = {
 }
 
 
-class TransactionAmount extends m.ViewComponent<TransactionAmountProps> {
+class TransactionAmount extends v.ViewComponent<TransactionAmountProps> {
   render() {
     const {props: {transaction}} = this
     const {INCOME, OUTCOME, LOAN, BORROW} = t.TRANSACTION_TYPE
@@ -272,7 +269,7 @@ type TransactionAccountStateProps = {
 type TransactionAccountProps = TransactionAccountOwnProps & TransactionAccountStateProps
 
 
-class _TransactionAccount extends m.ViewComponent<TransactionAccountProps> {
+class _TransactionAccount extends v.ViewComponent<TransactionAccountProps> {
   render() {
     const {
       props: {transaction, accountsById},
@@ -315,7 +312,7 @@ type TransactionOriginStateProps = {
 
 type TransactionOriginProps = TransactionOriginOwnProps & TransactionOriginStateProps
 
-class _TransactionOrigin extends m.ViewComponent<TransactionOriginProps> {
+class _TransactionOrigin extends v.ViewComponent<TransactionOriginProps> {
   render() {
     const {
       props: {transaction, categoriesById, payeesById},

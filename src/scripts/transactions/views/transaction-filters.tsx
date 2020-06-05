@@ -15,12 +15,8 @@ import * as a from '../../actions'
 import * as i18n from '../../i18n'
 import * as d from '../../dialogs'
 
-import * as m from '../../views/misc'
-import * as s from '../../views/svg'
-import * as f from '../../views/forms'
-
-import * as p from '../../views/pages'
 import * as v from '../../views'
+import * as s from '../../views/svg'
 
 /**
  * TransactionFiltersForm
@@ -42,7 +38,7 @@ type TransactionFiltersFormState = {
 }
 
 
-class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProps, TransactionFiltersFormState> {
+class _TransactionFiltersForm extends v.ViewComponent<TransactionFiltersFormProps, TransactionFiltersFormState> {
   readonly state = {
     formValues: parseFilters(this.props.location.search),
   }
@@ -105,19 +101,19 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
           className={`col-start-stretch
                       ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}
         >
-          <f.FormDateElement
+          <v.FormDateElement
             name='dateFrom'
             label={i18n.xln(context, i18n.DATE_FROM)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'dateFrom'])}
           />
-          <f.FormDateElement
+          <v.FormDateElement
             name='dateTo'
             label={i18n.xln(context, i18n.DATE_TO)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'dateTo'])}
           />
-          <f.FormSelectElement
+          <v.FormSelectElement
             name='accountId'
             label={i18n.xln(context, i18n.ACCOUNT)}
             disabled={pending}
@@ -132,8 +128,8 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
                 {title}
               </option>
             ))}
-          </f.FormSelectElement>
-          <f.FormSelectElement
+          </v.FormSelectElement>
+          <v.FormSelectElement
             name='categoryId'
             label={i18n.xln(context, i18n.CATEGORY)}
             disabled={pending}
@@ -148,8 +144,8 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
                 {title}
               </option>
             ))}
-          </f.FormSelectElement>
-          <f.FormSelectElement
+          </v.FormSelectElement>
+          <v.FormSelectElement
             name='payeeId'
             label={i18n.xln(context, i18n.PAYEE)}
             disabled={pending}
@@ -164,8 +160,8 @@ class _TransactionFiltersForm extends m.ViewComponent<TransactionFiltersFormProp
                 {title}
               </option>
             ))}
-          </f.FormSelectElement>
-          <f.FormTextElement
+          </v.FormSelectElement>
+          <v.FormTextElement
             name='comment'
             label={i18n.xln(context, i18n.COMMENT)}
             disabled={pending}
@@ -219,7 +215,7 @@ type TransactionFiltersControlsStateProps = {
 type TransactionFiltersControlsProps = TransactionFiltersControlsOwnProps & TransactionFiltersControlsStateProps
 
 
-class _TransactionFiltersControls extends m.ViewComponent<TransactionFiltersControlsProps> {
+class _TransactionFiltersControls extends v.ViewComponent<TransactionFiltersControlsProps> {
   openDialog = () => {
     const {context} = this
 

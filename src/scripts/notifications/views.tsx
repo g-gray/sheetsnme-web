@@ -5,9 +5,9 @@ import {connect} from 'react-redux'
 
 import * as e from '../env'
 
-import * as m from '../views/misc'
+import * as a from '../actions'
 
-import * as a from './actions'
+import * as v from '../views'
 
 type NotificationsStateProps = {
   notifications: t.NotificationList,
@@ -15,7 +15,7 @@ type NotificationsStateProps = {
 
 type NotificationsProps = NotificationsStateProps
 
-class _Notifications extends m.ViewComponent<NotificationsProps> {
+class _Notifications extends v.ViewComponent<NotificationsProps> {
   timeoutId: NodeJS.Timeout | undefined
 
   componentWillUnmount() {
@@ -54,7 +54,7 @@ export const Notifications = connect<NotificationsStateProps, {}, {}, t.AppState
 }))(_Notifications)
 
 
-class Snackbar extends m.ViewComponent {
+class Snackbar extends v.ViewComponent {
   render() {
     const {props: {children}} = this
 

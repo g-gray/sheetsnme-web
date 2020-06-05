@@ -15,13 +15,9 @@ import * as a from '../../actions'
 import * as i18n from '../../i18n'
 import * as d from '../../dialogs'
 
-import * as m from '../../views/misc'
-import * as f from '../../views/forms'
-
-import * as p from '../../views/pages'
 import * as v from '../../views'
 
-type TransactionFormOwnProps = t.RRRouteComponentProps & f.FormProps & {
+type TransactionFormOwnProps = t.RRRouteComponentProps & v.FormProps & {
   transaction?: t.TransactionReq,
 }
 
@@ -40,7 +36,7 @@ type TransactionFormState = {
 }
 
 
-class _TransactionForm extends m.ViewComponent<TransactionFormProps, TransactionFormState> {
+class _TransactionForm extends v.ViewComponent<TransactionFormProps, TransactionFormState> {
   readonly state = {
     formValues: this.props.transaction || {
       type: t.TRANSACTION_TYPE.OUTCOME,
@@ -235,20 +231,20 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
           className={`col-start-stretch
                       ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}
         >
-          <f.FormDateElement
+          <v.FormDateElement
             name='date'
             label={i18n.xln(context, i18n.DATE)}
             disabled={pending}
             {...u.bindValue(this, ['formValues', 'date'])}
           />
-          <f.G7FormLine>
-            <f.FormLabel>
+          <v.G7FormLine>
+            <v.FormLabel>
               {i18n.xln(context, i18n.TYPE)}
-            </f.FormLabel>
+            </v.FormLabel>
             <div className='col-start-stretch gaps-v-0x5'>
               <div className={isMobile ? 'col-start-stretch gaps-v-0x5' : 'row-start-center gaps-h-1'}>
                 <label className='row-start-center gaps-h-0x5'>
-                  <f.FormRadioElement
+                  <v.FormRadioElement
                     name='type'
                     disabled={pending}
                     {...u.bindChecked(this, ['formValues', 'type'], OUTCOME)}
@@ -257,7 +253,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                   <span>{i18n.xln(context, i18n.OUTCOME)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
-                  <f.FormRadioElement
+                  <v.FormRadioElement
                     name='type'
                     disabled={pending}
                     {...u.bindChecked(this, ['formValues', 'type'], INCOME)}
@@ -266,7 +262,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                   <span>{i18n.xln(context, i18n.INCOME)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
-                  <f.FormRadioElement
+                  <v.FormRadioElement
                     name='type'
                     disabled={pending}
                     {...u.bindChecked(this, ['formValues', 'type'], TRANSFER)}
@@ -277,7 +273,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
               </div>
               <div className={isMobile ? 'col-start-stretch gaps-v-0x5' : 'row-start-center gaps-h-1'}>
                 <label className='row-start-center gaps-h-0x5'>
-                  <f.FormRadioElement
+                  <v.FormRadioElement
                     name='type'
                     disabled={pending}
                     {...u.bindChecked(this, ['formValues', 'type'], LOAN)}
@@ -286,7 +282,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                   <span>{i18n.xln(context, i18n.I_LOANED)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
-                  <f.FormRadioElement
+                  <v.FormRadioElement
                     name='type'
                     disabled={pending}
                     {...u.bindChecked(this, ['formValues', 'type'], BORROW)}
@@ -296,18 +292,18 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                 </label>
               </div>
             </div>
-          </f.G7FormLine>
+          </v.G7FormLine>
 
           {!fpx.includes([OUTCOME, LOAN, TRANSFER], type) ? null :
           <Fragment>
-            <f.FormNumberElement
+            <v.FormNumberElement
               step='0.01'
               name='outcomeAmount'
               label={i18n.xln(context, i18n.AMOUNT)}
               disabled={pending}
               {...u.bindValue(this, ['formValues', 'outcomeAmount'])}
             />
-            <f.FormSelectElement
+            <v.FormSelectElement
               name='outcomeAccountId'
               label={i18n.xln(context, i18n.ACCOUNT)}
               disabled={pending}
@@ -322,19 +318,19 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                   {title}
                 </option>
               ))}
-            </f.FormSelectElement>
+            </v.FormSelectElement>
           </Fragment>}
 
           {!fpx.includes([INCOME, BORROW, TRANSFER], type) ? null :
           <Fragment>
-            <f.FormNumberElement
+            <v.FormNumberElement
               step='0.01'
               name='incomeAmount'
               label={i18n.xln(context, i18n.AMOUNT)}
               disabled={pending}
               {...u.bindValue(this, ['formValues', 'incomeAmount'])}
             />
-            <f.FormSelectElement
+            <v.FormSelectElement
               name='incomeAccountId'
               label={i18n.xln(context, i18n.ACCOUNT)}
               disabled={pending}
@@ -349,11 +345,11 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                   {title}
                 </option>
               ))}
-            </f.FormSelectElement>
+            </v.FormSelectElement>
           </Fragment>}
 
           {!fpx.includes([OUTCOME, INCOME], type) ? null :
-          <f.FormSelectElement
+          <v.FormSelectElement
             name='categoryId'
             label={i18n.xln(context, i18n.CATEGORY)}
             disabled={pending}
@@ -368,10 +364,10 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                 {title}
               </option>
             ))}
-          </f.FormSelectElement>}
+          </v.FormSelectElement>}
 
           {!fpx.includes([OUTCOME, INCOME, LOAN, BORROW], type) ? null :
-          <f.FormSelectElement
+          <v.FormSelectElement
             name='payeeId'
             label={i18n.xln(context, i18n.PAYEE)}
             disabled={pending}
@@ -386,9 +382,9 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                 {title}
               </option>
             ))}
-          </f.FormSelectElement>}
+          </v.FormSelectElement>}
 
-          <f.FormTextElement
+          <v.FormTextElement
             name='comment'
             label={i18n.xln(context, i18n.COMMENT)}
             disabled={pending}
@@ -418,7 +414,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
         </div>
         {!errors ? null :
         <hr className='hr margin-h-1x25' />}
-        <f.FormErrors errors={errors} />
+        <v.FormErrors errors={errors} />
       </form>
     )
   }

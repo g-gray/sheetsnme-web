@@ -14,11 +14,8 @@ import * as a from '../actions'
 import * as i18n from '../i18n'
 import * as d from '../dialogs'
 
-import * as m from '../views/misc'
-import * as s from '../views/svg'
-import * as f from '../views/forms'
-
 import * as v from '../views'
+import * as s from '../views/svg'
 
 /**
  * AccountPage
@@ -27,7 +24,7 @@ import * as v from '../views'
 type AccountPageProps = {}
 
 
-export class AccountsPage extends m.ViewComponent<AccountPageProps> {
+export class AccountsPage extends v.ViewComponent<AccountPageProps> {
   openDialog = () => {
     const {context} = this
 
@@ -64,7 +61,7 @@ export class AccountsPage extends m.ViewComponent<AccountPageProps> {
  * AccountForm
  */
 
-type AccountFormOwnProps = f.FormProps & {
+type AccountFormOwnProps = v.FormProps & {
   account?: t.AccountReq,
 }
 
@@ -80,7 +77,7 @@ type AccountFormState = {
 }
 
 
-class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
+class _AccountForm extends v.ViewComponent<AccountFormProps, AccountFormState> {
   readonly state = {
     formValues: this.props.account || {title: ''},
     errors: undefined,
@@ -177,7 +174,7 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
           className={`col-start-stretch
                       ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}
         >
-          <f.FormTextElement
+          <v.FormTextElement
             name='title'
             label={i18n.xln(context, i18n.TITLE)}
             disabled={pending}
@@ -206,7 +203,7 @@ class _AccountForm extends m.ViewComponent<AccountFormProps, AccountFormState> {
         </div>
         {!errors ? null :
         <hr className='hr margin-h-1x25' />}
-        <f.FormErrors errors={errors} />
+        <v.FormErrors errors={errors} />
       </form>
     )
   }
@@ -230,7 +227,7 @@ type AccountListStateProps = {
 type AccountListProps = AccountListStateProps
 
 
-class _AccountList extends m.ViewComponent<AccountListProps> {
+class _AccountList extends v.ViewComponent<AccountListProps> {
   fetchAccounts = () => {
     return
   }

@@ -14,11 +14,8 @@ import * as a from '../actions'
 import * as i18n from '../i18n'
 import * as d from '../dialogs'
 
-import * as m from '../views/misc'
-import * as s from '../views/svg'
-import * as f from '../views/forms'
-
 import * as v from '../views'
+import * as s from '../views/svg'
 
 /**
  * PayeePage
@@ -27,7 +24,7 @@ import * as v from '../views'
 type PayeePageProps = {}
 
 
-export class PayeesPage extends m.ViewComponent<PayeePageProps> {
+export class PayeesPage extends v.ViewComponent<PayeePageProps> {
   openDialog = () => {
     const {context} = this
 
@@ -64,7 +61,7 @@ export class PayeesPage extends m.ViewComponent<PayeePageProps> {
  * PayeeForm
  */
 
-type PayeeFormOwnProps = f.FormProps & {
+type PayeeFormOwnProps = v.FormProps & {
   payee?: t.PayeeReq,
 }
 
@@ -80,7 +77,7 @@ type PayeeFormState = {
 }
 
 
-class _PayeeForm extends m.ViewComponent<PayeeFormProps, PayeeFormState> {
+class _PayeeForm extends v.ViewComponent<PayeeFormProps, PayeeFormState> {
   readonly state = {
     formValues: this.props.payee || {title: ''},
     errors: undefined,
@@ -177,7 +174,7 @@ class _PayeeForm extends m.ViewComponent<PayeeFormProps, PayeeFormState> {
           className={`col-start-stretch
                       ${isMobile ? 'padding-v-1 padding-h-1x25' : 'padding-v-1x25'}`}
         >
-          <f.FormTextElement
+          <v.FormTextElement
             name='title'
             label={i18n.xln(context, i18n.TITLE)}
             disabled={pending}
@@ -206,7 +203,7 @@ class _PayeeForm extends m.ViewComponent<PayeeFormProps, PayeeFormState> {
         </div>
         {!errors ? null :
         <hr className='hr margin-h-1x25' />}
-        <f.FormErrors errors={errors} />
+        <v.FormErrors errors={errors} />
       </form>
     )
   }
@@ -230,7 +227,7 @@ type PayeesListStateProps = {
 type PayeesListProps = PayeesListStateProps
 
 
-class _PayeesList extends m.ViewComponent<PayeesListProps> {
+class _PayeesList extends v.ViewComponent<PayeesListProps> {
   onOpen = (payee: t.PayeeRes) => () => {
     const {context} = this
 

@@ -9,8 +9,6 @@ import * as a from '../../actions'
 import * as i18n from '../../i18n'
 import * as d from '../../dialogs'
 
-import * as m from '../../views/misc'
-
 import * as v from '../../views'
 
 import * as tf from './transaction-form'
@@ -19,7 +17,7 @@ import * as tl from './transaction-list'
 type TransactionPageProps = {}
 
 
-export class TransactionsPage extends m.ViewComponent<TransactionPageProps> {
+export class TransactionsPage extends v.ViewComponent<TransactionPageProps> {
   openDialog = () => {
     const {context} = this
 

@@ -9,7 +9,6 @@ import * as d from './dialog'
 
 import * as v from '../../views'
 import * as s from '../../views/svg'
-import * as m from '../../views/misc'
 
 export type FormDialogProps = {
   title   : string,
@@ -17,7 +16,7 @@ export type FormDialogProps = {
   children: t.RReactChildren,
 }
 
-class _FormDialog extends m.ViewComponent<FormDialogProps> {
+class _FormDialog extends v.ViewComponent<FormDialogProps> {
   render() {
     const {
       context: {isMobile},
@@ -85,7 +84,7 @@ export type ConfirmDialogProps = {
   onConfirm   : (event: v.FakeButtonEvent) => void,
 }
 
-class _ConfirmDialog extends m.ViewComponent<ConfirmDialogProps> {
+class _ConfirmDialog extends v.ViewComponent<ConfirmDialogProps> {
   render() {
     const {
       context,

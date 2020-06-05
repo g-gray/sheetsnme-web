@@ -8,8 +8,8 @@ import * as u from './utils'
 
 import * as a from './actions'
 
-import * as m from './views/misc'
 import {Router} from './router'
+import * as v from './views'
 
 type AppStateProps = {
   lang    : t.LANG,
@@ -18,7 +18,7 @@ type AppStateProps = {
 
 type AppProps = AppStateProps
 
-class _App extends m.ViewComponent<AppProps> {
+class _App extends v.ViewComponent<AppProps> {
   unresize: () => void = () => {}
 
   resize = () => {

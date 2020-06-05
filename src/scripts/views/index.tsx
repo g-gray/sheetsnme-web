@@ -1,7 +1,11 @@
+export * from './misc' // Important to be first
 export * from './closer'
 export * from './entity'
 export * from './fab'
 export * from './fake-button'
+export * from './forms'
 export * from './layouts'
+export * from './nav'
+export * from './pages'
 export * from './paginator'
 export * from './placeholder'

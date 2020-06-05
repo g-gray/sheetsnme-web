@@ -20,8 +20,8 @@ import * as fb from './fake-button'
 /**
  * Navbar
  */
-
 class _Navbar extends m.ViewComponent {
+
   open = () => {
     const close = () => {
       e.dispatch(a.removeDialog<MobileMenuProps>(dialog))

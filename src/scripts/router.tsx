@@ -14,12 +14,11 @@ import {AccountsPage} from './accounts'
 import {PayeesPage} from './payees'
 import {TransactionsPage} from './transactions'
 
-import * as p from './views/pages'
-import * as m from './views/misc'
+import * as v from './views'
 
 type RoutesProps = t.RRRouteComponentProps
 
-class _Routes extends m.ViewComponent<RoutesProps> {
+class _Routes extends v.ViewComponent<RoutesProps> {
   unlisten: () => void = () => {}
 
   componentDidMount() {
@@ -73,7 +72,7 @@ class _Routes extends m.ViewComponent<RoutesProps> {
         <Route path='/categories'             component={CategoriesPage} />
         <Route path='/accounts'               component={AccountsPage} />
         <Route path='/payees'                 component={PayeesPage} />
-        <Route                                component={p.Page404} />
+        <Route                                component={v.Page404} />
       </Switch>
     )
   }
