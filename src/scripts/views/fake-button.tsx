@@ -14,14 +14,12 @@ activation. Should be the last resort; try <Button /> first.
 
 export type FakeButtonEvent = t.RKeyboardEvent | t.RMouseEvent
 
-export type FakeButtonClickHandler = (event: FakeButtonEvent) => void
-
 type FakeButtonProps = {
   className?: string,
-  style?: t.RCSSProperties,
-  type?: string,
-  disabled?: boolean,
-  onClick: FakeButtonClickHandler,
+  style?    : t.RCSSProperties,
+  type?     : string,
+  disabled? : boolean,
+  onClick   : (event: FakeButtonEvent) => void,
 }
 
 export class FakeButton extends m.ViewComponent<FakeButtonProps> {

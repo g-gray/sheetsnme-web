@@ -15,33 +15,32 @@ a popup. Usage:
 */
 
 type CloserProps = {
-  root: t.RReactInstance,
-  close: (event: Event) => void,
+  root : t.RReactInstance,
+  close: (event: KeyboardEvent | MouseEvent) => void,
 }
 
 export class Closer extends m.ViewComponent<CloserProps> {
   unKeyDown: () => void = () => {}
   unClick: () => void = () => {}
 
-  maybeClose = (event: Event) => {
-    const {props: {close}} = this
-    if (close) close(event)
-  }
-
   onKeyDown = (event: Event) => {
+    const {props: {close}} = this
     if (
       event instanceof KeyboardEvent &&
       u.eventKeyCode(event) === u.KEY_NAMES_US.ESCAPE
     ) {
-      this.maybeClose(event)
+      close(event)
     }
   }
 
   onClick = (event: Event) => {
-    const {props: {root}} = this
+    const {props: {root, close}} = this
     const node = u.findDomNode(root)
-    if (!u.isAncestorOf(node, event.target)) {
-      this.maybeClose(event)
+    if (
+      event instanceof MouseEvent &&
+      !u.isAncestorOf(node, event.target)
+    ) {
+      close(event)
     }
   }
 

@@ -6,7 +6,7 @@ import * as m from './misc'
 
 type PlaceholderProps = {
   className?: string,
-  style?: t.RCSSProperties,
+  style?    : t.RCSSProperties,
 }
 
 export class Placeholder extends m.ViewComponent<PlaceholderProps> {

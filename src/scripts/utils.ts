@@ -16,8 +16,8 @@ export const DEFAULT_PAGE_SIZE: number = 25
  */
 
 type BindValueProps = {
+  value   : any,
   onUpdate: (value: any) => void,
-  value: any,
 }
 
 export function bindValue(
@@ -42,9 +42,9 @@ export function bindValue(
 
 
 type BindCheckedProps = {
+  value   : any,
+  checked : boolean,
   onUpdate: (value: any) => void,
-  value: any,
-  checked: boolean,
 }
 
 export function bindChecked(

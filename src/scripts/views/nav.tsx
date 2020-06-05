@@ -109,7 +109,7 @@ type UserMenuState = {
 }
 
 class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
-  state: Readonly<UserMenuState> = {expanded: false}
+  readonly state = {expanded: false}
 
   close = () => {
     this.setState({expanded: false})
@@ -127,7 +127,7 @@ class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
       close, toggle,
     } = this
 
-    if (user == null) {
+    if (!user) {
       return null
     }
 
@@ -136,9 +136,10 @@ class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
     return (
       <div className='relative row-start-stretch'>
         <fb.FakeButton
-          onClick={toggle}
           className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item z-index-2'
-          aria-expanded={expanded}>
+          aria-expanded={expanded}
+          onClick={toggle}
+        >
           <CircleUserPic
             url={pictureUrl}
             size={2}

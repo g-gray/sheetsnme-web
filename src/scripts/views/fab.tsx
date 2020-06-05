@@ -1,5 +1,3 @@
-import * as t from '../types'
-
 import React from 'react'
 
 import * as m from './misc'
@@ -8,7 +6,7 @@ import * as fb from './fake-button'
 
 type FabProps = {
   className?: string,
-  onClick: (event: fb.FakeButtonEvent) => void,
+  onClick   : (event: fb.FakeButtonEvent) => void,
 }
 
 export class Fab extends m.ViewComponent<FabProps> {

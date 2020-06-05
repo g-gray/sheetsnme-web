@@ -15,20 +15,24 @@ import * as p from './placeholder'
  * EntityItemList
  */
 
-type EntityItemListProps = {
+type EntityListProps = {
   entityList  : any[],
   pending     : boolean,
   Placeholder?: t.RComponentType<EntityListPlaceholderProps>
 }
 
-export class EntityItemList extends m.ViewComponent<EntityItemListProps> {
+export class EntityList extends m.ViewComponent<EntityListProps> {
   render() {
     const {props: {entityList, pending, Placeholder, children}} = this
 
-    if (pending || entityList.length === 0) {
+    if (pending) {
       return Placeholder
         ? <Placeholder length={entityList.length} />
         : <EntityListPlaceholder length={entityList.length} />
+    }
+
+    if (!pending && entityList.length === 0) {
+      return null
     }
 
     return children
@@ -42,16 +46,16 @@ export class EntityItemList extends m.ViewComponent<EntityItemListProps> {
  * EntityItem
  */
 
-type EntityItemProps = {
+type EntityProps = {
   icon    : t.RReactElement,
   onOpen  : (event: fb.FakeButtonEvent) => void,
   onDelete: (event: fb.FakeButtonEvent) => void,
 }
 
-export class EntityItem extends m.ViewComponent<EntityItemProps> {
+export class Entity extends m.ViewComponent<EntityProps> {
   actionsRef = React.createRef<HTMLDivElement>()
 
-  onClick = (event: fb.FakeButtonEvent): void => {
+  onClick = (event: fb.FakeButtonEvent) => {
     const {
       actionsRef,
       props: {onOpen}
@@ -126,8 +130,8 @@ export class EntityListPlaceholder extends m.ViewComponent<EntityListPlaceholder
 
     return (
       <div className='col-start-stretch'>
-        {fpx.range(0, length).map((key: number) => (
-          <EntityPlaceholder key={key} />
+        {fpx.range(0, length).map((value: number) => (
+          <EntityPlaceholder key={value} />
         ))}
       </div>
     )

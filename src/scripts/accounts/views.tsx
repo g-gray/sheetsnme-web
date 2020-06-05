@@ -18,7 +18,6 @@ import * as m from '../views/misc'
 import * as s from '../views/svg'
 import * as f from '../views/forms'
 
-import * as p from '../views/pages'
 import * as v from '../views'
 
 /**
@@ -301,12 +300,12 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
               {i18n.xln(context, i18n.BALANCE)}
             </span>
           </div>
-          <v.EntityItemList
+          <v.EntityList
             entityList={accounts}
             pending={pending}
           >
             {accounts.map((account) => (
-              <v.EntityItem
+              <v.Entity
                 key={account.id}
                 icon={<s.CreditCard className='font-large fg-primary' />}
                 onOpen={onOpen(account)}
@@ -320,9 +319,9 @@ class _AccountList extends m.ViewComponent<AccountListProps> {
                   ? <span className='fg-error'>{account.balance}</span>
                   : <span className='fg-on-surface-pale'>{account.balance}</span>}
                 </div>
-              </v.EntityItem>
+              </v.Entity>
             ))}
-          </v.EntityItemList>
+          </v.EntityList>
         </div>
       </div>
     )

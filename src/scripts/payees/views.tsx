@@ -18,7 +18,6 @@ import * as m from '../views/misc'
 import * as s from '../views/svg'
 import * as f from '../views/forms'
 
-import * as p from '../views/pages'
 import * as v from '../views'
 
 /**
@@ -297,12 +296,12 @@ class _PayeesList extends m.ViewComponent<PayeesListProps> {
               {i18n.xln(context, i18n.DEBT)}
             </span>
           </div>
-          <v.EntityItemList
+          <v.EntityList
             entityList={payees}
             pending={pending}
           >
             {payees.map(payee => (
-              <v.EntityItem
+              <v.Entity
                 key={payee.id}
                 icon={<s.Users className='font-large fg-primary' />}
                 onOpen={onOpen(payee)}
@@ -316,9 +315,9 @@ class _PayeesList extends m.ViewComponent<PayeesListProps> {
                   ? <span className='fg-error'>{payee.debt}</span>
                   : <span className='fg-on-surface-pale'>{payee.debt}</span>}
                 </div>
-              </v.EntityItem>
+              </v.Entity>
             ))}
-          </v.EntityItemList>
+          </v.EntityList>
         </div>
       </div>
     )

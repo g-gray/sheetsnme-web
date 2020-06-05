@@ -6,10 +6,10 @@ import ReactPaginate from 'react-paginate'
 
 import * as u from '../utils'
 
+import * as i18n from '../i18n'
+
 import * as m from './misc'
 import * as s from './svg'
-
-import * as i18n from '../i18n'
 
 type PaginatorProps = t.RRRouteComponentProps & {
   pageCount    : number,
@@ -20,10 +20,12 @@ type PaginatorState = {
   forcePage: number,
 }
 
+
 class _Paginator extends m.ViewComponent<PaginatorProps, PaginatorState> {
-  state: Readonly<PaginatorState> = {
+  readonly state = {
     forcePage: this.getPage(this.props.location.search),
   }
+
   unlisten: () => void = () => {}
 
   getPage(search: string): number {
@@ -37,7 +39,7 @@ class _Paginator extends m.ViewComponent<PaginatorProps, PaginatorState> {
     return `/transactions/${u.encodeQuery({...query, page})}`
   }
 
-  onPageChange = ({selected}: {selected: number}): void => {
+  changePage = ({selected}: {selected: number}): void => {
     const {props: {history, location, onPageChange}} = this
 
     const query = u.decodeQuery(location.search)
@@ -68,7 +70,7 @@ class _Paginator extends m.ViewComponent<PaginatorProps, PaginatorState> {
       context, context: {isMobile},
       props: {pageCount},
       state: {forcePage},
-      onPageChange, hrefBulder,
+      changePage, hrefBulder,
     } = this
 
     return (
@@ -81,7 +83,7 @@ class _Paginator extends m.ViewComponent<PaginatorProps, PaginatorState> {
         breakLabel='...'
         breakClassName={`block ${isMobile ? '' : 'padding-h-0x75'}`}
         breakLinkClassName='btn-secondary row-center-center'
-        onPageChange={onPageChange}
+        onPageChange={changePage}
         forcePage={forcePage - 1}
         disableInitialCallback={true}
         containerClassName={`${isMobile

@@ -18,7 +18,6 @@ import * as m from '../views/misc'
 import * as s from '../views/svg'
 import * as f from '../views/forms'
 
-import * as p from '../views/pages'
 import * as v from '../views'
 
 /**
@@ -286,20 +285,20 @@ class _CategoriesList extends m.ViewComponent<CategoriesListProps> {
     } = this
 
     return (
-      <v.EntityItemList
+      <v.EntityList
         entityList={categories}
         pending={pending}
       >
         {categories.map(category => (
-          <v.EntityItem
+          <v.Entity
             key={category.id}
             icon={<s.Tag className='font-large fg-primary' />}
             onOpen={onOpen(category)}
             onDelete={onDelete(category)}>
             {category.title}
-          </v.EntityItem>
+          </v.Entity>
         ))}
-      </v.EntityItemList>
+      </v.EntityList>
     )
   }
 }

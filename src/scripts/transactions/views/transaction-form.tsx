@@ -248,7 +248,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
             <div className='col-start-stretch gaps-v-0x5'>
               <div className={isMobile ? 'col-start-stretch gaps-v-0x5' : 'row-start-center gaps-h-1'}>
                 <label className='row-start-center gaps-h-0x5'>
-                  <f.Radio
+                  <f.FormRadioElement
                     name='type'
                     disabled={pending}
                     {...u.bindChecked(this, ['formValues', 'type'], OUTCOME)}
@@ -257,7 +257,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                   <span>{i18n.xln(context, i18n.OUTCOME)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
-                  <f.Radio
+                  <f.FormRadioElement
                     name='type'
                     disabled={pending}
                     {...u.bindChecked(this, ['formValues', 'type'], INCOME)}
@@ -266,7 +266,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                   <span>{i18n.xln(context, i18n.INCOME)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
-                  <f.Radio
+                  <f.FormRadioElement
                     name='type'
                     disabled={pending}
                     {...u.bindChecked(this, ['formValues', 'type'], TRANSFER)}
@@ -277,7 +277,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
               </div>
               <div className={isMobile ? 'col-start-stretch gaps-v-0x5' : 'row-start-center gaps-h-1'}>
                 <label className='row-start-center gaps-h-0x5'>
-                  <f.Radio
+                  <f.FormRadioElement
                     name='type'
                     disabled={pending}
                     {...u.bindChecked(this, ['formValues', 'type'], LOAN)}
@@ -286,7 +286,7 @@ class _TransactionForm extends m.ViewComponent<TransactionFormProps, Transaction
                   <span>{i18n.xln(context, i18n.I_LOANED)}</span>
                 </label>
                 <label className='row-start-center gaps-h-0x5'>
-                  <f.Radio
+                  <f.FormRadioElement
                     name='type'
                     disabled={pending}
                     {...u.bindChecked(this, ['formValues', 'type'], BORROW)}

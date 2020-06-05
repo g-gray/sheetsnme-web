@@ -11,7 +11,7 @@ import * as i18n from '../i18n'
 import * as m from './misc'
 
 export type FormProps = {
-  onSubmitSuccess: (event?: KeyboardEvent | t.RMouseEvent) => void,
+  onSubmitSuccess: () => void,
 }
 
 
@@ -108,7 +108,7 @@ type FormTextElementProps = {
 
 
 export class FormTextElement extends m.ViewComponent<FormTextElementProps> {
-  onChange = (event: t.RChangeEvent<HTMLInputElement>): void => {
+  onChange = (event: t.RChangeEvent<HTMLInputElement>) => {
     const {target: {value}} = event
     const {onUpdate} = this.props
     onUpdate(value)
@@ -116,13 +116,7 @@ export class FormTextElement extends m.ViewComponent<FormTextElementProps> {
 
   render() {
     const {
-      props: {
-        label,
-        name,
-        value,
-        readOnly,
-        disabled
-      },
+      props: {label, name, value, readOnly, disabled},
       onChange,
     } = this
 
@@ -166,7 +160,7 @@ type FormNumberElementProps = {
 }
 
 export class FormNumberElement extends m.ViewComponent<FormNumberElementProps> {
-  onChange = (event: t.RChangeEvent<HTMLInputElement>): void => {
+  onChange = (event: t.RChangeEvent<HTMLInputElement>) => {
     const {target: {value}} = event
     const {onUpdate} = this.props
     onUpdate(u.parseNum(value))
@@ -174,14 +168,7 @@ export class FormNumberElement extends m.ViewComponent<FormNumberElementProps> {
 
   render() {
     const {
-      props: {
-        label,
-        name,
-        step,
-        value,
-        readOnly,
-        disabled
-      },
+      props: {label, name, step, value, readOnly, disabled},
       onChange,
     } = this
 
@@ -283,7 +270,7 @@ export class FormDateElement extends m.ViewComponent<FormDateElementProps, FormD
     return state
   }
 
-  onYearInput = (event: t.RChangeEvent<HTMLSelectElement>): void => {
+  onYearInput = (event: t.RChangeEvent<HTMLSelectElement>) => {
     const {target: {value}} = event
     const year = u.parseNum(value)
     const month = this.mayBeMonth(year, this.state.month)
@@ -293,7 +280,7 @@ export class FormDateElement extends m.ViewComponent<FormDateElementProps, FormD
     this.onDateInput(year, month, day)
   }
 
-  onMonthInput = (event: t.RChangeEvent<HTMLSelectElement>): void => {
+  onMonthInput = (event: t.RChangeEvent<HTMLSelectElement>) => {
     const {target: {value}} = event
     const month = u.parseNum(value)
     const year = this.state.year
@@ -303,7 +290,7 @@ export class FormDateElement extends m.ViewComponent<FormDateElementProps, FormD
     this.onDateInput(year, month, day)
   }
 
-  onDayInput = (event: t.RChangeEvent<HTMLSelectElement>): void => {
+  onDayInput = (event: t.RChangeEvent<HTMLSelectElement>) => {
     const {target: {value}} = event
     const day = u.parseNum(value)
     const {year, month} = this.state
@@ -315,7 +302,7 @@ export class FormDateElement extends m.ViewComponent<FormDateElementProps, FormD
     year : undefined | number,
     month: undefined | number,
     day  : undefined | number
-  ): void => {
+  ) => {
     const {props: {onUpdate}} = this
 
     if (year != null && month != null && day != null) {
@@ -434,7 +421,7 @@ type FormSelectElementProps = {
 
 
 export class FormSelectElement extends m.ViewComponent<FormSelectElementProps> {
-  onChange = (event: t.RChangeEvent<HTMLSelectElement>): void => {
+  onChange = (event: t.RChangeEvent<HTMLSelectElement>) => {
     const {target: {value}} = event
     const {onUpdate} = this.props
     onUpdate(value)
@@ -475,36 +462,10 @@ export class FormSelectElement extends m.ViewComponent<FormSelectElementProps> {
 
 
 /**
- * FormErrors
+ * FormRadioElement
  */
 
-type FormErrorsProps = {
-  errors: undefined | t.ValidationError[],
-}
-
-
-export class FormErrors extends m.ViewComponent<FormErrorsProps> {
-  render() {
-    const {props: {errors}} = this
-
-    return !errors ? null : (
-      <div className='col-start-center padding-v-1 fg-accent font-midsmall'>
-        {errors.map(({text}, index) => (
-          <p key={`error-${index}`}>{text}</p>
-        ))}
-      </div>
-    )
-  }
-}
-
-
-
-/**
- * Radio
- */
-
-
-type RadioProps = {
+type FormRadioElementProps = {
   name           : string,
   value          : undefined | string,
   defaultChecked?: boolean,
@@ -514,7 +475,8 @@ type RadioProps = {
   onUpdate       : (value: string) => void,
 }
 
-export class Radio extends m.ViewComponent<RadioProps> {
+
+export class FormRadioElement extends m.ViewComponent<FormRadioElementProps> {
   onChange = (event: t.RChangeEvent<HTMLInputElement>) => {
     const {target: {value}} = event
     const {onUpdate} = this.props
@@ -550,6 +512,33 @@ export class Radio extends m.ViewComponent<RadioProps> {
         />
         <span className='radio-decorator' />
       </label>
+    )
+  }
+}
+
+
+
+/**
+ * FormErrors
+ */
+
+type FormErrorsProps = {
+  errors: undefined | t.ValidationError[],
+}
+
+
+export class FormErrors extends m.ViewComponent<FormErrorsProps> {
+  render() {
+    const {props: {errors}} = this
+
+    return !errors ? null : (
+      <div className='col-start-center padding-v-1 fg-accent font-midsmall'>
+        {errors.map(({text}, index) => (
+          <p key={index}>
+            {text}
+          </p>
+        ))}
+      </div>
     )
   }
 }

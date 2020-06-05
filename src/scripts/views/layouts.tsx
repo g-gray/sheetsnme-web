@@ -9,6 +9,10 @@ import * as nav from './nav'
 import * as d from '../dialogs'
 import * as n from '../notifications'
 
+/**
+ * ListPage
+ */
+
 type ListPageProps = {
   action  : t.RReactElement,
   children: t.RReactChildren,
@@ -34,7 +38,10 @@ export class ListPage extends m.ViewComponent<ListPageProps> {
     return (
       <PageLayout className='relative col-start-center padding-r-1x25'>
         <div className='limit-content-width col-start-stretch gaps-v-1 padding-b-2'>
-          <div className='col-start-stretch padding-h-0x5' style={{marginTop: '-1.75rem'}}>
+          <div
+            className='col-start-stretch padding-h-0x5'
+            style={{marginTop: '-1.75rem'}}
+          >
             {action}
           </div>
           {children}
@@ -45,6 +52,10 @@ export class ListPage extends m.ViewComponent<ListPageProps> {
 }
 
 
+
+/**
+ * PageLayout
+ */
 
 type PageLayoutProps = {
   className?: string,
@@ -79,11 +90,15 @@ export class PageLayout extends m.ViewComponent<PageLayoutProps> {
 
 
 
+/**
+ * MobilePageLayout
+ */
+
 type MobilePageLayoutOwnProps = {
   className?: string,
   style?    : t.RCSSProperties,
-  children? : t.RReactChildren,
   action?   : t.RReactElement,
+  children? : t.RReactChildren,
 }
 
 type MobilePageLayoutStateProps = {
@@ -92,10 +107,11 @@ type MobilePageLayoutStateProps = {
 
 type MobilePageLayoutProps = MobilePageLayoutOwnProps & MobilePageLayoutStateProps
 
+
 class _MobilePageLayout extends m.ViewComponent<MobilePageLayoutProps> {
   render() {
     const {
-      props: {className: cls, style, children, action, hasDialogs},
+      props: {className: cls, style, action, children, hasDialogs},
     } = this
 
     return (
@@ -104,7 +120,8 @@ class _MobilePageLayout extends m.ViewComponent<MobilePageLayoutProps> {
         <div
           className={`flex-1 ${cls || ''}`}
           style={style}
-          children={children} />
+          children={children}
+        />
         <div className='fix-b-l z-index-tooltip width-100p col-start-stretch gaps-v-0x5 padding-0x5'>
           <n.Notifications />
           {!action || hasDialogs ? null :

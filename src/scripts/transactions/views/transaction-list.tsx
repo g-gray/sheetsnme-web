@@ -64,7 +64,7 @@ class _TransactionsList extends m.ViewComponent<TransactionListProps> {
               </span>
             </div>}
           </div>
-          <v.EntityItemList
+          <v.EntityList
             entityList={transactions}
             pending={pending}
             Placeholder={TransactionListPlaceholder}
@@ -77,7 +77,7 @@ class _TransactionsList extends m.ViewComponent<TransactionListProps> {
                 />
               ))}
             </div>
-          </v.EntityItemList>
+          </v.EntityList>
         </div>
         {!transactions.length ? null :
         <v.Paginator pageCount={pageCount} />}
