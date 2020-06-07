@@ -231,6 +231,8 @@ class _TransactionFiltersControls extends v.ViewComponent<TransactionFiltersCont
         <TransactoinFiltersForm />
       </d.FormDialog>
     )
+
+    e.dispatch(a.addDialog<d.FormDialogProps>(dialog))
   }
 
   onReset = () => {
