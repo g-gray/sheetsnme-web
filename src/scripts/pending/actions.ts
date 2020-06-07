@@ -15,6 +15,8 @@ export function trackRequest<P>(
   return (dispatch): Promise<P> => {
     const {message, requestName, promise} = opts
 
+    // 0 below means that notification should be removed with removeNotification
+    // It won't be removed by timeout
     const action = dispatch(na.addNotification(message, 0))
     const {time} = action.payload
 
@@ -23,16 +25,14 @@ export function trackRequest<P>(
     return promise
       .then((response: any) => {
         dispatch(requestEnd(requestName))
-        if (time) {
-          dispatch(na.removeNotification(time))
-        }
+        dispatch(na.removeNotification(time))
+
         return response
       })
       .catch((response: any) => {
         dispatch(requestEnd(requestName))
-        if (time) {
-          dispatch(na.removeNotification(time))
-        }
+        dispatch(na.removeNotification(time))
+
         throw response
       })
     }

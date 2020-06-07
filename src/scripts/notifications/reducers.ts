@@ -5,6 +5,8 @@ import * as fpx from 'fpx'
 
 import * as a from './actions'
 
+const DEFAULT_TIMEOUT = 3000
+
 export const defaultState: t.NotificationsState = []
 
 export const notifications = (
@@ -13,7 +15,7 @@ export const notifications = (
 ) => {
   switch (action.type) {
     case a.ADD_NOTIFICATION: {
-      const {text, timeout, time} = action.payload
+      const {text, timeout = DEFAULT_TIMEOUT, time} = action.payload
       return [
         ...state,
         {
