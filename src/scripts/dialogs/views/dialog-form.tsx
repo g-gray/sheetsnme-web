@@ -50,7 +50,7 @@ class _FormDialog extends v.ViewComponent<FormDialogProps> {
     return (
       <d.Dialog onEscape={onClose}>
         <d.DialogOverlay className='bg-overlay' />
-        <d.DialogCentered onClick={close}>
+        <d.DialogCentered onClick={onClose}>
           <div
             className='col-start-stretch rounded bg-surface shadow-dept-3'
             style={{minWidth: '31rem'}}>
@@ -60,7 +60,7 @@ class _FormDialog extends v.ViewComponent<FormDialogProps> {
               </h2>
               <v.FakeButton
                 className='row-center-center'
-                onClick={close}
+                onClick={onClose}
               >
                 <s.X className='font-large' />
               </v.FakeButton>
