@@ -16,10 +16,12 @@ type NotificationsStateProps = {
 type NotificationsProps = NotificationsStateProps
 
 class _Notifications extends v.ViewComponent<NotificationsProps> {
-  timeoutId: NodeJS.Timeout | undefined
+  timeoutId: number | undefined
 
   componentWillUnmount() {
-    if (this.timeoutId) clearTimeout(this.timeoutId)
+    if (this.timeoutId) {
+      window.clearTimeout(this.timeoutId)
+    }
   }
 
   render() {
@@ -29,7 +31,7 @@ class _Notifications extends v.ViewComponent<NotificationsProps> {
     if (!notification) return null
 
     if (notification.timeout) {
-      this.timeoutId = setTimeout(() => {
+      this.timeoutId = window.setTimeout(() => {
         e.dispatch(a.removeNotification(notification.time))
       }, notification.timeout)
     }
