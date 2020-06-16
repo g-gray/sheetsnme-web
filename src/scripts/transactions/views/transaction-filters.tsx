@@ -22,7 +22,7 @@ import * as s from '../../views/svg'
  * TransactionFiltersForm
  */
 
-type TransactionFiltersFormOwnProps =  t.RRRouteComponentProps
+type TransactionFiltersFormOwnProps = v.FormProps & t.RRRouteComponentProps
 
 type TransactionFiltersFormStateProps = {
   categories: t.CategoryListRes,
@@ -49,7 +49,7 @@ class _TransactionFiltersForm extends v.ViewComponent<TransactionFiltersFormProp
     u.preventDefault(event)
 
     const {
-      props: {history, location},
+      props: {history, location, onSubmitSuccess},
       state: {formValues},
     } = this
 
@@ -59,6 +59,8 @@ class _TransactionFiltersForm extends v.ViewComponent<TransactionFiltersFormProp
       ...stringifyFilters(formValues),
       page: undefined,
     })}`)
+
+    onSubmitSuccess()
   }
 
   onReset = (event: t.RFormEvent) => {
@@ -228,7 +230,7 @@ class _TransactionFiltersControls extends v.ViewComponent<TransactionFiltersCont
         title={i18n.xln(context, i18n.FILTERS)}
         onClose={closeDialog}
       >
-        <TransactoinFiltersForm />
+        <TransactoinFiltersForm onSubmitSuccess={closeDialog} />
       </d.FormDialog>
     )
 
