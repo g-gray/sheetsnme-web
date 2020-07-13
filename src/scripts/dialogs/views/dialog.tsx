@@ -125,7 +125,7 @@ export class DialogCentered extends v.ViewComponent<DialogCenteredProps> {
         <div className='dialog-center'>
           <div className='relative'>
             {children}
-          </div>,
+          </div>
         </div>
       </DialogScrollable>
     )
