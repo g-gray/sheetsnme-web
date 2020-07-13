@@ -142,6 +142,7 @@ class _CategoryForm extends v.ViewComponent<CategoryFormProps, CategoryFormState
       <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_CATEGORY)}
         onConfirm={() => {
+          closeDialog()
           e.dispatch(a.deleteCategory(
             formValues.id!,
             i18n.xln(context, i18n.DELETING_CATEGORY)
@@ -261,6 +262,7 @@ class _CategoriesList extends v.ViewComponent<CategoriesListProps> {
       <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_CATEGORY)}
         onConfirm={() => {
+          closeDialog()
           e.dispatch(a.deleteCategory(
             category.id,
             i18n.xln(context, i18n.DELETING_CATEGORY)

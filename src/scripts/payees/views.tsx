@@ -142,6 +142,7 @@ class _PayeeForm extends v.ViewComponent<PayeeFormProps, PayeeFormState> {
       <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_PAYEE)}
         onConfirm={() => {
+          closeDialog()
           e.dispatch(a.deletePayee(
             formValues.id!,
             i18n.xln(context, i18n.DELETING_PAYEE)
@@ -261,6 +262,7 @@ class _PayeesList extends v.ViewComponent<PayeesListProps> {
       <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_PAYEE)}
         onConfirm={() => {
+          closeDialog()
           e.dispatch(a.deletePayee(
             payee.id,
             i18n.xln(context, i18n.DELETING_PAYEE)

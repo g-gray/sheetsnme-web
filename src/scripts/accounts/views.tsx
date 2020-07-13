@@ -142,6 +142,7 @@ class _AccountForm extends v.ViewComponent<AccountFormProps, AccountFormState> {
       <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_ACCOUNT)}
         onConfirm={() => {
+          closeDialog()
           e.dispatch(a.deleteAccount(
             formValues.id!,
             i18n.xln(context, i18n.DELETING_ACCOUNT)
@@ -265,6 +266,7 @@ class _AccountList extends v.ViewComponent<AccountListProps> {
       <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_ACCOUNT)}
         onConfirm={() => {
+          closeDialog()
           e.dispatch(a.deleteAccount(
             account.id,
             i18n.xln(context, i18n.DELETING_ACCOUNT)

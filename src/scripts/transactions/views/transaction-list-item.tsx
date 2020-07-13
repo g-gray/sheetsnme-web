@@ -80,6 +80,7 @@ class _Transaction extends v.ViewComponent<TransactionProps> {
       <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_TRANSACTION)}
         onConfirm={() => {
+          closeDialog()
           e.dispatch(a.deleteTransaction(
             transaction.id,
             i18n.xln(context, i18n.DELETING_TRANSACTION)

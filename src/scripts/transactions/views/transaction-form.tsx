@@ -116,6 +116,7 @@ class _TransactionForm extends v.ViewComponent<TransactionFormProps, Transaction
       <d.ConfirmDialog
         question={i18n.xln(context, i18n.DELETE_TRANSACTION)}
         onConfirm={() => {
+          closeDialog()
           e.dispatch(a.deleteTransaction(
             formValues.id!,
             i18n.xln(context, i18n.DELETING_TRANSACTION)
