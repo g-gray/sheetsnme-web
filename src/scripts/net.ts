@@ -8,7 +8,10 @@ import * as xhttp from 'xhttp'
 import * as e from './env'
 import * as u from './utils'
 
-export function authedJsonFetch<P>(url: string, params?: t.JsonParams): Promise<P> {
+export function authedJsonFetch<P>(
+  url: string,
+  params?: t.JsonParams
+): Promise<P> {
   // TODO Review this approach
   const state: t.AppState = e.store.getState()
   params = emerge.merge(params, {headers: u.langHeaders(state.dom.i18n.lang)})
@@ -24,12 +27,16 @@ export function authedJsonFetch<P>(url: string, params?: t.JsonParams): Promise<
     })
 }
 
-export function authedHttpFetch(url: string, params: t.XHttpParams): Promise<t.XHttpResponse> {
+export function authedHttpFetch(
+  url: string,
+  params: t.XHttpParams
+): Promise<t.XHttpResponse> {
   return httpFetch({url, ...params})
     .catch(response => {
       if (response.status === 401) {
-        window.location.assign(`/auth/login/${u.encodeQuery({redirectTo: window.location.href})}`)
-        return response
+        const query = u.encodeQuery({redirectTo: window.location.href})
+        window.location.assign(`/auth/login/${query}`)
+        throw response
       }
 
       throw response
