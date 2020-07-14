@@ -13,12 +13,12 @@ import * as n from '../notifications'
  * ListPage
  */
 
-type ListPageProps = {
+type ListPageLayoutProps = {
   action  : t.RReactElement,
   children: t.RReactChildren,
 }
 
-export class ListPage extends m.ViewComponent<ListPageProps> {
+export class ListPageLayout extends m.ViewComponent<ListPageLayoutProps> {
   render() {
     const {
       context: {isMobile},

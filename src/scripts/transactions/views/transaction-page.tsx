@@ -41,9 +41,9 @@ export class TransactionsPage extends v.ViewComponent<TransactionPageProps> {
     const {openDialog} = this
 
     return (
-      <v.ListPage action={<v.Fab onClick={openDialog} />}>
+      <v.ListPageLayout action={<v.Fab onClick={openDialog} />}>
         <tl.TransactionsList />
-      </v.ListPage>
+      </v.ListPageLayout>
     )
   }
 }
