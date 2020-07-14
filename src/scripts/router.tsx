@@ -13,6 +13,7 @@ import {CategoriesPage} from './categories'
 import {AccountsPage} from './accounts'
 import {PayeesPage} from './payees'
 import {TransactionsPage} from './transactions'
+import {DashboardPage} from './dashboard'
 
 import * as v from './views'
 
@@ -79,6 +80,7 @@ class _Routes extends v.ViewComponent<RoutesProps> {
         <Route path='/categories'             component={CategoriesPage} />
         <Route path='/accounts'               component={AccountsPage} />
         <Route path='/payees'                 component={PayeesPage} />
+        <Route path='/dashboard'              component={DashboardPage} />
         <Route                                component={v.Page404} />
       </Switch>
     )

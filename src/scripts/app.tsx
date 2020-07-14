@@ -50,5 +50,5 @@ class _App extends v.ViewComponent<AppProps> {
 
 export const App = connect<AppStateProps, {}, {}, t.AppState>(state => ({
   isMobile: state.dom.geometry.isMobile,
-  lang: state.dom.i18n.lang,
+  lang    : state.dom.i18n.lang,
 }))(_App)

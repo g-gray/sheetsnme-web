@@ -10,6 +10,43 @@ import * as d from '../dialogs'
 import * as n from '../notifications'
 
 /**
+ * Dashboard
+ */
+
+type DashboardPageLayoutProps = {
+  children: t.RReactChildren,
+}
+
+export class DashboardPageLayout extends m.ViewComponent<DashboardPageLayoutProps> {
+  render() {
+    const {
+      context: {isMobile},
+      props: {children},
+    } = this
+
+    if (isMobile) {
+      return (
+        <MobilePageLayout>
+          <div className='col-start-stretch padding-v-0x5'>
+            {children}
+          </div>
+        </MobilePageLayout>
+      )
+    }
+
+    return (
+      <PageLayout className='relative col-start-center padding-r-1x25'>
+        <div className='limit-content-width col-start-stretch gaps-v-1 padding-b-2'>
+          {children}
+        </div>
+      </PageLayout>
+    )
+  }
+}
+
+
+
+/**
  * ListPage
  */
 
@@ -135,6 +172,11 @@ class _MobilePageLayout extends m.ViewComponent<MobilePageLayoutProps> {
   }
 }
 
-export const MobilePageLayout = connect<MobilePageLayoutStateProps, {}, MobilePageLayoutOwnProps, t.AppState>(state => ({
-  hasDialogs: !!state.dom.dialogs.length,
+export const MobilePageLayout = connect<
+  MobilePageLayoutStateProps,
+  {},
+  MobilePageLayoutOwnProps,
+  t.AppState
+>(state => ({
+  hasDialogs: Boolean(state.dom.dialogs.length),
 }))(_MobilePageLayout)
