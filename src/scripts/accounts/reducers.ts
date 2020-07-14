@@ -7,6 +7,7 @@ import * as a from './actions'
 export const defaultState: t.AccountsState = {
   accountList: [],
   accountsById: {},
+  balancesByAccountId: {},
 }
 
 export const accounts = (
@@ -20,6 +21,14 @@ export const accounts = (
         ...state,
         accountList,
         accountsById: u.keyById(accountList),
+      }
+    }
+
+    case a.RECEIVE_ACCOUNTS_BALANCES: {
+      const {accountsBalances} = action.payload
+      return {
+        ...state,
+        balancesByAccountId: accountsBalances,
       }
     }
 

@@ -29,7 +29,10 @@ class _Routes extends v.ViewComponent<RoutesProps> {
 
     this.unlisten = history.listen(nextLocation => {
       if (new RegExp(`^/transactions`, 'g').test(nextLocation.pathname)) {
-        e.dispatch(a.fetchTransactions(nextLocation, i18n.xln(context, i18n.FETCHING_TRANSACTIONS)))
+        e.dispatch(a.fetchTransactions(
+          nextLocation,
+          i18n.xln(context, i18n.FETCHING_TRANSACTIONS)
+        ))
         return
       }
 
@@ -45,6 +48,10 @@ class _Routes extends v.ViewComponent<RoutesProps> {
 
       if (new RegExp(`^/payees`, 'g').test(nextLocation.pathname)) {
         e.dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES)))
+      }
+
+      if (new RegExp(`^/dashboard`, 'g').test(nextLocation.pathname)) {
+        e.dispatch(a.fetchAccountsBalances(i18n.xln(context, i18n.FETCHING_ACCOUNTS_BALANCES)))
       }
     })
 

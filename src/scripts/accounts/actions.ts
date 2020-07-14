@@ -3,7 +3,7 @@ import * as t from '../types'
 import * as n from '../net'
 import * as pa from '../pending/actions'
 
-export type AccountActions = ReceiveAccounts
+export type AccountActions = ReceiveAccounts | ReceiveAccountsBalances
 
 
 export const RECEIVE_ACCOUNTS = 'RECEIVE_ACCOUNTS'
@@ -25,6 +25,7 @@ export function receiveAccounts(
     },
   }
 }
+
 
 export function fetchAccounts(
   message: string
@@ -87,5 +88,48 @@ export function deleteAccount (
         method: 'DELETE',
       }),
     }))
+  }
+}
+
+
+
+/**
+ * Balances
+ */
+
+export const RECEIVE_ACCOUNTS_BALANCES = 'RECEIVE_ACCOUNTS_BALANCES'
+
+interface ReceiveAccountsBalances extends t.ReduxAction {
+  type: typeof RECEIVE_ACCOUNTS_BALANCES,
+  payload: {
+    accountsBalances: t.AccountsBalancesRes,
+  },
+}
+
+export function receiveAccountsBalances(
+  accountsBalances: t.AccountsBalancesRes
+): ReceiveAccountsBalances {
+  return {
+    type: RECEIVE_ACCOUNTS_BALANCES,
+    payload: {
+      accountsBalances,
+    },
+  }
+}
+
+
+export function fetchAccountsBalances(
+  message: string
+): t.ReduxThunkAction<Promise<t.AccountsBalancesRes>> {
+  return (dispatch) => {
+    return dispatch(pa.trackRequest({
+      message,
+      requestName: 'getAccountsBalances',
+      promise: n.authedJsonFetch<t.AccountsBalancesRes>('/api/accounts/balances'),
+    }))
+      .then((accountsBalances) => {
+        dispatch(receiveAccountsBalances(accountsBalances))
+        return accountsBalances
+      })
   }
 }

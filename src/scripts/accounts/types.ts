@@ -1,6 +1,7 @@
 export type AccountsState = {
-  accountList : AccountListRes,
-  accountsById: AccountsById,
+  accountList        : AccountListRes,
+  accountsById       : AccountsById,
+  balancesByAccountId: BalancesByAccountId,
 }
 
 export type AccountReq = {
@@ -27,4 +28,21 @@ export type AccountListRes = AccountWithBalanceRes[]
 
 export type AccountsById = {
   [key: string]: AccountWithBalanceRes,
+}
+
+
+
+/**
+ * Balances
+ */
+
+export type AccountsBalancesRes = BalancesByAccountId
+
+export type BalancesByAccountId = {
+  [key: string]: Balance,
+}
+
+export type Balance = {
+  accountId: string,
+  balance  : number,
 }
