@@ -5,56 +5,20 @@ import {ParsedUrlQuery, ParsedUrlQueryInput} from 'querystring'
 import {History, Location} from 'history'
 import {RouteComponentProps} from 'react-router-dom'
 
-import * as gt from './geometry/types'
+export * from './env'
+import * as et from './env'
+
 export * from './geometry/types'
-
-import * as i18nt from './i18n/types'
 export * from './i18n/types'
-
-import * as nt from './notifications/types'
 export * from './notifications/types'
-
-import * as dt from './dialogs/types'
 export * from './dialogs/types'
-
-import * as pent from './pending/types'
 export * from './pending/types'
 
-import * as ut from './user/types'
 export * from './user/types'
-
-import * as ct from './categories/types'
 export * from './categories/types'
-
-import * as at from './accounts/types'
 export * from './accounts/types'
-
-import * as pt from './payees/types'
 export * from './payees/types'
-
-import * as tt from './transactions/types'
 export * from './transactions/types'
-
-/**
- * Env
- */
-
-declare global {
-  interface Window {
-    VARS: {
-      PROD            : boolean,
-      COMMIT          : string,
-      LANG_HEADER_NAME: string,
-    }
-  }
-}
-
-export type AppContext = {
-  isMobile: boolean,
-  lang    : i18nt.LANG,
-}
-
-
 
 /**
  * React
@@ -96,31 +60,13 @@ export type RRRouteComponentProps = RouteComponentProps
  * Redux
  */
 
-export type AppState = {
-  dom: {
-    geometry     : gt.GeometryState,
-    i18n         : i18nt.i18nState,
-    notifications: nt.NotificationsState,
-    dialogs      : dt.DialogsState,
-  },
-  net: {
-    pending     : pent.Pending,
-    user        : ut.UserState,
-    categories  : ct.CategoriesState,
-    accounts    : at.AccountsState,
-    payees      : pt.PayeesState,
-    transactions: tt.TransactionsState,
-  },
-}
-
-
 export interface ReduxAction extends Action<string> {
   payload?: any,
 }
 
 export interface ReduxThunkAction<R> extends ThunkAction<
   R,
-  AppState,
+  et.AppState,
   unknown,
   ReduxAction
 > {}

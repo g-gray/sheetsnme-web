@@ -27,10 +27,12 @@
 <meta name="robots" content="noindex, nofollow" />
 
 <script>
-  window.VARS = {
-    PROD:                {{JSON.stringify(Boolean($.PROD))}},
-    COMMIT:              {{JSON.stringify($.COMMIT || '')}},
-    LANG_HEADER_NAME:    {{JSON.stringify($.LANG_HEADER_NAME || '')}},
+  window.env = {
+    VARS: {
+      PROD:             {{JSON.stringify(Boolean($.PROD))}},
+      COMMIT:           {{JSON.stringify($.COMMIT || '')}},
+      LANG_HEADER_NAME: {{JSON.stringify($.LANG_HEADER_NAME || '')}},
+    },
   }
 </script>
 

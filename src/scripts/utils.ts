@@ -230,7 +230,7 @@ const jsonHeaders = {
 }
 
 export function langHeaders(lang: t.LANG): {[key: string]: t.LANG} {
-  return {[window.VARS.LANG_HEADER_NAME]: lang}
+  return {[window.env.VARS.LANG_HEADER_NAME]: lang}
 }
 
 

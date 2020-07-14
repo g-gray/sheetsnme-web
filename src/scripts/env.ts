@@ -1,7 +1,7 @@
 import * as t from './types'
 
 import React from 'react'
-import {createStore, combineReducers, applyMiddleware} from 'redux'
+import {createStore, combineReducers, applyMiddleware, Store} from 'redux'
 import thunk, {ThunkMiddleware} from 'redux-thunk'
 
 import {geometry, defMobile} from './geometry/reducers'
@@ -17,31 +17,79 @@ import {accounts} from './accounts/reducers'
 import {payees} from './payees/reducers'
 import {transactions} from './transactions/reducers'
 
-export const store = createStore(
-  combineReducers({
-    dom: combineReducers({
-      geometry,
-      i18n,
-      notifications,
-      dialogs,
-    }),
-    net: combineReducers({
-      pending,
-      user,
-      categories,
-      accounts,
-      payees,
-      transactions,
-    }),
+/**
+ * Context
+ */
+
+export type AppContext = {
+  isMobile: boolean,
+  lang    : t.LANG,
+}
+
+
+const defaultContext: AppContext = {
+  isMobile: defMobile(window.innerWidth),
+  lang: defLang(),
+}
+
+export const Context = React.createContext<AppContext>(defaultContext)
+
+
+
+/**
+ * Store
+ */
+
+export type AppState = ReturnType<typeof rootReducer>
+
+
+const rootReducer = combineReducers({
+  dom: combineReducers({
+    geometry,
+    i18n,
+    notifications,
+    dialogs,
   }),
+  net: combineReducers({
+    pending,
+    user,
+    categories,
+    accounts,
+    payees,
+    transactions,
+  }),
+})
+
+export const store = createStore(
+  rootReducer,
   applyMiddleware(thunk as ThunkMiddleware<t.AppState, t.ReduxAction>)
 )
 
 export const dispatch = store.dispatch
 
-const defaultContext: t.AppContext = {
-  isMobile: defMobile(window.innerWidth),
-  lang: defLang(),
+
+
+/**
+ * Env
+ */
+
+declare global {
+  interface Window {
+    env: {
+      VARS: {
+        PROD            : boolean,
+        COMMIT          : string,
+        LANG_HEADER_NAME: string,
+      },
+      store: Store<AppState>,
+    }
+  }
 }
 
-export const Context = React.createContext<t.AppContext>(defaultContext)
+
+if (!window.env.VARS.PROD) {
+  window.env = {
+    ...window.env,
+    store,
+  }
+}
