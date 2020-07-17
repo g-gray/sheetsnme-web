@@ -7,6 +7,7 @@ import * as a from './actions'
 export const defaultState: t.PayeesState = {
   payeeList: [],
   payeesById: {},
+  debtsByPayeeId: {},
 }
 
 export const payees = (
@@ -20,6 +21,14 @@ export const payees = (
         ...state,
         payeeList,
         payeesById: u.keyById(payeeList),
+      }
+    }
+
+    case a.RECEIVE_PAYEES_DEBTS: {
+      const {payeesDebts} = action.payload
+      return {
+        ...state,
+        debtsByPayeeId: payeesDebts,
       }
     }
 

@@ -1,6 +1,7 @@
 export type PayeesState = {
-  payeeList: PayeeListRes,
-  payeesById: PayeesById,
+  payeeList     : PayeeListRes,
+  payeesById    : PayeesById,
+  debtsByPayeeId: DebtsByPayeeId,
 }
 
 export type PayeeReq = {
@@ -25,4 +26,21 @@ export type PayeeListRes = PayeeWithDebtRes[]
 
 export type PayeesById = {
   [key: string]: PayeeWithDebtRes,
+}
+
+
+
+/**
+ * Debts
+ */
+
+export type PayeesDebtsRes = DebtsByPayeeId
+
+export type DebtsByPayeeId = {
+  [key: string]: Debt,
+}
+
+export type Debt = {
+  payeeId: string,
+  debt   : number,
 }

@@ -42,7 +42,7 @@ class _Routes extends v.ViewComponent<RoutesProps> {
     t.CategoryListRes |
     t.AccountListRes |
     t.PayeeListRes |
-    [t.AccountsBalancesRes, t.CategoriesSpendingsRes] |
+    [t.AccountsBalancesRes, t.CategoriesSpendingsRes, t.PayeesDebtsRes] |
     void
   > => {
     const {context} = this
@@ -77,7 +77,11 @@ class _Routes extends v.ViewComponent<RoutesProps> {
     }
 
     if (new RegExp(`^/dashboard`, 'g').test(pathname)) {
-      return Promise.all<t.AccountsBalancesRes, t.CategoriesSpendingsRes>([
+      return Promise.all<
+        t.AccountsBalancesRes,
+        t.CategoriesSpendingsRes,
+        t.PayeesDebtsRes
+      >([
         e.dispatch(a.fetchAccountsBalances(i18n.xln(
           context,
           i18n.FETCHING_ACCOUNTS_BALANCES
@@ -85,6 +89,10 @@ class _Routes extends v.ViewComponent<RoutesProps> {
         e.dispatch(a.fetchCategoriesSpendings(i18n.xln(
           context,
           i18n.FETCHING_ACCOUNTS_BALANCES
+        ))),
+        e.dispatch(a.fetchPayeesDebts(i18n.xln(
+          context,
+          i18n.FETCHING_PAYEES_DEBTS
         ))),
       ])
     }

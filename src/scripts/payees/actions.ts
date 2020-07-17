@@ -3,7 +3,7 @@ import * as t from '../types'
 import * as n from '../net'
 import * as pa from '../pending/actions'
 
-export type PayeeActions = ReceivePayees
+export type PayeeActions = ReceivePayees | ReceivePayeesDebts
 
 
 export const RECEIVE_PAYEES = 'RECEIVE_PAYEES'
@@ -85,5 +85,48 @@ export function deletePayee(
         method: 'DELETE',
       }),
     }))
+  }
+}
+
+
+
+/**
+ * Debts
+ */
+
+export const RECEIVE_PAYEES_DEBTS = 'RECEIVE_PAYESS_DEBTS'
+
+interface ReceivePayeesDebts extends t.ReduxAction {
+  type: typeof RECEIVE_PAYEES_DEBTS,
+  payload: {
+    payeesDebts: t.PayeesDebtsRes,
+  },
+}
+
+export function receivePayeesDebts(
+  payeesDebts: t.PayeesDebtsRes
+): ReceivePayeesDebts {
+  return {
+    type: RECEIVE_PAYEES_DEBTS,
+    payload: {
+      payeesDebts,
+    },
+  }
+}
+
+
+export function fetchPayeesDebts(
+  message: string
+): t.ReduxThunkAction<Promise<t.PayeesDebtsRes>> {
+  return (dispatch) => {
+    return dispatch(pa.trackRequest({
+      message,
+      requestName: 'getPayeesDebts',
+      promise: n.authedJsonFetch<t.PayeesDebtsRes>('/api/payees/debts'),
+    }))
+      .then((payeesDebts) => {
+        dispatch(receivePayeesDebts(payeesDebts))
+        return payeesDebts
+      })
   }
 }

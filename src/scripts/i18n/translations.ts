@@ -54,6 +54,7 @@ export const FETCHING_TRANSACTIONS = {en: 'Fetching transactions', ru: 'Загр
 
 export const FETCHING_ACCOUNTS_BALANCES    = {en: 'Fetching account balances', ru: 'Загрузка балансов счетов...'}
 export const FETCHING_CATEGORIES_SPENDINGS = {en: 'Fetching category spendings', ru: 'Загрузка трат по категориям...'}
+export const FETCHING_PAYEES_DEBTS         = {en: 'Fetching payee debts', ru: 'Загрузка долгов плательшиков...'}
 
 export const CREATING_ACCOUNT      = {en: 'Creating account', ru: 'Добавление счета...'}
 export const CREATING_CATEGORY     = {en: 'Creating category', ru: 'Добавление категории...'}
