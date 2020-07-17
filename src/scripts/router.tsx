@@ -22,50 +22,77 @@ type RoutesProps = t.RRRouteComponentProps
 class _Routes extends v.ViewComponent<RoutesProps> {
   unlisten: () => void = () => {}
 
-  componentDidMount() {
-    const {
-      context,
-      props: {history, location},
-    } = this
+  fetchAppData = (): Promise<[
+    t.CategoryListRes,
+    t.AccountListRes,
+    t.PayeeListRes,
+  ]> => {
+    const {context} = this
 
-    this.unlisten = history.listen(nextLocation => {
-      if (new RegExp(`^/transactions`, 'g').test(nextLocation.pathname)) {
-        e.dispatch(a.fetchTransactions(
-          nextLocation,
-          i18n.xln(context, i18n.FETCHING_TRANSACTIONS)
-        ))
-        return
-      }
-
-      if (new RegExp(`^/categories`, 'g').test(nextLocation.pathname)) {
-        e.dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES)))
-        return
-      }
-
-      if (new RegExp(`^/accounts`, 'g').test(nextLocation.pathname)) {
-        e.dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS)))
-        return
-      }
-
-      if (new RegExp(`^/payees`, 'g').test(nextLocation.pathname)) {
-        e.dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES)))
-      }
-
-      if (new RegExp(`^/dashboard`, 'g').test(nextLocation.pathname)) {
-        e.dispatch(a.fetchAccountsBalances(i18n.xln(context, i18n.FETCHING_ACCOUNTS_BALANCES)))
-      }
-    })
-
-    e.dispatch(a.fetchUser(i18n.xln(context, i18n.FETCHING_USER)))
-      .then(() => Promise.all([
+    return e.dispatch(a.fetchUser(i18n.xln(context, i18n.FETCHING_USER)))
+      .then(() => Promise.all<t.CategoryListRes, t.AccountListRes, t.PayeeListRes>([
         e.dispatch(a.fetchCategories(i18n.xln(context, i18n.FETCHING_CATEGORIES))),
         e.dispatch(a.fetchAccounts(i18n.xln(context, i18n.FETCHING_ACCOUNTS))),
         e.dispatch(a.fetchPayees(i18n.xln(context, i18n.FETCHING_PAYEES))),
       ]))
-      .then(() => e.dispatch(a.fetchTransactions(
-        location,
-        i18n.xln(context, i18n.FETCHING_TRANSACTIONS)
+    }
+
+  fetchRouteData = (location: t.RRLocation): Promise<
+    t.TransactionListRes |
+    t.CategoryListRes |
+    t.AccountListRes |
+    t.PayeeListRes |
+    t.AccountsBalancesRes |
+    void
+  > => {
+    const {context} = this
+    const {pathname} = location
+
+    if (new RegExp(`^/categories`, 'g').test(pathname)) {
+      return e.dispatch(a.fetchCategories(i18n.xln(
+        context,
+        i18n.FETCHING_CATEGORIES
       )))
+    }
+
+    if (new RegExp(`^/accounts`, 'g').test(pathname)) {
+      return e.dispatch(a.fetchAccounts(i18n.xln(
+        context,
+        i18n.FETCHING_ACCOUNTS
+      )))
+    }
+
+    if (new RegExp(`^/payees`, 'g').test(pathname)) {
+      return e.dispatch(a.fetchPayees(i18n.xln(
+        context,
+        i18n.FETCHING_PAYEES
+      )))
+    }
+
+    if (new RegExp(`^/transactions`, 'g').test(pathname)) {
+      return e.dispatch(a.fetchTransactions(location, i18n.xln(
+        context,
+        i18n.FETCHING_TRANSACTIONS
+      )))
+    }
+
+    if (new RegExp(`^/dashboard`, 'g').test(pathname)) {
+      return e.dispatch(a.fetchAccountsBalances(i18n.xln(
+        context,
+        i18n.FETCHING_ACCOUNTS_BALANCES
+      )))
+    }
+
+    return Promise.resolve()
+  }
+
+  componentDidMount() {
+    const {props: {history, location}} = this
+
+    this.unlisten = history.listen(this.fetchRouteData)
+
+    this.fetchAppData()
+      .then(() => this.fetchRouteData(location))
   }
 
   componentWillUnmount() {
