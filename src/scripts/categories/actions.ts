@@ -3,7 +3,7 @@ import * as t from '../types'
 import * as n from '../net'
 import * as pa from '../pending/actions'
 
-export type CategoryActions = ReceiveCategories
+export type CategoryActions = ReceiveCategories | ReceiveCategoriesSpendings
 
 
 export const RECEIVE_CATEGORIES = 'RECEIVE_CATEGORIES'
@@ -25,6 +25,7 @@ function receiveCategories(
     },
   }
 }
+
 
 export function fetchCategories(
   message: string
@@ -87,5 +88,46 @@ export function deleteCategory(
         method: 'DELETE',
       }),
     }))
+  }
+}
+
+/**
+ * Spendings
+ */
+
+export const RECEIVE_CATEGORIES_SPENDINGS = 'RECEIVE_CATEGORIES_SPENDINGS'
+
+interface ReceiveCategoriesSpendings extends t.ReduxAction {
+  type: typeof RECEIVE_CATEGORIES_SPENDINGS,
+  payload: {
+    categoriesSpendings: t.CategoriesSpendingsRes,
+  },
+}
+
+export function receiveCategoriesSpendings(
+  categoriesSpendings: t.CategoriesSpendingsRes
+): ReceiveCategoriesSpendings {
+  return {
+    type: RECEIVE_CATEGORIES_SPENDINGS,
+    payload: {
+      categoriesSpendings,
+    },
+  }
+}
+
+
+export function fetchCategoriesSpendings(
+  message: string
+): t.ReduxThunkAction<Promise<t.CategoriesSpendingsRes>> {
+  return (dispatch) => {
+    return dispatch(pa.trackRequest({
+      message,
+      requestName: 'getCategoriesSpendings',
+      promise: n.authedJsonFetch<t.CategoriesSpendingsRes>('/api/categories/spendings'),
+    }))
+      .then((categoriesSpendings) => {
+        dispatch(receiveCategoriesSpendings(categoriesSpendings))
+        return categoriesSpendings
+      })
   }
 }

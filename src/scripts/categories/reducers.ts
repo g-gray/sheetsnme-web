@@ -7,6 +7,7 @@ import * as a from './actions'
 export const defaultState: t.CategoriesState = {
   categoryList: [],
   categoriesById: {},
+  spendingsByCategoryId: {},
 }
 
 export const categories = (
@@ -20,6 +21,14 @@ export const categories = (
         ...state,
         categoryList,
         categoriesById: u.keyById(categoryList),
+      }
+    }
+
+    case a.RECEIVE_CATEGORIES_SPENDINGS: {
+      const {categoriesSpendings} = action.payload
+      return {
+        ...state,
+        spendingsByCategoryId: categoriesSpendings,
       }
     }
 

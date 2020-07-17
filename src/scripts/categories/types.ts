@@ -1,6 +1,7 @@
 export type CategoriesState = {
-  categoryList  : CategoryListRes,
-  categoriesById: CategoriesById,
+  categoryList         : CategoryListRes,
+  categoriesById       : CategoriesById,
+  spendingsByCategoryId: SpendingsByCategoryId,
 }
 
 export type CategoryReq = {
@@ -21,4 +22,21 @@ export type CategoryListRes = CategoryRes[]
 
 export type CategoriesById = {
   [key: string]: CategoryRes,
+}
+
+
+
+/**
+ * Spendigns
+ */
+
+export type CategoriesSpendingsRes = SpendingsByCategoryId
+
+export type SpendingsByCategoryId = {
+  [key: string]: Spending,
+}
+
+export type Spending = {
+  categoryId: string,
+  spending  : number,
 }
