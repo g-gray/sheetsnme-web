@@ -8,11 +8,13 @@ import * as e from './env'
 import {App} from './app'
 
 const rootElem = (
-  <Provider store={e.store}>
-    <Router>
-      <App />
-    </Router>
-  </Provider>
+  <React.StrictMode>
+    <Provider store={e.store}>
+      <Router>
+        <App />
+      </Router>
+    </Provider>
+  </React.StrictMode>
 )
 
 const rootNode = document.getElementById('root')
