@@ -94,7 +94,7 @@ export function deletePayee(
  * Debts
  */
 
-export const RECEIVE_PAYEES_DEBTS = 'RECEIVE_PAYESS_DEBTS'
+export const RECEIVE_PAYEES_DEBTS = 'RECEIVE_PAYEES_DEBTS'
 
 interface ReceivePayeesDebts extends t.ReduxAction {
   type: typeof RECEIVE_PAYEES_DEBTS,
