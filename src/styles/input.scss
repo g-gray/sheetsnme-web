@@ -1,3 +1,5 @@
+$input-color-disabled: rgba(black, 0.50);
+
 @mixin input-core {
   @extend .input-height;
   @extend .input-padding;
@@ -39,6 +41,11 @@
   @include input-focus;
   border-color: rgba($color-on-surface, 0.12);
   background-color: $color-surface;
+
+  @include disabled {
+    @extend [disabled];
+    color: $input-color-disabled;
+  }
 }
 
 .input::placeholder {
@@ -62,4 +69,9 @@
   background-position: right 0.25rem center;
   background-repeat: no-repeat;
   background-size: 16px;
+
+  @include disabled {
+    @extend [disabled];
+    color: $input-color-disabled;
+  }
 }
