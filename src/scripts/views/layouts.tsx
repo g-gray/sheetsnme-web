@@ -36,7 +36,7 @@ export class DashboardPageLayout extends m.ViewComponent<DashboardPageLayoutProp
 
     return (
       <PageLayout className='relative col-start-center padding-r-1x25'>
-        <div className='limit-content-width col-start-stretch gaps-v-1 padding-b-2'>
+        <div className='limit-content-width col-start-stretch gaps-v-1 padding-t-1 padding-b-2'>
           {children}
         </div>
       </PageLayout>

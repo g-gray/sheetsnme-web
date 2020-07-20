@@ -4,6 +4,8 @@ import React from 'react'
 
 import * as v from '../views'
 
+import {DebtsChart} from './debts-chart'
+
 type DashboardPageProps = {}
 
 
@@ -12,8 +14,7 @@ export class DashboardPage extends v.ViewComponent<DashboardPageProps> {
 
     return (
       <v.DashboardPageLayout>
-        <div>
-        </div>
+        <DebtsChart />
       </v.DashboardPageLayout>
     )
   }
