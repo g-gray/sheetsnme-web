@@ -473,6 +473,7 @@ type FormRadioElementProps = {
   readOnly?      : boolean,
   disabled?      : boolean,
   onUpdate       : (value: string) => void,
+  label          : t.RReactNode,
 }
 
 
@@ -493,6 +494,7 @@ export class FormRadioElement extends m.ViewComponent<FormRadioElementProps> {
         checked,
         readOnly,
         disabled,
+        label,
       },
     } = this
 
@@ -511,6 +513,7 @@ export class FormRadioElement extends m.ViewComponent<FormRadioElementProps> {
           onChange={onChange}
         />
         <span className='radio-decorator' />
+        <span className='radio-label'>{label}</span>
       </label>
     )
   }

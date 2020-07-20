@@ -4,12 +4,15 @@ $radio-border-width: 1px;
 $radio-dot-width: 0.5rem;
 $radio-dot-height: 0.5rem;
 
+$radio-color-disabled: rgba(black, 0.50);
 $radio-color-border: rgba(black, 0.20);
 $radio-color-primary: $color-primary;
 
 .radio {
   flex-shrink: 0;
   @extend .relative;
+  @extend .row-start-center;
+  @extend .gaps-h-0x5;
   @extend .overflow-hidden;
 }
 
@@ -40,7 +43,18 @@ $radio-color-primary: $color-primary;
     background-color: $radio-color-primary;
   }
 
+  .radio-input:checked[disabled] ~ &::before {
+    background-color: $radio-color-disabled;
+  }
+
   .radio-input[disabled] ~ & {
     @extend [disabled];
+  }
+}
+
+.radio-label {
+  .radio-input[disabled] ~ & {
+    @extend [disabled];
+    color: $radio-color-disabled;
   }
 }

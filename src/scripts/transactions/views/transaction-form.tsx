@@ -244,53 +244,43 @@ class _TransactionForm extends v.ViewComponent<TransactionFormProps, Transaction
             </v.FormLabel>
             <div className='col-start-stretch gaps-v-0x5'>
               <div className={isMobile ? 'col-start-stretch gaps-v-0x5' : 'row-start-center gaps-h-1'}>
-                <label className='row-start-center gaps-h-0x5'>
-                  <v.FormRadioElement
-                    name='type'
-                    disabled={pending}
-                    {...u.bindChecked(this, ['formValues', 'type'], OUTCOME)}
-                    onUpdate={onTypeUpdated}
-                  />
-                  <span>{i18n.xln(context, i18n.OUTCOME)}</span>
-                </label>
-                <label className='row-start-center gaps-h-0x5'>
-                  <v.FormRadioElement
-                    name='type'
-                    disabled={pending}
-                    {...u.bindChecked(this, ['formValues', 'type'], INCOME)}
-                    onUpdate={onTypeUpdated}
-                  />
-                  <span>{i18n.xln(context, i18n.INCOME)}</span>
-                </label>
-                <label className='row-start-center gaps-h-0x5'>
-                  <v.FormRadioElement
-                    name='type'
-                    disabled={pending}
-                    {...u.bindChecked(this, ['formValues', 'type'], TRANSFER)}
-                    onUpdate={onTypeUpdated}
-                  />
-                  <span>{i18n.xln(context, i18n.TRANSFER)}</span>
-                </label>
+                <v.FormRadioElement
+                  name='type'
+                  disabled={pending}
+                  {...u.bindChecked(this, ['formValues', 'type'], OUTCOME)}
+                  onUpdate={onTypeUpdated}
+                  label={i18n.xln(context, i18n.OUTCOME)}
+                />
+                <v.FormRadioElement
+                  name='type'
+                  disabled={pending}
+                  {...u.bindChecked(this, ['formValues', 'type'], INCOME)}
+                  onUpdate={onTypeUpdated}
+                  label={i18n.xln(context, i18n.INCOME)}
+                />
+                <v.FormRadioElement
+                  name='type'
+                  disabled={pending}
+                  {...u.bindChecked(this, ['formValues', 'type'], TRANSFER)}
+                  onUpdate={onTypeUpdated}
+                  label={i18n.xln(context, i18n.TRANSFER)}
+                />
               </div>
               <div className={isMobile ? 'col-start-stretch gaps-v-0x5' : 'row-start-center gaps-h-1'}>
-                <label className='row-start-center gaps-h-0x5'>
-                  <v.FormRadioElement
-                    name='type'
-                    disabled={pending}
-                    {...u.bindChecked(this, ['formValues', 'type'], LOAN)}
-                    onUpdate={onTypeUpdated}
-                  />
-                  <span>{i18n.xln(context, i18n.I_LOANED)}</span>
-                </label>
-                <label className='row-start-center gaps-h-0x5'>
-                  <v.FormRadioElement
-                    name='type'
-                    disabled={pending}
-                    {...u.bindChecked(this, ['formValues', 'type'], BORROW)}
-                    onUpdate={onTypeUpdated}
-                  />
-                  <span>{i18n.xln(context, i18n.I_BORROWED)}</span>
-                </label>
+                <v.FormRadioElement
+                  name='type'
+                  disabled={pending}
+                  {...u.bindChecked(this, ['formValues', 'type'], LOAN)}
+                  onUpdate={onTypeUpdated}
+                  label={i18n.xln(context, i18n.I_LOANED)}
+                />
+                <v.FormRadioElement
+                  name='type'
+                  disabled={pending}
+                  {...u.bindChecked(this, ['formValues', 'type'], BORROW)}
+                  onUpdate={onTypeUpdated}
+                  label={i18n.xln(context, i18n.I_BORROWED)}
+                />
               </div>
             </div>
           </v.G7FormLine>
