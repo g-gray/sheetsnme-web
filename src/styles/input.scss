@@ -1,0 +1,65 @@
+@mixin input-core {
+  @extend .input-height;
+  @extend .input-padding;
+  // min-width: 14.5rem;
+  border-radius: $radius;
+  border: 1px solid;
+  @include sb-transition($duration: $transition-duration-faster);
+  @include media-sm {
+    min-width: auto;
+  }
+}
+
+@mixin input-focus {
+  &:focus, .enable-focus-indicators &:focus {
+    outline: 0;
+    background-color: $color-surface;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px $color-primary-light;
+  }
+}
+
+.hidden-input {
+  @extend .abs;
+  right: 100vw;
+  width: 0;
+  height: 0;
+}
+
+.input-height {
+  height: 2rem;
+}
+
+.input-padding {
+  padding: 0.25rem 0.75rem;
+}
+
+.input {
+  @include input-core;
+  @include input-focus;
+  border-color: rgba($color-on-surface, 0.12);
+  background-color: $color-surface;
+}
+
+.input::placeholder {
+  @extend .weight-light;
+  @include sb-transition;
+  opacity: 1;
+  color: rgba($color-on-surface, 0.32);
+}
+
+.textarea {
+  @extend .input;
+  height: auto;
+}
+
+.select-native {
+  @extend .input;
+  padding-right: 1.5rem;
+  appearance: none;
+  background-image: inline-feather-svg('<polyline points="6 9 12 15 18 9" />', rgba($color-on-surface, 0.60));
+  background-color: $color-surface;
+  background-position: right 0.25rem center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+}

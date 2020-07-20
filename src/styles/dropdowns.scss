@@ -1,0 +1,48 @@
+$dropdown-color-edge:   hsb(208, 10%, 86%);
+$dropdown-color-bg:     $color-surface;
+$dropdown-color-shadow: rgba(black, 0.1);
+
+.dropdown-chevron::before {
+  content: '';
+  display: block;
+  border: 7px solid transparent;
+  border-bottom-color: $dropdown-color-edge;
+}
+
+.dropdown-chevron::after {
+  content: '';
+  left: 50%;
+  bottom: 0;
+  display: block;
+  position: absolute;
+  border: 5px solid transparent;
+  border-bottom-color: $dropdown-color-bg;
+  transform: translateX(-50%);
+}
+
+.dropdown {
+  background-color: $dropdown-color-bg;
+  border-radius: $radius;
+  @extend .shadow-dept-2;
+}
+
+.dropdown-padding {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.dropdown-item-padding {
+  padding: 0.5rem 1rem;
+}
+
+.dropdown-hr-padding {
+  padding: 0.25rem 1rem;
+}
+
+.dropdown-position {
+  top: 100%;
+  right: 0rem;
+  position: absolute;
+  margin: 0.25rem;
+  @extend .col-start-stretch;
+}

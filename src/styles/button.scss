@@ -1,0 +1,76 @@
+ @mixin button-core {
+  line-height: 1rem;
+  border: 1px solid;
+  border-radius: $radius;
+  padding: 0.5rem 1rem;
+  @include sb-transition($duration: $transition-duration-fast);
+  @extend .wspace-nowrap;
+
+  @include disabled {
+    pointer-events: none;
+  }
+}
+
+@mixin button-focus {
+  &:focus, .enable-focus-indicators &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 3px $color-primary-light;
+  }
+}
+
+.btn-wide {
+  min-width: 8rem;
+}
+
+.btn-gaps {
+  @extend .gaps-h-0x25;
+}
+
+.btn-primary {
+  @include button-core;
+  @include button-focus;
+  color: $color-on-primary;
+  background-color: $color-primary;
+  border-color: transparent;
+  @include busy {
+    background-color: $color-primary-dark;
+  }
+  @include disabled {
+    opacity: 0.5;
+  }
+}
+
+.btn-secondary {
+  @include button-core;
+  @include button-focus;
+  color: $color-primary;
+  background-color: rgba($color-on-surface, 0.06);
+  border-color: transparent;
+  @include busy {
+    color: $color-primary-dark;
+    background-color: rgba($color-primary, 0.12);
+  }
+  @include if-current {
+    color: $color-on-primary;
+    background-color: $color-primary-dark;
+  }
+  @include disabled {
+    opacity: 0.5;
+  }
+}
+
+.btn-transparent {
+  @include button-core;
+  @include button-focus;
+  color: $color-primary;
+  background-color: transparent;
+  border-color: transparent;
+  @include busy {
+    color: $color-primary-dark;
+    background-color: rgba($color-primary, 0.12);
+    border-color: transparent;
+  }
+  @include disabled {
+    opacity: 0.5;
+  }
+}

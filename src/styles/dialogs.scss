@@ -1,0 +1,22 @@
+.dialog {
+  z-index: $z-index-dialog;
+  @extend .fix-fit;
+}
+
+.dialog-overlay {
+  @extend .abs-fit;
+  @extend .bg-overlay;
+}
+
+.dialog-scrollable {
+  height: 100%;
+  @extend .relative;
+  @extend .overflow-y-scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dialog-center {
+  min-height: 100vh;
+  @extend .col-center-center;
+  @extend .padding-1;
+}

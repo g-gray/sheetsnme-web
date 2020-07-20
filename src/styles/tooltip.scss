@@ -1,6 +1,7 @@
-$color-tooltip-bg: $color-snackbar;
-$color-tooltip-fg: $color-on-snackbar;
 $tooltip-offset: 1rem;
+
+$tooltip-color-bg: $color-snackbar;
+$tooltip-color-fg: $color-on-snackbar;
 
 [aria-label] {
   @extend .relative;
@@ -34,8 +35,8 @@ $tooltip-offset: 1rem;
 
   &::after {
     @extend .rounded;
-    color: $color-tooltip-fg;
-    background-color: $color-tooltip-bg;
+    color: $tooltip-color-fg;
+    background-color: $tooltip-color-bg;
     @extend .font-small;
     content: attr(aria-label);
     padding: 0.5rem;
@@ -58,7 +59,7 @@ $tooltip-offset: 1rem;
     bottom: 100%;
     right: 50%;
     transform: translateX(50%);
-    border-top-color: $color-tooltip-bg;
+    border-top-color: $tooltip-color-bg;
   }
 
   &::after {
@@ -73,7 +74,7 @@ $tooltip-offset: 1rem;
     top: 50%;
     left: 100%;
     transform: translateY(-50%);
-    border-right-color: $color-tooltip-bg;
+    border-right-color: $tooltip-color-bg;
   }
 
   &::after {
@@ -88,7 +89,7 @@ $tooltip-offset: 1rem;
     top: 100%;
     right: 50%;
     transform: translateX(50%);
-    border-bottom-color: $color-tooltip-bg;
+    border-bottom-color: $tooltip-color-bg;
   }
 
   &::after {
@@ -103,7 +104,7 @@ $tooltip-offset: 1rem;
     top: 50%;
     right: 100%;
     transform: translateY(-50%);
-    border-left-color: $color-tooltip-bg;
+    border-left-color: $tooltip-color-bg;
   }
 
   &::after {
@@ -117,7 +118,7 @@ $tooltip-offset: 1rem;
   &::before {
     bottom: 100%;
     left: 0;
-    border-top-color: $color-tooltip-bg;
+    border-top-color: $tooltip-color-bg;
   }
 
   &::after {
