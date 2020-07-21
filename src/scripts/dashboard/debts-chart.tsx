@@ -18,7 +18,6 @@ type DebtsChartStateProps = {
 
 type DebtsChartProps = DebtsChartOwnProps & DebtsChartStateProps
 
-
 class _DebtsChart extends v.ViewComponent<DebtsChartProps> {
   render() {
     const {
@@ -29,7 +28,7 @@ class _DebtsChart extends v.ViewComponent<DebtsChartProps> {
     const categories = payeeList.map((payee) => payee.title)
 
     const data = payeeList.map((payee) => {
-      return debtsByPayeeId[payee.id] && debtsByPayeeId[payee.id].debt
+      return debtsByPayeeId[payee.id]?.debt
     })
 
     const options: Highcharts.Options = {
