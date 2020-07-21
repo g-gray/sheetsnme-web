@@ -36,7 +36,7 @@ class _DebtsChart extends v.ViewComponent<DebtsChartProps> {
         type: 'bar',
       },
       title: {
-        text: i18n.xln(context, i18n.DEBTS),
+        text: i18n.xln(context, i18n.PAYEE_DEBTS),
       },
       xAxis: [
         {
@@ -55,7 +55,7 @@ class _DebtsChart extends v.ViewComponent<DebtsChartProps> {
       },
       series: [
         {
-          name: i18n.xln(context, i18n.DEBTS),
+          name: i18n.xln(context, i18n.PAYEE_DEBTS),
           type: 'bar',
           data,
         },

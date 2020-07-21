@@ -84,15 +84,15 @@ class _Routes extends v.ViewComponent<RoutesProps> {
       >([
         e.dispatch(a.fetchAccountsBalances(i18n.xln(
           context,
-          i18n.FETCHING_ACCOUNTS_BALANCES
+          i18n.FETCHING_ACCOUNT_BALANCES
         ))),
         e.dispatch(a.fetchCategoriesSpendings(i18n.xln(
           context,
-          i18n.FETCHING_ACCOUNTS_BALANCES
+          i18n.FETCHING_CATEGORY_SPENDINGS
         ))),
         e.dispatch(a.fetchPayeesDebts(i18n.xln(
           context,
-          i18n.FETCHING_PAYEES_DEBTS
+          i18n.FETCHING_PAYEE_DEBTS
         ))),
       ])
     }

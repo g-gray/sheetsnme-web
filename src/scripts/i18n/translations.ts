@@ -7,8 +7,8 @@ export const CATEGORIES            = {en: 'Categories', ru: 'Категории'
 export const TRANSACTIONS          = {en: 'Transactions', ru: 'Транзакции'}
 export const PAYEES                = {en: 'Payees', ru: 'Плательщики'}
 export const FILTERS               = {en: 'Filters', ru: 'Фильтры'}
-export const DEBTS                 = {en: 'Debts', ru: 'Долги'}
-export const SPENDINGS             = {en: 'Spendings', ru: 'Траты'}
+export const PAYEE_DEBTS           = {en: 'Payee Debts', ru: 'Долги плательщиков'}
+export const CATEGORY_SPENDINGS    = {en: 'Category Spendings', ru: 'Траты по категориям'}
 export const ACCOUNT_BALANCES      = {en: 'Account Balances', ru: 'Балансы счетов'}
 
 export const DATE                  = {en: 'Date', ru: 'Дата'}
@@ -50,15 +50,15 @@ export const SUBMIT                = {en: 'Submit', ru: 'Подтвердить'
 export const APPLY                 = {en: 'Apply', ru: 'Применить'}
 export const RESET                 = {en: 'Reset', ru: 'Сбросить'}
 
-export const FETCHING_USER         = {en: 'Fetching user', ru: 'Загрузка пользователя...'}
-export const FETCHING_ACCOUNTS     = {en: 'Fetching accounts', ru: 'Загрузка счетов...'}
-export const FETCHING_CATEGORIES   = {en: 'Fetching categories', ru: 'Загрузка категорий...'}
-export const FETCHING_PAYEES       = {en: 'Fetching payees', ru: 'Загрузка плательщиков...'}
-export const FETCHING_TRANSACTIONS = {en: 'Fetching transactions', ru: 'Загрузка транзакций...'}
+export const FETCHING_USER         = {en: 'Fetching user...', ru: 'Загрузка пользователя...'}
+export const FETCHING_ACCOUNTS     = {en: 'Fetching accounts...', ru: 'Загрузка счетов...'}
+export const FETCHING_CATEGORIES   = {en: 'Fetching categories...', ru: 'Загрузка категорий...'}
+export const FETCHING_PAYEES       = {en: 'Fetching payees...', ru: 'Загрузка плательщиков...'}
+export const FETCHING_TRANSACTIONS = {en: 'Fetching transactions...', ru: 'Загрузка транзакций...'}
 
-export const FETCHING_ACCOUNTS_BALANCES    = {en: 'Fetching account balances', ru: 'Загрузка балансов счетов...'}
-export const FETCHING_CATEGORIES_SPENDINGS = {en: 'Fetching category spendings', ru: 'Загрузка трат по категориям...'}
-export const FETCHING_PAYEES_DEBTS         = {en: 'Fetching payee debts', ru: 'Загрузка долгов плательшиков...'}
+export const FETCHING_ACCOUNT_BALANCES   = {en: 'Fetching account balances...', ru: 'Загрузка балансов счетов...'}
+export const FETCHING_CATEGORY_SPENDINGS = {en: 'Fetching category spendings...', ru: 'Загрузка трат по категориям...'}
+export const FETCHING_PAYEE_DEBTS        = {en: 'Fetching payee debts...', ru: 'Загрузка долгов плательшиков...'}
 
 export const CREATING_ACCOUNT      = {en: 'Creating account', ru: 'Добавление счета...'}
 export const CREATING_CATEGORY     = {en: 'Creating category', ru: 'Добавление категории...'}

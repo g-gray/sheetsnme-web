@@ -36,7 +36,7 @@ class _SpendingsChart extends v.ViewComponent<SpendingsChartProps> {
         type: 'bar',
       },
       title: {
-        text: i18n.xln(context, i18n.SPENDINGS),
+        text: i18n.xln(context, i18n.CATEGORY_SPENDINGS),
       },
       xAxis: [
         {
@@ -50,7 +50,7 @@ class _SpendingsChart extends v.ViewComponent<SpendingsChartProps> {
       },
       series: [
         {
-          name: i18n.xln(context, i18n.SPENDINGS),
+          name: i18n.xln(context, i18n.CATEGORY_SPENDINGS),
           type: 'bar',
           data,
         },
