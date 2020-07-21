@@ -116,12 +116,12 @@ class _Routes extends v.ViewComponent<RoutesProps> {
   render() {
     return (
       <Switch>
-        <Redirect from='/' to='/transactions' exact />
-        <Route path='/transactions'           component={TransactionsPage} exact />
+        <Redirect from='/' to='/dashboard' exact />
+        <Route path='/dashboard'              component={DashboardPage} />
+        <Route path='/transactions'           component={TransactionsPage} />
         <Route path='/categories'             component={CategoriesPage} />
         <Route path='/accounts'               component={AccountsPage} />
         <Route path='/payees'                 component={PayeesPage} />
-        <Route path='/dashboard'              component={DashboardPage} />
         <Route                                component={v.Page404} />
       </Switch>
     )

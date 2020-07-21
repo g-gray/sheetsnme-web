@@ -20,8 +20,8 @@ import * as fb from './fake-button'
 /**
  * Navbar
  */
-class _Navbar extends m.ViewComponent {
 
+class _Navbar extends m.ViewComponent {
   open = () => {
     const close = () => {
       e.dispatch(a.removeDialog<MobileMenuProps>(dialog))
@@ -78,8 +78,8 @@ class _Navbar extends m.ViewComponent {
         </Link>
         <div className='row-start-stretch relative z-index-1'>
           <fb.FakeButton
-            onClick={nextLang}
             className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item'
+            onClick={nextLang}
           >
             {i18n.xln(context, i18n.LANG)}
           </fb.FakeButton>
@@ -270,6 +270,14 @@ export class Drawer extends m.ViewComponent {
             className='drawer-link decorate-drawer-link'
           >
             <s.BarChart className='font-large theme-drawer-icon' />
+            <span>{i18n.xln(context, i18n.DASHBOARD)}</span>
+          </NavLink>
+          <NavLink
+            to='/transactions'
+            exact
+            className='drawer-link decorate-drawer-link'
+          >
+            <s.DollarSign className='font-large theme-drawer-icon' />
             <span>{i18n.xln(context, i18n.TRANSACTIONS)}</span>
           </NavLink>
         </div>

@@ -10,7 +10,7 @@ import * as d from '../dialogs'
 import * as n from '../notifications'
 
 /**
- * Dashboard
+ * DashboardPage
  */
 
 type DashboardPageLayoutProps = {
@@ -157,8 +157,9 @@ class _MobilePageLayout extends m.ViewComponent<MobilePageLayoutProps> {
         <div
           className={`flex-1 ${cls || ''}`}
           style={style}
-          children={children}
-        />
+        >
+          {children}
+        </div>
         <div className='fix-b-l z-index-tooltip width-100p col-start-stretch gaps-v-0x5 padding-0x5'>
           <n.Notifications />
           {!action || hasDialogs ? null :
