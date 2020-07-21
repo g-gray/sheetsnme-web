@@ -30,8 +30,6 @@ class _BalancesChart extends v.ViewComponent<BalancesChartProps> {
     const data = accountList.map((account) => {
       return balanceByAccountId[account.id]?.balance
     })
-    console.info(`balanceByAccountId:`, balanceByAccountId)
-
 
     const options: Highcharts.Options = {
       chart: {
