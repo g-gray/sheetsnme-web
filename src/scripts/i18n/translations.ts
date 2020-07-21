@@ -9,6 +9,7 @@ export const PAYEES                = {en: 'Payees', ru: 'Плательщики'
 export const FILTERS               = {en: 'Filters', ru: 'Фильтры'}
 export const DEBTS                 = {en: 'Debts', ru: 'Долги'}
 export const SPENDINGS             = {en: 'Spendings', ru: 'Траты'}
+export const ACCOUNT_BALANCES      = {en: 'Account Balances', ru: 'Балансы счетов'}
 
 export const DATE                  = {en: 'Date', ru: 'Дата'}
 export const DATE_FROM             = {en: 'Date From', ru: 'Дата с'}
