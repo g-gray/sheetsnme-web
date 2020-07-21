@@ -70,14 +70,6 @@ export function bindChecked(
  * Dom
  */
 
-export function findDomNode(
-  instance: React.ReactInstance | null | undefined
-): Element | Text | null {
-  const element = ReactDom.findDOMNode(instance)
-  if (element != null) fpx.validate(element, isElement)
-  return element
-}
-
 function isComponent(value: any): boolean {
   return fpx.isInstance(value, React.Component)
 }

@@ -109,6 +109,7 @@ type UserMenuState = {
 }
 
 class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
+  private userMenuRef = React.createRef<HTMLDivElement>()
   readonly state = {expanded: false}
 
   close = () => {
@@ -124,6 +125,7 @@ class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
       context,
       props: {user},
       state: {expanded},
+      userMenuRef,
       close, toggle,
     } = this
 
@@ -134,7 +136,7 @@ class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
     const {firstName, lastName, pictureUrl, email} = user
 
     return (
-      <div className='relative row-start-stretch'>
+      <div ref={userMenuRef} className='relative row-start-stretch'>
         <fb.FakeButton
           className='relative row-start-center gaps-h-0x75 padding-h-1 decorate-dark-menu-item z-index-2'
           aria-expanded={expanded}
@@ -147,7 +149,7 @@ class _UserMenu extends m.ViewComponent<UserMenuProps, UserMenuState> {
         </fb.FakeButton>
         {!expanded ? null :
         <c.Closer
-          root={this}
+          root={userMenuRef.current}
           close={close}
         >
           <div

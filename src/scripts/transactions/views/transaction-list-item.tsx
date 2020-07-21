@@ -26,7 +26,7 @@ type TransactionProps = t.RRRouteComponentProps & {
 
 
 class _Transaction extends v.ViewComponent<TransactionProps> {
-  actionsRef = React.createRef<HTMLDivElement>()
+  private actionsRef = React.createRef<HTMLDivElement>()
 
   fetchTransactions = () => {
     const {
@@ -44,8 +44,7 @@ class _Transaction extends v.ViewComponent<TransactionProps> {
     return (event: v.FakeButtonEvent) => {
       const {context, actionsRef} = this
 
-      const actionsNode = u.findDomNode(actionsRef.current)
-      if (u.isAncestorOf(actionsNode, event.target)) {
+      if (u.isAncestorOf(actionsRef.current, event.target)) {
         return
       }
 

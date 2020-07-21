@@ -53,16 +53,15 @@ type EntityProps = {
 }
 
 export class Entity extends m.ViewComponent<EntityProps> {
-  actionsRef = React.createRef<HTMLDivElement>()
+  private actionsRef = React.createRef<HTMLDivElement>()
 
   onClick = (event: fb.FakeButtonEvent) => {
     const {
+      props: {onOpen},
       actionsRef,
-      props: {onOpen}
     } = this
 
-    const actionsNode = u.findDomNode(actionsRef.current)
-    if (u.isAncestorOf(actionsNode, event.target)) {
+    if (u.isAncestorOf(actionsRef.current, event.target)) {
       return
     }
 
@@ -73,14 +72,15 @@ export class Entity extends m.ViewComponent<EntityProps> {
     const {
       context: {isMobile},
       props: {children, icon, onDelete},
-      onClick, actionsRef,
+      actionsRef,
+      onClick,
     } = this
 
     return (
       <fb.FakeButton
         type='div'
-        onClick={onClick}
         className='row-start-stretch gaps-h-1 padding-h-1 text-left theme-drawer-link-busy rounded trigger'
+        onClick={onClick}
       >
         <div className='relative width-2x5 square'>
           <div className='row-center-center abs-center'>
