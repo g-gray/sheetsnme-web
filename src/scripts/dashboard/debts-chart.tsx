@@ -25,11 +25,11 @@ class _DebtsChart extends v.ViewComponent<DebtsChartProps> {
       props: {payeeList, debtsByPayeeId, ...restProps},
     } = this
 
-    const categories = payeeList.map((payee) => payee.title)
-
-    const data = payeeList.map((payee) => {
-      return debtsByPayeeId[payee.id]?.debt
-    })
+    const payees = payeeList
+      .filter((payee) => debtsByPayeeId[payee.id]?.debt)
+      .sort((a, b) => a.debt - b.debt)
+    const payeeTitles = payees.map((payee) => payee.title)
+    const payeeDebts = payees.map((payee) => debtsByPayeeId[payee.id]?.debt)
 
     const options: Highcharts.Options = {
       chart: {
@@ -40,12 +40,12 @@ class _DebtsChart extends v.ViewComponent<DebtsChartProps> {
       },
       xAxis: [
         {
-          categories,
+          categories: payeeTitles,
         },
         {
           opposite: true,
           linkedTo: 0,
-          categories,
+          categories: payeeDebts.map((debt) => String(debt || '')),
         }
       ],
       yAxis: {
@@ -57,7 +57,16 @@ class _DebtsChart extends v.ViewComponent<DebtsChartProps> {
         {
           name: i18n.xln(context, i18n.PAYEE_DEBTS),
           type: 'bar',
-          data,
+          showInLegend: false,
+          minPointLength: 10,
+          data: payeeDebts.map((debt) => {
+            return {
+              y: Math.abs(debt),
+              color: debt < 0
+                ? t.COLORS.ERROR
+                : t.COLORS.PRIMARY,
+            }
+          }),
         },
       ],
     }

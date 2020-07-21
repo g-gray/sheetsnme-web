@@ -15,9 +15,9 @@ export class DashboardPage extends v.ViewComponent<DashboardPageProps> {
 
     return (
       <v.DashboardPageLayout>
-        <DebtsChart />
-        <SpendingsChart />
         <BalancesChart />
+        <SpendingsChart />
+        <DebtsChart />
       </v.DashboardPageLayout>
     )
   }

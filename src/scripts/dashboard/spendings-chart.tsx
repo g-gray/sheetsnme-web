@@ -25,11 +25,11 @@ class _SpendingsChart extends v.ViewComponent<SpendingsChartProps> {
       props: {categoryList, spendingsByCategoryId, ...restProps},
     } = this
 
-    const categories = categoryList.map((category) => category.title)
-
-    const data = categoryList.map((category) => {
-      return spendingsByCategoryId[category.id]?.spending
-    })
+    const categories = categoryList
+      .filter((category) => spendingsByCategoryId[category.id]?.spending)
+    const categoryTitles = categories.map((category) => category.title)
+    const categorySpendings = categories
+      .map((category) => spendingsByCategoryId[category.id]?.spending)
 
     const options: Highcharts.Options = {
       chart: {
@@ -40,8 +40,13 @@ class _SpendingsChart extends v.ViewComponent<SpendingsChartProps> {
       },
       xAxis: [
         {
-          categories,
+          categories: categoryTitles,
         },
+        {
+          opposite: true,
+          linkedTo: 0,
+          categories: categorySpendings.map((spending) => String(spending || '')),
+        }
       ],
       yAxis: {
         title: {
@@ -52,7 +57,14 @@ class _SpendingsChart extends v.ViewComponent<SpendingsChartProps> {
         {
           name: i18n.xln(context, i18n.CATEGORY_SPENDINGS),
           type: 'bar',
-          data,
+          showInLegend: false,
+          minPointLength: 10,
+          data: categorySpendings.map((spending) => {
+            return {
+              y: Math.abs(spending),
+              color: t.COLORS.PRIMARY,
+            }
+          }),
         },
       ],
     }

@@ -1,7 +1,6 @@
 import * as t from './types'
 
 import React from 'react'
-import ReactDom from 'react-dom'
 
 // @ts-ignore
 import * as fpx from 'fpx'

@@ -25,11 +25,11 @@ class _BalancesChart extends v.ViewComponent<BalancesChartProps> {
       props: {accountList, balanceByAccountId, ...restProps},
     } = this
 
-    const categories = accountList.map((account) => account.title)
-
-    const data = accountList.map((account) => {
-      return balanceByAccountId[account.id]?.balance
-    })
+    const accounts = accountList
+      .filter((account) => balanceByAccountId[account.id]?.balance)
+    const accountTitles = accounts.map((account) => account.title)
+    const accountBalances = accounts
+      .map((account) => balanceByAccountId[account.id]?.balance)
 
     const options: Highcharts.Options = {
       chart: {
@@ -40,8 +40,13 @@ class _BalancesChart extends v.ViewComponent<BalancesChartProps> {
       },
       xAxis: [
         {
-          categories,
+          categories: accountTitles,
         },
+        {
+          opposite: true,
+          linkedTo: 0,
+          categories: accountBalances.map((balance) => String(balance || '')),
+        }
       ],
       yAxis: {
         title: {
@@ -52,7 +57,16 @@ class _BalancesChart extends v.ViewComponent<BalancesChartProps> {
         {
           name: i18n.xln(context, i18n.ACCOUNT_BALANCES),
           type: 'bar',
-          data,
+          showInLegend: false,
+          minPointLength: 10,
+          data: accountBalances.map((balance) => {
+            return {
+              y: Math.abs(balance),
+              color: balance < 0
+                ? t.COLORS.ERROR
+                : t.COLORS.PRIMARY,
+            }
+          }),
         },
       ],
     }

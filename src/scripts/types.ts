@@ -19,6 +19,7 @@ export * from './categories/types'
 export * from './accounts/types'
 export * from './payees/types'
 export * from './transactions/types'
+export * from './dashboard/types'
 
 /**
  * React
