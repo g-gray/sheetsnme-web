@@ -289,39 +289,37 @@ class _AccountList extends v.ViewComponent<AccountListProps> {
     } = this
 
     return (
-      <div className='col-start-stretch gaps-v-2'>
-        <div className='col-start-stretch gaps-v-0x25'>
-          <div
-            className={`row-end-center
-                        ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}
-          >
-            <span className='fg-on-surface-pale'>
-              {i18n.xln(context, i18n.BALANCE)}
-            </span>
-          </div>
-          <v.EntityList
-            entityList={accounts}
-            pending={pending}
-          >
-            {accounts.map((account) => (
-              <v.Entity
-                key={account.id}
-                icon={<s.CreditCard className='font-large fg-primary' />}
-                onOpen={onOpen(account)}
-                onDelete={onDelete(account)}
-              >
-                <div className='flex-1 row-between-center gaps-h-1'>
-                  <span>{account.title}</span>
-                  { account.balance > 0
-                  ? <span className='fg-success'>+{account.balance}</span>
-                  : account.balance < 0
-                  ? <span className='fg-error'>{account.balance}</span>
-                  : <span className='fg-on-surface-pale'>{account.balance}</span>}
-                </div>
-              </v.Entity>
-            ))}
-          </v.EntityList>
+      <div className='col-start-stretch gaps-v-0x25'>
+        <div
+          className={`row-end-center
+                      ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}
+        >
+          <span className='fg-on-surface-pale'>
+            {i18n.xln(context, i18n.BALANCE)}
+          </span>
         </div>
+        <v.EntityList
+          entityList={accounts}
+          pending={pending}
+        >
+          {accounts.map((account) => (
+            <v.Entity
+              key={account.id}
+              icon={<s.CreditCard className='font-large fg-primary' />}
+              onOpen={onOpen(account)}
+              onDelete={onDelete(account)}
+            >
+              <div className='flex-1 row-between-center gaps-h-1'>
+                <span>{account.title}</span>
+                { account.balance > 0
+                ? <span className='fg-success'>+{account.balance}</span>
+                : account.balance < 0
+                ? <span className='fg-error'>{account.balance}</span>
+                : <span className='fg-on-surface-pale'>{account.balance}</span>}
+              </div>
+            </v.Entity>
+          ))}
+        </v.EntityList>
       </div>
     )
   }

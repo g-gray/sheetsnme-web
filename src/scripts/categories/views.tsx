@@ -279,25 +279,35 @@ class _CategoriesList extends v.ViewComponent<CategoriesListProps> {
 
   render() {
     const {
+      context: {isMobile},
       props: {categories, pending},
       onOpen, onDelete,
     } = this
 
     return (
-      <v.EntityList
-        entityList={categories}
-        pending={pending}
-      >
-        {categories.map(category => (
-          <v.Entity
-            key={category.id}
-            icon={<s.Tag className='font-large fg-primary' />}
-            onOpen={onOpen(category)}
-            onDelete={onDelete(category)}>
-            {category.title}
-          </v.Entity>
-        ))}
-      </v.EntityList>
+      <div className='col-start-stretch gaps-v-0x25'>
+        <div
+          className={`row-end-center
+                      ${isMobile
+                          ? 'padding-t-1x75 padding-r-1'
+                          : 'padding-t-1x25 padding-r-3x5'}`}
+        >
+        </div>
+        <v.EntityList
+          entityList={categories}
+          pending={pending}
+        >
+          {categories.map(category => (
+            <v.Entity
+              key={category.id}
+              icon={<s.Tag className='font-large fg-primary' />}
+              onOpen={onOpen(category)}
+              onDelete={onDelete(category)}>
+              {category.title}
+            </v.Entity>
+          ))}
+        </v.EntityList>
+      </div>
     )
   }
 }

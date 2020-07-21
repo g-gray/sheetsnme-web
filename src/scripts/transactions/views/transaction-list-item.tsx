@@ -192,7 +192,7 @@ type TransactionIconProps = {
 class TransactionIcon extends v.ViewComponent<TransactionIconProps> {
   render() {
     const {props: {transaction}} = this
-    const {INCOME, OUTCOME, LOAN, BORROW} = t.TRANSACTION_TYPE
+    const {INCOME, OUTCOME, LOAN, BORROW, TRANSFER} = t.TRANSACTION_TYPE
 
     return (
       <div className='row-start-center'>
@@ -208,13 +208,13 @@ class TransactionIcon extends v.ViewComponent<TransactionIconProps> {
               <s.Plus />
             </div>
           </div>
-        ) : (
+        ) : fpx.includes([TRANSFER], transaction.type) ? (
           <div className='relative width-2x5 square circle bg-primary'>
             <div className='row-center-center abs-center fg-on-primary font-large'>
               <s.Repeat />
             </div>
           </div>
-        )}
+        ): null}
       </div>
     )
   }
