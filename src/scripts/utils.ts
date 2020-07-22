@@ -338,3 +338,24 @@ export function keyById(list: any) {
 export function alwaysArray<T = any>(item: T[] | T): T[] {
   return new Array<T>().concat(item)
 }
+
+export function throttle(fun: () => void, time: number, limit: number = 1) {
+  // Monitor the count
+  var calledCount = 0
+
+  // Refresh the `calledCount` varialbe after the `time` has been passed
+  setInterval(function() {
+    calledCount = 0
+  }, time)
+
+  // Creating a closure that will be called
+  return function() {
+      // Checking the limit
+      // If limit is exceeded then do not call the passed function
+      if (limit > calledCount) {
+          // Increase the count
+          calledCount++
+          fun() // Call the function
+      }
+  }
+}

@@ -25,9 +25,7 @@ class _App extends v.ViewComponent<AppProps> {
     e.store.dispatch(a.resize(window.innerWidth))
   }
 
-  throttledResize = () => {
-    requestAnimationFrame(this.resize)
-  }
+  throttledResize = u.throttle(this.resize, 300)
 
   render() {
     const {props: {isMobile, lang}} = this
