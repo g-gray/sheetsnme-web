@@ -71,7 +71,10 @@ class _BalancesChart extends v.ViewComponent<BalancesChartProps> {
             </span>
           `
         },
-      } ,
+      },
+      credits: {
+        enabled: false,
+      },
       series: [
         {
           name: i18n.xln(context, i18n.ACCOUNT_BALANCES),

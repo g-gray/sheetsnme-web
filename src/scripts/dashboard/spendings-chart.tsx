@@ -71,7 +71,10 @@ class _SpendingsChart extends v.ViewComponent<SpendingsChartProps> {
             </span>
           `
         },
-      } ,
+      },
+      credits: {
+        enabled: false,
+      },
       series: [
         {
           name: i18n.xln(context, i18n.CATEGORY_SPENDINGS),

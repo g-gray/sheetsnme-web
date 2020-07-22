@@ -71,7 +71,10 @@ class _DebtsChart extends v.ViewComponent<DebtsChartProps> {
             </span>
           `
         },
-      } ,
+      },
+      credits: {
+        enabled: false,
+      },
       series: [
         {
           name: i18n.xln(context, i18n.PAYEE_DEBTS),
