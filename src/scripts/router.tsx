@@ -101,12 +101,12 @@ class _Routes extends v.ViewComponent<RoutesProps> {
   }
 
   componentDidMount() {
-    const {props: {history, location}} = this
+    const {props: {history}} = this
 
     this.unlisten = history.listen(this.fetchRouteData)
 
     this.fetchAppData()
-      .then(() => this.fetchRouteData(location))
+      .then(() => this.fetchRouteData(history.location))
   }
 
   componentWillUnmount() {
