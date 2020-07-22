@@ -163,7 +163,7 @@ export class FormNumberElement extends m.ViewComponent<FormNumberElementProps> {
   onChange = (event: t.RChangeEvent<HTMLInputElement>) => {
     const {target: {value}} = event
     const {onUpdate} = this.props
-    onUpdate(u.parseNum(value))
+    onUpdate(u.parseNumber(value))
   }
 
   render() {
@@ -272,7 +272,7 @@ export class FormDateElement extends m.ViewComponent<FormDateElementProps, FormD
 
   onYearInput = (event: t.RChangeEvent<HTMLSelectElement>) => {
     const {target: {value}} = event
-    const year = u.parseNum(value)
+    const year = u.parseNumber(value)
     const month = this.mayBeMonth(year, this.state.month)
     const days = u.daysInMonthList(year, month)
     const day = this.mayBeDay(days, this.state.day)
@@ -282,7 +282,7 @@ export class FormDateElement extends m.ViewComponent<FormDateElementProps, FormD
 
   onMonthInput = (event: t.RChangeEvent<HTMLSelectElement>) => {
     const {target: {value}} = event
-    const month = u.parseNum(value)
+    const month = u.parseNumber(value)
     const year = this.state.year
     const days = u.daysInMonthList(year, month)
     const day = this.mayBeDay(days, this.state.day)
@@ -292,7 +292,7 @@ export class FormDateElement extends m.ViewComponent<FormDateElementProps, FormD
 
   onDayInput = (event: t.RChangeEvent<HTMLSelectElement>) => {
     const {target: {value}} = event
-    const day = u.parseNum(value)
+    const day = u.parseNumber(value)
     const {year, month} = this.state
     this.setState({day})
     this.onDateInput(year, month, day)

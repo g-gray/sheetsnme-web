@@ -308,10 +308,22 @@ class _PayeesList extends v.ViewComponent<PayeesListProps> {
               <div className='flex-1 row-between-center gaps-h-1'>
                 <span>{payee.title}</span>
                 { payee.debt > 0
-                ? <span className='fg-success'>+{payee.debt}</span>
+                ? (
+                  <span className='fg-success'>
+                    +{u.formatNumber(payee.debt)}
+                  </span>
+                )
                 : payee.debt < 0
-                ? <span className='fg-error'>{payee.debt}</span>
-                : <span className='fg-on-surface-pale'>{payee.debt}</span>}
+                ? (
+                  <span className='fg-error'>
+                    {u.formatNumber(payee.debt)}
+                  </span>
+                )
+                : (
+                  <span className='fg-on-surface-pale'>
+                    {u.formatNumber(payee.debt)}
+                  </span>
+                )}
               </div>
             </v.Entity>
           ))}

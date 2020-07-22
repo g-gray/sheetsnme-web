@@ -7,6 +7,8 @@ import {withRouter} from 'react-router-dom'
 // @ts-ignore
 import * as fpx from 'fpx'
 
+import * as u from '../../utils'
+
 import * as i18n from '../../i18n'
 
 import * as v from '../../views'
@@ -42,25 +44,25 @@ class _TransactionsList extends v.ViewComponent<TransactionListProps> {
                         ${isMobile ? 'padding-t-0x5 padding-r-1' : 'padding-r-3x5'}`}
           >
             <tf.TransactionFiltersControls />
-            {pending ? null :
-            <div className='gaps-h-0x5'>
+            <div className={`flex-wrap fg-on-surface-pale
+                            ${isMobile ? 'col-start-end' : 'row-end-center gaps-h-0x5'}`}>
               <span className='gaps-h-0x5'>
-                <span className='fg-on-surface-pale'>
+                <span>
                   {i18n.xln(context, i18n.OUTCOME)}:
                 </span>
-                <span className='fg-error'>-{outcomeAmount}</span>
+                <span className='fg-error'>
+                  -{u.formatNumber(outcomeAmount)}
+                </span>
               </span>
-              <span className='fg-on-surface-pale'>/</span>
               <span className='gaps-h-0x5'>
-                <span className='fg-on-surface-pale'>
+                <span>
                   {i18n.xln(context, i18n.INCOME)}:
                 </span>
-                <span className='fg-success'>+{incomeAmount}</span>
+                <span className='fg-success'>
+                  +{u.formatNumber(incomeAmount)}
+                </span>
               </span>
-              <span className='fg-on-surface-pale'>
-                ({i18n.xln(context, i18n.WITHOUT_DEBTS_AND_TRANSFERS)})
-              </span>
-            </div>}
+            </div>
           </div>
           <v.EntityList
             entityList={transactions}

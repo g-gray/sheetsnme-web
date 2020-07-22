@@ -5,8 +5,9 @@ import {connect} from 'react-redux'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 
-import * as i18n from '../i18n'
+import * as u from '../utils'
 
+import * as i18n from '../i18n'
 import * as v from '../views'
 
 type SpendingsChartOwnProps = HighchartsReact.Props
@@ -45,7 +46,8 @@ class _SpendingsChart extends v.ViewComponent<SpendingsChartProps> {
         {
           opposite: true,
           linkedTo: 0,
-          categories: categorySpendings.map((spending) => String(spending || '')),
+          categories: categorySpendings
+            .map((category) => u.formatNumber(category)),
         }
       ],
       yAxis: {
@@ -53,6 +55,17 @@ class _SpendingsChart extends v.ViewComponent<SpendingsChartProps> {
           text: null,
         },
       },
+      tooltip: {
+        formatter: function () {
+          const {x, series: {name}, point: {y, color}} = this
+          return `
+            <span>
+              <span style="font-size: 10px;">${x}</span><br/>
+              <span style="color:${color}">●</span> ${name}: <b>${u.formatNumber(y || 0)}</b><br/>
+            </span>
+          `
+        },
+      } ,
       series: [
         {
           name: i18n.xln(context, i18n.CATEGORY_SPENDINGS),

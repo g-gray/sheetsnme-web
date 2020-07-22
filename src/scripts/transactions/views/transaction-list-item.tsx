@@ -234,19 +234,41 @@ type TransactionAmountProps = {
 class TransactionAmount extends v.ViewComponent<TransactionAmountProps> {
   render() {
     const {props: {transaction}} = this
-    const {INCOME, OUTCOME, LOAN, BORROW} = t.TRANSACTION_TYPE
+    const {INCOME, OUTCOME, LOAN, BORROW, TRANSFER} = t.TRANSACTION_TYPE
 
     return (
       <span className='wspace-nowrap'>
         { transaction.type === BORROW
-        ? <span className='fg-success'>+{transaction.outcomeAmount}</span>
+        ? (
+          <span className='fg-success'>
+            +{u.formatNumber(transaction.outcomeAmount)}
+          </span>
+        )
         : transaction.type === LOAN
-        ? <span className='fg-error'>-{transaction.incomeAmount}</span>
+        ? (
+          <span className='fg-error'>
+            -{u.formatNumber(transaction.incomeAmount)}
+          </span>
+        )
         : transaction.type === INCOME
-        ? <span className='fg-success'>+{transaction.incomeAmount}</span>
+        ? (
+          <span className='fg-success'>
+            +{u.formatNumber(transaction.incomeAmount)}
+          </span>
+        )
         : transaction.type === OUTCOME
-        ? <span className='fg-error'>-{transaction.outcomeAmount}</span>
-        : <span>{transaction.outcomeAmount || transaction.incomeAmount}</span>}
+        ? (
+          <span className='fg-error'>
+            -{u.formatNumber(transaction.outcomeAmount)}
+          </span>
+        )
+        : transaction.type === TRANSFER
+        ? (
+          <span>
+            {u.formatNumber(transaction.outcomeAmount || transaction.incomeAmount)}
+          </span>
+        )
+        : null}
       </span>
     )
   }

@@ -312,10 +312,22 @@ class _AccountList extends v.ViewComponent<AccountListProps> {
               <div className='flex-1 row-between-center gaps-h-1'>
                 <span>{account.title}</span>
                 { account.balance > 0
-                ? <span className='fg-success'>+{account.balance}</span>
+                ? (
+                  <span className='fg-success'>
+                    +{u.formatNumber(account.balance)}
+                  </span>
+                )
                 : account.balance < 0
-                ? <span className='fg-error'>{account.balance}</span>
-                : <span className='fg-on-surface-pale'>{account.balance}</span>}
+                ? (
+                  <span className='fg-error'>
+                    {u.formatNumber(account.balance)}
+                  </span>
+                )
+                : (
+                  <span className='fg-on-surface-pale'>
+                    {u.formatNumber(account.balance)}
+                  </span>
+                )}
               </div>
             </v.Entity>
           ))}

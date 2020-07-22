@@ -113,5 +113,3 @@ export const DECEMBER              = {en: 'December', ru: 'Декабрь'}
 
 export const BALANCE               = {en: 'Balance', ru: 'Сальдо'}
 export const DEBT                  = {en: 'Debt', ru: 'Долг'}
-
-export const WITHOUT_DEBTS_AND_TRANSFERS = {en: 'Without debts and transfers', ru: 'Без долгов и переводов'}

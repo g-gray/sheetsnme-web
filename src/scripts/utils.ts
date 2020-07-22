@@ -199,12 +199,21 @@ export function daysInMonthList(
     : fpx.range(1, 32)
 }
 
-export function parseNum(value: any): undefined | number {
+export function parseNumber(value: any): undefined | number {
   if (fpx.isString(value)) value = parseFloat(value)
-  if (fpx.isFinite(value)) return value
+  if (fpx.isFinite(value)) {
+    return value
+  }
   return undefined
 }
 
+export function formatNumber(value: number, fractionDigitsNumber = 2): string {
+  return value.toLocaleString('en-US', {
+    minimumFractionDigits: fractionDigitsNumber,
+    maximumFractionDigits: fractionDigitsNumber,
+  })
+    .replace(/\,/g, ' ')
+}
 
 
 /**
