@@ -129,7 +129,7 @@ export class EntityListPlaceholder extends m.ViewComponent<EntityListPlaceholder
     const {props: {length}} = this
 
     return (
-      <div className='col-start-stretch'>
+      <div className='col-start-stretch gaps-v-0x25'>
         {fpx.range(0, length).map((value: number) => (
           <EntityPlaceholder key={value} />
         ))}
