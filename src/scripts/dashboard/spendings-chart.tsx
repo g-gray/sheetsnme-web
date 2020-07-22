@@ -75,7 +75,7 @@ class _SpendingsChart extends v.ViewComponent<SpendingsChartProps> {
           data: categorySpendings.map((spending) => {
             return {
               y: Math.abs(spending),
-              color: t.COLORS.PRIMARY,
+              color: t.COLOR.PRIMARY,
             }
           }),
         },

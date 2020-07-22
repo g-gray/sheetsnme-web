@@ -76,8 +76,8 @@ class _DebtsChart extends v.ViewComponent<DebtsChartProps> {
             return {
               y: Math.abs(debt),
               color: debt < 0
-                ? t.COLORS.ERROR
-                : t.COLORS.PRIMARY,
+                ? t.COLOR.ERROR
+                : t.COLOR.PRIMARY,
             }
           }),
         },

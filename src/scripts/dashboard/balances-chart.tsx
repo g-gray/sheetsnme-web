@@ -76,8 +76,8 @@ class _BalancesChart extends v.ViewComponent<BalancesChartProps> {
             return {
               y: Math.abs(balance),
               color: balance < 0
-                ? t.COLORS.ERROR
-                : t.COLORS.PRIMARY,
+                ? t.COLOR.ERROR
+                : t.COLOR.PRIMARY,
             }
           }),
         },
