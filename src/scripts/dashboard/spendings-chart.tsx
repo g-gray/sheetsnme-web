@@ -42,12 +42,18 @@ class _SpendingsChart extends v.ViewComponent<SpendingsChartProps> {
       xAxis: [
         {
           categories: categoryTitles,
+          labels: {
+            step: 1
+          },
         },
         {
           opposite: true,
           linkedTo: 0,
           categories: categorySpendings
             .map((category) => u.formatNumber(category)),
+          labels: {
+            step: 1
+          },
         }
       ],
       yAxis: {

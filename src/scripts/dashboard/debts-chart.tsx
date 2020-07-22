@@ -42,12 +42,18 @@ class _DebtsChart extends v.ViewComponent<DebtsChartProps> {
       xAxis: [
         {
           categories: payeeTitles,
+          labels: {
+            step: 1
+          },
         },
         {
           opposite: true,
           linkedTo: 0,
           categories: payeeDebts
             .map((debt) => u.formatNumber(debt)),
+          labels: {
+            step: 1
+          },
         }
       ],
       yAxis: {

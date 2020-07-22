@@ -42,12 +42,18 @@ class _BalancesChart extends v.ViewComponent<BalancesChartProps> {
       xAxis: [
         {
           categories: accountTitles,
+          labels: {
+            step: 1
+          },
         },
         {
           opposite: true,
           linkedTo: 0,
           categories: accountBalances
             .map((balance) => u.formatNumber(balance)),
+          labels: {
+            step: 1
+          },
         }
       ],
       yAxis: {
