@@ -263,9 +263,9 @@ export class Drawer extends m.ViewComponent {
         className='col-start-stretch gaps-v-1 padding-v-1'
         style={{width: '16rem'}}
       >
-        <div className='col-start-stretch padding-h-0x5'>
+        <div className='col-start-stretch gaps-v-0x25 padding-h-0x5'>
           <NavLink
-            to='/'
+            to='/dashboard'
             exact
             className='drawer-link decorate-drawer-link'
           >
@@ -282,7 +282,7 @@ export class Drawer extends m.ViewComponent {
           </NavLink>
         </div>
         <hr className='hr' />
-        <div className='col-start-stretch padding-h-0x5'>
+        <div className='col-start-stretch gaps-v-0x25 padding-h-0x5'>
           <NavLink
             to='/categories'
             exact
