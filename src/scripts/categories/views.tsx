@@ -48,7 +48,7 @@ export class CategoriesPage extends v.ViewComponent<CategoryPageProps> {
     const {openDialog} = this
 
     return (
-      <v.ListPageLayout action={<v.Fab onClick={openDialog} />}>
+      <v.ListPageLayout fab={<v.Fab onClick={openDialog} />}>
         <CategoriesList />
       </v.ListPageLayout>
     )

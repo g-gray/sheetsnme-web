@@ -48,7 +48,7 @@ export class AccountsPage extends v.ViewComponent<AccountPageProps> {
     const {openDialog} = this
 
     return (
-      <v.ListPageLayout action={<v.Fab onClick={openDialog} />}>
+      <v.ListPageLayout fab={<v.Fab onClick={openDialog} />}>
         <AccountList />
       </v.ListPageLayout>
     )

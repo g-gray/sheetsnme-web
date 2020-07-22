@@ -48,7 +48,7 @@ export class PayeesPage extends v.ViewComponent<PayeePageProps> {
     const {openDialog} = this
 
     return (
-      <v.ListPageLayout action={<v.Fab onClick={openDialog} />}>
+      <v.ListPageLayout fab={<v.Fab onClick={openDialog} />}>
         <PayeesList />
       </v.ListPageLayout>
     )

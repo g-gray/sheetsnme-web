@@ -51,7 +51,7 @@ export class DashboardPageLayout extends m.ViewComponent<DashboardPageLayoutProp
  */
 
 type ListPageLayoutProps = {
-  action  : t.RReactElement,
+  fab     : t.RReactElement,
   children: t.RReactChildren,
 }
 
@@ -59,12 +59,12 @@ export class ListPageLayout extends m.ViewComponent<ListPageLayoutProps> {
   render() {
     const {
       context: {isMobile},
-      props: {action, children},
+      props: {fab, children},
     } = this
 
     if (isMobile) {
       return (
-        <MobilePageLayout action={action}>
+        <MobilePageLayout fab={fab}>
           <div className='col-start-stretch padding-v-0x5'>
             {children}
           </div>
@@ -79,7 +79,7 @@ export class ListPageLayout extends m.ViewComponent<ListPageLayoutProps> {
             className='col-start-stretch padding-h-0x5'
             style={{marginTop: '-1.75rem'}}
           >
-            {action}
+            {fab}
           </div>
           {children}
         </div>
@@ -113,8 +113,9 @@ export class PageLayout extends m.ViewComponent<PageLayoutProps> {
           <div
             className={`flex-1 ${cls || ''}`}
             style={style}
-            children={children}
-          />
+          >
+            {children}
+          </div>
         </div>
         <div className='fix-b-l z-index-tooltip width-100p row-start-center margin-0x5'>
           <n.Notifications />
@@ -134,7 +135,7 @@ export class PageLayout extends m.ViewComponent<PageLayoutProps> {
 type MobilePageLayoutOwnProps = {
   className?: string,
   style?    : t.RCSSProperties,
-  action?   : t.RReactElement,
+  fab?      : t.RReactElement,
   children? : t.RReactChildren,
 }
 
@@ -148,7 +149,7 @@ type MobilePageLayoutProps = MobilePageLayoutOwnProps & MobilePageLayoutStatePro
 class _MobilePageLayout extends m.ViewComponent<MobilePageLayoutProps> {
   render() {
     const {
-      props: {className: cls, style, action, children, hasDialogs},
+      props: {className: cls, style, fab, children, hasDialogs},
     } = this
 
     return (
@@ -162,9 +163,9 @@ class _MobilePageLayout extends m.ViewComponent<MobilePageLayoutProps> {
         </div>
         <div className='fix-b-l z-index-tooltip width-100p col-start-stretch gaps-v-0x5 padding-0x5'>
           <n.Notifications />
-          {!action || hasDialogs ? null :
+          {!fab || hasDialogs ? null :
           <div className='row-end-center padding-0x5'>
-            {action}
+            {fab}
           </div>}
         </div>
         <d.Dialogs />
