@@ -117,7 +117,7 @@ export class PageLayout extends m.ViewComponent<PageLayoutProps> {
             {children}
           </div>
         </div>
-        <div className='fix-b-l z-index-tooltip width-100p row-start-center margin-0x5'>
+        <div className='fix-b-l z-index-tooltip row-start-center margin-0x5'>
           <n.Notifications />
         </div>
         <d.Dialogs />
@@ -161,10 +161,10 @@ class _MobilePageLayout extends m.ViewComponent<MobilePageLayoutProps> {
         >
           {children}
         </div>
-        <div className='fix-b-l z-index-tooltip width-100p col-start-stretch gaps-v-0x5 padding-0x5'>
+        <div className='fix-b-r z-index-tooltip col-start-stretch gaps-v-0x5 padding-0x5'>
           <n.Notifications />
           {!fab || hasDialogs ? null :
-          <div className='row-end-center padding-0x5'>
+          <div className='row-end-center'>
             {fab}
           </div>}
         </div>
