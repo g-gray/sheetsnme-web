@@ -1,0 +1,9 @@
+/**
+ * The hack below prevents overflowing of flex container by child charts
+ */
+
+.highcharts-container,
+.highcharts-container svg {
+  width: 100% !important;
+  height: 100% !important;
+}
