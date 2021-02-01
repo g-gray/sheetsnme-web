@@ -223,6 +223,7 @@ type FormDateElementState = {
 export class FormDateElement extends m.ViewComponent<FormDateElementProps, FormDateElementState> {
   years: number[] = fpx.reverse(fpx.range(1940, new Date().getFullYear() + 1))
   months: {value: number, translations: t.TranslationsByLang}[] = [
+    {value: 0,  translations: i18n.JANUARY},
     {value: 1,  translations: i18n.FEBRUARY},
     {value: 2,  translations: i18n.MARCH},
     {value: 3,  translations: i18n.APRIL},
@@ -231,7 +232,6 @@ export class FormDateElement extends m.ViewComponent<FormDateElementProps, FormD
     {value: 6,  translations: i18n.JULY},
     {value: 7,  translations: i18n.AUGUST},
     {value: 8,  translations: i18n.SEPTEMBER},
-    {value: 0,  translations: i18n.JANUARY},
     {value: 9,  translations: i18n.OCTOBER},
     {value: 10, translations: i18n.NOVEMBER},
     {value: 11, translations: i18n.DECEMBER},
