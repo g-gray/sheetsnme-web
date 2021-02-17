@@ -264,8 +264,10 @@ class TransactionAmount extends v.ViewComponent<TransactionAmountProps> {
         )
         : transaction.type === TRANSFER
         ? (
-          <span>
-            {u.formatNumber(transaction.outcomeAmount || transaction.incomeAmount)}
+          <span className='row-end-center gaps-h-0x25'>
+            <span>{u.formatNumber(transaction.outcomeAmount)}</span>
+            <s.ArrowRight />
+            <span>{u.formatNumber(transaction.incomeAmount)}</span>
           </span>
         )
         : null}
