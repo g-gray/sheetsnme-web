@@ -1,0 +1,15 @@
+{
+  "root": "public/",
+  "routes": {
+    "/scripts/*": "public/scripts/",
+    "/styles/*": "public/styles/",
+    "/**": "public/index.html"
+  },
+  "proxies": {
+    "/api/": {
+      "origin": "${BACKEND_HOST}/api/"
+    }
+  },
+  "https_only": true,
+  "max_body_size": 10485760
+}

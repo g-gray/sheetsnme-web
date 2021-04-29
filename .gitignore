@@ -1,9 +1,11 @@
 /*
 !/.env.properties.example
+!/Aptfile
 !/.gitignore
 !/gulpfile.js
 !/package.json
 !/readme.md
+!/static.json
 !/tsconfig.json
 !/webpack.config.js
 !/yarn.lock
