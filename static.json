@@ -8,6 +8,9 @@
   "proxies": {
     "/api/": {
       "origin": "${BACKEND_HOST}/api/"
+    },
+    "/auth/": {
+      "origin": "${BACKEND_HOST}/auth/"
     }
   },
   "https_only": true,
