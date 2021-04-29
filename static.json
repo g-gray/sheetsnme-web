@@ -1,9 +1,9 @@
 {
   "root": "public/",
   "routes": {
-    "/scripts/*": "public/scripts/",
-    "/styles/*": "public/styles/",
-    "/**": "public/index.html"
+    "/scripts/*": "/scripts/",
+    "/styles/*": "/styles/",
+    "/**": "/index.html"
   },
   "proxies": {
     "/api/": {
