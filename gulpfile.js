@@ -41,6 +41,12 @@ const BACKEND_HOST     = process.env.BACKEND_HOST
 const LOCAL_PORT       = process.env.LOCAL_PORT
 const LANG_HEADER_NAME = process.env.LANG_HEADER_NAME
 
+/**
+ * Heroku specific
+ * Read more here: https://elements.heroku.com/buildpacks/ianpurvis/heroku-buildpack-version
+ */
+const SOURCE_VERSION = process.env.SOURCE_VERSION
+
 const cssCleanConfig = {
   keepSpecialComments: 0,
   aggressiveMerging: false,
@@ -81,8 +87,11 @@ gulp.task('static:watch', () => {
  */
 
 gulp.task('templates:build', () => {
-  const buf = cp.execSync('git rev-parse --short HEAD', {stdio: []})
-  const commit = buf.toString().replace(/\n/, '')
+  let commit = SOURCE_VERSION
+  if (!SOURCE_VERSION) {
+    const buf = cp.execSync('git rev-parse --short HEAD', {stdio: []})
+    commit = buf.toString().replace(/\n/, '')
+  }
 
   return gulp.src(SRC_TEMPLATE_FILES)
     .pipe(new st.Transform({
